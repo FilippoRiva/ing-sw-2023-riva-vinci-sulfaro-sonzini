@@ -1,6 +1,7 @@
 package com.myshelfie.model.chatting;
 
 public class Message {
+    //TODO Players or Strings?
     final private String sender;
     final private String receiver;
     final private String message;

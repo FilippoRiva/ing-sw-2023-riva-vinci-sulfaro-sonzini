@@ -19,6 +19,7 @@ public class CommonGoal {
         return tokens.peek();
     }
 
+    //TODO remove the possibility to push during the game?
     public void pushToken(Token token){
         tokens.push(token);
     }

@@ -11,14 +11,15 @@ public class Game {
     String gameName;
     GameState currentState;
     Chat chat;
-    CommonGoal[] goals;
-
+    CommonGoal[] commonGoals;
     LivingRoom livingRoom;
     ArrayList<Player> players;
+
     public Game(){
+        //TODO initial state
         currentState = GameState.ROOMSETUP;
         chat = new Chat();
-        goals = new CommonGoal[2];
+        commonGoals = new CommonGoal[2];
         livingRoom = new LivingRoom();
         players = new ArrayList<>();
     }
@@ -31,13 +32,11 @@ public class Game {
        this.currentState = nextState;
     }
 
-    public void addCommonGoal(CommonGoal goal){
-       if(goals[0] == null) goals[0] = goal ;
-       else goals[1] = goal;
+    public void setCommonGoal(CommonGoal[] goals){
+       this.commonGoals = goals;
     }
 
     public void addPlayer(Player player) throws GameFullException, NameTakenException {
-        //TODO eccezioni da implementare
         players.add(player);
     }
 
@@ -53,8 +52,8 @@ public class Game {
         return chat;
     }
 
-    public CommonGoal[] getGoals() {
-        return goals;
+    public CommonGoal[] getCommonGoals() {
+        return commonGoals;
     }
 
     public LivingRoom getLivingRoom() {
