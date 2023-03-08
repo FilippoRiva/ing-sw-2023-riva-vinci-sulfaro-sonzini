@@ -14,7 +14,7 @@ public class Bookshelf {
         }
     }
 
-    public void insertTile(int column,ItemTile tile) throws FullColumnException {
+    public void insertTile(int column, ItemTile tile) throws FullColumnException {
         for(int y = 5; y>=0; y--){
             if(items[column][y]!=ItemTile.EMPTY) {
                 items[column][y] = tile;

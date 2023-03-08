@@ -49,7 +49,7 @@ public class Player {
     }
 
     public Bookshelf getBookshelf(){
-        //TODO da copiare
+        //TODO copy
         return bookshelf;
     }
 }
