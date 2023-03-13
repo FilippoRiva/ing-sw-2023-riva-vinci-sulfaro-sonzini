@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 public class LivingRoom {
     ArrayList<ItemTile> bag;
-    ItemTile[][] items;
+
+    //TODO Matrix?
+    ItemTile[][] table;
 
     public LivingRoom(){
+        //TODO there or in Controller?
         ItemTile[] itemTiles = ItemTile.values();
         for(int i = 0; i < itemTiles.length; i++){
             for(int j = 0; j < 22; j++){
@@ -14,7 +17,7 @@ public class LivingRoom {
             }
         }
 
-        items = new ItemTile[9][9];
+        table = new ItemTile[9][9];
         //TODO no-go cells
     }
 
@@ -22,12 +25,12 @@ public class LivingRoom {
         return bag;
     }
 
-    public ItemTile[][] getItems() {
-        return items;
+    public ItemTile[][] getTable() {
+        return table;
     }
 
-    public void setItems(ItemTile[][] items) {
-        this.items = items;
+    public void setTable(ItemTile[][] table) {
+        this.table = table;
     }
 
     public void setBag(ArrayList<ItemTile> bag) {
@@ -35,7 +38,7 @@ public class LivingRoom {
     }
 
 
-    //TODO take to change only that or only set to change all?
+    //TODO methods for interaction with the table
     public void takeItem(int x, int y){
 
     }
