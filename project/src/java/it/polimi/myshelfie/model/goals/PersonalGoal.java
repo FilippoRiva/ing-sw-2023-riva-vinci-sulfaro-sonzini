@@ -103,12 +103,47 @@ public enum PersonalGoal {
     private final ItemTile[][] goal;
 
     public ItemTile[][] getGoal() {
-        ItemTile[][] returnValue = new ItemTile[5][6];
-        for(int x = 0; x < 5; x++){
-            System.arraycopy(goal[x], 0, returnValue[x], 0, 6);
+        ItemTile[][] returnValue = new ItemTile[6][5];
+        for(int y = 0; y < 5; y++){
+            System.arraycopy(goal[y], 0, returnValue[y], 0, 6);
         }
         return returnValue;
     }
+
+    public int isVerified(ItemTile [][] bookshelf){
+        int verifiedCount = 0;
+        for(int x = 0; x < 5; x++){
+            for(int y = 0; y < 6; y++){
+                if(goal[y][x]!= ItemTile.EMPTY) {
+                    if(bookshelf[y][x]==goal[y][x]) verifiedCount++;
+                }
+            }
+        }
+        switch (verifiedCount){
+            case 1 -> {
+                return 1;
+            }
+            case 2 -> {
+                return 2;
+            }
+            case 3 -> {
+                return 4;
+            }
+            case 4 -> {
+                return 6;
+            }
+            case 5 -> {
+                return 9;
+            }
+            case 6 -> {
+                return 12;
+            }
+            default -> {
+                return 0;
+            }
+        }
+    }
+
 
     PersonalGoal(ItemTile[][] goal){
         this.goal = goal;
