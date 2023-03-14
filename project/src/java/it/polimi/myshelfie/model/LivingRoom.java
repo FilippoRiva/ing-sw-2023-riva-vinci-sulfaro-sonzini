@@ -1,4 +1,4 @@
-package com.myshelfie.model;
+package it.polimi.myshelfie.model;
 
 import java.util.ArrayList;
 

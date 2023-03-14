@@ -1,6 +1,6 @@
-package com.myshelfie.model;
+package it.polimi.myshelfie.model;
 
-import com.myshelfie.model.exceptions.FullColumnException;
+import it.polimi.myshelfie.model.exceptions.FullColumnException;
 
 public class Bookshelf {
     ItemTile[][] items;

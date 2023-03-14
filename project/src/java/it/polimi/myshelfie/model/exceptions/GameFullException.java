@@ -1,4 +1,4 @@
-package com.myshelfie.model.exceptions;
+package it.polimi.myshelfie.model.exceptions;
 
 public class GameFullException extends Exception{
     //TODO implementation

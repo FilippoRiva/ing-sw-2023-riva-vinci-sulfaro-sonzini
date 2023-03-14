@@ -1,4 +1,4 @@
-package com.myshelfie.model.chatting;
+package it.polimi.myshelfie.model.chatting;
 
 import java.util.ArrayList;
 

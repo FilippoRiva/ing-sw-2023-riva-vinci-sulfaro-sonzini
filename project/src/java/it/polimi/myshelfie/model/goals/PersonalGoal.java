@@ -1,6 +1,6 @@
-package com.myshelfie.model.goals;
+package it.polimi.myshelfie.model.goals;
 
-import com.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTile;
 
 public enum PersonalGoal {
     FIRST(new ItemTile[][]{

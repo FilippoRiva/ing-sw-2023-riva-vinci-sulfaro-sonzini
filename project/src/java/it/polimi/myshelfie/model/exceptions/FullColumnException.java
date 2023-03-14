@@ -1,4 +1,4 @@
-package com.myshelfie.model.exceptions;
+package it.polimi.myshelfie.model.exceptions;
 
 public class FullColumnException extends Exception{
     private final String message;

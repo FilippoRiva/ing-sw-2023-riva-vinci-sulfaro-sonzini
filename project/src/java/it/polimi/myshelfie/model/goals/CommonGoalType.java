@@ -1,4 +1,4 @@
-package com.myshelfie.model.goals;
+package it.polimi.myshelfie.model.goals;
 
 
 public enum CommonGoalType {

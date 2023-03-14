@@ -1,6 +1,6 @@
-package com.myshelfie.model.goals;
+package it.polimi.myshelfie.model.goals;
 
-import com.myshelfie.model.Token;
+import it.polimi.myshelfie.model.Token;
 
 import java.util.EmptyStackException;
 import java.util.Stack;

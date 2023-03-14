@@ -1,4 +1,4 @@
-package com.myshelfie.model.chatting;
+package it.polimi.myshelfie.model.chatting;
 
 public class Message {
     //TODO Players or Strings?

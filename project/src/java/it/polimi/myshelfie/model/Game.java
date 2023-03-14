@@ -1,9 +1,9 @@
-package com.myshelfie.model;
+package it.polimi.myshelfie.model;
 
-import com.myshelfie.model.exceptions.GameFullException;
-import com.myshelfie.model.exceptions.NameTakenException;
-import com.myshelfie.model.chatting.Chat;
-import com.myshelfie.model.goals.CommonGoal;
+import it.polimi.myshelfie.model.exceptions.GameFullException;
+import it.polimi.myshelfie.model.exceptions.NameTakenException;
+import it.polimi.myshelfie.model.chatting.Chat;
+import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.util.ArrayList;
 

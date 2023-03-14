@@ -1,6 +1,6 @@
-package com.myshelfie.model;
+package it.polimi.myshelfie.model;
 
-import com.myshelfie.model.goals.PersonalGoal;
+import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.util.ArrayList;
 
