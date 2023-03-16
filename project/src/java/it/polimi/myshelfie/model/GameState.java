@@ -1,5 +1,14 @@
 package it.polimi.myshelfie.model;
 
 public enum GameState {
-    ROOMSETUP, LOBBY, TURN, REFILL, WIN
+    LOBBY,
+    STARTGAME,
+    DRAW,
+    ORGANIZE,
+    COUNTINGPOINTS,
+    REFILL,
+    LASTDRAW,
+    LASTORGANIZE,
+    LASTCOUNTINGPOINTS,
+    WIN
 }
