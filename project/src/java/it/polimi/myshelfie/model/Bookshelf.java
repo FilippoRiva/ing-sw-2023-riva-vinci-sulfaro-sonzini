@@ -2,32 +2,37 @@ package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 
-public class Bookshelf {
-    ItemTile[][] items;
+import java.awt.*;
 
-    public Bookshelf(){
-        items = new ItemTile[5][6];
-        for(int x = 0; x < 5; x++){
-            for(int y = 0;y<6; y++){
-                items[x][y]=ItemTile.EMPTY;
+public class Bookshelf {
+    ItemTile[][] bookshelf;
+
+    public Bookshelf(Dimension bookshelfDimension){
+        int width = bookshelfDimension.width;
+        int height = bookshelfDimension.height;
+        bookshelf = new ItemTile[width][height];
+
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < height; y++){
+                bookshelf[x][y] = ItemTile.EMPTY;
             }
         }
     }
 
     public void insertTile(int column, ItemTile tile) throws FullColumnException {
-        for(int y = 5; y>=0; y--){
-            if(items[column][y]!=ItemTile.EMPTY) {
-                items[column][y] = tile;
+        for(int y = bookshelf.length-1; y >= 0; y--){
+            if(bookshelf[y][column] == ItemTile.EMPTY) {
+                bookshelf[y][column] = tile;
                 return;
             }
         }
         throw new FullColumnException("Column "+column+" is full");
     }
 
-    public ItemTile[][] getItems() {
-        ItemTile[][] returnValue = new ItemTile[5][6];
-        for(int x = 0; x < 5; x++){
-            System.arraycopy(items[x], 0, returnValue[x], 0, 6);
+    public ItemTile[][] getBookshelf() {
+        ItemTile[][] returnValue = new ItemTile[bookshelf.length-1][bookshelf[0].length-1];
+        for(int x = 0; x < bookshelf.length-1; x++){
+            System.arraycopy(bookshelf[x], 0, returnValue[x], 0, bookshelf.length-1);
         }
         return returnValue;
     }
