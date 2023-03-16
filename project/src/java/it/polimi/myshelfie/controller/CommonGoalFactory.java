@@ -36,40 +36,31 @@ public class CommonGoalFactory {
         result[0] = goals.get(first);
         result[1] = goals.get(second);
         // adding tokens given the number of players
-        switch (playerNum){
-            case 2 :
-
+        switch (playerNum) {
+            case 2 -> {
                 result[0].pushToken(Token.FOURFIRST);
                 result[0].pushToken(Token.EIGHTFIRST);
-
                 result[1].pushToken(Token.FOURSECOND);
                 result[1].pushToken(Token.EIGHTSECOND);
-
-                break;
-            case 3 :
-
+            }
+            case 3 -> {
                 result[0].pushToken(Token.FOURFIRST);
                 result[0].pushToken(Token.SIXFIRST);
                 result[0].pushToken(Token.EIGHTFIRST);
-
                 result[1].pushToken(Token.FOURSECOND);
                 result[1].pushToken(Token.EIGHTSECOND);
                 result[1].pushToken(Token.SIXSECOND);
-
-                break;
-            case 4 :
-
+            }
+            case 4 -> {
                 result[0].pushToken(Token.TWOFIRST);
                 result[0].pushToken(Token.FOURFIRST);
                 result[0].pushToken(Token.SIXFIRST);
                 result[0].pushToken(Token.EIGHTFIRST);
-
                 result[1].pushToken(Token.TWOSECOND);
                 result[1].pushToken(Token.FOURSECOND);
                 result[1].pushToken(Token.EIGHTSECOND);
                 result[1].pushToken(Token.SIXSECOND);
-
-                break;
+            }
         }
         return result;
     }

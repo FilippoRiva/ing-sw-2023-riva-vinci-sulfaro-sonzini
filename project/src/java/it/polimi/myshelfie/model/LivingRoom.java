@@ -4,16 +4,13 @@ import java.util.ArrayList;
 
 public class LivingRoom {
     ArrayList<ItemTile> bag;
-
-    //TODO Matrix?
     ItemTile[][] table;
 
-    public LivingRoom(){
-        //TODO there or in Controller?
+    public LivingRoom(int numTilesPerType){
         ItemTile[] itemTiles = ItemTile.values();
-        for(int i = 0; i < itemTiles.length; i++){
-            for(int j = 0; j < 22; j++){
-                bag.add(itemTiles[i]);
+        for (ItemTile itemTile : itemTiles) {
+            for (int j = 0; j < numTilesPerType; j++) {
+                bag.add(itemTile);
             }
         }
 
