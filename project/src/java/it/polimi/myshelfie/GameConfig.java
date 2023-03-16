@@ -3,10 +3,10 @@ package it.polimi.myshelfie;
 import java.awt.*;
 
 public class GameConfig {
-    private int numPlayers;
-    private Dimension bookshelfDimension;
-    private int numCommonGoal;
-    private int numTilesPerType;
+    private final int numPlayers;
+    private final Dimension bookshelfDimension;
+    private final int numCommonGoal;
+    private final int numTilesPerType;
 
     public GameConfig (int numPlayers){
         this.numPlayers = numPlayers;
