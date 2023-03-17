@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>it.polimi.myshelfie</groupId>
-  <artifactId>my-shelfie-project</artifactId>
+  <artifactId>softeng-gc16</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 
