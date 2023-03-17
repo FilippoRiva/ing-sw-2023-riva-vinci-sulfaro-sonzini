@@ -26,14 +26,14 @@ public class CommonGoalSixOfTwo extends CommonGoal{
                     if(i != height-1) { //down
                         if(bookshelf[i][j] == bookshelf[i+1][j]) {
                             cont++;
-                            take[i][j] = true;
+                            //take[i][j] = true;
                             take[i+1][j] = true;
                         }
                     }
                     if(j != width-1){ //right
                         if(bookshelf[i][j] == bookshelf[i][j+1]) {
                             cont++;
-                            take[i][j] = true;
+                            //take[i][j] = true;
                             take[i][j+1] = true;
                         }
                     }
