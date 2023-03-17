@@ -3,6 +3,12 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 
 public class CommonGoalFourLines extends CommonGoal{
+    /**
+     *
+     * @param bookshelf is a generic n x m matrix of ItemTile
+     * @return true if exists 4 lines with at most 3 different type of ItemTile, false otherwise
+     *
+     */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
         int height = bookshelf.length-1;
