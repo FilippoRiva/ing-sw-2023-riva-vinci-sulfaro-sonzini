@@ -2,16 +2,17 @@ package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
 
-import java.awt.*;
 import java.util.Arrays;
 
 public class CommonGoalEightTiles extends CommonGoal{
-    //TODO take dimension in GameConfig
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
+        int height = bookshelf.length-1;
+        int width = bookshelf[0].length-1;
         int[] counter = new int[ItemTile.values().length];
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 6; j++){
+
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
                 switch (bookshelf[i][j]){
                     case CAT-> counter[0]++;
                     case BOOK -> counter[1]++;
