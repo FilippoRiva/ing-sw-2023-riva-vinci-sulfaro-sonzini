@@ -1,5 +1,6 @@
 # Personal idea config
 /.idea/
 # Compiled sources
+/target/
 /project/out/
 /out/
