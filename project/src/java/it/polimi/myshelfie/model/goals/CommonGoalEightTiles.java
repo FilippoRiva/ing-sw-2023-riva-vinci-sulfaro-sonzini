@@ -5,6 +5,12 @@ import it.polimi.myshelfie.model.ItemTile;
 import java.util.Arrays;
 
 public class CommonGoalEightTiles extends CommonGoal{
+    /**
+     *
+     * @param bookshelf is a generic n x m matrix of ItemTile
+     * @return true if 8 elements has the same ItemTile value, false otherwise
+     *
+     */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
         int height = bookshelf.length-1;

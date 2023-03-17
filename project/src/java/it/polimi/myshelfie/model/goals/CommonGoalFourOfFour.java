@@ -3,16 +3,22 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 
 public class CommonGoalFourOfFour extends CommonGoal{
+    /**
+     *
+     * @param bookshelf is a generic n x m matrix of ItemTile
+     * @return true if exists 4 groups of 4 tiles with the same ItemTile value, false otherwise
+     *
+     */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
 
         /*
-         * ov ov v v v
-         * ov ov v v v
-         * ov ov v v v
-         * o  o
-         * o  o
-         * o  o
+         *  ov ov v v v
+         *  ov ov v v v
+         *  ov ov v v v
+         *  o  o  - - -
+         *  o  o  - - -
+         *  o  o  - - -
          */
 
         int height = bookshelf.length-1;
@@ -36,8 +42,8 @@ public class CommonGoalFourOfFour extends CommonGoal{
                     if(check(bookshelf, i, j))
                         cont++;
                 }
+                if(cont == 4) return true;
             }
-            if(cont == 4) return true;
         }
         return false;
     }
