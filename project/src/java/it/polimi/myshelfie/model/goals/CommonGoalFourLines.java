@@ -13,26 +13,29 @@ public class CommonGoalFourLines extends CommonGoal{
     public boolean isVerified(ItemTile[][] bookshelf) {
         int height = bookshelf.length-1;
         int width = bookshelf[0].length-1;
-        int type_count, row_count=0;
+        int row_count=0;
         boolean found=false;
-        for(int i = 0; i<=width; i++) {
-            type_count = 0;
+        for(int i = 0; i<=height; i++) {
             if (bookshelf[i][0] != ItemTile.EMPTY) {
-                for (int j = height; j >=0; j--) {
-                    found = false;
-                    for (int k = j; k > j; k--) {
-                        if (bookshelf[i][j] == bookshelf[i][k])
-                            found = true;
-                    }
-                    if (!found)
-                        type_count++;
-                }
-                if (type_count < 4)
-                    row_count++;
+                if(checkRow(bookshelf[i], 3, width)) row_count++;
             }
         }
-        if(row_count>=2)
-            return true;
-        else
-            return false;
-    }}
+        return row_count >= 2;
+    }
+    private boolean checkRow(ItemTile[] row, int maxNumber, int width){
+        boolean found=false;
+        int typeCount=0;
+        for(int i=0; i<width; i++){
+            found=false;
+            for(int j=0; j<i; j++){
+                if(row[i]==row[j])
+                    found=true;
+            }
+            if(!found)
+                typeCount++;
+
+        }
+        return typeCount <= maxNumber;
+    }
+
+}
