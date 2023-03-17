@@ -6,5 +6,5 @@ import java.util.Observer;
 
 public interface ChatController {
     void addMessage(Message message);
-    void addObserver(Observer observer,String player);
+    void addPlayerToChat(String player,Observer observer);
 }

@@ -3,7 +3,7 @@ package it.polimi.myshelfie.model;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.exceptions.GameFullException;
 import it.polimi.myshelfie.model.exceptions.NameTakenException;
-import it.polimi.myshelfie.model.chatting.Chat;
+import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class Game {
     GameConfig gameConfig;
     String gameName;
     GameState currentState;
-    Chat chat;
+    ChatSystem chatSystem;
     CommonGoal[] commonGoals;
     LivingRoom livingRoom;
     ArrayList<Player> players;
@@ -21,7 +21,7 @@ public class Game {
         this.gameConfig = gameConfig;
         this.gameName = gameName;
         currentState = GameState.LOBBY;
-        chat = new Chat();
+        chatSystem = new ChatSystem();
         commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType());
         players = new ArrayList<>();
@@ -46,8 +46,8 @@ public class Game {
     public GameState getCurrentState(){
         return currentState;
     }
-    public Chat getChat() {
-        return chat;
+    public ChatSystem getChat() {
+        return chatSystem;
     }
     public CommonGoal[] getCommonGoals() {
         return commonGoals;
