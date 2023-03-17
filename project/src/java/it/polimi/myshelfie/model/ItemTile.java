@@ -1,12 +1,12 @@
 package it.polimi.myshelfie.model;
 
 public enum ItemTile {
-    CAT("Cat"),
-    BOOK("Book"),
-    GAME("Game"),
-    FRAME("Frame"),
-    TROPHY("Trophy"),
-    PLANT("Plant"),
+    CAT("Cat"), //verde
+    BOOK("Book"), //bianco
+    GAME("Game"),//giallo
+    FRAME("Frame"),//blu
+    TROPHY("Trophy"),//azzurro
+    PLANT("Plant"),//rosa
     EMPTY("Empty");
 
     private final String name;
