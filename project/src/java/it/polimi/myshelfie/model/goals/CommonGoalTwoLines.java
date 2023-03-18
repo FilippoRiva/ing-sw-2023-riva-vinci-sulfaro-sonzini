@@ -23,7 +23,8 @@ public class CommonGoalTwoLines extends CommonGoal{
     }
 
     private boolean checkRow(ItemTile[] row, int width){
-        for(int i=0; i<width; i++){
+        for(int i=0; i<=width; i++){
+            if(row[i] == ItemTile.EMPTY) return false;
             for(int j=0; j<i; j++){
                 if(row[i]==row[j]) return false;
             }
