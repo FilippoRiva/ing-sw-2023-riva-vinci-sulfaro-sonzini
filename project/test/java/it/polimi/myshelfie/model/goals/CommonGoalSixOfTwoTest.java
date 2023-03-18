@@ -22,12 +22,22 @@ class CommonGoalSixOfTwoTest {
         assertTrue(sixOfTwoGoal.isVerified(bookshelf),"5x6 verifiable bookshelf should be verified");
 
         bookshelf = new ItemTile[][]{
-                {ItemTile.CAT  ,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT  },
-                {ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT  ,ItemTile.CAT},
-                {ItemTile.CAT,ItemTile.PLANT,ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY},
-                {ItemTile.BOOK,ItemTile.BOOK,ItemTile.EMPTY,ItemTile.CAT,ItemTile.EMPTY    },
-                {ItemTile.TROPHY,ItemTile.GAME,ItemTile.BOOK,ItemTile.CAT,ItemTile.BOOK},
-                {ItemTile.TROPHY  ,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK  }
+                {ItemTile.CAT   ,ItemTile.CAT  ,ItemTile.CAT  ,ItemTile.CAT   ,ItemTile.CAT},
+                {ItemTile.CAT   ,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.TROPHY},
+                {ItemTile.TROPHY,ItemTile.PLANT,ItemTile.GAME ,ItemTile.FRAME ,ItemTile.FRAME},
+                {ItemTile.CAT   ,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK  ,ItemTile.BOOK},
+                {ItemTile.CAT   ,ItemTile.GAME ,ItemTile.BOOK ,ItemTile.PLANT ,ItemTile.PLANT},
+                {ItemTile.CAT   ,ItemTile.CAT  ,ItemTile.CAT  ,ItemTile.GAME  ,ItemTile.GAME}
+        };
+        assertTrue(sixOfTwoGoal.isVerified(bookshelf),"5x6 verifiable bookshelf should be verified");
+
+        bookshelf = new ItemTile[][]{
+                {ItemTile.CAT   ,ItemTile.CAT  ,ItemTile.CAT  ,ItemTile.CAT  ,ItemTile.CAT  },
+                {ItemTile.CAT   ,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT  ,ItemTile.CAT  },
+                {ItemTile.CAT   ,ItemTile.PLANT,ItemTile.GAME ,ItemTile.EMPTY,ItemTile.EMPTY},
+                {ItemTile.BOOK  ,ItemTile.EMPTY ,ItemTile.EMPTY,ItemTile.CAT  ,ItemTile.EMPTY},
+                {ItemTile.PLANT,ItemTile.GAME ,ItemTile.BOOK ,ItemTile.CAT  ,ItemTile.EMPTY },
+                {ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK }
         };
         assertFalse(sixOfTwoGoal.isVerified(bookshelf),"Only 5 has same tiles, should not be verified");
     }

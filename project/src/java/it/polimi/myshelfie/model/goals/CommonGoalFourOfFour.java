@@ -2,8 +2,6 @@ package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
 
-import java.util.Arrays;
-
 public class CommonGoalFourOfFour extends CommonGoal{
     /**
      *
@@ -13,28 +11,17 @@ public class CommonGoalFourOfFour extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-
-        /*
-         *  ov ov v v v
-         *  ov ov v v v
-         *  ov ov v v v
-         *  o  o  - - -
-         *  o  o  - - -
-         *  o  o  - - -
-         */
-
         int height = bookshelf.length;
         int width = bookshelf[0].length;
         boolean[][] take = new boolean[height][width];
-        int[] counter = new int[ItemTile.values().length];
-
+        int counter = 0;
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY) {
                     if (i < 3) {
                         if (j < 2) {
                             if (checkHorizontal(bookshelf, take, i, j)) {
-                                map(bookshelf[i][j], counter);
+                                counter++;
                                 take[i][j] = true;
                                 take[i][j+1] = true;
                                 take[i][j+2] = true;
@@ -42,7 +29,7 @@ public class CommonGoalFourOfFour extends CommonGoal{
                             }
                         }
                         if (!take[i][j] && checkVertical(bookshelf, take, i, j)) {
-                            map(bookshelf[i][j], counter);
+                            counter++;
                             take[i][j] = true;
                             take[i+1][j] = true;
                             take[i+2][j] = true;
@@ -50,19 +37,19 @@ public class CommonGoalFourOfFour extends CommonGoal{
                         }
                     } else if (j < 2) {
                         if (checkHorizontal(bookshelf, take, i, j)) {
-                            map(bookshelf[i][j], counter);
+                            //first two columns of the last three columns
+                            counter++;
                             take[i][j+1] = true;
                             take[i][j+2] = true;
                             take[i][j+3] = true;
                         }
                     }
-                    if (Arrays.stream(counter).anyMatch(num -> num == 4)) return true;
+                    if (counter==4) return true;
                 }
             }
         }
         return false;
     }
-
     private boolean checkHorizontal(ItemTile[][] bookshelf, boolean[][] take, int i, int j){
         for(int k = 0; k < 3; k++){
             if(take[i][j] || bookshelf[i][j] != bookshelf[i][j+1]) return false;
@@ -76,16 +63,5 @@ public class CommonGoalFourOfFour extends CommonGoal{
             i++;
         }
         return true;
-    }
-
-    private void map(ItemTile tile, int[] counter){
-        switch (tile){
-            case CAT-> counter[0]++;
-            case BOOK -> counter[1]++;
-            case GAME -> counter[2]++;
-            case FRAME -> counter[3]++;
-            case TROPHY -> counter[4]++;
-            case PLANT -> counter[5]++;
-        }
     }
 }
