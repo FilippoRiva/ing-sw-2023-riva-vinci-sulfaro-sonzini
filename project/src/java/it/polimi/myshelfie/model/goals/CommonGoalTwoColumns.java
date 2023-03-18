@@ -28,7 +28,7 @@ public class CommonGoalTwoColumns extends CommonGoal{
         int height = bookshelf.length - 1;
         for (int j = height; j >= 0; j--) {
             for (int k = height; k > j; k--) {
-                if (bookshelf[j][i] == bookshelf[k][i])
+                if (bookshelf[j][i] == ItemTile.EMPTY || bookshelf[j][i] == bookshelf[k][i])
                     return false;
             }
         }
