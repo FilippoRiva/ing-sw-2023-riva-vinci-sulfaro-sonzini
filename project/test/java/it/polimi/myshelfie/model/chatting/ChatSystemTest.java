@@ -28,6 +28,8 @@ class ChatSystemTest {
     @Test
     void addMessage() {
         Message msg;
+        Messages messages = new Messages() {
+        };
 
         //testing wrong messages
         msg = new Message(Messages.fromNobody,"","");
