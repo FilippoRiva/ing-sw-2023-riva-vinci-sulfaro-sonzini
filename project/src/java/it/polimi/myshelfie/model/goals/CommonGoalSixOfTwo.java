@@ -13,34 +13,42 @@ public class CommonGoalSixOfTwo extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        int height = bookshelf.length-1;
-        int width = bookshelf[0].length-1;
-        int cont = 0;
+        int height = bookshelf.length;
+        int width = bookshelf[0].length;
         boolean[][] take = new boolean[height][width];
-//        for (boolean[] row: take)
-//            Arrays.fill(row, false);
+        int[] counter = new int[ItemTile.values().length];
 
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY){
                     if(i != height-1) { //down
                         if(bookshelf[i][j] == bookshelf[i+1][j]) {
-                            cont++;
-                            //take[i][j] = true;
+                            map(bookshelf[i][j], counter);
+                            take[i][j] = true;
                             take[i+1][j] = true;
                         }
                     }
                     if(j != width-1){ //right
-                        if(bookshelf[i][j] == bookshelf[i][j+1]) {
-                            cont++;
-                            //take[i][j] = true;
+                        if(!take[i][j] && bookshelf[i][j] == bookshelf[i][j+1]) {
+                            map(bookshelf[i][j], counter);
                             take[i][j+1] = true;
                         }
                     }
-                    if(cont == 6) return true;
+                    if(Arrays.stream(counter).anyMatch(num -> num == 6)) return true;
                 }
             }
         }
         return false;
+    }
+
+    private void map(ItemTile tile, int[] counter){
+        switch (tile){
+            case CAT-> counter[0]++;
+            case BOOK -> counter[1]++;
+            case GAME -> counter[2]++;
+            case FRAME -> counter[3]++;
+            case TROPHY -> counter[4]++;
+            case PLANT -> counter[5]++;
+        }
     }
 }

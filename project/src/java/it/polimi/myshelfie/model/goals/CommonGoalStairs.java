@@ -13,35 +13,35 @@ public class CommonGoalStairs extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        height = bookshelf.length-1;
-        width = bookshelf[0].length-1;
+        height = bookshelf.length;
+        width = bookshelf[0].length;
 
-        for(int j=height-1; j>=width-1; j--){
-            if(bookshelf[0][j] == ItemTile.EMPTY){
-                if(checkRight(bookshelf, j)) return true;
+        for(int i=height-1; i>=width-2; i--){
+            if(bookshelf[i][0] == ItemTile.EMPTY){
+                if(checkRight(bookshelf, i)) return true;
                 break;
             }
         }
-        for(int j=height-1; j>=width-1; j--){
-            if(bookshelf[width-1][j] == ItemTile.EMPTY){
-                if(checkLeft(bookshelf, width-1, j)) return true;
+        for(int i=height-1; i>=width-2; i--){
+            if(bookshelf[i][width-1] == ItemTile.EMPTY){
+                if(checkLeft(bookshelf, i, width-1)) return true;
                 break;
             }
         }
         return false;
     }
 
-    private boolean checkRight(ItemTile[][] bookshelf, int j){
-        for(int k=1; k<width-2; k++) {
-            if (bookshelf[k][j-k] == ItemTile.EMPTY) return false;
-            if (bookshelf[k-1][j-k] != ItemTile.EMPTY) return false;
+    private boolean checkRight(ItemTile[][] bookshelf, int i){
+        for(int k=1; k<width; k++) {
+            if (bookshelf[i-k+1][k] == ItemTile.EMPTY) return false;
+            if ((i-k)>=0 && bookshelf[i-k][k] != ItemTile.EMPTY) return false;
         }
         return true;
     }
     private boolean checkLeft(ItemTile[][] bookshelf, int i, int j){
-        for(int k=1; k<width-2; k++) {
-            if (bookshelf[i-k][j-k] == ItemTile.EMPTY) return false;
-            if (bookshelf[i-k-1][j-k] != ItemTile.EMPTY) return false;
+        for(int k=1; k<width; k++) {
+            if (bookshelf[i-k+1][j-k] == ItemTile.EMPTY) return false;
+            if ((i-k)>=0 && bookshelf[i-k][j-k] != ItemTile.EMPTY) return false;
         }
         return true;
     }

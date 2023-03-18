@@ -13,25 +13,22 @@ public class CommonGoalTwoSquares extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        int cont = 0;
-        int height = bookshelf.length-1;
-        int width = bookshelf[0].length-1;
+        int height = bookshelf.length;
+        int width = bookshelf[0].length;
         boolean[][] take = new boolean[height][width];
-        for (boolean[] row: take)
-            Arrays.fill(row, false);
+        int[] counter = new int[ItemTile.values().length];
 
         for(int i = 0; i < height-1; i++) {
             for(int j = 0; j < width-1; j++) {
                 if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY){
                     if(check(bookshelf, i, j)) {
-                        cont++;
-                        //take[i][j] = true;
+                        map(bookshelf[i][j], counter);
                         take[i+1][j]=true;
                         take[i][j+1]=true;
                         take[i+1][j+1]=true;
                     }
                 }
-                if(cont == 2) return true;
+                if(Arrays.stream(counter).anyMatch(num -> num == 2)) return true;
             }
         }
         return false;
@@ -42,5 +39,16 @@ public class CommonGoalTwoSquares extends CommonGoal{
         if(bookshelf[i][j]!=bookshelf[i][j+1]) return false;
         if(bookshelf[i][j]!=bookshelf[i+1][j]) return false;
         return true;
+    }
+
+    private void map(ItemTile tile, int[] counter){
+        switch (tile){
+            case CAT-> counter[0]++;
+            case BOOK -> counter[1]++;
+            case GAME -> counter[2]++;
+            case FRAME -> counter[3]++;
+            case TROPHY -> counter[4]++;
+            case PLANT -> counter[5]++;
+        }
     }
 }

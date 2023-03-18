@@ -11,8 +11,8 @@ public class CommonGoalX extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        int height = bookshelf.length-1;
-        int width = bookshelf[0].length-1;
+        int height = bookshelf.length;
+        int width = bookshelf[0].length;
 
         for(int i = 1; i < height-1; i++) {
             for(int j = 1; j < width-1; j++) {
