@@ -14,9 +14,9 @@ public class CommonGoalX extends CommonGoal{
         int height = bookshelf.length-1;
         int width = bookshelf[0].length-1;
 
-        for(int i = 1; i < width-1; i++) {
-            for(int j = 1; j < height-1; j++) {
-                if(check(bookshelf, i, j)) return true;
+        for(int i = 1; i < height-1; i++) {
+            for(int j = 1; j < width-1; j++) {
+                if(bookshelf[i][j] != ItemTile.EMPTY && check(bookshelf, i, j)) return true;
             }
         }
         return false;

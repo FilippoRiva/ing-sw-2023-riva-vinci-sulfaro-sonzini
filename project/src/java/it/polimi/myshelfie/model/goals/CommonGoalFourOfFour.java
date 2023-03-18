@@ -21,37 +21,57 @@ public class CommonGoalFourOfFour extends CommonGoal{
          *  o  o  - - -
          */
 
-        int height = bookshelf.length-1;
-        int width = bookshelf[0].length-1;
+        int height = bookshelf.length;
+        int width = bookshelf[0].length;
         int cont = 0;
+        boolean[][] take = new boolean[height][width];
 
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                if(i < 3){
-                    if(j<2){
-                        //horizontal
-                        if(check(bookshelf, i, j))
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY) {
+                    if (i < 3) {
+                        if (j < 2) {
+                            if (checkHorizontal(bookshelf, take, i, j)) {
+                                cont++;
+                                take[i][j] = true;
+                                take[i][j+1] = true;
+                                take[i][j+2] = true;
+                                take[i][j+3] = true;
+                            }
+                        }
+                        if (!take[i][j] && checkVertical(bookshelf, take, i, j)) {
                             cont++;
-                    }else{
-                        //vertical
-                        if(check(bookshelf, j, i))
+                            take[i][j] = true;
+                            take[i+1][j] = true;
+                            take[i+2][j] = true;
+                            take[i+3][j] = true;
+                        }
+                    } else if (j < 2) {
+                        if (checkHorizontal(bookshelf, take, i, j)) {
                             cont++;
+                            take[i][j+1] = true;
+                            take[i][j+2] = true;
+                            take[i][j+3] = true;
+                        }
                     }
-                }else if(j<2){
-                    //horizontal
-                    if(check(bookshelf, i, j))
-                        cont++;
+                    if (cont == 4) return true;
                 }
-                if(cont == 4) return true;
             }
         }
         return false;
     }
 
-    private boolean check(ItemTile[][] bookshelf, int i, int j){
+    private boolean checkHorizontal(ItemTile[][] bookshelf, boolean[][] take, int i, int j){
         for(int k = 0; k < 3; k++){
-            if(bookshelf[i][j] != bookshelf[i][j+1]) return false;
+            if(take[i][j] || bookshelf[i][j] != bookshelf[i][j+1]) return false;
             j++;
+        }
+        return true;
+    }
+    private boolean checkVertical(ItemTile[][] bookshelf, boolean[][] take, int i, int j){
+        for(int k = 0; k < 3; k++){
+            if(take[i][j] || bookshelf[i][j] != bookshelf[i+1][j]) return false;
+            i++;
         }
         return true;
     }

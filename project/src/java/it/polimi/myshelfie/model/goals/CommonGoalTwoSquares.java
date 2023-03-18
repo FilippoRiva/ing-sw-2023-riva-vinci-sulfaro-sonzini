@@ -5,7 +5,12 @@ import it.polimi.myshelfie.model.ItemTile;
 import java.util.Arrays;
 
 public class CommonGoalTwoSquares extends CommonGoal{
-
+    /**
+     *
+     * @param bookshelf is a generic n x m matrix of ItemTile
+     * @return true if exists 2 squares (2x2) with all ItemTiles equals, false otherwise
+     *
+     */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
         int cont = 0;
@@ -15,9 +20,9 @@ public class CommonGoalTwoSquares extends CommonGoal{
         for (boolean[] row: take)
             Arrays.fill(row, false);
 
-        for(int i = 0; i < width-1; i++) {
-            for(int j = 0; j < height-1; j++) {
-                if(!take[i][j]){
+        for(int i = 0; i < height-1; i++) {
+            for(int j = 0; j < width-1; j++) {
+                if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY){
                     if(check(bookshelf, i, j)) {
                         cont++;
                         //take[i][j] = true;

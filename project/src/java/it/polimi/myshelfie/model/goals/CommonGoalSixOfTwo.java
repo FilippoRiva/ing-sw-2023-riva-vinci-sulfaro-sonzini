@@ -17,12 +17,12 @@ public class CommonGoalSixOfTwo extends CommonGoal{
         int width = bookshelf[0].length-1;
         int cont = 0;
         boolean[][] take = new boolean[height][width];
-        for (boolean[] row: take)
-            Arrays.fill(row, false);
+//        for (boolean[] row: take)
+//            Arrays.fill(row, false);
 
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
-                if(!take[i][j]){
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY){
                     if(i != height-1) { //down
                         if(bookshelf[i][j] == bookshelf[i+1][j]) {
                             cont++;
