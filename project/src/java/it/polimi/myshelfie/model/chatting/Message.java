@@ -14,13 +14,26 @@ public class Message {
         else this.message = message;
     }
 
+    /**
+     *
+     * @return the sender's name
+     */
     public String getSender() {
         return sender;
     }
 
+    /**
+     *
+     * @return the receiver's name
+     */
     public String getReceiver() {
         return receiver;
     }
+
+    /**
+     *
+     * @return the message String
+     */
 
     public String getMessage() {
         return message;

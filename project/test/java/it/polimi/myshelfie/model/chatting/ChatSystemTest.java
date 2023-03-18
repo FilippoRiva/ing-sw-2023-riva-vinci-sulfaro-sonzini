@@ -11,11 +11,9 @@ class ChatSystemTest {
     ArrayList<Message> messagesToA = new ArrayList<>();
     ArrayList<Message> messagesToB = new ArrayList<>();
     ChatSystem cs;
-    Messages messages;
 
     @BeforeEach
     void setUp() {
-        this.messages = new Messages();
         //adding two players
         cs = new ChatSystem();
         cs.addPlayerToChat("A", (o, arg) -> {
