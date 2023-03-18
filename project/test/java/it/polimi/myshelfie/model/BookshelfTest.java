@@ -1,11 +1,9 @@
 package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,14 +11,14 @@ class BookshelfTest {
     @Test
     void setUp() {
         Bookshelf bookshelf = new Bookshelf(new Dimension(5,6));
-        ItemTile[][] bookshelfItems = bookshelf.getBookshelf();
+        ItemTile[][] bookshelfItems = bookshelf.getBookshelfItems();
         for(ItemTile[] a : bookshelfItems){
             for(ItemTile tile : a){
                 if(tile != ItemTile.EMPTY) fail();
             }
         }
         bookshelf = new Bookshelf(new Dimension(10,10));
-        bookshelfItems = bookshelf.getBookshelf();
+        bookshelfItems = bookshelf.getBookshelfItems();
         for(ItemTile[] a : bookshelfItems){
             for(ItemTile tile : a){
                 if(tile != ItemTile.EMPTY) fail();
@@ -50,7 +48,7 @@ class BookshelfTest {
         for(ItemTile t: tiles) bookshelf.insertTile(3,t);
         tiles = new ItemTile[]{ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME};
         for(ItemTile t: tiles) bookshelf.insertTile(4,t);
-        ItemTile[][] bookshelfTiles = bookshelf.getBookshelf();
+        ItemTile[][] bookshelfTiles = bookshelf.getBookshelfItems();
         assertTrue(matrixEqual(bookshelfTiles,
         new ItemTile [][]{
                 {ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
@@ -72,7 +70,7 @@ class BookshelfTest {
         for(ItemTile t: tiles) bookshelf.insertTile(3,t);
         tiles = new ItemTile[]{ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME};
         for(ItemTile t: tiles) bookshelf.insertTile(4,t);
-        bookshelfTiles = bookshelf.getBookshelf();
+        bookshelfTiles = bookshelf.getBookshelfItems();
         assertTrue(matrixEqual(bookshelfTiles,
                 new ItemTile [][]{
                         {ItemTile.CAT,ItemTile.BOOK,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
@@ -88,7 +86,7 @@ class BookshelfTest {
             tiles = new ItemTile[]{ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT};
             for (ItemTile t : tiles) bookshelf.insertTile(column, t);
         }
-        bookshelfTiles = bookshelf.getBookshelf();
+        bookshelfTiles = bookshelf.getBookshelfItems();
         assertTrue(matrixEqual(bookshelfTiles,
                 new ItemTile [][]{
                         {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
