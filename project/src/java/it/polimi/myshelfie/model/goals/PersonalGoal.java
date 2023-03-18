@@ -2,124 +2,67 @@ package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
 
-public enum PersonalGoal {
-    FIRST(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY, ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY, ItemTile.GAME,ItemTile.CAT  },
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.PLANT, ItemTile.BOOK ,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.CAT,ItemTile.EMPTY, ItemTile.EMPTY,ItemTile.TROPHY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY, ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.BOOK,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY},
-    }),
-    SECOND(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.PLANT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.GAME},
-            new ItemTile[]{ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-    }),
-    THIRD(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.PLANT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.CAT,ItemTile.EMPTY,ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.FRAME},
-    }),
-    FOURTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.PLANT,ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY},
-    }),
-    FIFTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.PLANT,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.BOOK,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY},
-    }),
-    SIXTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.BOOK,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.PLANT,ItemTile.EMPTY},
-    }),
-    SEVENTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.FRAME},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.PLANT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.GAME,ItemTile.EMPTY},
-    }),
-    EIGHTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.PLANT},
-            new ItemTile[]{ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-    }),
-    NINTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.PLANT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.GAME},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK,ItemTile.EMPTY,ItemTile.EMPTY},
-    }),
-    TENTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.GAME},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.PLANT,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.BOOK,ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-    }),
-    ELEVENTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.FRAME,ItemTile.BOOK,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.PLANT},
-            new ItemTile[]{ItemTile.GAME,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT,ItemTile.EMPTY},
-    }),
-    TWELFTH(new ItemTile[][]{
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.CAT},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.BOOK,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.EMPTY,ItemTile.GAME,ItemTile.EMPTY,ItemTile.FRAME,ItemTile.EMPTY},
-            new ItemTile[]{ItemTile.PLANT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-    });
+import java.security.InvalidParameterException;
+import java.util.Random;
 
-    private final ItemTile[][] goal;
+public class PersonalGoal {
+    /**
+     * The n x m personal goal matrix
+     */
+    private final ItemTile [][] goal;
+    private final int width;
+    private final int height;
 
-    public ItemTile[][] getGoal() {
-        ItemTile[][] returnValue = new ItemTile[6][5];
-        for(int y = 0; y < 5; y++){
-            System.arraycopy(goal[y], 0, returnValue[y], 0, 6);
-        }
-        return returnValue;
+    /**
+     * The default constructor for PersonalGoal
+     * @param personalGoalDefault the PersonalGoalDefault type for this personalGoal
+     */
+    public PersonalGoal(PersonalGoalDefaults personalGoalDefault){
+        this.width = 5;
+        this.height = 6;
+        this.goal = personalGoalDefault.getGoal();
     }
 
-    public int isVerified(ItemTile [][] bookshelf){
+    /**
+     * The personal Goal constructor when the size of the board is not 5x6
+     * @param width board width
+     * @param height board height
+     * @param personalGoalRatio percentage of cells with non-empty tiles to be generated
+     */
+    public PersonalGoal(int width,int height,double personalGoalRatio){
+        this.width = width;
+        this.height = height;
+        if(width == 5 && height == 6) throw new InvalidParameterException("This Constructor should be used only when " +
+                "the size of the bookshelf isn't the default one");
+        goal = new ItemTile[height][width];
+        Random rand = new Random();
+        for(int x = 0; x<width; x++){
+            for(int y = 0; y<height; y++){
+                if(rand.nextDouble()>=1-personalGoalRatio){
+                    goal[y][x] = ItemTile.random();
+                }else goal[y][x] = ItemTile.EMPTY;
+            }
+        }
+    }
+
+    /**
+     * Used to calculate the points that a certain player has earned on this particular personal goal
+     * @param bookshelfItems the player's bookshelfItems
+     * @return the points to be gained by the player
+     */
+    public int isVerified(ItemTile [][] bookshelfItems){
         int verifiedCount = 0;
-        for(int x = 0; x < 5; x++){
-            for(int y = 0; y < 6; y++){
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < height; y++){
                 if(goal[y][x]!= ItemTile.EMPTY) {
-                    if(bookshelf[y][x]==goal[y][x]) verifiedCount++;
+                    if(bookshelfItems[y][x]==goal[y][x]) verifiedCount++;
                 }
             }
         }
         switch (verifiedCount){
+            case 0 ->{
+                return 0;
+            }
             case 1 -> {
                 return 1;
             }
@@ -139,13 +82,16 @@ public enum PersonalGoal {
                 return 12;
             }
             default -> {
-                return 0;
+                return 12 + (verifiedCount-6)*3; // each tile match after 6 gives 3 points
             }
         }
     }
 
-
-    PersonalGoal(ItemTile[][] goal){
-        this.goal = goal;
+    public ItemTile[][] getGoal() {
+        ItemTile[][] returnValue = new ItemTile[height][width];
+        for(int y = 0; y < height; y++){
+            System.arraycopy(goal[y], 0, returnValue[y], 0, width);
+        }
+        return returnValue;
     }
 }
