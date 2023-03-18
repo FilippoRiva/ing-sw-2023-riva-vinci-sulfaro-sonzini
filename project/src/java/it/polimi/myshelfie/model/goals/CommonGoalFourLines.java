@@ -20,13 +20,14 @@ public class CommonGoalFourLines extends CommonGoal{
                 if(checkRow(bookshelf[i], 3, width)) row_count++;
             }
         }
-        return row_count >= 2;
+        return row_count>=4;
     }
     private boolean checkRow(ItemTile[] row, int maxNumber, int width){
         boolean found=false;
         int typeCount=0;
-        for(int i=0; i<width; i++){
+        for(int i=0; i<=width; i++){
             found=false;
+            if(row[i] == ItemTile.EMPTY) return false;
             for(int j=0; j<i; j++){
                 if(row[i]==row[j])
                     found=true;
