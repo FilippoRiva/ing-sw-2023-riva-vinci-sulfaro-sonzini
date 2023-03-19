@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Player {
     private final String name;
     private int position;
+    private int points;
     private final ArrayList<Token> obtainedTokens;
     private PersonalGoal personalGoal;
     private Bookshelf bookshelf;
@@ -14,6 +15,7 @@ public class Player {
     public Player(String name){
         this.name = name;
         position = -1;
+        points = 0;
         obtainedTokens = new ArrayList<>();
     }
 
@@ -31,6 +33,18 @@ public class Player {
 
     public void addObtainedToken(Token token){
         obtainedTokens.add(token);
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
     }
 
     public String getName(){

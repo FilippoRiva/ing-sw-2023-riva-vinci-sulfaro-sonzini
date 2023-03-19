@@ -5,17 +5,22 @@ import it.polimi.myshelfie.model.exceptions.GameFullException;
 import it.polimi.myshelfie.model.exceptions.NameTakenException;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.goals.CommonGoal;
+import it.polimi.myshelfie.model.goals.PersonalGoal;
+import it.polimi.myshelfie.model.interfaces.GameController;
+import it.polimi.myshelfie.model.interfaces.LobbyController;
 
 import java.util.ArrayList;
+import java.util.Observer;
 
-public class Game {
-    GameConfig gameConfig;
-    String gameName;
-    GameState currentState;
-    ChatSystem chatSystem;
-    CommonGoal[] commonGoals;
-    LivingRoom livingRoom;
-    ArrayList<Player> players;
+public class Game implements GameController, LobbyController {
+    private GameConfig gameConfig;
+    private String gameName;
+    private String turn;
+    private GameState currentState;
+    private ChatSystem chatSystem;
+    private CommonGoal[] commonGoals;
+    private LivingRoom livingRoom;
+    private ArrayList<Player> players;
 
     public Game(String gameName, GameConfig gameConfig){
         this.gameConfig = gameConfig;
@@ -31,31 +36,151 @@ public class Game {
         players.add(player);
     }
 
-    public void setGameName(String gameName){
-        this.gameName = gameName;
-    }
-    public void setCurrentState(GameState nextState){
-       this.currentState = nextState;
-    }
-    public void setCommonGoal(CommonGoal[] goals){
-       this.commonGoals = goals;
-    }
-    public String getGameName(){
+    @Override
+    public String getName() {
         return gameName;
     }
-    public GameState getCurrentState(){
-        return currentState;
+
+    @Override
+    public boolean init() {
+        //TODO implementation
+        return false;
     }
-    public ChatSystem getChat() {
-        return chatSystem;
+
+    @Override
+    public ArrayList<ItemTile> getBag() {
+        return livingRoom.getBag();
     }
-    public CommonGoal[] getCommonGoals() {
-        return commonGoals;
-    }
+
+    @Override
     public LivingRoom getLivingRoom() {
         return livingRoom;
     }
-    public ArrayList<Player> getPlayers() {
-        return players;
+
+    @Override
+    public void setLivingRoom(LivingRoom livingRoom) {
+        this.livingRoom = livingRoom;
+    }
+
+    @Override
+    public void addToken(String playerName, Token token) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                p.addObtainedToken(token);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void refillGame() {
+        //TODO implementation
+    }
+
+    @Override
+    public Bookshelf getBookshelf(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                return p.getBookshelf();
+            }
+        }
+        //throw
+        return null;
+    }
+
+    @Override
+    public void nextTurn() {
+        int currentTurn;
+
+        for(Player p : players){
+            if(p.getName().equals(turn)){
+                currentTurn = players.indexOf(p);
+                if(currentTurn < players.size()-1)
+                    turn = players.get(currentTurn+1).getName();
+                else
+                    turn = players.get(0).getName();
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void setState(GameState state) {
+        this.currentState = state;
+    }
+
+    @Override
+    public void addPoints(String playerName, int points) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                p.addPoints(points);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public PersonalGoal getPersonalGoal(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                return p.getPersonalGoal();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int getNumberOfPlayers() {
+        return players.size();
+    }
+
+    @Override
+    public GameState getState() {
+        return currentState;
+    }
+
+    @Override
+    public String getCurrentPlayer() {
+        return turn;
+    }
+
+    @Override
+    public String getLastPlayer() {
+        return players.get(players.size()-1).getName();
+    }
+
+    @Override
+    public void setGameConfig(GameConfig config) {
+        this.gameConfig = config;
+    }
+
+    @Override
+    public boolean isPlayerNameValid(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void addPlayer(String name) {
+        players.add(new Player(name));
+    }
+
+    @Override
+    public void removePlayer(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                players.remove(p);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void addObserver(Observer observer, String playerName) {
+        //TODO implementation
     }
 }

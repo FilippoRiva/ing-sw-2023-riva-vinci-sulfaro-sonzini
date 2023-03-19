@@ -3,11 +3,13 @@ package it.polimi.myshelfie.model;
 import java.util.ArrayList;
 
 public class LivingRoom {
-    ArrayList<ItemTile> bag;
-    ItemTile[][] table;
+    private ArrayList<ItemTile> bag;
+    private ItemTile[][] table;
 
     public LivingRoom(int numTilesPerType){
         ItemTile[] itemTiles = ItemTile.values();
+        bag = new ArrayList<>();
+
         for (ItemTile itemTile : itemTiles) {
             for (int j = 0; j < numTilesPerType; j++) {
                 bag.add(itemTile);

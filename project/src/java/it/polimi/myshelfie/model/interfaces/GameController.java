@@ -12,17 +12,17 @@ public interface GameController {
     boolean init();
     ArrayList<ItemTile> getBag();
     LivingRoom getLivingRoom();
-    void setLivingRoom();
-    void addToken(String player, Token token);
+    void setLivingRoom(LivingRoom livingRoom);
+    void addToken(String playerName, Token token);
     void refillGame();
-    Bookshelf getBookshelf(String player);
+    Bookshelf getBookshelf(String playerName);
     void nextTurn();
     void setState(GameState state);
-    void addPoints(String player, int points);
-    PersonalGoal getPersonalGoal(String player);
+    void addPoints(String playerName, int points);
+    PersonalGoal getPersonalGoal(String playerName);
     int getNumberOfPlayers();
     GameState getState();
     String getCurrentPlayer();
     String getLastPlayer();
-    void addObserver(Observer observer, String player);
+    void addObserver(Observer observer, String playerName);
 }
