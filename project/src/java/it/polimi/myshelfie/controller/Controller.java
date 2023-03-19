@@ -1,32 +1,61 @@
 package it.polimi.myshelfie.controller;
 
+import it.polimi.myshelfie.controller.interfaces.GameView;
+import it.polimi.myshelfie.controller.interfaces.LobbyView;
 import it.polimi.myshelfie.model.Bookshelf;
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.awt.*;
 import java.util.List;
 
-public class Controller {
+public class Controller implements GameView, LobbyView {
+    @Override
     public void createGame(String namePlayer, String nameRoom, int numPlayers){
-
+        //TODO implementation
     }
-    public void insertPlayer(String namePlayer, String nameRoom){
+    @Override
+    public List<String> askGameList() {
+        //TODO implementation
+        return null;
+    }
+    @Override
+    public void joinGame(String namePlayer, String nameRoom) {
+        //TODO implementation
+    }
+    @Override
+    public void setGameConfig(List<Integer> configs) {
+        //TODO implementation
+    }
+    @Override
+    public void exitGame() {
+        //TODO implementation
+    }
+    @Override
+    public void takeTileFromLivingRoom(List<Point> takenTiles) {
+        //TODO implementation
+    }
 
+    @Override
+    public void insertTileInBookshelf(List<ItemTile> takenTiles, int column) {
+        //TODO implementation
     }
     public void initializeGame(){
-
+        //TODO implementation
     }
     public void updateBookshelf(List<ItemTile> takenTiles, int column){
-
+        //TODO implementation
     }
-    public void updateLivingRoom(List<Point> takenTiles){
-
+    public void updateLivingRoom(List<Position> takenTiles){
+        //TODO implementation
     }
     private boolean checkCommonGoal(Bookshelf bookshelf){
+        //TODO implementation
         return false;
     }
     private int calculatePoints(Bookshelf bookshelf, PersonalGoal personalGoal){
+        //TODO implementation
         return 0;
     }
 }
