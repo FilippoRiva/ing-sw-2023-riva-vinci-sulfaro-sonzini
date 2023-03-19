@@ -1,4 +1,6 @@
-package it.polimi.myshelfie.model;
+package it.polimi.myshelfie.controller;
+
+import it.polimi.myshelfie.model.Position;
 
 import java.util.ArrayList;
 

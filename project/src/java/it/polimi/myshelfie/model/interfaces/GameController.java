@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model.interfaces;
 
+import it.polimi.myshelfie.controller.DrawMove;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
@@ -10,7 +11,8 @@ public interface GameController {
     String getName();
     boolean init();
     ArrayList<ItemTile> getBag();
-    void draw(DrawMove move);
+    LivingRoom getLivingRoom();
+    void setLivingRoom();
     void addToken(String player, Token token);
     void refillGame();
     Bookshelf getBookshelf(String player);
