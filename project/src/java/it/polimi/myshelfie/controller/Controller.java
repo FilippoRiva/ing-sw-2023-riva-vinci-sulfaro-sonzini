@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.controller;
 
+import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.controller.interfaces.GameView;
 import it.polimi.myshelfie.controller.interfaces.LobbyView;
 import it.polimi.myshelfie.model.Bookshelf;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.util.List;
 
 public class Controller implements GameView, LobbyView {
+    GameConfig config;
     @Override
     public void createGame(String namePlayer, String nameRoom, int numPlayers){
         //TODO implementation
@@ -25,8 +27,8 @@ public class Controller implements GameView, LobbyView {
         //TODO implementation
     }
     @Override
-    public void setGameConfig(List<Integer> configs) {
-        //TODO implementation
+    public void setGameConfig(GameConfig configs) {
+        this.config=configs;
     }
     @Override
     public void exitGame() {

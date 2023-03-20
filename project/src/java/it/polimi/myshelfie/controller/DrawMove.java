@@ -9,6 +9,12 @@ public class DrawMove {
     private final ArrayList<Position> positions;
     private final int column;
 
+    /**
+     *
+     * @param player is the player playing.
+     * @param positions are the coordinates of the selected tiles.
+     * @param column is the column where the selected tiles have to be placed.
+     */
     public DrawMove(String player, ArrayList<Position> positions, int column){
         this.player = player;
         this.positions = positions;
