@@ -31,6 +31,10 @@ public class Player {
         this.bookshelf = bookshelf;
     }
 
+    /**
+     *
+     * @param token is the token obtained from a completed common goal
+     */
     public void addObtainedToken(Token token){
         obtainedTokens.add(token);
     }
@@ -43,6 +47,10 @@ public class Player {
         this.points = points;
     }
 
+    /**
+     *
+     * @param points are the points obtained in that turn from the player
+     */
     public void addPoints(int points) {
         this.points += points;
     }

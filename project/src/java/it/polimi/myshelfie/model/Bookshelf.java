@@ -5,9 +5,9 @@ import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import java.awt.*;
 
 public class Bookshelf {
-    ItemTile[][] bookshelfItems;
-    int width;
-    int height;
+    private ItemTile[][] bookshelfItems;
+    private int width;
+    private int height;
 
     /**
      * Default Constructor
