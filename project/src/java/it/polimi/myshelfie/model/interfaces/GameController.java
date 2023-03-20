@@ -1,10 +1,12 @@
 package it.polimi.myshelfie.model.interfaces;
 
-import it.polimi.myshelfie.controller.DrawMove;
-import it.polimi.myshelfie.model.*;
+import it.polimi.myshelfie.model.GameState;
+import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 
 public interface GameController {
@@ -14,16 +16,8 @@ public interface GameController {
     String getName();
     boolean init();
 
-    /**
-     * @return the bag which is a list of tiles
-     */
-    ArrayList<ItemTile> getBag();
-
-    /**
-     * @return the living room which has the bag and the board
-     */
-    LivingRoom getLivingRoom();
-    void setLivingRoom(LivingRoom livingRoom);
+    void takeTilesFromLivingRoom(List<Position> takenTiles);
+    void addTilesInBookshelf(List<ItemTile> takenTiles, int column);
 
     /**
      *
@@ -32,7 +26,6 @@ public interface GameController {
      */
     void addToken(String playerName, Token token);
     void refillGame();
-    Bookshelf getBookshelf(String playerName);
 
     /**
      *
