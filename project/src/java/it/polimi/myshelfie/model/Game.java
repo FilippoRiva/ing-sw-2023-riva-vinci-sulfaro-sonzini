@@ -10,6 +10,7 @@ import it.polimi.myshelfie.model.interfaces.GameController;
 import it.polimi.myshelfie.model.interfaces.LobbyController;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 
 public class Game implements GameController, LobbyController {
@@ -28,7 +29,7 @@ public class Game implements GameController, LobbyController {
         currentState = GameState.LOBBY;
         chatSystem = new ChatSystem();
         commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
-        livingRoom = new LivingRoom(gameConfig.getNumTilesPerType());
+        livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(),gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
         players = new ArrayList<>();
     }
 
@@ -47,20 +48,6 @@ public class Game implements GameController, LobbyController {
         return false;
     }
 
-    @Override
-    public ArrayList<ItemTile> getBag() {
-        return livingRoom.getBag();
-    }
-
-    @Override
-    public LivingRoom getLivingRoom() {
-        return livingRoom;
-    }
-
-    @Override
-    public void setLivingRoom(LivingRoom livingRoom) {
-        this.livingRoom = livingRoom;
-    }
 
     @Override
     public void addToken(String playerName, Token token) {
@@ -78,14 +65,13 @@ public class Game implements GameController, LobbyController {
     }
 
     @Override
-    public Bookshelf getBookshelf(String playerName) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                return p.getBookshelf();
-            }
-        }
-        //throw
-        return null;
+    public void takeTilesFromLivingRoom(List<Position> takenTiles) {
+
+    }
+
+    @Override
+    public void addTilesInBookshelf(List<ItemTile> takenTiles, int column) {
+
     }
 
     @Override

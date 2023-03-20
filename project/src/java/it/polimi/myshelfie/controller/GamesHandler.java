@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.controller;
 
+import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.Game;
 import it.polimi.myshelfie.model.interfaces.ChatController;
 import it.polimi.myshelfie.model.interfaces.GameController;
@@ -15,7 +16,7 @@ public class GamesHandler {
     private List<GameFile> savedGames;
 
     public Game addGame(String name){
-        Game game = new Game(name);
+        Game game = new Game(name,new GameConfig(2));
         gameControllers.put(name, game);
         return game;
     }

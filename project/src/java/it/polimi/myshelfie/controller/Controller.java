@@ -12,37 +12,42 @@ import java.awt.*;
 import java.util.List;
 
 public class Controller implements GameView, LobbyView {
-    GameConfig config;
     @Override
-    public void createGame(String namePlayer, String nameRoom, int numPlayers){
-        //TODO implementation
-    }
-    @Override
-    public List<String> askGameList() {
-        //TODO implementation
-        return null;
-    }
-    @Override
-    public void joinGame(String namePlayer, String nameRoom) {
-        //TODO implementation
-    }
-    @Override
-    public void setGameConfig(GameConfig configs) {
-        this.config=configs;
-    }
-    @Override
-    public void exitGame() {
-        //TODO implementation
-    }
-    @Override
-    public void takeTileFromLivingRoom(List<Point> takenTiles) {
-        //TODO implementation
+    public void takeTileFromLivingRoom(List<Position> takenTiles, String playerName, String roomName) throws Exception {
+
     }
 
     @Override
-    public void insertTileInBookshelf(List<ItemTile> takenTiles, int column) {
-        //TODO implementation
+    public void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName, String roomName) throws Exception {
+
     }
+
+    @Override
+    public void createGame(String namePlayer, String nameRoom) throws Exception {
+
+    }
+
+    @Override
+    public List<String> askGameList() {
+        return null;
+    }
+
+    @Override
+    public void joinGame(String namePlayer, String nameRoom) throws Exception {
+
+    }
+
+    @Override
+    public void setGameConfig(GameConfig configs) {
+
+    }
+
+    @Override
+    public void exitGame(String namePlayer, String roomName) throws Exception {
+
+    }
+
+    GameConfig config;
     public void initializeGame(){
         //TODO implementation
     }
