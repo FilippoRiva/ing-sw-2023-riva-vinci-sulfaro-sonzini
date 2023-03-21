@@ -6,6 +6,7 @@ import java.util.Observer;
 
 public interface LobbyController {
     void setGameConfig(GameConfig config);
+    GameConfig getGameConfig();
 
     /**
      *

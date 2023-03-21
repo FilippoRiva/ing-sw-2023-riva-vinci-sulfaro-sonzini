@@ -1,9 +1,9 @@
 package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.exceptions.GameFullException;
 import it.polimi.myshelfie.model.exceptions.NameTakenException;
-import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 import it.polimi.myshelfie.model.interfaces.GameController;
@@ -23,13 +23,10 @@ public class Game implements GameController, LobbyController {
     private LivingRoom livingRoom;
     private ArrayList<Player> players;
 
-    public Game(String gameName, GameConfig gameConfig){
-        this.gameConfig = gameConfig;
+    public Game(String gameName){
         this.gameName = gameName;
         currentState = GameState.LOBBY;
         chatSystem = new ChatSystem();
-        commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
-        livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(),gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
         players = new ArrayList<>();
     }
 
@@ -37,17 +34,54 @@ public class Game implements GameController, LobbyController {
         players.add(player);
     }
 
+
     @Override
     public String getName() {
         return gameName;
     }
 
     @Override
-    public boolean init() {
-        //TODO implementation
-        return false;
+    public void setGameConfig(GameConfig config) {
+        this.gameConfig = config;
     }
 
+    @Override
+    public GameConfig getGameConfig() {
+        return gameConfig;
+    }
+
+    @Override
+    public void init() {
+        turn = players.get(0).getName();
+        commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
+        livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
+    }
+
+    @Override
+    public void takeTilesFromLivingRoom(List<Position> takenTiles) {
+        for(Position p : takenTiles){
+            livingRoom.removeTile(p.getX(), p.getY());
+        }
+    }
+
+    @Override
+    public void addTilesInBookshelf(String playerName, List<ItemTile> takenTiles, int column) {
+        //TODO check if full
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                ItemTile[][] bookshelf = p.getBookshelf().getBookshelfItems();
+                for(int i = bookshelf.length-1; i>=0; i--){
+                    if(bookshelf[i][column] == ItemTile.EMPTY){
+                        for (ItemTile takenTile : takenTiles) {
+                            bookshelf[i][column] = takenTile;
+                            i--;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public void addToken(String playerName, Token token) {
@@ -60,18 +94,8 @@ public class Game implements GameController, LobbyController {
     }
 
     @Override
-    public void refillGame() {
-        //TODO implementation
-    }
-
-    @Override
-    public void takeTilesFromLivingRoom(List<Position> takenTiles) {
-
-    }
-
-    @Override
-    public void addTilesInBookshelf(List<ItemTile> takenTiles, int column) {
-
+    public void refillGame() throws Exception {
+        livingRoom.refill();
     }
 
     @Override
@@ -133,11 +157,6 @@ public class Game implements GameController, LobbyController {
     @Override
     public String getLastPlayer() {
         return players.get(players.size()-1).getName();
-    }
-
-    @Override
-    public void setGameConfig(GameConfig config) {
-        this.gameConfig = config;
     }
 
     @Override

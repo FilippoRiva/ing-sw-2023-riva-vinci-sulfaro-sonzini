@@ -14,10 +14,10 @@ public interface GameController {
      * @return game's name
      */
     String getName();
-    boolean init();
+    void init();
 
     void takeTilesFromLivingRoom(List<Position> takenTiles);
-    void addTilesInBookshelf(List<ItemTile> takenTiles, int column);
+    void addTilesInBookshelf(String playerName, List<ItemTile> takenTiles, int column);
 
     /**
      *
@@ -25,7 +25,7 @@ public interface GameController {
      * @param token is the token obtained from the completed common goal.
      */
     void addToken(String playerName, Token token);
-    void refillGame();
+    void refillGame() throws Exception;
 
     /**
      *

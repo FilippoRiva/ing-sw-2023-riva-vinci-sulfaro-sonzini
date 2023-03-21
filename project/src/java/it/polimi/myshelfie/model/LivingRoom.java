@@ -36,7 +36,7 @@ public class LivingRoom {
      * @param numTilesPerType the number of tiles of a single tile type
      * @param size the odd size of the new board
      */
-    public LivingRoom(int numTilesPerType,int size,int numberOfPlayers) throws InvalidParameterException {
+    public LivingRoom(int numTilesPerType, int size, int numberOfPlayers) throws InvalidParameterException {
         if(size<9) throw new InvalidParameterException("Size too small");
         if(size%2==0) throw new InvalidParameterException("Even size not implemented");
         bag = new Stack<>();
