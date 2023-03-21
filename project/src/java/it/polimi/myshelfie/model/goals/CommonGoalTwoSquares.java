@@ -37,8 +37,7 @@ public class CommonGoalTwoSquares extends CommonGoal{
     private boolean check (ItemTile[][] bookshelf, int i, int j){
         if(bookshelf[i][j]!=bookshelf[i+1][j+1]) return false;
         if(bookshelf[i][j]!=bookshelf[i][j+1]) return false;
-        if(bookshelf[i][j]!=bookshelf[i+1][j]) return false;
-        return true;
+        return bookshelf[i][j] == bookshelf[i + 1][j];
     }
 
     private void map(ItemTile tile, int[] counter){

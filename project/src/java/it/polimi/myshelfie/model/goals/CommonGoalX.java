@@ -26,7 +26,6 @@ public class CommonGoalX extends CommonGoal{
         if(bookshelf[i][j]!=bookshelf[i+1][j+1]) return false;
         if(bookshelf[i][j]!=bookshelf[i-1][j+1]) return false;
         if(bookshelf[i][j]!=bookshelf[i+1][j-1]) return false;
-        if(bookshelf[i][j]!=bookshelf[i-1][j-1]) return false;
-        return true;
+        return bookshelf[i][j] == bookshelf[i - 1][j - 1];
     }
 }

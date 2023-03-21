@@ -23,7 +23,7 @@ public class CommonGoalFourLines extends CommonGoal{
         return row_count>=4;
     }
     private boolean checkRow(ItemTile[] row, int maxNumber, int width){
-        boolean found=false;
+        boolean found;
         int typeCount=0;
         for(int i=0; i<=width; i++){
             found=false;

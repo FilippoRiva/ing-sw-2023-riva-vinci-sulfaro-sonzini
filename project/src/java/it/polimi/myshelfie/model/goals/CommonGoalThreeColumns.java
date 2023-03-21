@@ -23,7 +23,7 @@ public class CommonGoalThreeColumns extends CommonGoal{
     }
 
     private boolean checkColumn(ItemTile[][] bookshelf, int i, int maxNumber){
-        boolean found=false;
+        boolean found;
         int height = bookshelf.length-1, type_count=0;
         for(int j=height; j>=0; j--){
             found =false;

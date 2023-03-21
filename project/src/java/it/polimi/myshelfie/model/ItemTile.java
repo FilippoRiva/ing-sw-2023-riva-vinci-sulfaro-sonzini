@@ -15,7 +15,7 @@ public enum ItemTile {
 
     /**
      *
-     * @return a random ItemTile excluding ItemTile.EMPTY
+     * @return a random ItemTile excluding "ItemTile.EMPTY"
      */
     public static ItemTile random(){
         Random rand = new Random();

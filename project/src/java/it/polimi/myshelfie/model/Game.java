@@ -167,7 +167,7 @@ public class Game implements GameController, LobbyController {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override

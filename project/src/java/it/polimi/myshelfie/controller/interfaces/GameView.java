@@ -2,8 +2,6 @@ package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
-
-import java.awt.*;
 import java.util.List;
 
 public interface GameView {
