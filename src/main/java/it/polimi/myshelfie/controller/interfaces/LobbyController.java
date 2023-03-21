@@ -11,6 +11,7 @@ public interface LobbyController {
      * @param nameRoom is the name of the room.
      */
     void createGame(String playerName, String nameRoom) throws Exception;
+    void setGameConfig(String nameRoom, GameConfig configs) throws Exception;
     List<String> askGameList();
     /**
      *
@@ -18,6 +19,5 @@ public interface LobbyController {
      * @param nameRoom  is the name of the room entered by the player
      */
     void joinGame(String playerName, String nameRoom) throws Exception;
-    void setGameConfig(String nameRoom, GameConfig configs) throws Exception;
     void exitGame(String playerName, String roomName) throws Exception;
 }

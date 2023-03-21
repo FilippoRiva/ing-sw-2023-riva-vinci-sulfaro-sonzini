@@ -1,8 +1,6 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.*;
-import it.polimi.myshelfie.model.goals.CommonGoal;
-import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.util.List;
 import java.util.Observer;
@@ -14,7 +12,7 @@ public interface GameModel {
     String getName();
     void init();
 
-    void takeTilesFromLivingRoom(List<Position> takenTiles);
+    void deleteTilesFromLivingRoom(List<Position> takenTiles);
     void addTilesInBookshelf(String playerName, List<ItemTile> takenTiles, int column);
 
     /**

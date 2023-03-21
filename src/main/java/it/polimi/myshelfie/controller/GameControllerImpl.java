@@ -11,7 +11,6 @@ import it.polimi.myshelfie.model.interfaces.GameModel;
 import java.util.List;
 
 public class GameControllerImpl implements GameController, ChatController {
-
     GameModel gameModel;
     ChatModel chatModel;
 
@@ -20,8 +19,8 @@ public class GameControllerImpl implements GameController, ChatController {
         this.chatModel=chatModel;
     }
     @Override
-    public void deleteTileFromLivingRoom(List<Position> takenTiles) throws Exception {
-        gameModel.takeTilesFromLivingRoom(takenTiles);
+    public void deleteTileFromLivingRoom(List<Position> takenTiles){
+        gameModel.deleteTilesFromLivingRoom(takenTiles);
     }
 
     @Override

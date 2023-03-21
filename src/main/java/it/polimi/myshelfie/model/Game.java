@@ -52,7 +52,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void takeTilesFromLivingRoom(List<Position> takenTiles) {
+    public void deleteTilesFromLivingRoom(List<Position> takenTiles) {
         for(Position p : takenTiles){
             livingRoom.removeTile(p.getX(), p.getY());
         }
