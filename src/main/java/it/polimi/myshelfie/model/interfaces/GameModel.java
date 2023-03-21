@@ -1,9 +1,7 @@
 package it.polimi.myshelfie.model.interfaces;
 
-import it.polimi.myshelfie.model.GameState;
-import it.polimi.myshelfie.model.ItemTile;
-import it.polimi.myshelfie.model.Position;
-import it.polimi.myshelfie.model.Token;
+import it.polimi.myshelfie.model.*;
+import it.polimi.myshelfie.model.goals.CommonGoal;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.util.List;
@@ -42,18 +40,13 @@ public interface GameModel {
 
     /**
      *
-     * @param playerName is the name of the player.
-     * @return his personal goal
-     */
-    PersonalGoal getPersonalGoal(String playerName);
-
-    /**
-     *
      * @return the numbers of players
      */
     int getNumberOfPlayers();
     GameState getState();
-    String getCurrentPlayer();
+    Player getCurrentPlayer();
     String getLastPlayer();
+    void checkCommonGoal(String playerName);
+    void refillLivingRoom();
     void addObserver(Observer observer, String playerName);
 }

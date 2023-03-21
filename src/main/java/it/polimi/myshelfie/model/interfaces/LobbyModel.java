@@ -1,6 +1,9 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.LivingRoom;
+import it.polimi.myshelfie.model.exceptions.GameFullException;
+import it.polimi.myshelfie.model.exceptions.NameTakenException;
 
 import java.util.Observer;
 
@@ -19,7 +22,7 @@ public interface LobbyModel {
      *
      * @param playerName is the name of the new player that has to be added to the game
      */
-    void addPlayer(String playerName);
+    void addPlayer(String playerName) ;
 
     /**
      *

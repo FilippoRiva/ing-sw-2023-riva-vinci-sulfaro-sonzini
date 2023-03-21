@@ -2,10 +2,7 @@ package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
-import it.polimi.myshelfie.model.exceptions.GameFullException;
-import it.polimi.myshelfie.model.exceptions.NameTakenException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
-import it.polimi.myshelfie.model.goals.PersonalGoal;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
@@ -17,7 +14,7 @@ import java.util.Observer;
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
     private String gameName;
-    private String turn;
+    private Player turn;
     private GameState currentState;
     private ChatSystem chatSystem;
     private CommonGoal[] commonGoals;
@@ -29,10 +26,6 @@ public class Game implements GameModel, LobbyModel {
         currentState = GameState.LOBBY;
         chatSystem = new ChatSystem();
         players = new ArrayList<>();
-    }
-
-    public void addPlayer(Player player) throws GameFullException, NameTakenException {
-        players.add(player);
     }
 
 
@@ -53,7 +46,7 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void init() {
-        turn = players.get(0).getName();
+        turn = players.get(0);
         commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
     }
@@ -88,6 +81,7 @@ public class Game implements GameModel, LobbyModel {
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 p.addObtainedToken(token);
+                p.addPoints(token.getValue());
                 return;
             }
         }
@@ -103,12 +97,12 @@ public class Game implements GameModel, LobbyModel {
         int currentTurn;
 
         for(Player p : players){
-            if(p.getName().equals(turn)){
+            if(p.equals(turn)){
                 currentTurn = players.indexOf(p);
                 if(currentTurn < players.size()-1)
-                    turn = players.get(currentTurn+1).getName();
+                    turn = players.get(currentTurn+1);
                 else
-                    turn = players.get(0).getName();
+                    turn = players.get(0);
                 return;
             }
         }
@@ -130,16 +124,6 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public PersonalGoal getPersonalGoal(String playerName) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                return p.getPersonalGoal();
-            }
-        }
-        return null;
-    }
-
-    @Override
     public int getNumberOfPlayers() {
         return players.size();
     }
@@ -150,13 +134,31 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public String getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return turn;
     }
 
     @Override
     public String getLastPlayer() {
         return players.get(players.size()-1).getName();
+    }
+
+    @Override
+    public void checkCommonGoal(String playerName) {
+        for(CommonGoal cm : commonGoals){
+            if(cm.isVerified(turn.getBookshelf().getBookshelfItems())){
+                addToken(playerName, cm.popToken());
+            }
+        }
+    }
+
+    @Override
+    public void refillLivingRoom() {
+        try {
+            livingRoom.refill();
+        }catch(Exception e){
+
+        }
     }
 
     @Override
@@ -170,7 +172,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addPlayer(String name) {
+    public void addPlayer(String name){
         players.add(new Player(name));
     }
 
@@ -198,4 +200,6 @@ public class Game implements GameModel, LobbyModel {
     public GameModel getGameController() {
         return this;
     }
+
+
 }

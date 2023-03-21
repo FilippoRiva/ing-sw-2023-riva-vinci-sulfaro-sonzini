@@ -48,4 +48,8 @@ public class GamesHandler {
     public GameConfig getConfig(String roomName) {
         return getLobby(roomName).getGameConfig();
     }
+
+    public boolean isPlayerNameValid(String roomName, String playerName) {
+        return getLobby(roomName).isPlayerNameValid(playerName);
+    }
 }

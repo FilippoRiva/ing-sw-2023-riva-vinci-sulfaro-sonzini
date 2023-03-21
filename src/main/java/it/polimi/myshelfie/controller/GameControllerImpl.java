@@ -25,8 +25,16 @@ public class GameControllerImpl implements GameController, ChatController {
     }
 
     @Override
-    public void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName) throws Exception {
+    public void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName) {
         gameModel.addTilesInBookshelf(playerName, takenTiles, column);
+
+        endTurn(playerName);
+    }
+
+    private void endTurn(String playerName){
+        gameModel.checkCommonGoal(playerName);
+
+        gameModel.refillLivingRoom();
     }
 
     public void addMessage(Message message){

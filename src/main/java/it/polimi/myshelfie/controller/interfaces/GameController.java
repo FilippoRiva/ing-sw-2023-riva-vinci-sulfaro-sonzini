@@ -17,5 +17,5 @@ public interface GameController {
       * @param takenTiles are the ordered tiles to be placed in the bookshelf.
      * @param column is the selected column where to put the taken tiles.
      */
-    void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName) throws Exception;
+    void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName);
 }

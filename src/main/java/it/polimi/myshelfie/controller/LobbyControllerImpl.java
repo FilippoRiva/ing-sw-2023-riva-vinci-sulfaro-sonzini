@@ -24,6 +24,8 @@ public class LobbyControllerImpl implements it.polimi.myshelfie.controller.inter
     @Override
     public void joinGame(String playerName, String roomName) throws Exception {
         if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("room does not exist");
+        if(!gamesHandler.isPlayerNameValid(roomName, playerName)) throw new Exception("player name already exists");
+
         gamesHandler.getLobby(roomName).addPlayer(playerName);
         if(gamesHandler.getController(roomName).getNumberOfPlayers() == gamesHandler.getConfig(roomName).getNumPlayers())
             gamesHandler.getController(roomName).init();

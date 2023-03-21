@@ -1,7 +1,6 @@
 package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.goals.PersonalGoal;
-
 import java.util.ArrayList;
 
 public class Player {
@@ -69,9 +68,5 @@ public class Player {
     public PersonalGoal getPersonalGoal(){
         return personalGoal;
     }
-
-    public Bookshelf getBookshelf(){
-        //TODO copy
-        return bookshelf;
-    }
+    public Bookshelf getBookshelf(){return bookshelf;}
 }
