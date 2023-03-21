@@ -18,6 +18,6 @@ public interface LobbyView {
      * @param nameRoom  is the name of the room entered by the player
      */
     void joinGame(String namePlayer, String nameRoom) throws Exception;
-    void setGameConfig(GameConfig configs);
+    void setGameConfig(String nameRoom, GameConfig configs) throws Exception;
     void exitGame(String namePlayer, String roomName) throws Exception;
 }
