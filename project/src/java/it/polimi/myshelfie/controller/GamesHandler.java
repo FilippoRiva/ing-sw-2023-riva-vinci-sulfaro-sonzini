@@ -12,21 +12,19 @@ import java.util.List;
 public class GamesHandler {
     private HashMap<String, GameController> gameControllers;
     private HashMap<String, ChatController> gameChats;
-    private HashMap<String, LobbyController> gameLobby;
+    private HashMap<String, LobbyController> gameLobbies;
     private List<GameFile> savedGames;
 
-    public Game addGame(String roomName){
-        Game game = new Game(roomName);
-        gameControllers.put(roomName, game);
-        return game;
+    public LobbyController addGame(String roomName){
+        LobbyController gameLobby = new Game(roomName);
+        gameLobbies.put(roomName,gameLobby);
+        gameChats.put(roomName,gameLobby.getChatController());
+        gameControllers.put(roomName,gameLobby.getGameController());
+        return gameLobby;
     }
 
     public void addGameConfig(String roomName, GameConfig gameConfig){
         getLobby(roomName).setGameConfig(gameConfig);
-    }
-
-    public GameController getGame(String roomName){
-        return gameControllers.get(roomName);
     }
 
     public boolean isRoomNameValid(String roomName){
@@ -36,16 +34,16 @@ public class GamesHandler {
     public GameController getController(String roomName) {
         return gameControllers.get(roomName);
     }
-    public ChatController getGameChat(String roomName) {
+    public ChatController getChat(String roomName) {
         return gameChats.get(roomName);
     }
 
-    public HashMap<String, LobbyController> getGameLobby() {
-        return gameLobby;
+    public HashMap<String, LobbyController> getLobbies() {
+        return gameLobbies;
     }
 
     public LobbyController getLobby(String roomName) {
-        return gameLobby.get(roomName);
+        return gameLobbies.get(roomName);
     }
     public GameConfig getConfig(String roomName) {
         return getLobby(roomName).getGameConfig();

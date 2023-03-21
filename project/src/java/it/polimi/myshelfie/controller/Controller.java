@@ -5,6 +5,7 @@ import it.polimi.myshelfie.controller.interfaces.GameView;
 import it.polimi.myshelfie.controller.interfaces.LobbyView;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.interfaces.LobbyController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +15,13 @@ public class Controller implements GameView, LobbyView {
 
     @Override
     public void createGame(String namePlayer, String roomName) throws Exception {
-        if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("name of the room is not available");
-        gamesHandler.addGame(roomName).addPlayer(namePlayer);
+        if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("room name is not available");
+        LobbyController newLobby = gamesHandler.addGame(roomName);
+        newLobby.addPlayer(namePlayer);
     }
     @Override
     public List<String> askGameList() {
-        return new ArrayList<>(gamesHandler.getGameLobby().keySet());
+        return new ArrayList<>(gamesHandler.getLobbies().keySet());
     }
     @Override
     public void joinGame(String namePlayer, String roomName) throws Exception {

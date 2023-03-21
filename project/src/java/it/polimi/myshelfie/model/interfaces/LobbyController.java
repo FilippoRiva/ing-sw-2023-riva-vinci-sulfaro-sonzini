@@ -27,4 +27,8 @@ public interface LobbyController {
      */
     void removePlayer(String playerName);
     void addObserver(Observer observer, String playerName);
+
+    ChatController getChatController();
+
+    GameController getGameController();
 }

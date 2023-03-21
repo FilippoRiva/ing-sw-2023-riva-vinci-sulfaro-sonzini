@@ -6,6 +6,7 @@ import it.polimi.myshelfie.model.exceptions.GameFullException;
 import it.polimi.myshelfie.model.exceptions.NameTakenException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
+import it.polimi.myshelfie.model.interfaces.ChatController;
 import it.polimi.myshelfie.model.interfaces.GameController;
 import it.polimi.myshelfie.model.interfaces.LobbyController;
 
@@ -187,5 +188,15 @@ public class Game implements GameController, LobbyController {
     @Override
     public void addObserver(Observer observer, String playerName) {
         //TODO implementation
+    }
+
+    @Override
+    public ChatController getChatController() {
+        return chatSystem;
+    }
+
+    @Override
+    public GameController getGameController() {
+        return this;
     }
 }
