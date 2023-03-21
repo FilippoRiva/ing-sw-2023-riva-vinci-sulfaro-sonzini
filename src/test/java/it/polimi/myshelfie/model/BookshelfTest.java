@@ -14,14 +14,14 @@ class BookshelfTest {
         ItemTile[][] bookshelfItems = bookshelf.getBookshelfItems();
         for(ItemTile[] a : bookshelfItems){
             for(ItemTile tile : a){
-                if(tile != ItemTile.EMPTY) fail();
+                if(tile.getType() != ItemTileType.EMPTY) fail();
             }
         }
         bookshelf = new Bookshelf(new Dimension(10,10));
         bookshelfItems = bookshelf.getBookshelfItems();
         for(ItemTile[] a : bookshelfItems){
             for(ItemTile tile : a){
-                if(tile != ItemTile.EMPTY) fail();
+                if(tile.getType() != ItemTileType.EMPTY) fail();
             }
         }
     }
@@ -29,86 +29,86 @@ class BookshelfTest {
     @Test
     void insertTile() throws FullColumnException {
         Bookshelf bookshelf = new Bookshelf(new Dimension(5,6));
-        ItemTile[] tiles = new ItemTile[]{ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT};
+        ItemTile[] tiles = new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)};
         try {
             for (ItemTile t : tiles) bookshelf.insertTile(0, t);
             fail("We should get an exception here");
         }catch (FullColumnException e){
-           e.getMessage();
+            e.getMessage();
         }
 
         bookshelf = new Bookshelf(new Dimension(5,6));
-        tiles = new ItemTile[]{ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(0,t);
-        tiles = new ItemTile[]{ItemTile.BOOK,ItemTile.BOOK,ItemTile.BOOK,ItemTile.BOOK};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(1,t);
-        tiles = new ItemTile[]{ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(2,t);
-        tiles = new ItemTile[]{ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(3,t);
-        tiles = new ItemTile[]{ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(4,t);
         ItemTile[][] bookshelfTiles = bookshelf.getBookshelfItems();
         assertTrue(matrixEqual(bookshelfTiles,
-        new ItemTile [][]{
-                {ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.EMPTY},
-                {ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.TROPHY,ItemTile.EMPTY,ItemTile.EMPTY},
-                {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME  }
+        new ItemTile[][]{
+                {new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0)},
+                {new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0)},
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)  }
         }));
         //full
         bookshelf = new Bookshelf(new Dimension(5,6));
-        tiles = new ItemTile[]{ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(0,t);
-        tiles = new ItemTile[]{ItemTile.BOOK,ItemTile.BOOK,ItemTile.BOOK,ItemTile.BOOK,ItemTile.BOOK,ItemTile.BOOK};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(1,t);
-        tiles = new ItemTile[]{ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY,ItemTile.TROPHY};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(2,t);
-        tiles = new ItemTile[]{ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(3,t);
-        tiles = new ItemTile[]{ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME,ItemTile.FRAME};
+        tiles = new ItemTile[]{new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0)};
         for(ItemTile t: tiles) bookshelf.insertTile(4,t);
         bookshelfTiles = bookshelf.getBookshelfItems();
         assertTrue(matrixEqual(bookshelfTiles,
-                new ItemTile [][]{
-                        {ItemTile.CAT,ItemTile.BOOK,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                        {ItemTile.CAT,ItemTile.BOOK,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                        {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                        {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                        {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME},
-                        {ItemTile.CAT  ,ItemTile.BOOK ,ItemTile.TROPHY,ItemTile.CAT,ItemTile.FRAME  }
+                new ItemTile[][]{
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                        {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                        {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                        {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)},
+                        {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0)  }
                 }));
         //bigger one
         bookshelf = new Bookshelf(new Dimension(9,11));
         for(int column = 0; column <9;column++) {
-            tiles = new ItemTile[]{ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT, ItemTile.CAT};
+            tiles = new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)};
             for (ItemTile t : tiles) bookshelf.insertTile(column, t);
         }
         bookshelfTiles = bookshelf.getBookshelfItems();
         assertTrue(matrixEqual(bookshelfTiles,
-                new ItemTile [][]{
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                        {ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
+                new ItemTile[][]{
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                        {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
                 }));
     }
 
-    private boolean matrixEqual(ItemTile[][]A,ItemTile[][] B){
+    private boolean matrixEqual(ItemTile[][]A, ItemTile[][] B){
         if(A.length!=B.length) return false;
         if(A[0].length!=B[0].length) return false;
         for(int y = 0; y<A.length; y++){
             for(int x = 0; x<A[0].length; x++){
-                if(A[y][x]!=B[y][x]) return false;
+                if(A[y][x].getType()!=B[y][x].getType()) return false;
             }
         }
         return true;

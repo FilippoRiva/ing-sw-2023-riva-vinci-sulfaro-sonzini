@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 import java.util.Arrays;
 
@@ -16,11 +17,11 @@ public class CommonGoalTwoSquares extends CommonGoal{
         int height = bookshelf.length;
         int width = bookshelf[0].length;
         boolean[][] take = new boolean[height][width];
-        int[] counter = new int[ItemTile.values().length];
+        int[] counter = new int[ItemTileType.values().length];
 
         for(int i = 0; i < height-1; i++) {
             for(int j = 0; j < width-1; j++) {
-                if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY){
+                if(!take[i][j] && bookshelf[i][j].getType() != ItemTileType.EMPTY){
                     if(check(bookshelf, i, j)) {
                         map(bookshelf[i][j], counter);
                         take[i+1][j]=true;
@@ -35,13 +36,13 @@ public class CommonGoalTwoSquares extends CommonGoal{
     }
 
     private boolean check (ItemTile[][] bookshelf, int i, int j){
-        if(bookshelf[i][j]!=bookshelf[i+1][j+1]) return false;
-        if(bookshelf[i][j]!=bookshelf[i][j+1]) return false;
-        return bookshelf[i][j] == bookshelf[i + 1][j];
+        if(bookshelf[i][j].getType()!=bookshelf[i+1][j+1].getType()) return false;
+        if(bookshelf[i][j].getType()!=bookshelf[i][j+1].getType()) return false;
+        return bookshelf[i][j].getType() == bookshelf[i + 1][j].getType();
     }
 
     private void map(ItemTile tile, int[] counter){
-        switch (tile){
+        switch (tile.getType()){
             case CAT-> counter[0]++;
             case BOOK -> counter[1]++;
             case GAME -> counter[2]++;

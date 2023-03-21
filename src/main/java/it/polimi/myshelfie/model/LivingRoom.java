@@ -40,11 +40,11 @@ public class LivingRoom {
         if(size<9) throw new InvalidParameterException("Size too small");
         if(size%2==0) throw new InvalidParameterException("Even size not implemented");
         bag = new Stack<>();
-        ItemTile[] itemTiles = ItemTile.values();
-        for (ItemTile itemTile : itemTiles) {
-            if(itemTile!=ItemTile.EMPTY) {
+        ItemTileType[] itemTiles = ItemTileType.values();
+        for (ItemTileType itemTile : itemTiles) {
+            if(itemTile!= ItemTileType.EMPTY) {
                 for (int j = 0; j < numTilesPerType; j++) {
-                    bag.add(itemTile);
+                    bag.add(new ItemTile(itemTile,j%3));
                 }
             }
         }
@@ -55,7 +55,7 @@ public class LivingRoom {
         this.offset = (size-1)/2;
         for(int x = 0; x<size;x++){
             for(int y = 0; y<size;y++){
-                table[x][y]=ItemTile.EMPTY;
+                table[x][y]= new ItemTile(ItemTileType.EMPTY,0);
             }
         }
     }
@@ -146,7 +146,7 @@ public class LivingRoom {
         for(int i = 0;i<size;i++){
             for(int j = 0;j<size;j++){
                 if(i>=j) stair[i][j] = bag.pop();
-                else stair[i][j] = ItemTile.EMPTY;
+                else stair[i][j] = new ItemTile(ItemTileType.EMPTY,0);
                 if(bag.empty()) break;
             }
             if(bag.empty()) break;
@@ -230,7 +230,7 @@ public class LivingRoom {
      * @param x x coordinate
      * @param y y coordinate
      */
-    private void putTile(ItemTile tile,int x, int y){
+    private void putTile(ItemTile tile, int x, int y){
         table[x+offset][offset-y] = tile;
     }
 
@@ -242,7 +242,7 @@ public class LivingRoom {
      */
     public ItemTile removeTile(int x, int y){
         ItemTile oldTile = table[x+offset][offset-y] ;
-        table[x+offset][offset-y] = ItemTile.EMPTY;
+        table[x+offset][offset-y] = new ItemTile(ItemTileType.EMPTY,0);
         return oldTile;
     }
 
@@ -262,8 +262,8 @@ public class LivingRoom {
     public boolean isRefillable(){
         for(int y = offset; y>=-offset; y--){
             for(int x = -offset; x<=offset; x++){
-                if(getTile(x,y)!=ItemTile.EMPTY){
-                    if(getTile(x+1,y)!=ItemTile.EMPTY ||getTile(x,y-1)!=ItemTile.EMPTY) return false;
+                if(getTile(x,y).getType()!= ItemTileType.EMPTY){
+                    if(getTile(x+1,y).getType()!= ItemTileType.EMPTY ||getTile(x,y-1).getType()!= ItemTileType.EMPTY) return false;
                 }
             }
         }

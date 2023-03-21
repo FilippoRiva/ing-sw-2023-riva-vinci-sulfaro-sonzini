@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,22 +13,22 @@ class CommonGoalXTest {
         CommonGoalX xGoal = new CommonGoalX();
 
         ItemTile[][] bookshelf = {
-                {ItemTile.CAT  ,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT  },
-                {ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT  ,ItemTile.CAT},
-                {ItemTile.TROPHY,ItemTile.PLANT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT},
-                {ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT,ItemTile.CAT    },
-                {ItemTile.CAT,ItemTile.GAME,ItemTile.BOOK,ItemTile.CAT,ItemTile.CAT},
-                {ItemTile.CAT  ,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT  }
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
+                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0)},
+                {new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)    },
+                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  }
         };
         assertTrue(xGoal.isVerified(bookshelf),"5x6 verifiable bookshelf should be verified");
 
         bookshelf = new ItemTile[][]{
-                {ItemTile.CAT  ,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT  },
-                {ItemTile.CAT,ItemTile.EMPTY,ItemTile.EMPTY,ItemTile.CAT  ,ItemTile.CAT},
-                {ItemTile.FRAME,ItemTile.PLANT,ItemTile.FRAME,ItemTile.CAT,ItemTile.CAT},
-                {ItemTile.CAT,ItemTile.FRAME,ItemTile.EMPTY,ItemTile.CAT,ItemTile.CAT    },
-                {ItemTile.FRAME,ItemTile.GAME,ItemTile.BOOK,ItemTile.CAT,ItemTile.CAT},
-                {ItemTile.CAT  ,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT,ItemTile.CAT  }
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
+                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0)},
+                {new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)    },
+                {new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
+                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  }
         };
         assertFalse(xGoal.isVerified(bookshelf),"Only 4 of 5, should not be verified");
     }

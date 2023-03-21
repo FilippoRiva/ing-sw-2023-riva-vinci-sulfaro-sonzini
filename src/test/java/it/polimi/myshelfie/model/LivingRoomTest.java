@@ -44,10 +44,10 @@ class LivingRoomTest {
 
         livingRoom = new LivingRoom(22,9,4);
         livingRoom.refill();
-        assertNotEquals(ItemTile.EMPTY,livingRoom.removeTile(0,0));
-        assertNotEquals(ItemTile.EMPTY,livingRoom.removeTile(4,0));
-        assertNotEquals(ItemTile.EMPTY,livingRoom.removeTile(-4,0));
-        assertNotEquals(ItemTile.EMPTY,livingRoom.removeTile(0,4));
-        assertNotEquals(ItemTile.EMPTY,livingRoom.removeTile(0,-4));
+        assertNotEquals(ItemTileType.EMPTY,livingRoom.removeTile(0,0).getType());
+        assertNotEquals(ItemTileType.EMPTY,livingRoom.removeTile(4,0).getType());
+        assertNotEquals(ItemTileType.EMPTY,livingRoom.removeTile(-4,0).getType());
+        assertNotEquals(ItemTileType.EMPTY,livingRoom.removeTile(0,4).getType());
+        assertNotEquals(ItemTileType.EMPTY,livingRoom.removeTile(0,-4).getType());
     }
 }

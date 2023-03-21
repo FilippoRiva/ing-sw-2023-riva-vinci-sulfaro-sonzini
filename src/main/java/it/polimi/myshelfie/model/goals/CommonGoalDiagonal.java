@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalDiagonal extends CommonGoal{
     private int height;
@@ -24,18 +25,18 @@ public class CommonGoalDiagonal extends CommonGoal{
 
     private boolean checkDescendingDiagonal(int startingPosition, ItemTile[][] bookshelf){
         ItemTile tileType = bookshelf[startingPosition][0];
-        if (tileType == ItemTile.EMPTY) return false;
+        if (tileType.getType() == ItemTileType.EMPTY) return false;
         for(int pos = 1; pos <= width; pos++){
-            if(bookshelf[startingPosition+pos][pos] != tileType) return false;
+            if(bookshelf[startingPosition+pos][pos].getType() != tileType.getType()) return false;
         }
         return true;
     }
 
     private boolean checkAscendingDiagonal(int startingPosition, ItemTile[][] bookshelf){
         ItemTile tileType = bookshelf[startingPosition][width];
-        if (tileType == ItemTile.EMPTY) return false;
+        if (tileType.getType() == ItemTileType.EMPTY) return false;
         for(int pos = 1; pos <= width; pos++){
-            if(bookshelf[startingPosition+pos][width-pos] != tileType) return false;
+            if(bookshelf[startingPosition+pos][width-pos].getType() != tileType.getType()) return false;
         }
         return true;
     }

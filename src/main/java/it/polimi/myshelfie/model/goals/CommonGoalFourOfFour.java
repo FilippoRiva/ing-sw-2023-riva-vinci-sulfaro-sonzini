@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalFourOfFour extends CommonGoal{
     /**
@@ -17,7 +18,7 @@ public class CommonGoalFourOfFour extends CommonGoal{
         int counter = 0;
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
-                if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY) {
+                if(!take[i][j] && bookshelf[i][j].getType() != ItemTileType.EMPTY) {
                     if (i < 3) {
                         if (j < 2) {
                             if (checkHorizontal(bookshelf, take, i, j)) {
@@ -52,14 +53,14 @@ public class CommonGoalFourOfFour extends CommonGoal{
     }
     private boolean checkHorizontal(ItemTile[][] bookshelf, boolean[][] take, int i, int j){
         for(int k = 0; k < 3; k++){
-            if(take[i][j] || bookshelf[i][j] != bookshelf[i][j+1]) return false;
+            if(take[i][j] || bookshelf[i][j].getType() != bookshelf[i][j+1].getType()) return false;
             j++;
         }
         return true;
     }
     private boolean checkVertical(ItemTile[][] bookshelf, boolean[][] take, int i, int j){
         for(int k = 0; k < 3; k++){
-            if(take[i][j] || bookshelf[i][j] != bookshelf[i+1][j]) return false;
+            if(take[i][j] || bookshelf[i][j].getType() != bookshelf[i+1][j].getType()) return false;
             i++;
         }
         return true;

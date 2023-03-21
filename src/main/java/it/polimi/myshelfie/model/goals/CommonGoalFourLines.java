@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalFourLines extends CommonGoal{
     /**
@@ -14,9 +15,8 @@ public class CommonGoalFourLines extends CommonGoal{
         int height = bookshelf.length-1;
         int width = bookshelf[0].length-1;
         int row_count=0;
-        boolean found=false;
         for(int i = 0; i<=height; i++) {
-            if (bookshelf[i][0] != ItemTile.EMPTY) {
+            if (bookshelf[i][0].getType() != ItemTileType.EMPTY) {
                 if(checkRow(bookshelf[i], 3, width)) row_count++;
             }
         }
@@ -27,9 +27,9 @@ public class CommonGoalFourLines extends CommonGoal{
         int typeCount=0;
         for(int i=0; i<=width; i++){
             found=false;
-            if(row[i] == ItemTile.EMPTY) return false;
+            if(row[i].getType() == ItemTileType.EMPTY) return false;
             for(int j=0; j<i; j++){
-                if(row[i]==row[j])
+                if(row[i].getType()==row[j].getType())
                     found=true;
             }
             if(!found)

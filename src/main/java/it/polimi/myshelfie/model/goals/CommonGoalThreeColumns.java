@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalThreeColumns extends CommonGoal{
     /**
@@ -15,7 +16,7 @@ public class CommonGoalThreeColumns extends CommonGoal{
         int col_count=0;
 
         for(int i = 0; i<=width; i++) {
-            if (bookshelf[0][i] != ItemTile.EMPTY) {
+            if (bookshelf[0][i].getType() != ItemTileType.EMPTY) {
                 if (checkColumn(bookshelf, i, 3)) col_count++;
             }
         }
@@ -27,9 +28,9 @@ public class CommonGoalThreeColumns extends CommonGoal{
         int height = bookshelf.length-1, type_count=0;
         for(int j=height; j>=0; j--){
             found =false;
-            if(bookshelf[j][i] == ItemTile.EMPTY) return false;
+            if(bookshelf[j][i].getType() == ItemTileType.EMPTY) return false;
             for(int k=height; k>j; k--) {
-                if (bookshelf[j][i] == bookshelf[k][i])
+                if (bookshelf[j][i].getType() == bookshelf[k][i].getType())
                     found = true;
             }
             if(!found)

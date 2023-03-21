@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalSixOfTwo extends CommonGoal{
     /**
@@ -18,16 +19,16 @@ public class CommonGoalSixOfTwo extends CommonGoal{
 
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
-                if(!take[i][j] && bookshelf[i][j] != ItemTile.EMPTY){
+                if(!take[i][j] && bookshelf[i][j].getType() != ItemTileType.EMPTY){
                     if(i != height-1) { //down
-                        if(bookshelf[i][j] == bookshelf[i+1][j]) {
+                        if(bookshelf[i][j].getType() == bookshelf[i+1][j].getType()) {
                             counter++;
                             take[i][j] = true;
                             take[i+1][j] = true;
                         }
                     }
                     if(j != width-1){ //right
-                        if(!take[i][j] && bookshelf[i][j] == bookshelf[i][j+1]) {
+                        if(!take[i][j] && bookshelf[i][j].getType() == bookshelf[i][j+1].getType()) {
                             counter++;
                             take[i][j+1] = true;
                         }

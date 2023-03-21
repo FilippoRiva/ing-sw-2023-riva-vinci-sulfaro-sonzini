@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 
 import java.util.Arrays;
 
@@ -15,12 +16,12 @@ public class CommonGoalEightTiles extends CommonGoal{
     public boolean isVerified(ItemTile[][] bookshelf) {
         int height = bookshelf.length;
         int width = bookshelf[0].length;
-        int[] counter = new int[ItemTile.values().length];
+        int[] counter = new int[ItemTileType.values().length];
 
-        for(int i = 0; i < height; i++){
-            for(int j = 0; j < width; j++){
-                switch (bookshelf[i][j]){
-                    case CAT-> counter[0]++;
+        for (ItemTile[] itemTiles : bookshelf) {
+            for (int j = 0; j < width; j++) {
+                switch (itemTiles[j].getType()) {
+                    case CAT -> counter[0]++;
                     case BOOK -> counter[1]++;
                     case GAME -> counter[2]++;
                     case FRAME -> counter[3]++;

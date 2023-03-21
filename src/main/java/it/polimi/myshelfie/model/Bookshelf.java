@@ -5,9 +5,9 @@ import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import java.awt.*;
 
 public class Bookshelf {
-    private ItemTile[][] bookshelfItems;
-    private int width;
-    private int height;
+    private final ItemTile[][] bookshelfItems;
+    private final int width;
+    private final int height;
 
     /**
      * Default Constructor
@@ -20,7 +20,7 @@ public class Bookshelf {
 
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
-                bookshelfItems[y][x] = ItemTile.EMPTY;
+                bookshelfItems[y][x] = new ItemTile(ItemTileType.EMPTY,0);
             }
         }
     }
@@ -32,9 +32,9 @@ public class Bookshelf {
      * @throws FullColumnException if the selected column is full
      */
     public void insertTile(int column, ItemTile tile) throws FullColumnException {
-        if(tile.equals(ItemTile.EMPTY)) return;
+        if(tile.getType().equals(ItemTileType.EMPTY)) return;
         for(int y = height-1; y >= 0; y--){
-            if(bookshelfItems[y][column] == ItemTile.EMPTY) {
+            if(bookshelfItems[y][column].getType() == ItemTileType.EMPTY) {
                 bookshelfItems[y][column] = tile;
                 return;
             }

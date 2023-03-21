@@ -13,13 +13,13 @@ import java.util.Observer;
 
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
-    private String gameName;
+    private final String gameName;
     private Player turn;
     private GameState currentState;
-    private ChatSystem chatSystem;
+    private final ChatSystem chatSystem;
     private CommonGoal[] commonGoals;
     private LivingRoom livingRoom;
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
 
     public Game(String gameName){
         this.gameName = gameName;
@@ -64,7 +64,7 @@ public class Game implements GameModel, LobbyModel {
             if(p.getName().equals(playerName)){
                 ItemTile[][] bookshelf = p.getBookshelf().getBookshelfItems();
                 for(int i = bookshelf.length-1; i>=0; i--){
-                    if(bookshelf[i][column] == ItemTile.EMPTY){
+                    if(bookshelf[i][column].getType() == ItemTileType.EMPTY){
                         for (ItemTile takenTile : takenTiles) {
                             bookshelf[i][column] = takenTile;
                             i--;
