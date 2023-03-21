@@ -28,7 +28,7 @@ public class Controller implements GameView, LobbyView {
         if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("room does not exist");
         gamesHandler.getLobby(roomName).addPlayer(namePlayer);
         if(gamesHandler.getController(roomName).getNumberOfPlayers() == gamesHandler.getConfig(roomName).getNumPlayers())
-            initializeGame(roomName);
+            gamesHandler.getController(roomName).init();
     }
     @Override
     public void setGameConfig(String roomName, GameConfig configs) throws Exception {
@@ -39,10 +39,6 @@ public class Controller implements GameView, LobbyView {
     public void exitGame(String namePlayer, String roomName) throws Exception {
         if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("room does not exist");
         gamesHandler.getLobby(roomName).removePlayer(namePlayer);
-    }
-    private void initializeGame(String roomName) throws Exception {
-        if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("room does not exist");
-        gamesHandler.getController(roomName).init();
     }
     @Override
     public void deleteTileFromLivingRoom(List<Position> takenTiles, String playerName, String roomName) throws Exception {
