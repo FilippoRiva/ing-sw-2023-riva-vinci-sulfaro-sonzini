@@ -1,18 +1,21 @@
 package it.polimi.myshelfie.controller;
 
 import it.polimi.myshelfie.GameConfig;
-import it.polimi.myshelfie.controller.interfaces.LobbyView;
+import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class LobbyController implements LobbyView {
+public class LobbyController implements it.polimi.myshelfie.controller.interfaces.LobbyController {
     GamesHandler gamesHandler = new GamesHandler();
+    HashMap<String,GameControllerImpl> gameControllers = new HashMap<>();
     @Override
     public void createGame(String playerName, String roomName) throws Exception {
         if(!gamesHandler.isRoomNameValid(roomName)) throw new Exception("room name is not available");
-        it.polimi.myshelfie.model.interfaces.LobbyController newLobby = gamesHandler.addGame(roomName);
+        LobbyModel newLobby = gamesHandler.addGame(roomName);
         newLobby.addPlayer(playerName);
+       gameControllers.put(roomName,new GameControllerImpl(newLobby.getGameController(),newLobby.getChatController()));
     }
     @Override
     public List<String> askGameList() {

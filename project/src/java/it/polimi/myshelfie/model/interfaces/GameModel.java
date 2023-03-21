@@ -9,7 +9,7 @@ import it.polimi.myshelfie.model.goals.PersonalGoal;
 import java.util.List;
 import java.util.Observer;
 
-public interface GameController {
+public interface GameModel {
     /**
      * @return game's name
      */

@@ -1,0 +1,12 @@
+package it.polimi.myshelfie.controller.interfaces;
+
+import it.polimi.myshelfie.model.chatting.Message;
+
+public interface ChatController {
+    /**
+     *
+     * @param message is a message written by a player and sent to one or more player.
+     *
+     */
+    void addMessage(Message message);
+}

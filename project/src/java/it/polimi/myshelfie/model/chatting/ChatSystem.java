@@ -1,12 +1,12 @@
 package it.polimi.myshelfie.model.chatting;
 
-import it.polimi.myshelfie.model.interfaces.ChatController;
+import it.polimi.myshelfie.model.interfaces.ChatModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observer;
 
-public class ChatSystem implements ChatController
+public class ChatSystem implements ChatModel
 {
 
     private final ArrayList<Message> messages;

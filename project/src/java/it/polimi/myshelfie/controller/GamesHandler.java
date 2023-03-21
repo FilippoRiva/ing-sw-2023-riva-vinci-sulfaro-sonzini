@@ -2,21 +2,21 @@ package it.polimi.myshelfie.controller;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.Game;
-import it.polimi.myshelfie.model.interfaces.ChatController;
-import it.polimi.myshelfie.model.interfaces.GameController;
-import it.polimi.myshelfie.model.interfaces.LobbyController;
+import it.polimi.myshelfie.model.interfaces.ChatModel;
+import it.polimi.myshelfie.model.interfaces.GameModel;
+import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class GamesHandler {
-    private HashMap<String, GameController> gameControllers;
-    private HashMap<String, ChatController> gameChats;
-    private HashMap<String, LobbyController> gameLobbies;
+    private HashMap<String, GameModel> gameControllers;
+    private HashMap<String, ChatModel> gameChats;
+    private HashMap<String, LobbyModel> gameLobbies;
     private List<GameFile> savedGames;
 
-    public LobbyController addGame(String roomName){
-        LobbyController gameLobby = new Game(roomName);
+    public LobbyModel addGame(String roomName){
+        LobbyModel gameLobby = new Game(roomName);
         gameLobbies.put(roomName,gameLobby);
         gameChats.put(roomName,gameLobby.getChatController());
         gameControllers.put(roomName,gameLobby.getGameController());
@@ -31,18 +31,18 @@ public class GamesHandler {
         return !gameControllers.containsKey(roomName);
     }
 
-    public GameController getController(String roomName) {
+    public GameModel getController(String roomName) {
         return gameControllers.get(roomName);
     }
-    public ChatController getChat(String roomName) {
+    public ChatModel getChat(String roomName) {
         return gameChats.get(roomName);
     }
 
-    public HashMap<String, LobbyController> getLobbies() {
+    public HashMap<String, LobbyModel> getLobbies() {
         return gameLobbies;
     }
 
-    public LobbyController getLobby(String roomName) {
+    public LobbyModel getLobby(String roomName) {
         return gameLobbies.get(roomName);
     }
     public GameConfig getConfig(String roomName) {

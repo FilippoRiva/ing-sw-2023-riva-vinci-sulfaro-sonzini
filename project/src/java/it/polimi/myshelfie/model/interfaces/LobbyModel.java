@@ -4,7 +4,7 @@ import it.polimi.myshelfie.GameConfig;
 
 import java.util.Observer;
 
-public interface LobbyController {
+public interface LobbyModel {
     void setGameConfig(GameConfig config);
     GameConfig getGameConfig();
 
@@ -28,7 +28,7 @@ public interface LobbyController {
     void removePlayer(String playerName);
     void addObserver(Observer observer, String playerName);
 
-    ChatController getChatController();
+    ChatModel getChatController();
 
-    GameController getGameController();
+    GameModel getGameController();
 }

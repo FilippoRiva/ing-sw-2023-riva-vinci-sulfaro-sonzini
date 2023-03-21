@@ -6,15 +6,15 @@ import it.polimi.myshelfie.model.exceptions.GameFullException;
 import it.polimi.myshelfie.model.exceptions.NameTakenException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
-import it.polimi.myshelfie.model.interfaces.ChatController;
-import it.polimi.myshelfie.model.interfaces.GameController;
-import it.polimi.myshelfie.model.interfaces.LobbyController;
+import it.polimi.myshelfie.model.interfaces.ChatModel;
+import it.polimi.myshelfie.model.interfaces.GameModel;
+import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
 
-public class Game implements GameController, LobbyController {
+public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
     private String gameName;
     private String turn;
@@ -191,12 +191,12 @@ public class Game implements GameController, LobbyController {
     }
 
     @Override
-    public ChatController getChatController() {
+    public ChatModel getChatController() {
         return chatSystem;
     }
 
     @Override
-    public GameController getGameController() {
+    public GameModel getGameController() {
         return this;
     }
 }

@@ -4,7 +4,7 @@ import it.polimi.myshelfie.GameConfig;
 
 import java.util.List;
 
-public interface LobbyView {
+public interface LobbyController {
     /**
      *
      * @param playerName is the name of the first player that creates the current game.
