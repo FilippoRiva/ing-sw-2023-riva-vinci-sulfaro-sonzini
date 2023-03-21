@@ -12,7 +12,7 @@ public interface GameView {
      * @param takenTiles are the tiles taken by the player from the living room.
      *                   These tiles are removed from the board.
      */
-    void deleteTileFromLivingRoom(List<Position> takenTiles, String playerName, String roomName) throws Exception;
+    void deleteTileFromLivingRoom(List<Position> takenTiles, String roomName) throws Exception;
 
     /**
      *
