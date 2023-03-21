@@ -2,5 +2,5 @@
 /.idea/
 # Compiled sources
 /target/
-/project/out/
+/src/out/
 /out/

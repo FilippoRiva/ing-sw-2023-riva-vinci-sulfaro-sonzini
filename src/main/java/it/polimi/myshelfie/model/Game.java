@@ -67,7 +67,6 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void addTilesInBookshelf(String playerName, List<ItemTile> takenTiles, int column) {
-        //TODO check if full
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 ItemTile[][] bookshelf = p.getBookshelf().getBookshelfItems();

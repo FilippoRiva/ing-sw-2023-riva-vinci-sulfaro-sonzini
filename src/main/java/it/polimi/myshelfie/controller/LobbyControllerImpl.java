@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class LobbyController implements it.polimi.myshelfie.controller.interfaces.LobbyController {
+public class LobbyControllerImpl implements it.polimi.myshelfie.controller.interfaces.LobbyController {
     GamesHandler gamesHandler = new GamesHandler();
     HashMap<String,GameControllerImpl> gameControllers = new HashMap<>();
     @Override

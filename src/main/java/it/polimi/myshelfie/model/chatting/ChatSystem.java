@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observer;
 
-public class ChatSystem implements ChatModel
-{
+public class ChatSystem implements ChatModel {
 
     private final ArrayList<Message> messages;
     private final HashMap<String,PlayerChat> playerChats;
