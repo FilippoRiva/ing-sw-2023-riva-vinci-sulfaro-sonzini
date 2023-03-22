@@ -21,8 +21,7 @@ public class Game implements GameModel, LobbyModel {
     private LivingRoom livingRoom;
     private final ArrayList<Player> players;
 
-    public Game(String gameName){
-        this.gameName = gameName;
+    public Game(){
         currentState = GameState.LOBBY;
         chatSystem = new ChatSystem();
         players = new ArrayList<>();
@@ -38,6 +37,11 @@ public class Game implements GameModel, LobbyModel {
         turn = players.get(0);
         commonGoals = CommonGoalFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
+
+        for(Player p : players){
+            p.setBookshelf(new Bookshelf(gameConfig.getBookshelfDimension()));
+            //TODO initialize personal goal
+        }
     }
 
     @Override
