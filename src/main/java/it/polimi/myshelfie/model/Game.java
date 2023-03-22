@@ -28,12 +28,6 @@ public class Game implements GameModel, LobbyModel {
         players = new ArrayList<>();
     }
 
-
-    @Override
-    public String getName() {
-        return gameName;
-    }
-
     @Override
     public void setGameConfig(GameConfig config) {
         this.gameConfig = config;
@@ -49,6 +43,11 @@ public class Game implements GameModel, LobbyModel {
         turn = players.get(0);
         commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
+    }
+
+    @Override
+    public void setCommonGoals(CommonGoal[] commonGoals) {
+        this.commonGoals = commonGoals;
     }
 
     @Override
@@ -88,11 +87,6 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void refillGame() throws Exception {
-        livingRoom.refill();
-    }
-
-    @Override
     public void nextTurn() {
         int currentTurn;
 
@@ -126,21 +120,6 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public int getNumberOfPlayers() {
         return players.size();
-    }
-
-    @Override
-    public GameState getState() {
-        return currentState;
-    }
-
-    @Override
-    public Player getCurrentPlayer() {
-        return turn;
-    }
-
-    @Override
-    public String getLastPlayer() {
-        return players.get(players.size()-1).getName();
     }
 
     @Override
