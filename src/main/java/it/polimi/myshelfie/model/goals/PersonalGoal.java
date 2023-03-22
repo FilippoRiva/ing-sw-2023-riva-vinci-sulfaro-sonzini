@@ -54,7 +54,7 @@ public class PersonalGoal {
      * @param bookshelfItems the player's bookshelfItems
      * @return the points to be gained by the player
      */
-    public int isVerified(ItemTile[][] bookshelfItems){
+    public int achievedPoints(ItemTile[][] bookshelfItems){
         int verifiedCount = 0;
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){

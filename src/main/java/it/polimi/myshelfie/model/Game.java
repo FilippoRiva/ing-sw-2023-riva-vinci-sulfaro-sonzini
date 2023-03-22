@@ -2,11 +2,13 @@ package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
+import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
@@ -34,57 +36,13 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public GameConfig getGameConfig() {
-        return gameConfig;
-    }
-
-    @Override
     public void init() {
         turn = players.get(0);
         commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
     }
 
-    @Override
-    public void setCommonGoals(CommonGoal[] commonGoals) {
-        this.commonGoals = commonGoals;
-    }
 
-    @Override
-    public void deleteTilesFromLivingRoom(List<Position> takenTiles) {
-        for(Position p : takenTiles){
-            livingRoom.removeTile(p.getX(), p.getY());
-        }
-    }
-
-    @Override
-    public void addTilesInBookshelf(String playerName, List<ItemTile> takenTiles, int column) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                ItemTile[][] bookshelf = p.getBookshelf().getBookshelfItems();
-                for(int i = bookshelf.length-1; i>=0; i--){
-                    if(bookshelf[i][column].getType() == ItemTileType.EMPTY){
-                        for (ItemTile takenTile : takenTiles) {
-                            bookshelf[i][column] = takenTile;
-                            i--;
-                        }
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void addToken(String playerName, Token token) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                p.addObtainedToken(token);
-                p.addPoints(token.getValue());
-                return;
-            }
-        }
-    }
 
     @Override
     public void nextTurn() {
@@ -103,23 +61,57 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
+    public void calculateWinResults() {
+        //conta punti per ogni player
+        for(Player player : players) {
+            player.calculatePoints();
+        }
+    }
+
+    @Override
     public void setState(GameState state) {
         this.currentState = state;
     }
 
     @Override
-    public void addPoints(String playerName, int points) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                p.addPoints(points);
-                return;
+    public GameState getState() {
+        return currentState;
+    }
+
+    @Override
+    public void draw(List<Position> positions, String playerName) throws InvalidParameterException {
+        List<ItemTile> items = new ArrayList<>();
+        for(Position p : positions){
+            items.add(livingRoom.removeTile(p.getX(), p.getY()));
+        }
+        for(Player player : players) {
+            if (player.getName().equals(playerName)) {
+                player.setTilesTaken(items);
             }
+            return;
         }
     }
 
     @Override
-    public int getNumberOfPlayers() {
-        return players.size();
+    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
+        for(Player player : players) {
+            if (player.getName().equals(playerName)) {
+                player.setTilesTaken(orderedTiles);
+            }
+            return;
+        }
+    }
+
+    @Override
+    public void insert(String playerName, int column) throws InvalidParameterException, FullColumnException {
+        for (Player player : players) {
+            if (player.getName().equals(playerName)) {
+                for(ItemTile t: player.getTilesTaken()) {
+                    player.getBookshelf().insertTile(column, t);
+                }
+                return;
+            }
+        }
     }
 
     @Override
@@ -131,8 +123,18 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    private void addToken(String playerName, Token token) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                p.addObtainedToken(token);
+                p.addPoints(token.getValue());
+                return;
+            }
+        }
+    }
+
     @Override
-    public void refillLivingRoom() throws Exception {
+    public void refillLivingRoom(){
         livingRoom.refill();
     }
 
@@ -162,13 +164,14 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addObserver(Observer observer, String playerName) {
-        //TODO implementation
+    public boolean isRoomFull() {
+        return players.size()==gameConfig.getNumPlayers();
     }
 
     @Override
     public ChatModel getChatModel() {
         return chatSystem;
+
     }
 
     @Override

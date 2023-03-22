@@ -2,6 +2,7 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
+import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.security.InvalidParameterException;
@@ -36,9 +37,9 @@ public interface GameModel {
      */
     void draw(List<Position> positions, String playerName) throws InvalidParameterException;
 
-    void orderChosenTiles(List<ItemTile> orderedTiles) throws InvalidParameterException;
+    void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException;
 
-    void insert(String playerName, int column) throws InvalidParameterException;
+    void insert(String playerName, int column) throws InvalidParameterException, FullColumnException;
 
     /**
      * check if the player achieved the commonGoal and adds the obtained tokens to the player.

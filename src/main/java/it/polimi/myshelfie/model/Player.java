@@ -2,6 +2,7 @@ package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     private final String name;
@@ -10,6 +11,9 @@ public class Player {
     private final ArrayList<Token> obtainedTokens;
     private PersonalGoal personalGoal;
     private Bookshelf bookshelf;
+
+    private List<ItemTile> tilesTaken;
+
 
     public Player(String name){
         this.name = name;
@@ -69,4 +73,17 @@ public class Player {
         return personalGoal;
     }
     public Bookshelf getBookshelf(){return bookshelf;}
+
+    public void setTilesTaken(List<ItemTile> tilesTaken) {
+        this.tilesTaken = tilesTaken;
+    }
+
+    public List<ItemTile> getTilesTaken() {
+        return tilesTaken;
+    }
+
+    public void calculatePoints() {
+        //TODO implementation of adjacent tile point
+        points += personalGoal.achievedPoints(bookshelf.getBookshelfItems()) ;
+    }
 }
