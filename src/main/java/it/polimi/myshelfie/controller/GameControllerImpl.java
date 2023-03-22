@@ -11,12 +11,12 @@ import it.polimi.myshelfie.model.interfaces.GameModel;
 import java.util.List;
 
 public class GameControllerImpl implements GameController, ChatController {
-    GameModel gameModel;
-    ChatModel chatModel;
+    private GameModel gameModel;
+    private ChatModel chatModel;
 
     public GameControllerImpl(GameModel gameModel, ChatModel chatModel){
-        this.gameModel=gameModel;
-        this.chatModel=chatModel;
+        this.gameModel = gameModel;
+        this.chatModel = chatModel;
     }
     @Override
     public void deleteTileFromLivingRoom(List<Position> takenTiles){
@@ -30,13 +30,24 @@ public class GameControllerImpl implements GameController, ChatController {
         endTurn(playerName);
     }
 
+    @Override
+    public void addMessage(Message message){
+        chatModel.addMessage(message);
+    }
+
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
 
         gameModel.refillLivingRoom();
+        gameModel.nextTurn();
     }
 
-    public void addMessage(Message message){
-        chatModel.addMessage(message);
+    public boolean roomFull() {
+        return gameModel.getNumberOfPlayers() == gameModel.getGameConfig().getNumPlayers();
+    }
+
+    public void init() {
+        gameModel.init();
+        gameModel.setCommonGoals(CommonGoalFactory.getGoals(gameModel.getNumberOfPlayers()));
     }
 }

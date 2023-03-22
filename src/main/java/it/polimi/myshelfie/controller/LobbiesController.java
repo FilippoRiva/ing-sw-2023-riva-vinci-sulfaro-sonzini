@@ -3,8 +3,6 @@ package it.polimi.myshelfie.controller;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.Game;
-import it.polimi.myshelfie.model.interfaces.ChatModel;
-import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
 import java.util.ArrayList;
@@ -12,20 +10,18 @@ import java.util.HashMap;
 import java.util.List;
 
 public class LobbiesController implements LobbyController {
-    private HashMap<String, GameModel> games;
-    private HashMap<String, ChatModel> chats;
-    private HashMap<String, LobbyModel> lobbies;
+    private HashMap<String, GameControllerImpl> games = new HashMap<>();
+    private HashMap<String, LobbyModel> lobbiesModel = new HashMap<>();
     private List<GameFile> savedGames;
 
     @Override
     public void createGame(String playerName, String roomName) throws Exception {
-        if(!games.containsKey(roomName)) throw new Exception("room name is not available");
+        if(games.containsKey(roomName)) throw new Exception("room name is not available");
 
         LobbyModel gameLobby = new Game(roomName);
 
-        lobbies.put(roomName, gameLobby);
-        chats.put(roomName, gameLobby.getChatController());
-        games.put(roomName, gameLobby.getGameController());
+        lobbiesModel.put(roomName, gameLobby);
+        games.put(roomName, new GameControllerImpl(gameLobby.getGameController(), gameLobby.getChatController()));
 
         gameLobby.addPlayer(playerName);
     }
@@ -36,18 +32,17 @@ public class LobbiesController implements LobbyController {
     }
     @Override
     public List<String> askGameList() {
-        return new ArrayList<>(lobbies.keySet());
+        return new ArrayList<>(lobbiesModel.keySet());
     }
     @Override
     public void joinGame(String playerName, String roomName) throws Exception {
         if(!games.containsKey(roomName)) throw new Exception("room does not exist");
-        if(getLobby(roomName).isPlayerNameValid(playerName)) throw new Exception("player name already exists");
+        if(!getLobby(roomName).isPlayerNameValid(playerName)) throw new Exception("player name already exists");
 
         getLobby(roomName).addPlayer(playerName);
-        if(getController(roomName).getNumberOfPlayers() == getConfig(roomName).getNumPlayers()) {
-            getController(roomName).init();
 
-        }
+        if(getController(roomName).roomFull())
+            getController(roomName).init();
     }
     @Override
     public void exitGame(String playerName, String roomName) throws Exception {
@@ -55,16 +50,10 @@ public class LobbiesController implements LobbyController {
         getLobby(roomName).removePlayer(playerName);
     }
 
-    private GameModel getController(String roomName) {
-        return games.get(roomName);
-    }
-    private ChatModel getChat(String roomName) {
-        return chats.get(roomName);
-    }
     private LobbyModel getLobby(String roomName) {
-        return lobbies.get(roomName);
+        return lobbiesModel.get(roomName);
     }
-    private GameConfig getConfig(String roomName) {
-        return getLobby(roomName).getGameConfig();
+    private GameControllerImpl getController(String roomName) {
+        return games.get(roomName);
     }
 }
