@@ -17,7 +17,7 @@ public class Game implements GameModel, LobbyModel {
     private Player turn;
     private GameState currentState;
     private final ChatSystem chatSystem;
-    private CommonGoal[] commonGoals;
+    private List<CommonGoal> commonGoals;
     private LivingRoom livingRoom;
     private final ArrayList<Player> players;
 
@@ -36,7 +36,7 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void initializeGame() {
         turn = players.get(0);
-        commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
+        commonGoals = CommonGoalFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
     }
 

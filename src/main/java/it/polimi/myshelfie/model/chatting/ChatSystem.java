@@ -4,12 +4,11 @@ import it.polimi.myshelfie.model.interfaces.ChatModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observer;
 
 public class ChatSystem implements ChatModel {
 
     private final ArrayList<Message> messages;
-    private final HashMap<String,PlayerChat> playerChats;
+    private final HashMap<String, PlayerChat> playerChats;
 
     /**
      * Creates a Chat System
@@ -45,16 +44,6 @@ public class ChatSystem implements ChatModel {
         //to a player
         messages.add(message);
         playerChats.get(message.getReceiver()).addMessage(message);
-    }
-
-    /**
-     *
-     * @param player is the name of a new player that has to be added to this chat system
-     * @param observer is the Observer of the corresponding PlayerChatView representing his chat
-     */
-    @Override
-    public void addPlayerToChat(String player,Observer observer){
-        playerChats.put(player,new PlayerChat(player,observer));
     }
 
     /**

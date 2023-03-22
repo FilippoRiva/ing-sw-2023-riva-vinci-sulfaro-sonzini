@@ -16,14 +16,7 @@ class ChatSystemTest {
     void setUp() {
         //adding two players
         cs = new ChatSystem();
-        cs.addPlayerToChat("A", (o, arg) -> {
-            PlayerChatView pcw = (PlayerChatView)o  ;
-            messagesToA.add(pcw.getLastMessage());
-        });
-        cs.addPlayerToChat("B", (o, arg) -> {
-            PlayerChatView pcw = (PlayerChatView)o  ;
-            messagesToB.add(pcw.getLastMessage());
-        });
+        //TODO 
     }
     @Test
     void addMessage() {

@@ -1,6 +1,5 @@
 package it.polimi.myshelfie.model;
 
-import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.goals.*;
 
 import java.util.ArrayList;
@@ -30,44 +29,47 @@ public class CommonGoalFactory {
 
     /**
      * @param playerNum number of players for this game
-     * @return an array of length 2 containing two random common goals with Tokens already stacked on top
+     * @return a list containing random common goals with Tokens already stacked on top
      */
-    public static List<CommonGoal> getGoals(int playerNum,int commonGoalNum){
-        //TODO generico per numero di common goal
+    public static List<CommonGoal> getGoals(int playerNum, int commonGoalNum){
+        //TODO based on commonGoalNum
+
         Random random = new Random();
         int first = random.nextInt(12);
         int second;
         do{
             second = random.nextInt(12);
         }while(first == second);
-        CommonGoal[] result = new CommonGoal[2];
-        result[0] = goals.get(first);
-        result[1] = goals.get(second);
+
+        List<CommonGoal> result = new ArrayList<>(commonGoalNum);
+        result.add(goals.get(first));
+        result.add(goals.get(second));
+
         // adding tokens given the number of players
         switch (playerNum) {
             case 2 -> {
-                result[0].pushToken(Token.FOURFIRST);
-                result[0].pushToken(Token.EIGHTFIRST);
-                result[1].pushToken(Token.FOURSECOND);
-                result[1].pushToken(Token.EIGHTSECOND);
+                result.get(0).pushToken(Token.FOURFIRST);
+                result.get(0).pushToken(Token.EIGHTFIRST);
+                result.get(1).pushToken(Token.FOURSECOND);
+                result.get(1).pushToken(Token.EIGHTSECOND);
             }
             case 3 -> {
-                result[0].pushToken(Token.FOURFIRST);
-                result[0].pushToken(Token.SIXFIRST);
-                result[0].pushToken(Token.EIGHTFIRST);
-                result[1].pushToken(Token.FOURSECOND);
-                result[1].pushToken(Token.EIGHTSECOND);
-                result[1].pushToken(Token.SIXSECOND);
+                result.get(0).pushToken(Token.FOURFIRST);
+                result.get(0).pushToken(Token.SIXFIRST);
+                result.get(0).pushToken(Token.EIGHTFIRST);
+                result.get(1).pushToken(Token.FOURSECOND);
+                result.get(1).pushToken(Token.EIGHTSECOND);
+                result.get(1).pushToken(Token.SIXSECOND);
             }
             case 4 -> {
-                result[0].pushToken(Token.TWOFIRST);
-                result[0].pushToken(Token.FOURFIRST);
-                result[0].pushToken(Token.SIXFIRST);
-                result[0].pushToken(Token.EIGHTFIRST);
-                result[1].pushToken(Token.TWOSECOND);
-                result[1].pushToken(Token.FOURSECOND);
-                result[1].pushToken(Token.EIGHTSECOND);
-                result[1].pushToken(Token.SIXSECOND);
+                result.get(0).pushToken(Token.TWOFIRST);
+                result.get(0).pushToken(Token.FOURFIRST);
+                result.get(0).pushToken(Token.SIXFIRST);
+                result.get(0).pushToken(Token.EIGHTFIRST);
+                result.get(1).pushToken(Token.TWOSECOND);
+                result.get(1).pushToken(Token.FOURSECOND);
+                result.get(1).pushToken(Token.EIGHTSECOND);
+                result.get(1).pushToken(Token.SIXSECOND);
             }
         }
         return result;
