@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CommonGoalFactory {
+    private static ArrayList<CommonGoal> goals = initialize();
 
-    /**
-     * @return an array of length 2 containing two random common goals with Tokens already stacked on top
-     */
-    public static CommonGoal[] getGoals(int playerNum){
-        // selecting random goals
-        ArrayList<CommonGoal> goals = new ArrayList<>();
+    private static ArrayList<CommonGoal> initialize(){
+        goals = new ArrayList<>();
         goals.add(new CommonGoalCorner());
         goals.add(new CommonGoalDiagonal());
         goals.add(new CommonGoalEightTiles());
@@ -26,6 +23,15 @@ public class CommonGoalFactory {
         goals.add(new CommonGoalTwoLines());
         goals.add(new CommonGoalTwoSquares());
         goals.add(new CommonGoalX());
+
+        return goals;
+    }
+
+    /**
+     * @param playerNum number of players for this game
+     * @return an array of length 2 containing two random common goals with Tokens already stacked on top
+     */
+    public static CommonGoal[] getGoals(int playerNum){
         Random random = new Random();
         int first = random.nextInt(12);
         int second;
