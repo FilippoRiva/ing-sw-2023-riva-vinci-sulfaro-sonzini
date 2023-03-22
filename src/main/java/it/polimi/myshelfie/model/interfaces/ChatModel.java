@@ -11,10 +11,6 @@ public interface ChatModel {
      */
     void addMessage(Message message);
 
-    /**
-     *
-     * @param player is the name of a new player that has to be added to the chat
-     * @param observer is the observer of the corresponding PlayerChatView representing his chat
-     */
-    void addPlayerToChat(String player,Observer observer);
+    //TODO metodo per settare il pattern Observer/Listener da parte del controller
+
 }

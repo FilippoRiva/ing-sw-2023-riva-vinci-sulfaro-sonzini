@@ -132,12 +132,8 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void refillLivingRoom() {
-        try {
-            livingRoom.refill();
-        }catch(Exception e){
-
-        }
+    public void refillLivingRoom() throws Exception {
+        livingRoom.refill();
     }
 
     @Override
@@ -171,12 +167,12 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public ChatModel getChatController() {
+    public ChatModel getChatModel() {
         return chatSystem;
     }
 
     @Override
-    public GameModel getGameController() {
+    public GameModel getGameModel() {
         return this;
     }
 

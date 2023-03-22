@@ -1,16 +1,13 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
-import it.polimi.myshelfie.model.LivingRoom;
-import it.polimi.myshelfie.model.exceptions.GameFullException;
-import it.polimi.myshelfie.model.exceptions.NameTakenException;
-
-import java.util.Observer;
 
 public interface LobbyModel {
+    /**
+     * sets the game config to be used by the game
+     * @param config
+     */
     void setGameConfig(GameConfig config);
-    GameConfig getGameConfig();
-
     /**
      *
      * @param playerName is the name of the player.
@@ -29,9 +26,13 @@ public interface LobbyModel {
      * @param playerName is the name of the player that has to be removed from the game
      */
     void removePlayer(String playerName);
-    void addObserver(Observer observer, String playerName);
 
-    ChatModel getChatController();
+    boolean isRoomFull();
 
-    GameModel getGameController();
+    ChatModel getChatModel();
+
+    GameModel getGameModel();
+
+    //TODO metodo per settare il pattern Observer/Listener da parte del controller
+
 }

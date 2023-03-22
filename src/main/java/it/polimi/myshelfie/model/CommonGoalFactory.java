@@ -1,9 +1,10 @@
-package it.polimi.myshelfie.controller;
+package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.goals.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class CommonGoalFactory {
@@ -31,7 +32,8 @@ public class CommonGoalFactory {
      * @param playerNum number of players for this game
      * @return an array of length 2 containing two random common goals with Tokens already stacked on top
      */
-    public static CommonGoal[] getGoals(int playerNum){
+    public static List<CommonGoal> getGoals(int playerNum,int commonGoalNum){
+        //TODO generico per numero di common goal
         Random random = new Random();
         int first = random.nextInt(12);
         int second;

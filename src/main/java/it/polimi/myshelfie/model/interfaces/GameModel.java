@@ -4,83 +4,66 @@ import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Observer;
 
 public interface GameModel {
     /**
-     * initialize game
+     * Initialize game with the GameConfig that have been previously set.
+     * If no custom GameConfig is set the default one is used.
+     * Notifies every view on the lobby.
      */
     void init();
 
     /**
-     * set the commonGoal of the game
-     * @param commonGoals two random commonGoals
-     */
-    void setCommonGoals(CommonGoal[] commonGoals);
-
-    /**
-     * change the state of the game
+     * change the state of the game and notifies every view on the game
      * @param state the new state
      */
     void setState(GameState state);
 
     /**
-     * delete the tiles from the livingRoom
-     * @param takenTiles list of coordinates where the player taken the tiles
-     *
+     * @return the current state previously set by setState()
      */
-    void deleteTilesFromLivingRoom(List<Position> takenTiles);
+    GameState getState();
 
     /**
-     * insert the tiles in the bookshelf
-     * @param playerName player playing
-     * @param takenTiles list of tiles taken by the player in order
-     * @param column column choose by the player
-     *
+     * Draws the given positions from the living room
+     * @param positions the positions to be removed from the board, where the first in the list is the first one to be
+     *                  inserted in the player's bookshelf, and the last one is the last one to be inserted.
+     * @param playerName the name of the player drawing the tiles
+     * @throws InvalidParameterException if the given positions/column are/is not valid
      */
-    void addTilesInBookshelf(String playerName, List<ItemTile> takenTiles, int column);
+    void draw(List<Position> positions, String playerName) throws InvalidParameterException;
+
+    void orderChosenTiles(List<ItemTile> orderedTiles) throws InvalidParameterException;
+
+    void insert(String playerName, int column) throws InvalidParameterException;
 
     /**
-     * change the current player playing
-     */
-    void nextTurn();
-
-    /**
-     *
-     * @param playerName name of the player that has completed a common goal.
-     * @param token is the token obtained from the completed common goal.
-     */
-    void addToken(String playerName, Token token);
-
-    /**
-     *
-     * @param playerName is the name of the player playing.
-     * @param points ae the points the player obtained after his turn.
-     */
-    void addPoints(String playerName, int points);
-
-    /**
-     *
-     * @return the numbers of players
-     */
-    int getNumberOfPlayers();
-
-    /**
-     *
-     * @return gameConfig of this game
-     */
-    GameConfig getGameConfig();
-
-    /**
-     * check if the player achieved the commonGoal
+     * check if the player achieved the commonGoal and adds the obtained tokens to the player.
+     * to be called at the end of a player's turn
      * @param playerName player playing
      */
     void checkCommonGoal(String playerName);
 
     /**
-     * refill the livingRoom
+     * refill the livingRoom if refillable
      */
     void refillLivingRoom();
-    void addObserver(Observer observer, String playerName);
+
+    /**
+     * change the current player playing and notifies every view
+     */
+    void nextTurn();
+
+    /**
+     * if last round and last player calculates the results
+     */
+    void calculateWinResults();
+
+    //TODO Altre cose logiche utili al controller per far proseguire il flusso della partita come:
+    // isLastRound, isBookshelfFull, isLastPlayer, isCurrentPlayer
+
+    //TODO metodo per settare il pattern Observer/Listener da parte del controller
 }

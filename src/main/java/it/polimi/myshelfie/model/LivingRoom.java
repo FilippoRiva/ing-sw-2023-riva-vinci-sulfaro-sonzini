@@ -61,11 +61,11 @@ public class LivingRoom {
     }
 
     /**
-     * If the board is refillable it refills the board with the remaining tiles in the bag
-     * @throws Exception if the board is not refillable
+     * If the board is refillable it refills the board with the remaining tiles in the bag.
+     * If it isn't it does nothing.
      */
-    public void refill() throws Exception{
-        if(!isRefillable()) throw new Exception("Board not refillable, remove some tiles");
+    public void refill(){
+        if(!isRefillable()) return;
         boolean emptyBag = bag.empty();
         if(emptyBag) return;
         int wingSize = offset-1;
