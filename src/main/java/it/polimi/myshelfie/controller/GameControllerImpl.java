@@ -5,9 +5,11 @@ import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 public class GameControllerImpl implements GameController, ChatController {
@@ -18,36 +20,34 @@ public class GameControllerImpl implements GameController, ChatController {
         this.gameModel = gameModel;
         this.chatModel = chatModel;
     }
-    @Override
-    public void deleteTileFromLivingRoom(List<Position> takenTiles){
-        gameModel.deleteTilesFromLivingRoom(takenTiles);
+
+    public void initializeGame() {
+        gameModel.initializeGame();
     }
 
     @Override
-    public void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName) {
-        gameModel.addTilesInBookshelf(playerName, takenTiles, column);
+    public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
+        gameModel.drawTiles(positions, playerName);
+    }
+
+    @Override
+    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
+        gameModel.orderChosenTiles(orderedTiles, playerName);
+    }
+
+    @Override
+    public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
+        gameModel.insertTiles(playerName, column);
 
         endTurn(playerName);
     }
-
-    @Override
-    public void addMessage(Message message){
-        chatModel.addMessage(message);
-    }
-
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
-
         gameModel.refillLivingRoom();
         gameModel.nextTurn();
     }
-
-    public boolean roomFull() {
-        return gameModel.getNumberOfPlayers() == gameModel.getGameConfig().getNumPlayers();
-    }
-
-    public void init() {
-        gameModel.init();
-        gameModel.setCommonGoals(CommonGoalFactory.getGoals(gameModel.getNumberOfPlayers()));
+    @Override
+    public void addMessage(Message message){
+        chatModel.addMessage(message);
     }
 }

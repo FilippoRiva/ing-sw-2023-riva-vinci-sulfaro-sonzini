@@ -2,20 +2,19 @@ package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.exceptions.FullColumnException;
+
+import java.security.InvalidParameterException;
 import java.util.List;
 
 public interface GameController {
-    /**
-     *
-     * @param takenTiles are the tiles taken by the player from the living room.
-     *                   These tiles are removed from the board.
-     */
-    void deleteTileFromLivingRoom(List<Position> takenTiles) throws Exception;
+    void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException;
 
-    /**
-     *
-      * @param takenTiles are the ordered tiles to be placed in the bookshelf.
-     * @param column is the selected column where to put the taken tiles.
-     */
-    void insertTileInBookshelf(List<ItemTile> takenTiles, int column, String playerName);
+    void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException;
+
+    void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException;
+
+
+    //TODO methods to manage Observer/Listener
+
 }

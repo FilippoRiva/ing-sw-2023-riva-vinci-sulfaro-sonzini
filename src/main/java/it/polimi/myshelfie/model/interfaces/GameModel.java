@@ -1,13 +1,10 @@
 package it.polimi.myshelfie.model.interfaces;
 
-import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
-import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Observer;
 
 public interface GameModel {
     /**
@@ -15,7 +12,7 @@ public interface GameModel {
      * If no custom GameConfig is set the default one is used.
      * Notifies every view on the lobby.
      */
-    void init();
+    void initializeGame();
 
     /**
      * change the state of the game and notifies every view on the game
@@ -35,11 +32,11 @@ public interface GameModel {
      * @param playerName the name of the player drawing the tiles
      * @throws InvalidParameterException if the given positions/column are/is not valid
      */
-    void draw(List<Position> positions, String playerName) throws InvalidParameterException;
+    void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException;
 
     void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException;
 
-    void insert(String playerName, int column) throws InvalidParameterException, FullColumnException;
+    void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException;
 
     /**
      * check if the player achieved the commonGoal and adds the obtained tokens to the player.
@@ -63,8 +60,8 @@ public interface GameModel {
      */
     void calculateWinResults();
 
-    //TODO Altre cose logiche utili al controller per far proseguire il flusso della partita come:
+    //TODO Methods to manage progress of the game such as:
     // isLastRound, isBookshelfFull, isLastPlayer, isCurrentPlayer
 
-    //TODO metodo per settare il pattern Observer/Listener da parte del controller
+    //TODO methods to manage Observer/Listener
 }

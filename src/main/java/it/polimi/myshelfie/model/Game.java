@@ -11,11 +11,9 @@ import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
-    private final String gameName;
     private Player turn;
     private GameState currentState;
     private final ChatSystem chatSystem;
@@ -31,18 +29,16 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void setGameConfig(GameConfig config) {
-        this.gameConfig = config;
+    public void setGameConfig(GameConfig gameConfig) {
+        this.gameConfig = gameConfig;
     }
 
     @Override
-    public void init() {
+    public void initializeGame() {
         turn = players.get(0);
         commonGoals = new CommonGoal[gameConfig.getNumCommonGoal()];
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
     }
-
-
 
     @Override
     public void nextTurn() {
@@ -62,7 +58,6 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void calculateWinResults() {
-        //conta punti per ogni player
         for(Player player : players) {
             player.calculatePoints();
         }
@@ -79,7 +74,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void draw(List<Position> positions, String playerName) throws InvalidParameterException {
+    public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
         List<ItemTile> items = new ArrayList<>();
         for(Position p : positions){
             items.add(livingRoom.removeTile(p.getX(), p.getY()));
@@ -103,7 +98,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void insert(String playerName, int column) throws InvalidParameterException, FullColumnException {
+    public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
         for (Player player : players) {
             if (player.getName().equals(playerName)) {
                 for(ItemTile t: player.getTilesTaken()) {
@@ -164,8 +159,8 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public boolean isRoomFull() {
-        return players.size()==gameConfig.getNumPlayers();
+    public boolean isLobbyFull() {
+        return players.size() == gameConfig.getNumPlayers();
     }
 
     @Override

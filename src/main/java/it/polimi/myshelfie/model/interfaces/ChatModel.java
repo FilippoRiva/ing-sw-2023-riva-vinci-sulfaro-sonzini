@@ -11,6 +11,6 @@ public interface ChatModel {
      */
     void addMessage(Message message);
 
-    //TODO metodo per settare il pattern Observer/Listener da parte del controller
+    //TODO methods to manage Observer/Listener
 
 }

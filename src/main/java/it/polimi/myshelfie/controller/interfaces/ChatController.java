@@ -9,4 +9,7 @@ public interface ChatController {
      *
      */
     void addMessage(Message message);
+
+    //TODO methods to manage Observer/Listener between model and view
+
 }

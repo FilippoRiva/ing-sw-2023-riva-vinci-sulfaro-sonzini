@@ -27,12 +27,12 @@ public interface LobbyModel {
      */
     void removePlayer(String playerName);
 
-    boolean isRoomFull();
+    boolean isLobbyFull();
 
     ChatModel getChatModel();
 
     GameModel getGameModel();
 
-    //TODO metodo per settare il pattern Observer/Listener da parte del controller
+    //TODO methods to manage Observer/Listener
 
 }

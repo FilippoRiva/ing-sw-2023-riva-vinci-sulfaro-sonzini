@@ -6,24 +6,17 @@ import java.util.List;
 
 public class Player {
     private final String name;
-    private int position;
     private int points;
     private final ArrayList<Token> obtainedTokens;
     private PersonalGoal personalGoal;
     private Bookshelf bookshelf;
-
     private List<ItemTile> tilesTaken;
 
 
     public Player(String name){
         this.name = name;
-        position = -1;
         points = 0;
         obtainedTokens = new ArrayList<>();
-    }
-
-    public void setPosition(int position){
-        this.position = position;
     }
 
     public void setPersonalGoal(PersonalGoal personalGoal) {
@@ -46,10 +39,6 @@ public class Player {
         return points;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
     /**
      *
      * @param points are the points obtained in that turn from the player
@@ -60,9 +49,6 @@ public class Player {
 
     public String getName(){
         return name;
-    }
-    public int getPosition(){
-        return position;
     }
 
     public ArrayList<Token> getObtainedTokens() {
