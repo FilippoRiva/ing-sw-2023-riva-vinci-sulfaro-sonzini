@@ -14,13 +14,4 @@ public class Position {
         return y;
     }
 
-    public boolean isValid(int livingRoomDimension) {
-        //TODO is outside the no-go cells
-        if (x < -livingRoomDimension / 2 || x > livingRoomDimension / 2)
-            return false;
-        if (y < -livingRoomDimension / 2 || y > livingRoomDimension / 2)
-            return false;
-
-        return true;
-    }
 }

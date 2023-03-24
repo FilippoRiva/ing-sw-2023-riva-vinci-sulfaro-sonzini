@@ -151,7 +151,7 @@ public class Game implements GameModel, LobbyModel {
 
     private boolean positionsAreValid(List<Position> positions){
         for(Position p : positions){
-            if(!p.isValid(gameConfig.getLivingRoomSize())) return false;
+            if(!livingRoom.isValid(p)) return false;
             if(!livingRoom.atLeastOneSideFree(p)) return false;
         }
 

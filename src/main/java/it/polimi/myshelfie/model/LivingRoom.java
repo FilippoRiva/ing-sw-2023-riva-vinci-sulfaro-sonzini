@@ -6,6 +6,7 @@ import java.util.*;
 public class LivingRoom {
     private final Stack<ItemTile> bag;
     private final ItemTile[][] table;
+    private final boolean[][] validPositions;
     private final int size;
     private final int offset;
     private final int numberOfPlayers;
@@ -51,23 +52,19 @@ public class LivingRoom {
         Collections.shuffle(bag);
         this.numberOfPlayers = numberOfPlayers;
         this.table = new ItemTile[size][size];
+        this.validPositions = new boolean[size][size];
         this.size = size;
         this.offset = (size-1)/2;
         for(int x = 0; x<size;x++){
             for(int y = 0; y<size;y++){
-                table[x][y]= new ItemTile(ItemTileType.EMPTY,0);
+                table[x][y] = null;
+                validPositions[x][y] = false;
             }
         }
+        initializeValidPositions();
     }
 
-    /**
-     * If the board is refillable it refills the board with the remaining tiles in the bag.
-     * If it isn't it does nothing.
-     */
-    public void refill(){
-        if(!isRefillable()) return;
-        boolean emptyBag = bag.empty();
-        if(emptyBag) return;
+    private void initializeValidPositions() {
         int wingSize = offset-1;
         if(size>9) {
             //central square
@@ -86,17 +83,17 @@ public class LivingRoom {
         else if (size == 9){
             switch (numberOfPlayers){
                 case 2 -> {
-                   fillArea(-1,1,3,3);
+                    fillArea(-1,1,3,3);
 
-                   fillArea(-3,0,2,2);
-                   fillArea(-1,3,2,2);
-                   fillArea(2,1,2,2);
-                   fillArea(0,-2,2,2);
+                    fillArea(-3,0,2,2);
+                    fillArea(-1,3,2,2);
+                    fillArea(2,1,2,2);
+                    fillArea(0,-2,2,2);
 
-                   fillArea(-2,1,1,1);
-                   fillArea(1,2,1,1);
-                   fillArea(2,-1,1,1);
-                   fillArea(-1,-2,1,1);
+                    fillArea(-2,1,1,1);
+                    fillArea(1,2,1,1);
+                    fillArea(2,-1,1,1);
+                    fillArea(-1,-2,1,1);
                 }
                 case 3 ->{
                     fillArea(-2,2,5,5);
@@ -128,6 +125,23 @@ public class LivingRoom {
         }
     }
 
+
+
+    /**
+     * Fills a certain area of the table until the bag of ItemTiles is empty
+     * @param x the upper left corner's x coordinate
+     * @param y the upper left corner's y coordinate
+     * @param width the width of the area to fill
+     * @param height the height of the area to fill
+     */
+    private void fillArea(int x,int y,int width, int height){
+        for(int xPos = x; xPos<x+width; xPos++){
+            for(int yPos = y; yPos>y-height; yPos--){
+                setValid(xPos,yPos);
+            }
+        }
+    }
+
     /**
      *
      * @param x upper left corner x coordinate
@@ -142,86 +156,82 @@ public class LivingRoom {
      */
     private void fillStair(int x,int y,int size, int orientation){
         if(bag.empty()) return;
-        ItemTile[][] stair = new ItemTile[size][size];
+        boolean[][] stair = new boolean[size][size];
         for(int i = 0;i<size;i++){
             for(int j = 0;j<size;j++){
-                if(i>=j) stair[i][j] = bag.pop();
-                else stair[i][j] = new ItemTile(ItemTileType.EMPTY,0);
-                if(bag.empty()) break;
-            }
-            if(bag.empty()) break;
-        }
-        while(orientation!=0){
-            stair = rotateMatrix(stair);
-            orientation--;
-        }
-        for(int i = 0;i<size;i++){
-            for(int j = 0;j<size;j++){
-                putTile(stair[i][j],x+i,y+j-size+1);
+                stair[i][j] = j <= i;
             }
         }
+        switch (orientation){
+            case 1 -> flipVertical(stair);
+            case 2 -> {
+                flipHorizontal(stair);
+                flipVertical(stair);
+            }
+            case 3 -> flipHorizontal(stair);
+        }
+        for(int i = 0; i<size; i++){
+            for(int j = 0; j<size; j++){
+                if(stair[i][j]) setValid(x+i,y-size+1+j);
+            }
+        }
+
     }
 
-    /**
-     * Rotates a matrix of 90 degrees
-     * @param matrix the matrix to rotate
-     * @return the rotated matrix
-     */
-    private ItemTile[][] rotateMatrix(ItemTile[][] matrix){
-        return substituteTiles(findTransposition(matrix));
-    }
-
-    /**
-     * Transpose a matrix taking elements below the diagonal and swapping them with the elements over the diagonal
-     * @param matrix the matrix to transpose
-     * @return the transposed matrix
-     */
-    private ItemTile[][] findTransposition(ItemTile[][] matrix){
+    private void flipHorizontal(boolean[][] matrix){
         int size = matrix.length;
-        ItemTile temp;
-        for(int x = 0; x<size; x++){
-            for(int y = 0; y<x ;y++){
-               temp = matrix[x][y];
-               matrix[x][y]=matrix[y][x];
-               matrix[y][x]=temp;
+        for(int x=0; x<size/2; x++){
+            for(int y=0; y<size; y++){
+                boolean temp = matrix[x][y];
+                matrix[x][y] = matrix[size-x-1][y];
+                matrix[size-x-1][y] = temp;
             }
         }
-        return matrix;
+    }
+
+    private void flipVertical(boolean[][] matrix){
+        int size;
+        size = matrix.length;
+        for(int x=0; x<size; x++){
+            for(int y=0; y<size/2; y++){
+                boolean temp = matrix[x][y];
+                matrix[x][y] = matrix[x][size-y-1];
+                matrix[x][size-y-1] = temp;
+            }
+        }
+    }
+
+
+    private void setValid(int x, int y){
+        validPositions[x+offset][offset-y] = true;
+    }
+
+
+    /**
+     * If the board is refillable it refills the board with the remaining tiles in the bag.
+     * If it isn't it does nothing.
+     */
+    public void refill(){
+        if(!isRefillable()) return;
+        boolean emptyBag = bag.empty();
+        if(emptyBag) return;
+        for(int x=-offset; x<=offset;x++){
+            for(int y=-offset; y<=offset;y++){
+                if(isValid(x,y)) putTile(bag.pop(),x,y);
+                if(bag.isEmpty()) break;
+            }
+            if(bag.isEmpty()) break;
+        }
     }
 
     /**
-     * Swaps the tiles of a matrix over the central axis
-     * @param matrix to swap
-     * @return the swapped matrix
+     * Let you see what tile is at a certain table coordinate
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return the ItemTile at [x,y] position
      */
-    private ItemTile[][] substituteTiles(ItemTile[][] matrix){
-        int size = matrix.length;
-        ItemTile temp;
-        for(int y = size-1 ; y>=0;y--){
-            for(int x = 0 ; x<size/2;x++){
-                temp = matrix[x][y];
-                matrix[x][y] = matrix[size-1-x][y];
-                matrix[size-1-x][y] = temp;
-            }
-        }
-        return matrix;
-    }
-
-    /**
-     * Fills a certain area of the table until the bag of ItemTiles is empty
-     * @param x the upper left corner's x coordinate
-     * @param y the upper left corner's y coordinate
-     * @param width the width of the area to fill
-     * @param height the height of the area to fill
-     */
-    private void fillArea(int x,int y,int width, int height){
-        if(bag.empty()) return;
-        for(int xPos = x; xPos<x+width; xPos++){
-            for(int yPos = y; yPos>y-height; yPos--){
-                putTile(bag.pop(),xPos,yPos);
-                if(bag.empty()) return;
-            }
-        }
+    public ItemTile getTile(int x, int y){
+        return table[x+offset][offset-y];
     }
 
     /**
@@ -246,15 +256,6 @@ public class LivingRoom {
         return oldTile;
     }
 
-    /**
-     * Let you see what tile is at a certain table coordinate
-     * @param x x coordinate
-     * @param y y coordinate
-     * @return the ItemTile at [x,y] position
-     */
-    public ItemTile getTile(int x, int y){
-        return table[x+offset][y+offset];
-    }
 
     public ItemTile[][] getTable() {
         return table;
@@ -266,12 +267,27 @@ public class LivingRoom {
     public boolean isRefillable(){
         for(int y = offset; y>=-offset; y--){
             for(int x = -offset; x<=offset; x++){
-                if(getTile(x,y).getType()!= ItemTileType.EMPTY){
-                    if(getTile(x+1,y).getType()!= ItemTileType.EMPTY ||getTile(x,y-1).getType()!= ItemTileType.EMPTY) return false;
+                if(getTile(x,y)!=null && getTile(x,y).getType()!= ItemTileType.EMPTY){
+                    if(getTile(x+1,y)!=null && getTile(x+1,y).getType()!= ItemTileType.EMPTY) return false;
+                    if(getTile(x,y-1)!=null && getTile(x,y-1).getType()!= ItemTileType.EMPTY) return false;
                 }
             }
         }
         return true;
+    }
+
+    public boolean isValid(Position p) {
+        int x = p.getX();
+        int y = p.getY();
+        if (x < -offset / 2 || x > offset / 2)
+            return false;
+        if (y < -offset / 2 || y > offset / 2)
+            return false;
+        return isValid(p.getX(), p.getY());
+    }
+
+    private boolean isValid(int x,int y){
+        return validPositions[x+offset][offset-y];
     }
 
     public boolean atLeastOneSideFree(Position p){
