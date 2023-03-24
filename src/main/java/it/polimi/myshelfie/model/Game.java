@@ -3,10 +3,7 @@ package it.polimi.myshelfie.model;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
-import it.polimi.myshelfie.model.goals.CommonGoal;
-import it.polimi.myshelfie.model.goals.CommonGoalDefaultsFactory;
-import it.polimi.myshelfie.model.goals.PersonalGoal;
-import it.polimi.myshelfie.model.goals.PersonalGoalDefaults;
+import it.polimi.myshelfie.model.goals.*;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
@@ -83,20 +80,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     private List<PersonalGoal> generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal){
-        ArrayList<Integer> numbersList = new ArrayList<>();
-        Random rand = new Random();
-        for(int i = 0; i < numOfPlayers*numOfPersonalGoal; ){
-            int randomInt = rand.nextInt(PersonalGoalDefaults.values().length);
-            if(!numbersList.contains(randomInt)){
-                numbersList.add(randomInt);
-                i++;
-            }
-        }
-        ArrayList<PersonalGoal> result = new ArrayList<>();
-        for(Integer i : numbersList){
-            result.add(new PersonalGoal(PersonalGoalDefaults.values()[i]));
-        }
-        return result;
+        return PersonalGoalFactory.getPersonalGoals(numOfPersonalGoal,gameConfig.getBookshelfDimension(),numOfPlayers,gameConfig.getPersonalGoalRatio());
     }
 
 
