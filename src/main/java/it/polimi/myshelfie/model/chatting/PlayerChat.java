@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Observer;
 
 public class PlayerChat {
-    //TODO new observer pattern
+    //TODO Observer/Listener implementation
     private final ArrayList<Message> messages;
     private final String player;
     private final PlayerChatView playerChatView;

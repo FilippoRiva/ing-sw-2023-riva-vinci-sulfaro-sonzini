@@ -15,6 +15,7 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 public class Game implements GameModel, LobbyModel {
+    //TODO Observer/Listener implementation
     private GameConfig gameConfig;
     private Player turn;
     private GameState currentState;

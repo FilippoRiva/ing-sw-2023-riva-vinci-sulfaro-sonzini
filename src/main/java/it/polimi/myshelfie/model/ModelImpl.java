@@ -6,6 +6,7 @@ import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import java.util.HashMap;
 
 public class ModelImpl implements Model {
+    //TODO Observer/Listener implementation
     private final HashMap<String, LobbyModel> lobbiesModel = new HashMap<>();
 
     public LobbyModel addLobby(String lobbyName) throws Exception {
