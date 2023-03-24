@@ -4,6 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalThreeColumns extends CommonGoal{
+    private final int id = 8;
     /**
      *
      * @param bookshelf is a generic n x m matrix of ItemTile
@@ -40,5 +41,10 @@ public class CommonGoalThreeColumns extends CommonGoal{
                 type_count++;
         }
         return type_count <= maxNumber;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 }

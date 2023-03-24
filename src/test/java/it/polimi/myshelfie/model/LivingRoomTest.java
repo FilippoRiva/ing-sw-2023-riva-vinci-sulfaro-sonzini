@@ -22,7 +22,7 @@ class LivingRoomTest {
             assertTrue(tableEqual(table, livingRoom.getTable()));
         }
         for(int size = 11 ;size<=51;size+=2){
-            GameConfig gc = new GameConfig(4,new Dimension(5,6),2,22*size/9,size, 1);
+            GameConfig gc = new GameConfig(4,new Dimension(5,6),2,22*size/9,size, 1,0);
             livingRoom = new LivingRoom(gc.getNumTilesPerType(),gc.getLivingRoomSize(),gc.getNumPlayers());
             assertTrue(livingRoom.isRefillable());
             livingRoom.refill();

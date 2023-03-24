@@ -4,7 +4,7 @@ import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
-import it.polimi.myshelfie.model.goals.CommonGoalFactory;
+import it.polimi.myshelfie.model.goals.CommonGoalDefaultsFactory;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 import it.polimi.myshelfie.model.goals.PersonalGoalDefaults;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
@@ -68,7 +68,7 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void initialize() {
         turn = players.get(0);
-        commonGoals = CommonGoalFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
+        commonGoals = CommonGoalDefaultsFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
 
         List<PersonalGoal> goals = generatePersonalGoals(gameConfig.getNumPlayers(), gameConfig.getNumPersonalGoals());

@@ -17,7 +17,7 @@ class GameConfigTest {
         int numPersonalGoals = 1;
         GameConfig gc = null;
         try {
-            gc = new GameConfig(numPlayers,dimension,numCommonGoal,numTilesPerType,livingRoomSize, numPersonalGoals);
+            gc = new GameConfig(numPlayers,dimension,numCommonGoal,numTilesPerType,livingRoomSize, numPersonalGoals,0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

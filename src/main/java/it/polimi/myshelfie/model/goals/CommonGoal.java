@@ -10,6 +10,7 @@ public abstract class CommonGoal {
     private final Stack<Token> tokens = new Stack<>();
 
     public abstract boolean isVerified(ItemTile[][] bookshelf);
+    public abstract int getId();
     public Token peekToken() throws EmptyStackException {
         return tokens.peek();
     }

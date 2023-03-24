@@ -4,6 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalStairs extends CommonGoal{
+    private final int id = 11;
     int height;
     int width;
     /**
@@ -45,5 +46,10 @@ public class CommonGoalStairs extends CommonGoal{
             if ((i-k)>=0 && bookshelf[i-k][j-k].getType() != ItemTileType.EMPTY) return false;
         }
         return true;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 }

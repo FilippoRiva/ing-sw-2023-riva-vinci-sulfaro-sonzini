@@ -4,6 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalTwoLines extends CommonGoal{
+    private final int id = 7;
     /**
      *
      * @param bookshelf is a generic n x m matrix of ItemTile
@@ -21,6 +22,11 @@ public class CommonGoalTwoLines extends CommonGoal{
             }
         }
         return row_count >= 2;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     private boolean checkRow(ItemTile[] row, int width){

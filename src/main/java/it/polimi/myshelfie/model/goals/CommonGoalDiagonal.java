@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalDiagonal extends CommonGoal{
     private int width;
+    private final int id = 1;
     /**
      *
      * @param bookshelf is a generic matrix[x][y] of ItemTile.
@@ -40,4 +41,8 @@ public class CommonGoalDiagonal extends CommonGoal{
         return true;
     }
 
+    @Override
+    public int getId() {
+        return id;
+    }
 }

@@ -9,6 +9,7 @@ public class GameConfig {
     private final int numTilesPerType;
     private final int livingRoomSize;
     private final int numPersonalGoals;
+    private final double personalGoalRatio;
 
     public GameConfig (int numPlayers){
         this.numPlayers = numPlayers;
@@ -17,15 +18,17 @@ public class GameConfig {
         this.numTilesPerType = 22;
         this.livingRoomSize = 9;
         this.numPersonalGoals = 1;
+        this.personalGoalRatio = 0;
     }
 
-    public GameConfig (int numPlayers, Dimension bookshelfDimension, int numCommonGoal, int numTilesPerType, int livingRoomSize, int numPersonalGoals) throws Exception{
+    public GameConfig (int numPlayers, Dimension bookshelfDimension, int numCommonGoal, int numTilesPerType, int livingRoomSize, int numPersonalGoals, double personalGoalRatio) throws Exception{
         this.numPlayers = numPlayers;
         this.bookshelfDimension = bookshelfDimension;
         this.numCommonGoal = numCommonGoal;
         this.numTilesPerType = numTilesPerType;
         this.livingRoomSize = livingRoomSize;
         this.numPersonalGoals = numPersonalGoals;
+        this.personalGoalRatio = personalGoalRatio;
         if(numPersonalGoals*numPlayers>12) throw new Exception("Invalid number of players or number of personal goals");
         if(bookshelfDimension.width> bookshelfDimension.height) throw new Exception("Invalid bookshelf size");
         if(livingRoomSize%2 == 0 || livingRoomSize < 9) throw new Exception("Invalid livingRoom Size");
@@ -46,6 +49,9 @@ public class GameConfig {
     }
     public int getLivingRoomSize() {
         return livingRoomSize;
+    }
+    public double getPersonalGoalRatio(){
+        return personalGoalRatio;
     }
 
 }
