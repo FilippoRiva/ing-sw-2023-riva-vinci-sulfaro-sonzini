@@ -11,7 +11,7 @@ public class LivingRoom {
     private final int numberOfPlayers;
 
     /**
-     * Creates a new empty living room of size x size dimension. The living room will contain a bag of item tiles with
+     * Creates a new empty livingRoom of size x size dimension. The livingRoom will contain a bag of item tiles with
      * a set number of tile per each tile type. The coordinate system has 0,0 at the center of the board.
      * Example of a 9x9 board<br>
      * -----------------------------------------------------<br>

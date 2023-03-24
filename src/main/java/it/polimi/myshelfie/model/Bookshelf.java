@@ -55,37 +55,20 @@ public class Bookshelf {
     }
 
     public int achievedAdjacentTiles(){
-        boolean boolBookshelf [][] = new boolean[height][width];
-        int points=0,n;
-        for(int i=0; i<height; i++){
-            for(int j=0; j<width; j++){
-                boolBookshelf[i][j]=false;
-            }
-        }
+        boolean[][] boolBookshelf = new boolean[height][width];
+        int points = 0, n;
+
+
         for(int i=0; i<height;i++){
             for(int j=0; j<width;j++){
-                if(!boolBookshelf[i][j] && bookshelfItems[i][j].getType()!=ItemTileType.EMPTY)
-                {
-                    n=checkAdjacent(boolBookshelf, i, j);
+                if(!boolBookshelf[i][j] && bookshelfItems[i][j].getType()!=ItemTileType.EMPTY) {
+                    n = checkAdjacent(boolBookshelf, i, j);
                     switch (n) {
-                        case 1, 2 -> {
-                            break;
-                        }
-                        case 3 -> {
-                            points += 2;
-                            break;
-                        }
-                        case 4 -> {
-                            points += 3;
-                            break;
-                        }
-                        case 5 -> {
-                            points += 5;
-                            break;
-                        }
-                        default -> {
-                            points += 8;
-                        }
+                        case 1, 2 -> {}
+                        case 3 -> points += 2;
+                        case 4 -> points += 3;
+                        case 5 -> points += 5;
+                        default -> points += 8;
                     }
                 }
             }

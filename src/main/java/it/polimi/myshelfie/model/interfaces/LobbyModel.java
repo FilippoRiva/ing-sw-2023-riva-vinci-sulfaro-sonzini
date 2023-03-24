@@ -5,7 +5,7 @@ import it.polimi.myshelfie.GameConfig;
 public interface LobbyModel {
     /**
      * sets the game config to be used by the game
-     * @param config
+     * @param config configurations for the game
      */
     void setGameConfig(GameConfig config);
     /**

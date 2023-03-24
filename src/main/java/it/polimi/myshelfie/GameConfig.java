@@ -28,7 +28,7 @@ public class GameConfig {
         this.numPersonalGoals = numPersonalGoals;
         if(numPersonalGoals*numPlayers>12) throw new Exception("Invalid number of players or number of personal goals");
         if(bookshelfDimension.width> bookshelfDimension.height) throw new Exception("Invalid bookshelf size");
-        if(livingRoomSize%2==0||livingRoomSize<9) throw new Exception("Invalid living Room Size");
+        if(livingRoomSize%2 == 0 || livingRoomSize < 9) throw new Exception("Invalid livingRoom Size");
     }
 
     public int getNumPlayers() {

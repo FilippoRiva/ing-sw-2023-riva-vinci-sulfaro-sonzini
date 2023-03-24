@@ -54,9 +54,9 @@ public class Game implements GameModel, LobbyModel {
         ArrayList<Integer> numbersList = new ArrayList<>();
         Random rand = new Random();
         for(int i = 0; i < numOfPlayers*numOfPersonalGoal; ){
-            int newRandomInt = rand.nextInt(PersonalGoalDefaults.values().length);
-            if(!numbersList.contains(newRandomInt)){
-                numbersList.add(newRandomInt);
+            int randomInt = rand.nextInt(PersonalGoalDefaults.values().length);
+            if(!numbersList.contains(randomInt)){
+                numbersList.add(randomInt);
                 i++;
             }
         }

@@ -30,8 +30,10 @@ public class CommonGoalThreeColumns extends CommonGoal{
             found =false;
             if(bookshelf[j][i].getType() == ItemTileType.EMPTY) return false;
             for(int k=height; k>j; k--) {
-                if (bookshelf[j][i].getType() == bookshelf[k][i].getType())
+                if (bookshelf[j][i].getType() == bookshelf[k][i].getType()) {
                     found = true;
+                    break;
+                }
             }
             if(!found)
                 type_count++;

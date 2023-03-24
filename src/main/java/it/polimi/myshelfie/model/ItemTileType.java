@@ -14,12 +14,12 @@ public enum ItemTileType {
 
     /**
      *
-     * @return a random ItemTile excluding ItemTile.EMPTY
+     * @return a random ItemTile excluding the EMPTY tile
      */
     public static ItemTileType random(){
         Random rand = new Random();
-        int newTilePos = rand.nextInt(ItemTileType.values().length-1);
-        return ItemTileType.values()[newTilePos];
+        int tilePos = rand.nextInt(ItemTileType.values().length-1);
+        return ItemTileType.values()[tilePos];
     }
 
     ItemTileType(String name){

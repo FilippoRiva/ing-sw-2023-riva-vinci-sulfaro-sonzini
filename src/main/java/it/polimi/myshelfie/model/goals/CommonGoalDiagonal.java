@@ -4,7 +4,6 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalDiagonal extends CommonGoal{
-    private int height;
     private int width;
     /**
      *
@@ -14,9 +13,9 @@ public class CommonGoalDiagonal extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        height = bookshelf.length - 1;
+        int height = bookshelf.length - 1;
         width = bookshelf[0].length - 1;
-        for(int startingPosition = height-width; startingPosition >= 0 ; startingPosition --){
+        for(int startingPosition = height -width; startingPosition >= 0 ; startingPosition --){
             if(checkDescendingDiagonal(startingPosition,bookshelf)) return true;
             if(checkAscendingDiagonal(startingPosition,bookshelf)) return true;
         }

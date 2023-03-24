@@ -26,7 +26,7 @@ public interface GameModel {
     GameState getState();
 
     /**
-     * Draws the given positions from the living room
+     * Draws the given positions from the livingRoom
      * @param positions the positions to be removed from the board, where the first in the list is the first one to be
      *                  inserted in the player's bookshelf, and the last one is the last one to be inserted.
      * @param playerName the name of the player drawing the tiles

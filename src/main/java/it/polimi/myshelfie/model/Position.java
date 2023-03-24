@@ -1,7 +1,5 @@
 package it.polimi.myshelfie.model;
 
-import java.awt.*;
-
 public class Position {
     private final int x;
     private final int y;

@@ -48,28 +48,28 @@ public class CommonGoalFactory {
         // adding tokens given the number of players
         switch (playerNum) {
             case 2 -> {
-                result.get(0).pushToken(Token.FOURFIRST);
-                result.get(0).pushToken(Token.EIGHTFIRST);
-                result.get(1).pushToken(Token.FOURSECOND);
-                result.get(1).pushToken(Token.EIGHTSECOND);
+                result.get(0).pushToken(Token.FOUR_FIRST);
+                result.get(0).pushToken(Token.EIGHT_FIRST);
+                result.get(1).pushToken(Token.FOUR_SECOND);
+                result.get(1).pushToken(Token.EIGHT_SECOND);
             }
             case 3 -> {
-                result.get(0).pushToken(Token.FOURFIRST);
-                result.get(0).pushToken(Token.SIXFIRST);
-                result.get(0).pushToken(Token.EIGHTFIRST);
-                result.get(1).pushToken(Token.FOURSECOND);
-                result.get(1).pushToken(Token.EIGHTSECOND);
-                result.get(1).pushToken(Token.SIXSECOND);
+                result.get(0).pushToken(Token.FOUR_FIRST);
+                result.get(0).pushToken(Token.SIX_FIRST);
+                result.get(0).pushToken(Token.EIGHT_FIRST);
+                result.get(1).pushToken(Token.FOUR_SECOND);
+                result.get(1).pushToken(Token.EIGHT_SECOND);
+                result.get(1).pushToken(Token.SIX_SECOND);
             }
             case 4 -> {
-                result.get(0).pushToken(Token.TWOFIRST);
-                result.get(0).pushToken(Token.FOURFIRST);
-                result.get(0).pushToken(Token.SIXFIRST);
-                result.get(0).pushToken(Token.EIGHTFIRST);
-                result.get(1).pushToken(Token.TWOSECOND);
-                result.get(1).pushToken(Token.FOURSECOND);
-                result.get(1).pushToken(Token.EIGHTSECOND);
-                result.get(1).pushToken(Token.SIXSECOND);
+                result.get(0).pushToken(Token.TWO_FIRST);
+                result.get(0).pushToken(Token.FOUR_FIRST);
+                result.get(0).pushToken(Token.SIX_FIRST);
+                result.get(0).pushToken(Token.EIGHT_FIRST);
+                result.get(1).pushToken(Token.TWO_SECOND);
+                result.get(1).pushToken(Token.FOUR_SECOND);
+                result.get(1).pushToken(Token.EIGHT_SECOND);
+                result.get(1).pushToken(Token.SIX_SECOND);
             }
         }
         return result;

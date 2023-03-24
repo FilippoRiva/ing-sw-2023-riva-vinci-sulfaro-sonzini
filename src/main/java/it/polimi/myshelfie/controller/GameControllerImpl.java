@@ -13,8 +13,8 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 public class GameControllerImpl implements GameController, ChatController {
-    private GameModel gameModel;
-    private ChatModel chatModel;
+    private final GameModel gameModel;
+    private final ChatModel chatModel;
 
     public GameControllerImpl(GameModel gameModel, ChatModel chatModel){
         this.gameModel = gameModel;

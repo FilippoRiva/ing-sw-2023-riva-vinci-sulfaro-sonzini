@@ -29,8 +29,10 @@ public class CommonGoalFourLines extends CommonGoal{
             found=false;
             if(row[i].getType() == ItemTileType.EMPTY) return false;
             for(int j=0; j<i; j++){
-                if(row[i].getType()==row[j].getType())
-                    found=true;
+                if (row[i].getType() == row[j].getType()) {
+                    found = true;
+                    break;
+                }
             }
             if(!found)
                 typeCount++;
