@@ -1,8 +1,9 @@
-package it.polimi.myshelfie.model;
+package it.polimi.myshelfie.model.goals;
 
-import it.polimi.myshelfie.model.goals.*;
+import it.polimi.myshelfie.model.Token;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -32,18 +33,14 @@ public class CommonGoalFactory {
      * @return a list containing random common goals with Tokens already stacked on top
      */
     public static List<CommonGoal> getGoals(int playerNum, int commonGoalNum){
-        //TODO based on commonGoalNum
-
-        Random random = new Random();
-        int first = random.nextInt(12);
-        int second;
-        do{
-            second = random.nextInt(12);
-        }while(first == second);
+        List<Integer> randomNumbers = new ArrayList<>();
+        for(int i=0; i<goals.size(); i++) randomNumbers.add(i);
+        Collections.shuffle(randomNumbers);
 
         List<CommonGoal> result = new ArrayList<>(commonGoalNum);
-        result.add(goals.get(first));
-        result.add(goals.get(second));
+        for(int i = 0; i<commonGoalNum; i++){
+            result.add(goals.get(randomNumbers.get(i)));
+        }
 
         // adding tokens given the number of players
         switch (playerNum) {
@@ -58,8 +55,8 @@ public class CommonGoalFactory {
                 result.get(0).pushToken(Token.SIX_FIRST);
                 result.get(0).pushToken(Token.EIGHT_FIRST);
                 result.get(1).pushToken(Token.FOUR_SECOND);
-                result.get(1).pushToken(Token.EIGHT_SECOND);
                 result.get(1).pushToken(Token.SIX_SECOND);
+                result.get(1).pushToken(Token.EIGHT_SECOND);
             }
             case 4 -> {
                 result.get(0).pushToken(Token.TWO_FIRST);
@@ -68,8 +65,8 @@ public class CommonGoalFactory {
                 result.get(0).pushToken(Token.EIGHT_FIRST);
                 result.get(1).pushToken(Token.TWO_SECOND);
                 result.get(1).pushToken(Token.FOUR_SECOND);
-                result.get(1).pushToken(Token.EIGHT_SECOND);
                 result.get(1).pushToken(Token.SIX_SECOND);
+                result.get(1).pushToken(Token.EIGHT_SECOND);
             }
         }
         return result;
