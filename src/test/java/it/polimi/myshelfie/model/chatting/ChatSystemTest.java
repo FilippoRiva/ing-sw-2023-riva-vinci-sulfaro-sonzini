@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model.chatting;
 
+import it.polimi.myshelfie.modelview.PlayerChatView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,14 @@ class ChatSystemTest {
     void setUp() {
         //adding two players
         cs = new ChatSystem();
-        //TODO 
+        cs.addPlayerToChat("A", (o, arg) -> {
+            PlayerChatView pcw = (PlayerChatView)o  ;
+            messagesToA.add(pcw.getLastMessage());
+        });
+        cs.addPlayerToChat("B", (o, arg) -> {
+            PlayerChatView pcw = (PlayerChatView)o  ;
+            messagesToB.add(pcw.getLastMessage());
+        });
     }
     @Test
     void addMessage() {
@@ -32,7 +40,7 @@ class ChatSystemTest {
         //testing private message
         msg = new Message("A","B","Ciao");
         cs.addMessage(msg);
-        assertEquals(0, messagesToA.size(), "A should not receive any message");
+        assertEquals(1, cs.getMessages().size(), "Message should be accepted");
         assertEquals("Ciao",messagesToB.get(0).getMessage(),"Ciao should be received by B");
 
         //testing Messages.toEveryone messages
@@ -63,7 +71,9 @@ class ChatSystemTest {
         cs.addMessage(msgToA);
         PlayerChatView pcwA = cs.getPlayerChatView("A");
         PlayerChatView pcwB = cs.getPlayerChatView("B");
-        assertEquals(pcwA.getMessages().get(0), msgToA);
+        assertEquals(pcwA.getMessages().get(0), msgToB);
+        assertEquals(pcwA.getMessages().get(1), msgToA);
         assertEquals(pcwB.getMessages().get(0), msgToB);
+        assertEquals(pcwB.getMessages().get(1), msgToA);
     }
 }

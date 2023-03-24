@@ -1,4 +1,7 @@
-package it.polimi.myshelfie.model.chatting;
+package it.polimi.myshelfie.modelview;
+
+import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.chatting.PlayerChat;
 
 import java.util.List;
 import java.util.Observable;

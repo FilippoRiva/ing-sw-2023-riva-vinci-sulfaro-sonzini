@@ -1,9 +1,12 @@
 package it.polimi.myshelfie.model.chatting;
 
+import it.polimi.myshelfie.modelview.PlayerChatView;
+
 import java.util.ArrayList;
 import java.util.Observer;
 
 public class PlayerChat {
+    //TODO new observer pattern
     private final ArrayList<Message> messages;
     private final String player;
     private final PlayerChatView playerChatView;

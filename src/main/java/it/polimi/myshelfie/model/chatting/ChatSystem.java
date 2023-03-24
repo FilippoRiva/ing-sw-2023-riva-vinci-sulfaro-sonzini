@@ -1,9 +1,11 @@
 package it.polimi.myshelfie.model.chatting;
 
 import it.polimi.myshelfie.model.interfaces.ChatModel;
+import it.polimi.myshelfie.modelview.PlayerChatView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observer;
 
 public class ChatSystem implements ChatModel {
 
@@ -41,9 +43,19 @@ public class ChatSystem implements ChatModel {
         }
         //not a player
         if(!playerChats.containsKey(message.getSender())) return;
-        //to a player
+        //to a specific player
         messages.add(message);
         playerChats.get(message.getReceiver()).addMessage(message);
+        playerChats.get(message.getSender()).addMessage(message);
+    }
+
+    /**
+     *
+     * @param player is the name of a new player that has to be added to this chat system
+     * @param observer is the Observer of the corresponding PlayerChatView representing his chat
+     */
+    public void addPlayerToChat(String player, Observer observer){
+        playerChats.put(player,new PlayerChat(player,observer));
     }
 
     /**
