@@ -273,4 +273,15 @@ public class LivingRoom {
         }
         return true;
     }
+
+    public boolean atLeastOneSideFree(Position p){
+        int livingRoomDimension = table.length;
+
+        if(p.getY() == livingRoomDimension/2 || getTile(p.getX(), p.getY()+1).getType() == ItemTileType.EMPTY) return true;
+        if(p.getX() == livingRoomDimension/2 || getTile(p.getX()+1, p.getY()).getType() == ItemTileType.EMPTY) return true;
+        if(p.getY() == -livingRoomDimension/2 || getTile(p.getX(), p.getY()-1).getType() == ItemTileType.EMPTY) return true;
+        if(p.getX() == -livingRoomDimension/2 || getTile(p.getX()-1, p.getY()).getType() == ItemTileType.EMPTY) return true;
+
+        return false;
+    }
 }
