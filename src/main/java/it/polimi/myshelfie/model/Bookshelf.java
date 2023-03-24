@@ -79,39 +79,18 @@ public class Bookshelf {
     private int checkAdjacent(boolean[][] boolBookshelf, int i, int j){
         int n=0;
         boolBookshelf[i][j]=true;
-       // if((i-1<0 || boolBookshelf[i-1][j] || bookshelfItems[i-1][j].getType()!=bookshelfItems[i][j].getType()) &&
-          // (j-1<0 || boolBookshelf[i][j-1] || bookshelfItems[i][j-1].getType()!=bookshelfItems[i][j].getType())&&
-          // (i+1>height || boolBookshelf[i+1][j] || bookshelfItems[i+1][j].getType()!=bookshelfItems[i][j].getType()) &&
-           //(j+1>width || boolBookshelf[i][j+1] || bookshelfItems[i][j+1].getType()!=bookshelfItems[i][j].getType())){
-           // return 1;}
-        /*if(i-1<0 && j-1<0 && i+1>height && j+1>width){
-            if(boolBookshelf[i-1][j] || boolBookshelf[i+1][j] || boolBookshelf[i][j-1] || boolBookshelf[i][j+1]){
-                if(bookshelfItems[i-1][j].getType()!=bookshelfItems[i][j].getType() ||
-                        bookshelfItems[i+1][j].getType()!=bookshelfItems[i][j].getType() ||
-                        bookshelfItems[i][j-1].getType()!=bookshelfItems[i][j].getType() ||
-                        bookshelfItems[i][j+1].getType()!=bookshelfItems[i][j].getType()){
-                    return 1;
-                }
-            }
-        }*/
-        //else {
-            if (j - 1 >= 0 && !boolBookshelf[i][j-1] && bookshelfItems[i][j-1].getType() == bookshelfItems[i][j].getType()) {
-                //boolBookshelf[i][j-1] = true;
-                n+= checkAdjacent(boolBookshelf, i, j-1);
-            }
-            if (i - 1 >= 0 && !boolBookshelf[i-1][j] && bookshelfItems[i-1][j].getType() == bookshelfItems[i][j].getType()) {
-                //boolBookshelf[i-1][j] = true;
-                n+= checkAdjacent(boolBookshelf, i-1, j);
-            }
-            if (j+1 < width && !boolBookshelf[i][j+1] && bookshelfItems[i][j+1].getType() == bookshelfItems[i][j].getType()) {
-                //boolBookshelf[i][j+1] = true;
-                n+=checkAdjacent(boolBookshelf, i, j+1);
-            }
-            if (i + 1 <height && !boolBookshelf[i+1][j] && bookshelfItems[i+1][j].getType() == bookshelfItems[i][j].getType()) {
-                //boolBookshelf[i+1][j] = true;
-                n+= checkAdjacent(boolBookshelf, i+1, j);
-            }
-        //}
+        if (j - 1 >= 0 && !boolBookshelf[i][j-1] && bookshelfItems[i][j-1].getType() == bookshelfItems[i][j].getType()) {
+            n+= checkAdjacent(boolBookshelf, i, j-1);
+        }
+        if (i - 1 >= 0 && !boolBookshelf[i-1][j] && bookshelfItems[i-1][j].getType() == bookshelfItems[i][j].getType()) {
+            n+= checkAdjacent(boolBookshelf, i-1, j);
+        }
+        if (j+1 < width && !boolBookshelf[i][j+1] && bookshelfItems[i][j+1].getType() == bookshelfItems[i][j].getType()) {
+            n+=checkAdjacent(boolBookshelf, i, j+1);
+        }
+        if (i + 1 <height && !boolBookshelf[i+1][j] && bookshelfItems[i+1][j].getType() == bookshelfItems[i][j].getType()) {
+            n+= checkAdjacent(boolBookshelf, i+1, j);
+        }
         return 1+n;
     }
 }

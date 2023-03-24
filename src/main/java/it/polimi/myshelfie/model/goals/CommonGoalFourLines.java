@@ -17,12 +17,13 @@ public class CommonGoalFourLines extends CommonGoal{
         int row_count=0;
         for(int i = 0; i<=height; i++) {
             if (bookshelf[i][0].getType() != ItemTileType.EMPTY) {
-                if(checkRow(bookshelf[i], 3, width)) row_count++;
+                if(checkRow(bookshelf[i], width)) row_count++;
             }
         }
         return row_count>=4;
     }
-    private boolean checkRow(ItemTile[] row, int maxNumber, int width){
+    private boolean checkRow(ItemTile[] row, int width){
+        int maxNumber = 3;
         boolean found;
         int typeCount=0;
         for(int i=0; i<=width; i++){

@@ -14,7 +14,6 @@ public class CommonGoalEightTiles extends CommonGoal{
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        int height = bookshelf.length;
         int width = bookshelf[0].length;
         int[] counter = new int[ItemTileType.values().length];
 

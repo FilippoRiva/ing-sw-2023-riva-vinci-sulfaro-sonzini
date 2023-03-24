@@ -37,14 +37,10 @@ public class GameConfig {
     public Dimension getBookshelfDimension() {
         return bookshelfDimension;
     }
-
     public int getNumCommonGoal() {
         return numCommonGoal;
     }
-
     public int getNumPersonalGoals(){ return numPersonalGoals; }
-
-
     public int getNumTilesPerType() {
         return numTilesPerType;
     }

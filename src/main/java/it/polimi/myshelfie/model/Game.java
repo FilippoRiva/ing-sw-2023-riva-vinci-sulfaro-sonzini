@@ -169,7 +169,9 @@ public class Game implements GameModel, LobbyModel {
 
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
-                if (!player.getTilesTaken().containsAll(orderedTiles) || player.getTilesTaken().size() != orderedTiles.size())
+                // for ArrayLists the complexity of containsAll is O(n*m) where n are the items in the list and m are
+                // the items of the argument. Creating a HashSet is O(n) and the containsAll is O(1) so it's faster
+                if (!new HashSet<>(player.getTilesTaken()).containsAll(orderedTiles) || player.getTilesTaken().size() != orderedTiles.size())
                     throw new InvalidParameterException("tiles different from the taken in the draw move");
                 player.setTilesTaken(orderedTiles);
                 return;

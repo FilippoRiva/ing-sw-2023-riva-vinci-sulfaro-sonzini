@@ -17,13 +17,14 @@ public class CommonGoalThreeColumns extends CommonGoal{
 
         for(int i = 0; i<=width; i++) {
             if (bookshelf[0][i].getType() != ItemTileType.EMPTY) {
-                if (checkColumn(bookshelf, i, 3)) col_count++;
+                if (checkColumn(bookshelf, i)) col_count++;
             }
         }
         return col_count >= 3;
     }
 
-    private boolean checkColumn(ItemTile[][] bookshelf, int i, int maxNumber){
+    private boolean checkColumn(ItemTile[][] bookshelf, int i){
+        int maxNumber = 3;
         boolean found;
         int height = bookshelf.length-1, type_count=0;
         for(int j=height; j>=0; j--){
