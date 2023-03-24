@@ -279,11 +279,11 @@ public class LivingRoom {
     public boolean isValid(Position p) {
         int x = p.getX();
         int y = p.getY();
-        if (x < -offset / 2 || x > offset / 2)
+        if (x < -offset || x > offset)
             return false;
-        if (y < -offset / 2 || y > offset / 2)
+        if (y < -offset || y > offset)
             return false;
-        return isValid(p.getX(), p.getY());
+        return isValid(x, y);
     }
 
     private boolean isValid(int x,int y){
@@ -291,13 +291,12 @@ public class LivingRoom {
     }
 
     public boolean atLeastOneSideFree(Position p){
-        int livingRoomDimension = table.length;
+        int x = p.getX();
+        int y = p.getY();
 
-        if(p.getY() == livingRoomDimension/2 || getTile(p.getX(), p.getY()+1).getType() == ItemTileType.EMPTY) return true;
-        if(p.getX() == livingRoomDimension/2 || getTile(p.getX()+1, p.getY()).getType() == ItemTileType.EMPTY) return true;
-        if(p.getY() == -livingRoomDimension/2 || getTile(p.getX(), p.getY()-1).getType() == ItemTileType.EMPTY) return true;
-        if(p.getX() == -livingRoomDimension/2 || getTile(p.getX()-1, p.getY()).getType() == ItemTileType.EMPTY) return true;
-
-        return false;
+        if(p.getY() == offset  || getTile(x, y+1) == null || getTile(x, y+1).getType() == ItemTileType.EMPTY) return true;
+        if(p.getX() == offset  || getTile(x+1, y) == null || getTile(x+1, y).getType() == ItemTileType.EMPTY) return true;
+        if(p.getY() == -offset || getTile(x, y-1) == null || getTile(x,y-1).getType() == ItemTileType.EMPTY) return true;
+        return p.getX() == -offset || getTile(x - 1, y) == null || getTile(x - 1, y).getType() == ItemTileType.EMPTY;
     }
 }
