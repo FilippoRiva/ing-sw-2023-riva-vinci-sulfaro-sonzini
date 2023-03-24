@@ -4,13 +4,14 @@ import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
+import it.polimi.myshelfie.model.goals.PersonalGoal;
+import it.polimi.myshelfie.model.goals.PersonalGoalDefaults;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
@@ -38,11 +39,34 @@ public class Game implements GameModel, LobbyModel {
         commonGoals = CommonGoalFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
 
+        List<PersonalGoal> goals = generatePersonalGoals(gameConfig.getNumPlayers(), gameConfig.getNumPersonalGoals());
+        Iterator<PersonalGoal> itr = goals.iterator();
         for(Player p : players){
             p.setBookshelf(new Bookshelf(gameConfig.getBookshelfDimension()));
-            //TODO initialize personal goal
+            for(int i = 0 ; i < gameConfig.getNumPersonalGoals(); i++){
+                p.setPersonalGoal(itr.next());
+            }
         }
+
     }
+
+    private List<PersonalGoal> generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal){
+        ArrayList<Integer> numbersList = new ArrayList<>();
+        Random rand = new Random();
+        for(int i = 0; i < numOfPlayers*numOfPersonalGoal; ){
+            int newRandomInt = rand.nextInt(PersonalGoalDefaults.values().length);
+            if(!numbersList.contains(newRandomInt)){
+                numbersList.add(newRandomInt);
+                i++;
+            }
+        }
+        ArrayList<PersonalGoal> result = new ArrayList<>();
+        for(Integer i : numbersList){
+            result.add(new PersonalGoal(PersonalGoalDefaults.values()[i]));
+        }
+        return result;
+    }
+
 
     @Override
     public void nextTurn() {
@@ -79,6 +103,9 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
+        if(!positionsAreValid(positions)) throw new InvalidParameterException("positions not valid");
+        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+
         List<ItemTile> items = new ArrayList<>();
         for(Position p : positions){
             items.add(livingRoom.removeTile(p.getX(), p.getY()));
@@ -91,18 +118,50 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    private boolean positionsAreValid(List<Position> positions){
+        for(Position p : positions){
+            if(!p.isValid(gameConfig.getLivingRoomSize())) return false;
+            if(!atLeastOneSideFree(p)) return false;
+        }
+
+        return aligned(positions);
+    }
+
+    private boolean atLeastOneSideFree(Position p){
+        int livingRoomDimension = gameConfig.getLivingRoomSize();
+
+        if(p.getY() == livingRoomDimension/2 || livingRoom.getTable()[p.getX()][p.getY()+1].getType() == ItemTileType.EMPTY) return true;
+        if(p.getX() == livingRoomDimension/2 || livingRoom.getTable()[p.getX()+1][p.getY()].getType() == ItemTileType.EMPTY) return true;
+        if(p.getY() == -livingRoomDimension/2 || livingRoom.getTable()[p.getX()][p.getY()-1].getType() == ItemTileType.EMPTY) return true;
+        if(p.getX() == -livingRoomDimension/2 || livingRoom.getTable()[p.getX()-1][p.getY()].getType() == ItemTileType.EMPTY) return true;
+
+        return false;
+    }
+
+    private boolean aligned(List<Position> positions){
+        return positions.stream().map(Position::getX).distinct().limit(2).count()==1 ||
+                positions.stream().map(Position::getY).distinct().limit(2).count()==1;
+    }
+
     @Override
     public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
+        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
+                if (!player.getTilesTaken().containsAll(orderedTiles) || player.getTilesTaken().size() != orderedTiles.size())
+                    throw new InvalidParameterException("tiles different from the taken in the draw move");
                 player.setTilesTaken(orderedTiles);
+                return;
             }
-            return;
         }
     }
 
     @Override
     public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
+        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(column < 0 || column > gameConfig.getBookshelfDimension().width-1) throw new InvalidParameterException("column not available");
+
         for (Player player : players) {
             if (player.getName().equals(playerName)) {
                 for(ItemTile t: player.getTilesTaken()) {

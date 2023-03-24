@@ -14,7 +14,14 @@ class GameConfigTest {
         int numCommonGoal = 2;
         int numTilesPerType = 22;
         int livingRoomSize = 9;
-        GameConfig gc = new GameConfig(numPlayers,dimension,numCommonGoal,numTilesPerType,livingRoomSize);
+        int numPersonalGoals = 1;
+        GameConfig gc = null;
+        try {
+            gc = new GameConfig(numPlayers,dimension,numCommonGoal,numTilesPerType,livingRoomSize, numPersonalGoals);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         assertEquals(numPlayers,gc.getNumPlayers());
         assertEquals(dimension,gc.getBookshelfDimension());
         assertEquals(numCommonGoal,gc.getNumCommonGoal());

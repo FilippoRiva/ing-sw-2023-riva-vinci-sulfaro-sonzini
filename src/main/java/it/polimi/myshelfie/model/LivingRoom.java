@@ -256,6 +256,10 @@ public class LivingRoom {
         return table[x+offset][y+offset];
     }
 
+    public ItemTile[][] getTable() {
+        return table;
+    }
+
     /**
      * @return true if every remaining tile has no neighbour tile
      */
