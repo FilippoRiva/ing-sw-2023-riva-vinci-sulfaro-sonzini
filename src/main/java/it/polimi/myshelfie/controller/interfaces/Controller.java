@@ -2,20 +2,20 @@ package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
 
-public interface LobbiesController {
+public interface Controller {
 
     void askGameList();
 
     /**
      *
      * @param playerName is the name of the first player that creates the current game.
-     * @param lobbyName is the name of the room.
+     * @param lobbyName is the name of the lobby.
      */
     void createGame(String playerName, String lobbyName) throws Exception;
     /**
      *
      * @param playerName is the name of the player.
-     * @param lobbyName  is the name of the room entered by the player
+     * @param lobbyName  is the name of the lobby entered by the player
      */
     void joinGame(String playerName, String lobbyName) throws Exception;
 
