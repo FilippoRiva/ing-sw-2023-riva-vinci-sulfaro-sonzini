@@ -4,6 +4,7 @@ import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.goals.CommonGoal;
+import it.polimi.myshelfie.model.goals.CommonGoalFactory;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 import it.polimi.myshelfie.model.goals.PersonalGoalDefaults;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
@@ -32,9 +33,39 @@ public class Game implements GameModel, LobbyModel {
     public void setGameConfig(GameConfig gameConfig) {
         this.gameConfig = gameConfig;
     }
+    @Override
+    public boolean isPlayerNameValid(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
-    public void initializeGame() {
+    public void addPlayer(String name){
+        players.add(new Player(name));
+    }
+
+    @Override
+    public void removePlayer(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                players.remove(p);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public boolean isLobbyFull() {
+        return players.size() == gameConfig.getNumPlayers();
+    }
+
+
+    @Override
+    public void initialize() {
         turn = players.get(0);
         commonGoals = CommonGoalFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
         livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
@@ -121,21 +152,10 @@ public class Game implements GameModel, LobbyModel {
     private boolean positionsAreValid(List<Position> positions){
         for(Position p : positions){
             if(!p.isValid(gameConfig.getLivingRoomSize())) return false;
-            if(!atLeastOneSideFree(p)) return false;
+            if(!livingRoom.atLeastOneSideFree(p)) return false;
         }
 
         return aligned(positions);
-    }
-
-    private boolean atLeastOneSideFree(Position p){
-        int livingRoomDimension = gameConfig.getLivingRoomSize();
-
-        if(p.getY() == livingRoomDimension/2 || livingRoom.getTable()[p.getX()][p.getY()+1].getType() == ItemTileType.EMPTY) return true;
-        if(p.getX() == livingRoomDimension/2 || livingRoom.getTable()[p.getX()+1][p.getY()].getType() == ItemTileType.EMPTY) return true;
-        if(p.getY() == -livingRoomDimension/2 || livingRoom.getTable()[p.getX()][p.getY()-1].getType() == ItemTileType.EMPTY) return true;
-        if(p.getX() == -livingRoomDimension/2 || livingRoom.getTable()[p.getX()-1][p.getY()].getType() == ItemTileType.EMPTY) return true;
-
-        return false;
     }
 
     private boolean aligned(List<Position> positions){
@@ -195,47 +215,27 @@ public class Game implements GameModel, LobbyModel {
     public void refillLivingRoom(){
         livingRoom.refill();
     }
-
-    @Override
-    public boolean isPlayerNameValid(String playerName) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void addPlayer(String name){
-        players.add(new Player(name));
-    }
-
-    @Override
-    public void removePlayer(String playerName) {
-        for(Player p : players){
-            if(p.getName().equals(playerName)){
-                players.remove(p);
-                return;
-            }
-        }
-    }
-
-    @Override
-    public boolean isLobbyFull() {
-        return players.size() == gameConfig.getNumPlayers();
-    }
-
     @Override
     public ChatModel getChatModel() {
         return chatSystem;
 
     }
-
     @Override
     public GameModel getGameModel() {
         return this;
     }
 
+    //for test:
+    public String getTurn() {
+        return turn.getName();
+    }
 
+    public Player getPlayer(String playerName) {
+        for(Player p : players){
+            if(p.getName().equals(playerName)){
+                return p;
+            }
+        }
+        return null;
+    }
 }

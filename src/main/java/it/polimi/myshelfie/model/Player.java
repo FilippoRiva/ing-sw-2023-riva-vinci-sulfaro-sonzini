@@ -69,7 +69,8 @@ public class Player {
     }
 
     public void calculatePoints() {
-        //TODO implementation of adjacent tile point
         points += personalGoal.achievedPoints(bookshelf.getBookshelfItems()) + bookshelf.achievedAdjacentTiles();
     }
+
+
 }

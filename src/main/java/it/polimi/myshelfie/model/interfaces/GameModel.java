@@ -12,7 +12,7 @@ public interface GameModel {
      * If no custom GameConfig is set the default one is used.
      * Notifies every view on the lobby.
      */
-    void initializeGame();
+    void initialize();
 
     /**
      * change the state of the game and notifies every view on the game

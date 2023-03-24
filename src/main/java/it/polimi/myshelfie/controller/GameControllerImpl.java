@@ -22,7 +22,8 @@ public class GameControllerImpl implements GameController, ChatController {
     }
 
     public void initializeGame() {
-        gameModel.initializeGame();
+        gameModel.initialize();
+        gameModel.refillLivingRoom();
     }
 
     @Override
