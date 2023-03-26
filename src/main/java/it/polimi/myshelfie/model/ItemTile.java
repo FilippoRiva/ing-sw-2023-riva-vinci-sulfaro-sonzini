@@ -2,14 +2,14 @@ package it.polimi.myshelfie.model;
 
 public class ItemTile {
     private final ItemTileType type;
-    private final int num;
+    private final int id;
     public ItemTile(ItemTileType type, int num){
         this.type = type;
-        this.num = num;
+        this.id = num;
     }
 
-    public int getNum() {
-        return num;
+    public int getId() {
+        return id;
     }
     public ItemTileType getType() {
         return type;

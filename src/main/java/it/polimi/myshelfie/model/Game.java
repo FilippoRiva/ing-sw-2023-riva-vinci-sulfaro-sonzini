@@ -80,7 +80,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     private List<PersonalGoal> generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal){
-        return PersonalGoalFactory.getPersonalGoals(numOfPersonalGoal,gameConfig.getBookshelfDimension(),numOfPlayers,gameConfig.getPersonalGoalRatio());
+        return PersonalGoalFactory.getDistinctPersonalGoals(numOfPersonalGoal,gameConfig.getBookshelfDimension(),numOfPlayers,gameConfig.getPersonalGoalRatio());
     }
 
 
@@ -128,7 +128,7 @@ public class Game implements GameModel, LobbyModel {
         }
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
-                player.setTilesTaken(items);
+                player.setTakenTiles(items);
             }
             return;
         }
@@ -156,9 +156,9 @@ public class Game implements GameModel, LobbyModel {
             if (player.getName().equals(playerName)) {
                 // for ArrayLists the complexity of containsAll is O(n*m) where n are the items in the list and m are
                 // the items of the argument. Creating a HashSet is O(n) and the containsAll is O(1) so it's faster
-                if (!new HashSet<>(player.getTilesTaken()).containsAll(orderedTiles) || player.getTilesTaken().size() != orderedTiles.size())
+                if (!new HashSet<>(player.getTakenTiles()).containsAll(orderedTiles) || player.getTakenTiles().size() != orderedTiles.size())
                     throw new InvalidParameterException("tiles different from the taken in the draw move");
-                player.setTilesTaken(orderedTiles);
+                player.setTakenTiles(orderedTiles);
                 return;
             }
         }
@@ -171,7 +171,7 @@ public class Game implements GameModel, LobbyModel {
 
         for (Player player : players) {
             if (player.getName().equals(playerName)) {
-                for(ItemTile t: player.getTilesTaken()) {
+                for(ItemTile t: player.getTakenTiles()) {
                     player.getBookshelf().insertTile(column, t);
                 }
                 return;

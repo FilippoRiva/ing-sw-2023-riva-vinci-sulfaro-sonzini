@@ -52,33 +52,33 @@ class GameTest {
         try {
             game.drawTiles(positions, "pippo");
             fail();
-        }catch (InvalidParameterException e){}
+        }catch (InvalidParameterException ignored){}
         positions = new ArrayList<>();
         positions.add(new Position(1, 2));
         positions.add(new Position(2, 1));
         try {
             game.drawTiles(positions, "pippo");
             fail();
-        }catch (InvalidParameterException e){}
+        }catch (InvalidParameterException ignored){}
 
         positions = new ArrayList<>();
         positions.add(new Position(3, 1));
         positions.add(new Position(3, 0));
         try {
             game.drawTiles(positions, "pippo");
-        }catch (InvalidParameterException e){
+        }catch (InvalidParameterException ignored){
             fail();
         }
 
-        game.orderChosenTiles(game.getPlayer("pippo").getTilesTaken(), "pippo");
+        game.orderChosenTiles(game.getPlayer("pippo").getTakenTiles(), "pippo");
         try {
             game.insertTiles("pippo", 10);
             fail();
-        }catch (Exception e){}
+        }catch (Exception ignored){}
         try {
             game.insertTiles("pluto", 3);
             fail();
-        }catch (Exception e){}
+        }catch (Exception ignored){}
         try {
             game.insertTiles("pippo", 3);
         }catch (Exception e){

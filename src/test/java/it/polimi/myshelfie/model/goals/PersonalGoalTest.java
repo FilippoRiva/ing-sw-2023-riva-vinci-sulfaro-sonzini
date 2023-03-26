@@ -118,12 +118,12 @@ class PersonalGoalTest {
     @Test
     void customPersonalGoalTestIsVerified(){
 
-        PersonalGoal personalGoal = new PersonalGoal(10,10,1);
+        PersonalGoal personalGoal = new PersonalGoal(10,10,1,1);
         assertEquals(12+(10*10-6)*3,personalGoal.achievedPoints(personalGoal.getGoal()));
-        personalGoal = new PersonalGoal(100,100,1);
+        personalGoal = new PersonalGoal(100,100,1,1);
         assertEquals(12+(100*100-6)*3,personalGoal.achievedPoints(personalGoal.getGoal()));
 
-        personalGoal = new PersonalGoal(10,10,0.5);
+        personalGoal = new PersonalGoal(10,10,1,0.5);
         assertTrue(12<personalGoal.achievedPoints(personalGoal.getGoal()));
     }
 

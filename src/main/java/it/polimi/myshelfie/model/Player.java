@@ -10,7 +10,7 @@ public class Player {
     private final ArrayList<Token> obtainedTokens;
     private PersonalGoal personalGoal;
     private Bookshelf bookshelf;
-    private List<ItemTile> tilesTaken;
+    private List<ItemTile> takenTiles;
 
 
     public Player(String name){
@@ -32,6 +32,7 @@ public class Player {
      * @param token is the token obtained from a completed common goal
      */
     public void addObtainedToken(Token token){
+        if(token == null) return;
         obtainedTokens.add(token);
     }
 
@@ -60,12 +61,12 @@ public class Player {
     }
     public Bookshelf getBookshelf(){return bookshelf;}
 
-    public void setTilesTaken(List<ItemTile> tilesTaken) {
-        this.tilesTaken = tilesTaken;
+    public void setTakenTiles(List<ItemTile> takenTiles) {
+        this.takenTiles = takenTiles;
     }
 
-    public List<ItemTile> getTilesTaken() {
-        return tilesTaken;
+    public List<ItemTile> getTakenTiles() {
+        return takenTiles;
     }
 
     public void calculatePoints() {

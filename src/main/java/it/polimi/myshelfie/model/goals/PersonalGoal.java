@@ -13,12 +13,14 @@ public class PersonalGoal {
     private final ItemTile[][] goal;
     private final int width;
     private final int height;
+    private final int id;
 
     /**
      * The default constructor for PersonalGoal
      * @param personalGoalDefault the PersonalGoalDefault type for this personalGoal
      */
     public PersonalGoal(PersonalGoalDefaults personalGoalDefault){
+        this.id = personalGoalDefault.getId();
         this.width = 5;
         this.height = 6;
         this.goal = personalGoalDefault.getGoal();
@@ -32,9 +34,10 @@ public class PersonalGoal {
      * @param personalGoalRatio percentage of cells with non-empty tiles to be generated
      * @throws InvalidParameterException if the size of the bookshelf isn't a valid size
      */
-    public PersonalGoal(int width,int height,double personalGoalRatio) throws InvalidParameterException{
+    public PersonalGoal(int width,int height,int id,double personalGoalRatio) throws InvalidParameterException{
         this.width = width;
         this.height = height;
+        this.id = id;
         if(width == 5 && height == 6) throw new InvalidParameterException("This Constructor should be used only when " +
                 "the size of the bookshelf isn't the default one");
         if(width<height) throw new InvalidParameterException("Height must be greater equal than width");

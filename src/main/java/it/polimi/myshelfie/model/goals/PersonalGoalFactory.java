@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PersonalGoalFactory {
-    public static ArrayList<PersonalGoal> getPersonalGoals(int numPersonalGoalsPerPlayer, Dimension bookshelfSize, int numPlayers,double personalGoalRatio){
+    public static ArrayList<PersonalGoal> getDistinctPersonalGoals(int numPersonalGoalsPerPlayer, Dimension bookshelfSize, int numPlayers, double personalGoalRatio){
         if(numPersonalGoalsPerPlayer == 0) throw new InvalidParameterException("invalid personal goals per players number");
         if(bookshelfSize.width == 5 && bookshelfSize.height == 6){
             return getDefaults(numPersonalGoalsPerPlayer,numPlayers);
@@ -38,7 +38,7 @@ public class PersonalGoalFactory {
     private static ArrayList<PersonalGoal> getCustoms(int numPersonalGoals,Dimension bookshelfSize, int numPlayers,double personalGoalRatio){
         ArrayList<PersonalGoal> result = new ArrayList<>();
         for(int i = 0; i < numPersonalGoals*numPlayers; i++){
-           result.add(new PersonalGoal(bookshelfSize.width,bookshelfSize.height,personalGoalRatio));
+           result.add(new PersonalGoal(bookshelfSize.width,bookshelfSize.height,0,personalGoalRatio));
         }
         return result;
     }

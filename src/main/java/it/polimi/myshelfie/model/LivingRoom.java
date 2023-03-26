@@ -256,7 +256,7 @@ public class LivingRoom {
         return oldTile;
     }
 
-
+    //TODO return copy
     public ItemTile[][] getTable() {
         return table;
     }
