@@ -1,0 +1,78 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+
+\title{Peer-Review : Model UML}
+\author{Riva Filippo, Vinci Francesco, Sulfaro Antonio, Sonzini Anna\\Gruppo 16}
+
+\begin{document}
+
+\maketitle
+
+Valutazione del diagramma UML del modello del gruppo 06.
+
+\section{Descrizione}
+
+Il diagramma UML elaborato astrae tutti i componenti principali della partita di my shelfie utilizzando queste classi ed enum: 
+\begin{itemize}
+    \item Game : per rappresentare lo stato della partita e per permettere un accesso alle varie altre classi del modello
+    \item GameState : enum per rappresentare gli stati del gioco 
+    \item Board : per rappresentare la plancia di gioco 
+    \item Cell : gli elementi costituenti la Board 
+    \item CellType : enum che associa ogni Cell ad un suo stato (ACTIVE, INACTIVE, OUT\_OF\_BOUND).
+    \item Tile : le tessere del gioco con un loro numero.
+    \item TileType : enum che associa ogni Tile ad un suo tipo (CATS, BOOKS, GAMES, ...)
+    \item Bag : per rappresentare l'insieme di Tile non ancora posizionate sulla Board
+    \item Player : la classe rappresentante ogni giocatore 
+    \item Bookshelf : la classe rappresentante la libreria di ogni giocatore
+    \item PersonalGoalCard : la classe rappresentante gli obbiettivi personali di ogni giocatore
+    \item CommonGoalCard : la classe astratta rappresentante gli obbiettivi comuni, implementata in diversi modi secondo un pattern Strategy. 
+    \item Factory : classe che sfrutta il pattern Factory per generare CommonGoalCard
+    \item Token : classe astratta che rappresenta il concetto di tessera punteggio.
+\end{itemize}
+
+\section{Lati Positivi}
+
+I punti di forza di questa astrazione del gioco sono :
+\begin{enumerate}
+    \item Uso di pattern Strategy per rappresentare le CommonGoalCard con conseguente facilità nell'inserire eventuali nuove carte obiettivo comune
+    \item Uso di un pattern Factory per la generazione delle CommonGoalCard rendendone semplice anche la istanziazione
+    \item Unione di alcune implementazioni delle CommonGoalCard in classi più generali migliorando così la leggibilità del codice e la sua scalabilità
+    \item Astrazione dello concetto di Cell e CellType per identificare la validità di una cella all'interno della Board rendendo più intuitivi e leggibili eventuali controlli.
+    \item Utilizzo dei GameState per rappresentare lo stato della partita facilitando il dialogo tra Model View e Controller
+    \item Utilizzo degli Optional per il ritorno di valori potenzialmente null o non validi (per ottenere un Player o i Token di una CommonGoalCard).
+    \item Il flusso delle chiamate permette tutto il flusso della partita
+\end{enumerate}
+
+\section{Lati negativi}
+
+I punti deboli che abbiamo trovato in questo modello sono : 
+\begin{enumerate}
+    \item L'esposizione di tutti i suoi componenti al Controller nonostante buona parte della logica delle classi del modello venga eseguita al suo interno. Questo non permette di modificare liberamente l'implementazione del modello senza doversi preoccupare di eventuali ritorsioni sul suo utilizzo da parte del Controller. Questo rende più difficile il lavoro di gruppo in quanto bisogna conoscerne l'implementazione anche all'esterno per poterlo utilizzare e peggiora la scalabilità del codice. Rende anche più complessa la programmazione di un Controller solido.  
+    \item L'implementazione delle PersonalGoalCard non sfrutta le potenzialità della programmazione ad oggetti e ne rende difficile un'eventuale modifica o diverse implementazioni in un futuro. Una classe astratta come fatto per gli obiettivi comuni avrebbe reso più estendibile il concetto di obbiettivo personale. 
+    \item Mancata progettazione del design pattern Observer utile alla View per ricevere gli aggiornamenti dal modello
+\end{enumerate}
+
+\section{Confronto tra le architetture}
+
+Il problema di progettazione da parte del nostro gruppo è stato affrontato con un approccio simile. 
+Le principali differenze sono :
+\begin{itemize}
+    \item utilizzo di interfacce tra model e controller per staccare completamente l'implementazione del modello dal suo utilizzo esterno
+    \item utilizzo di una classe rappresentante la configurazione della partita utile a rendere il modello configurabile secondo le necessità del controller (numero di giocatori, dimensione delle librerie, numero di obiettivi comuni ecc...)
+    \item utilizzo di ModelView per notificare i cambiamenti alla view senza dare dei riferimenti interni al modello
+    \item modellazione delle partite multiple e della chat 
+\end{itemize}
+
+
+Dei possibili miglioramenti sul nostro modello potrebbero essere 
+
+
+\begin{itemize}
+    \item L'astrazione delle celle e dei loro rispettivi stati di validità all'interno della plancia di gioco così da rendere il codice più leggibile e meno algoritmico. 
+    \item L'unione di alcune implementazioni della classe astratta CommonGoal per diminuire il numero di classi necessarie per la loro rappresentazione migliorando così la leggibilità e la scalabilità del codice.
+    \item L'utilizzo di Optional per i valori da passare al controller
+\end{itemize}
+
+\end{document}
