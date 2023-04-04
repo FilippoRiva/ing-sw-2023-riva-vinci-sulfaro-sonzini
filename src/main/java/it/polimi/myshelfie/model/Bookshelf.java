@@ -54,6 +54,10 @@ public class Bookshelf {
         return returnValue;
     }
 
+    public boolean isColumnFillable(int numTakenTiles, int column){
+        return bookshelfItems[numTakenTiles-1][column].getType() == ItemTileType.EMPTY;
+    }
+
     public int achievedAdjacentTiles(){
         boolean[][] boolBookshelf = new boolean[height][width];
         int points = 0, n;

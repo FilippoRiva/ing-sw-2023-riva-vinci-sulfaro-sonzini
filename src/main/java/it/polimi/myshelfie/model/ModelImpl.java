@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model;
 
+import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
@@ -28,11 +29,7 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public void askGameList() {
-        for(String lobby : lobbiesModel.keySet()){
-            if(!lobbiesModel.get(lobby).isLobbyFull())
-                return;
-                //TODO notify
-        }
+    public ClientExceptionsNotifier getNewClientExceptionNotifier(String playerName) {
+        return null;
     }
 }

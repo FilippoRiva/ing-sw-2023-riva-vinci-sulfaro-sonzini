@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.model;
 
-import java.security.InvalidParameterException;
+
 import java.util.*;
 
 public class LivingRoom {
@@ -37,9 +37,9 @@ public class LivingRoom {
      * @param numTilesPerType the number of tiles of a single tile type
      * @param size the odd size of the new board
      */
-    public LivingRoom(int numTilesPerType, int size, int numberOfPlayers) throws InvalidParameterException {
-        if(size<9) throw new InvalidParameterException("Size too small");
-        if(size%2==0) throw new InvalidParameterException("Even size not implemented");
+    public LivingRoom(int numTilesPerType, int size, int numberOfPlayers) throws Exception {
+        if(size<9) throw new Exception("Size too small");
+        if(size%2==0) throw new Exception("Even size not implemented");
         bag = new Stack<>();
         ItemTileType[] itemTiles = ItemTileType.values();
         for (ItemTileType itemTile : itemTiles) {

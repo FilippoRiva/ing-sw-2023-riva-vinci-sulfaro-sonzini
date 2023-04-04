@@ -3,7 +3,7 @@ package it.polimi.myshelfie.model;
 import it.polimi.myshelfie.GameConfig;
 import org.junit.jupiter.api.Test;
 
-import java.security.InvalidParameterException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
     @Test
-    void createGame(){
+    void createGame() throws Exception {
         Game game = new Game();
         game.setGameConfig(new GameConfig(4));
 
@@ -38,7 +38,7 @@ class GameTest {
     }
 
     @Test
-    void play(){
+    void play() throws Exception {
         Game game = new Game();
         game.setGameConfig(new GameConfig(2));
         game.addPlayer("pippo");
@@ -52,25 +52,29 @@ class GameTest {
         try {
             game.drawTiles(positions, "pippo");
             fail();
-        }catch (InvalidParameterException ignored){}
+        }catch (Exception ignored){}
         positions = new ArrayList<>();
         positions.add(new Position(1, 2));
         positions.add(new Position(2, 1));
         try {
             game.drawTiles(positions, "pippo");
             fail();
-        }catch (InvalidParameterException ignored){}
+        }catch (Exception ignored){}
 
         positions = new ArrayList<>();
         positions.add(new Position(3, 1));
         positions.add(new Position(3, 0));
         try {
             game.drawTiles(positions, "pippo");
-        }catch (InvalidParameterException ignored){
+        }catch (Exception ignored){
             fail();
         }
 
-        game.orderChosenTiles(game.getPlayer("pippo").getTakenTiles(), "pippo");
+        try {
+            game.orderChosenTiles(game.getPlayer("pippo").getTakenTiles(), "pippo");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         try {
             game.insertTiles("pippo", 10);
             fail();

@@ -2,7 +2,7 @@ package it.polimi.myshelfie.model.goals;
 
 import it.polimi.myshelfie.model.Token;
 
-import java.security.InvalidParameterException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,9 +13,9 @@ public class CommonGoalDefaultsFactory {
      * @param playerNum number of players for this game
      * @return a list containing random common goals with Tokens already stacked on top
      */
-    public static List<CommonGoal> getGoals(int playerNum, int commonGoalNum)throws InvalidParameterException{
-        if(playerNum<2) throw new InvalidParameterException("invalid player number");
-        if(commonGoalNum>12 || commonGoalNum == 0 ) throw new InvalidParameterException("invalid common goal number");
+    public static List<CommonGoal> getGoals(int playerNum, int commonGoalNum) throws Exception{
+        if(playerNum<2) throw new Exception("invalid player number");
+        if(commonGoalNum>12 || commonGoalNum == 0 ) throw new Exception("invalid common goal number");
 
         List<CommonGoal> result = new ArrayList<>(commonGoalNum);
         List<Integer> randomValues = generateDistinctRandomIntegers(commonGoalNum);

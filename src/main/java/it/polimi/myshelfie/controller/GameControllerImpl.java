@@ -7,9 +7,11 @@ import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
+import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 
-import java.security.InvalidParameterException;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class GameControllerImpl implements GameController, ChatController {
@@ -27,18 +29,30 @@ public class GameControllerImpl implements GameController, ChatController {
     }
 
     @Override
-    public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
-        gameModel.drawTiles(positions, playerName);
+    public void drawTiles(List<Position> positions, String playerName) {
+        try {
+            gameModel.drawTiles(positions, playerName);
+        } catch (Exception e) {
+            //TODO notify exception to view
+        }
     }
 
     @Override
-    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
-        gameModel.orderChosenTiles(orderedTiles, playerName);
+    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
+        try {
+            gameModel.orderChosenTiles(orderedTiles, playerName);
+        } catch (Exception e) {
+            //TODO notify exception to view
+        }
     }
 
     @Override
-    public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
-        gameModel.insertTiles(playerName, column);
+    public void insertTiles(String playerName, int column) {
+        try {
+            gameModel.insertTiles(playerName, column);
+        } catch (Exception e) {
+            //TODO notify exception to view
+        }
 
         endTurn(playerName);
     }

@@ -8,5 +8,6 @@ public interface Model {
      */
     LobbyModel addLobby(String lobbyName) throws Exception;
     void removeLobby(String lobbyName) throws Exception;
-    void askGameList();
+
+    ClientExceptionsNotifier getNewClientExceptionNotifier(String playerName);
 }

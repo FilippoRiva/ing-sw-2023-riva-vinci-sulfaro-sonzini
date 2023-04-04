@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PersonalGoalFactoryTest {
 
     @Test
-    void getPersonalGoals() {
+    void getPersonalGoals() throws Exception {
         for(int i = 1 ; i < 6; i++){
             List<PersonalGoal> a = PersonalGoalFactory.getDistinctPersonalGoals(i,new Dimension(5,6),2,0);
             assertEquals(i*2,a.size());

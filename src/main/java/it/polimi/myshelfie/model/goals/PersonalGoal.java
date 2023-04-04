@@ -3,7 +3,7 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
-import java.security.InvalidParameterException;
+
 import java.util.Random;
 
 public class PersonalGoal {
@@ -32,15 +32,15 @@ public class PersonalGoal {
      * @param width board width
      * @param height board height
      * @param personalGoalRatio percentage of cells with non-empty tiles to be generated
-     * @throws InvalidParameterException if the size of the bookshelf isn't a valid size
+     * @throws Exception if the size of the bookshelf isn't a valid size
      */
-    public PersonalGoal(int width,int height,int id,double personalGoalRatio) throws InvalidParameterException{
+    public PersonalGoal(int width,int height,int id,double personalGoalRatio) throws Exception{
         this.width = width;
         this.height = height;
         this.id = id;
-        if(width == 5 && height == 6) throw new InvalidParameterException("This Constructor should be used only when " +
+        if(width == 5 && height == 6) throw new Exception("This Constructor should be used only when " +
                 "the size of the bookshelf isn't the default one");
-        if(width<height) throw new InvalidParameterException("Height must be greater equal than width");
+        if(width<height) throw new Exception("Height must be greater equal than width");
         goal = new ItemTile[height][width];
         Random rand = new Random();
         for(int x = 0; x<width; x++){

@@ -3,23 +3,23 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.Token;
 import org.junit.jupiter.api.Test;
 
-import java.security.InvalidParameterException;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CommonGoalFactoryTest {
     @Test
-    void createCommonGoals(){
+    void createCommonGoals() throws Exception {
         try{
             CommonGoalDefaultsFactory.getGoals(1,2);
             fail();
-        }catch (InvalidParameterException ignored){
+        }catch (Exception ignored){
         }
         try{
             CommonGoalDefaultsFactory.getGoals(3,0);
             fail();
-        }catch (InvalidParameterException ignored){
+        }catch (Exception ignored){
         }
 
         List<CommonGoal> commonGoals = CommonGoalDefaultsFactory.getGoals(2, 2);
