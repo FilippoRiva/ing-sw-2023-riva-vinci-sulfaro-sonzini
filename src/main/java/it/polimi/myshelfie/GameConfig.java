@@ -11,7 +11,8 @@ public class GameConfig {
     private final int numPersonalGoals;
     private final double personalGoalRatio;
 
-    public GameConfig (int numPlayers){
+    public GameConfig (int numPlayers) throws Exception {
+        if(numPlayers<2) throw new Exception("too few players");
         this.numPlayers = numPlayers;
         this.bookshelfDimension = new Dimension(5, 6);
         this.numCommonGoal = 2;
@@ -22,6 +23,7 @@ public class GameConfig {
     }
 
     public GameConfig (int numPlayers, Dimension bookshelfDimension, int numCommonGoal, int numTilesPerType, int livingRoomSize, int numPersonalGoals, double personalGoalRatio) throws Exception{
+        //exceptions for all attributes
         this.numPlayers = numPlayers;
         this.bookshelfDimension = bookshelfDimension;
         this.numCommonGoal = numCommonGoal;

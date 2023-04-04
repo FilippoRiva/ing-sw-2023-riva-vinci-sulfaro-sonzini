@@ -28,28 +28,31 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void setGameConfig(GameConfig gameConfig) throws Exception{
-        if(isLobbyFull()) throw new Exception("lobby is full");
-        if(gameConfig.getNumPlayers()<2) throw new Exception("number of player too low");
-        //TODO all the exceptions
+    public void setGameConfig(GameConfig gameConfig) {
+        //if(isLobbyFull()) throw new Exception("lobby is full");
         this.gameConfig = gameConfig;
     }
+
     @Override
+    public void addPlayer(String playerName) throws Exception{
+        if(isLobbyFull()) throw new Exception("lobby full");
+        if(!isPlayerNameValid(playerName)) throw new Exception("player name is not valid");
+
+        players.add(new Player(playerName));
+    }
+
+    public boolean isLobbyFull() {
+        return players.size() == gameConfig.getNumPlayers();
+    }
+
     public boolean isPlayerNameValid(String playerName) {
+        //TODO define rules for available characters in playerName
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 return false;
             }
         }
         return true;
-    }
-
-    @Override
-    public void addPlayer(String playerName) throws Exception{
-        if(isLobbyFull()) throw new Exception("lobby full");
-        //TODO al the exceptions
-
-        players.add(new Player(playerName));
     }
 
     @Override
@@ -62,12 +65,6 @@ public class Game implements GameModel, LobbyModel {
         }
         throw new Exception("player is not in this lobby");
     }
-
-    @Override
-    public boolean isLobbyFull() {
-        return players.size() == gameConfig.getNumPlayers();
-    }
-
 
     @Override
     public void initialize() {
@@ -109,7 +106,7 @@ public class Game implements GameModel, LobbyModel {
         for(Player p : players){
             if(p.equals(turn)){
                 currentTurn = players.indexOf(p);
-                turn = players.get(currentTurn+1 % players.size());
+                turn = players.get((currentTurn+1) % players.size());
                 return;
             }
         }

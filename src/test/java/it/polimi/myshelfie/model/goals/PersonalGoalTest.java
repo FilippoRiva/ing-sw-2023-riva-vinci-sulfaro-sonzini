@@ -116,7 +116,7 @@ class PersonalGoalTest {
     }
 
     @Test
-    void customPersonalGoalTestIsVerified(){
+    void customPersonalGoalTestIsVerified() throws Exception {
 
         PersonalGoal personalGoal = new PersonalGoal(10,10,1,1);
         assertEquals(12+(10*10-6)*3,personalGoal.achievedPoints(personalGoal.getGoal()));

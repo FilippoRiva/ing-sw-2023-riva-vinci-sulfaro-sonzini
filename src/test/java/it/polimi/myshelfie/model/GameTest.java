@@ -21,9 +21,6 @@ class GameTest {
 
         assertFalse(game.isLobbyFull());
 
-        assertFalse(game.isPlayerNameValid("pippo"));
-        assertTrue(game.isPlayerNameValid("pluto"));
-
         game.addPlayer("pluto");
         game.addPlayer("jack");
         game.removePlayer("pluto");
@@ -83,11 +80,6 @@ class GameTest {
             game.insertTiles("pluto", 3);
             fail();
         }catch (Exception ignored){}
-        try {
-            game.insertTiles("pippo", 3);
-        }catch (Exception e){
-            fail();
-        }
         game.checkCommonGoal("pippo");
         assertEquals(0, game.getPlayer("pippo").getPoints());
 

@@ -47,7 +47,7 @@ class LivingRoomTest {
     }
 
     @Test
-    public void isValidPositionTest(){
+    public void isValidPositionTest() throws Exception {
         GameConfig gc = new GameConfig(4);
         LivingRoom lr = new LivingRoom(gc.getNumTilesPerType(),gc.getLivingRoomSize(),gc.getNumPlayers());
         assertTrue(lr.isValid(new Position(0,0)));

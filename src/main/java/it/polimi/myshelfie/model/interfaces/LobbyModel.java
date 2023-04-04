@@ -7,15 +7,7 @@ public interface LobbyModel {
      * sets the game config to be used by the game
      * @param config configurations for the game
      */
-    void setGameConfig(GameConfig config) throws Exception;
-    /**
-     *
-     * @param playerName is the name of the player.
-     * @return false if the name is not available.
-     */
-    @Deprecated
-    boolean isPlayerNameValid(String playerName);
-
+    void setGameConfig(GameConfig config);
     /**
      *
      * @param playerName is the name of the new player that has to be added to the game
@@ -27,9 +19,6 @@ public interface LobbyModel {
      * @param playerName is the name of the player that has to be removed from the game
      */
     void removePlayer(String playerName) throws Exception;
-
-    @Deprecated
-    boolean isLobbyFull();
 
     ChatModel getChatModel();
 

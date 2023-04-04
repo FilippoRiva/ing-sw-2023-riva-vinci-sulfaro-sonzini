@@ -60,7 +60,7 @@ public class ControllerImpl implements Controller {
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
         if (lobbyModel != null) {
             try {
-                getLobbyModel(lobbyName).addPlayer(playerName);
+                lobbyModel.addPlayer(playerName);
             } catch (Exception e) {
                 clientExceptionsNotifiers.get(playerName).notifyException(e);
             }
