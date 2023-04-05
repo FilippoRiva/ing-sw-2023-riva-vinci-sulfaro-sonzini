@@ -39,7 +39,7 @@ public class Bookshelf {
                 return;
             }
         }
-        throw new FullColumnException("Column "+column+" is full");
+        throw new FullColumnException(column);
     }
 
     /**

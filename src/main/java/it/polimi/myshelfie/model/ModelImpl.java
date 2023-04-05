@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model;
 
+import it.polimi.myshelfie.model.exceptions.LobbyExistanceException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
@@ -10,8 +11,8 @@ public class ModelImpl implements Model {
     //TODO Observer/Listener implementation
     private final HashMap<String, LobbyModel> lobbiesModel = new HashMap<>();
 
-    public LobbyModel addLobby(String lobbyName) throws Exception {
-        if(lobbiesModel.containsKey(lobbyName)) throw new Exception("this lobby already exists");
+    public LobbyModel addLobby(String lobbyName) throws LobbyExistanceException {
+        if(lobbiesModel.containsKey(lobbyName)) throw new LobbyExistanceException(true, lobbyName);
 
         LobbyModel lobbyModel = new Game();
         lobbiesModel.put(lobbyName, lobbyModel);
@@ -22,8 +23,8 @@ public class ModelImpl implements Model {
         return lobbyModel;
     }
 
-    public void removeLobby(String lobbyName) throws Exception {
-        if(!lobbiesModel.containsKey(lobbyName)) throw new Exception("lobby does not exist");
+    public void removeLobby(String lobbyName) throws LobbyExistanceException {
+        if(!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistanceException(false, lobbyName);
         lobbiesModel.remove(lobbyName);
         // Notifies Listeners
     }

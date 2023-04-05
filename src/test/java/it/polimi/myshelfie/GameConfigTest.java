@@ -1,5 +1,6 @@
 package it.polimi.myshelfie;
 
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -18,7 +19,7 @@ class GameConfigTest {
         GameConfig gc = null;
         try {
             gc = new GameConfig(numPlayers,dimension,numCommonGoal,numTilesPerType,livingRoomSize, numPersonalGoals,0);
-        } catch (Exception e) {
+        } catch (InvalidParameterException e) {
             throw new RuntimeException(e);
         }
 

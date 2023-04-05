@@ -3,6 +3,8 @@ package it.polimi.myshelfie.model;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.ChatSystem;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.goals.*;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
@@ -34,9 +36,9 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addPlayer(String playerName) throws Exception{
-        if(isLobbyFull()) throw new Exception("lobby full");
-        if(!isPlayerNameValid(playerName)) throw new Exception("player name is not valid");
+    public void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
+        if(isLobbyFull()) throw new LobbyFullException();
+        if(!isPlayerNameValid(playerName)) throw new InvalidParameterException("player name is not valid");
 
         players.add(new Player(playerName));
     }
@@ -56,14 +58,14 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void removePlayer(String playerName) throws Exception{
+    public void removePlayer(String playerName) throws InvalidParameterException{
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 players.remove(p);
                 return;
             }
         }
-        throw new Exception("player is not in this lobby");
+        throw new InvalidParameterException("player is not in this lobby");
     }
 
     @Override
@@ -73,7 +75,7 @@ public class Game implements GameModel, LobbyModel {
         try {
             commonGoals = CommonGoalDefaultsFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
             livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
-        } catch (Exception e) {
+        } catch (InvalidParameterException e) {
             throw new RuntimeException(e);
         }
 
@@ -130,9 +132,9 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void drawTiles(List<Position> positions, String playerName) throws Exception {
-        if(!playerName.equals(turn.getName())) throw new Exception("player playing in the wrong turn");
-        if(!positionsAreValid(positions)) throw new Exception("positions not valid");
+    public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
+        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(!positionsAreValid(positions)) throw new InvalidParameterException("positions are not valid");
 
         List<ItemTile> items = new ArrayList<>();
         for(Position p : positions){
@@ -161,15 +163,15 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws Exception {
-        if(!playerName.equals(turn.getName())) throw new Exception("player playing in the wrong turn");
+    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
+        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
 
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
                 // for ArrayLists the complexity of containsAll is O(n*m) where n are the items in the list and m are
                 // the items of the argument. Creating a HashSet is O(n) and the containsAll is O(1) so it's faster
                 if (!new HashSet<>(player.getTakenTiles()).containsAll(orderedTiles) || player.getTakenTiles().size() != orderedTiles.size())
-                    throw new Exception("tiles different from the taken ones in the draw move");
+                    throw new InvalidParameterException("tiles different from the taken ones in the draw move");
                 player.setTakenTiles(orderedTiles);
                 return;
             }
@@ -177,15 +179,15 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void insertTiles(String playerName, int column) throws Exception {
-        if(!playerName.equals(turn.getName())) throw new Exception("player playing in the wrong turn");
-        if(column < 0 || column > gameConfig.getBookshelfDimension().width-1) throw new Exception("column not available");
+    public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
+        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(column < 0 || column > gameConfig.getBookshelfDimension().width-1) throw new InvalidParameterException("column not available");
 
         for (Player p : players) {
             if (p.getName().equals(playerName)) {
                 int numTakenTiles = p.getTakenTiles().size();
                 if (p.getBookshelf().isColumnFillable(numTakenTiles, column))
-                    throw new Exception("too many tiles for column " + column);
+                    throw new FullColumnException(column);
                 for(ItemTile t: p.getTakenTiles()) {
                     p.getBookshelf().insertTile(column, t);
                 }

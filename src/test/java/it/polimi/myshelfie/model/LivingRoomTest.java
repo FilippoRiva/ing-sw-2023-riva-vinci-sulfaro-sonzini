@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LivingRoomTest {
 
     @Test
-    void livingRoomCheck() throws Exception {
+    void livingRoomCheck() throws InvalidParameterException {
         LivingRoom livingRoom;
         for(int players = 2; players<11; players++){
             GameConfig gc = new GameConfig(players);
@@ -34,7 +35,7 @@ class LivingRoomTest {
         try{
             new LivingRoom(22,2,5);
             fail();
-        }catch (Exception ignored){
+        }catch (InvalidParameterException ignored){
         }
 
         livingRoom = new LivingRoom(22,9,4);
@@ -47,7 +48,7 @@ class LivingRoomTest {
     }
 
     @Test
-    public void isValidPositionTest() throws Exception {
+    public void isValidPositionTest() throws InvalidParameterException {
         GameConfig gc = new GameConfig(4);
         LivingRoom lr = new LivingRoom(gc.getNumTilesPerType(),gc.getLivingRoomSize(),gc.getNumPlayers());
         assertTrue(lr.isValid(new Position(0,0)));

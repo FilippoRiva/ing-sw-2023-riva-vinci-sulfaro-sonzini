@@ -2,6 +2,7 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 
 import java.util.List;
@@ -32,11 +33,11 @@ public interface GameModel {
      * @param playerName the name of the player drawing the tiles
      * @throws Exception if the given positions/column are/is not valid
      */
-    void drawTiles(List<Position> positions, String playerName) throws Exception;
+    void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException;
 
-    void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws Exception;
+    void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException;
 
-    void insertTiles(String playerName, int column) throws Exception;
+    void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException;
 
     /**
      * check if the player achieved the commonGoal and adds the obtained tokens to the player.

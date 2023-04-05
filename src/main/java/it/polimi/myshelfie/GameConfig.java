@@ -1,5 +1,7 @@
 package it.polimi.myshelfie;
 
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+
 import java.awt.*;
 
 public class GameConfig {
@@ -11,8 +13,8 @@ public class GameConfig {
     private final int numPersonalGoals;
     private final double personalGoalRatio;
 
-    public GameConfig (int numPlayers) throws Exception {
-        if(numPlayers<2) throw new Exception("too few players");
+    public GameConfig (int numPlayers) throws InvalidParameterException {
+        if(numPlayers<2) throw new InvalidParameterException("too few players");
         this.numPlayers = numPlayers;
         this.bookshelfDimension = new Dimension(5, 6);
         this.numCommonGoal = 2;
@@ -22,7 +24,8 @@ public class GameConfig {
         this.personalGoalRatio = 0;
     }
 
-    public GameConfig (int numPlayers, Dimension bookshelfDimension, int numCommonGoal, int numTilesPerType, int livingRoomSize, int numPersonalGoals, double personalGoalRatio) throws Exception{
+    public GameConfig (int numPlayers, Dimension bookshelfDimension, int numCommonGoal, int numTilesPerType, int livingRoomSize, int numPersonalGoals, double personalGoalRatio)
+            throws InvalidParameterException{
         //exceptions for all attributes
         this.numPlayers = numPlayers;
         this.bookshelfDimension = bookshelfDimension;
@@ -31,9 +34,9 @@ public class GameConfig {
         this.livingRoomSize = livingRoomSize;
         this.numPersonalGoals = numPersonalGoals;
         this.personalGoalRatio = personalGoalRatio;
-        if(numPersonalGoals*numPlayers>12) throw new Exception("Invalid number of players or number of personal goals");
-        if(bookshelfDimension.width> bookshelfDimension.height) throw new Exception("Invalid bookshelf size");
-        if(livingRoomSize%2 == 0 || livingRoomSize < 9) throw new Exception("Invalid livingRoom Size");
+        if(numPersonalGoals*numPlayers>12) throw new InvalidParameterException("Invalid number of players or number of personal goals");
+        if(bookshelfDimension.width> bookshelfDimension.height) throw new InvalidParameterException("Invalid bookshelf size");
+        if(livingRoomSize%2 == 0 || livingRoomSize < 9) throw new InvalidParameterException("Invalid livingRoom Size");
     }
 
     public int getNumPlayers() {

@@ -4,6 +4,9 @@ import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.model.ClientsExceptionsNotifierImpl;
 import it.polimi.myshelfie.model.ModelImpl;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.model.exceptions.LobbyExistanceException;
+import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
@@ -34,10 +37,11 @@ public class ControllerImpl implements Controller {
         try {
             lobbyModel = model.addLobby(lobbyName);
             lobbyModel.addPlayer(playerName);
-        } catch(Exception e) {
+        } catch (LobbyExistanceException | InvalidParameterException | LobbyFullException e) {
             clientExceptionsNotifiers.get(playerName).notifyException(e);
             return;
         }
+
         lobbiesModels.put(lobbyName, lobbyModel);
         gamesControllers.put(lobbyName, new GameControllerImpl(lobbyModel.getGameModel(), lobbyModel.getChatModel()));
         clientExceptionsNotifiers.put(playerName, model.getNewClientExceptionNotifier(playerName));
@@ -46,11 +50,7 @@ public class ControllerImpl implements Controller {
     public void setGameConfig(String playerName, String lobbyName, GameConfig configs) {
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
         if (lobbyModel != null) {
-            try {
-                getLobbyModel(lobbyName).setGameConfig(configs);
-            } catch (Exception e) {
-                clientExceptionsNotifiers.get(playerName).notifyException(e);
-            }
+            getLobbyModel(lobbyName).setGameConfig(configs);
         } else {
             clientExceptionsNotifiers.get(playerName).notifyException(new Exception("lobby doesn't exists"));
         }
@@ -61,11 +61,11 @@ public class ControllerImpl implements Controller {
         if (lobbyModel != null) {
             try {
                 lobbyModel.addPlayer(playerName);
-            } catch (Exception e) {
+            } catch (LobbyFullException | InvalidParameterException e) {
                 clientExceptionsNotifiers.get(playerName).notifyException(e);
             }
         } else {
-            clientExceptionsNotifiers.get(playerName).notifyException(new Exception("lobby doesn't exists"));
+            clientExceptionsNotifiers.get(playerName).notifyException(new LobbyExistanceException(false, lobbyName));
         }
 
         getController(lobbyName).initializeGame();
@@ -76,11 +76,11 @@ public class ControllerImpl implements Controller {
         if (lobbyModel != null) {
             try {
                 getLobbyModel(lobbyName).removePlayer(playerName);
-            } catch (Exception e) {
+            } catch (InvalidParameterException e) {
                 clientExceptionsNotifiers.get(playerName).notifyException(e);
             }
         } else {
-            clientExceptionsNotifiers.get(playerName).notifyException(new Exception("lobby doesn't exists"));
+            clientExceptionsNotifiers.get(playerName).notifyException(new LobbyExistanceException(false, lobbyName));
         }
     }
 

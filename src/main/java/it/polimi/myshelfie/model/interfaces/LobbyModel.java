@@ -1,6 +1,8 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 
 public interface LobbyModel {
     /**
@@ -12,13 +14,13 @@ public interface LobbyModel {
      *
      * @param playerName is the name of the new player that has to be added to the game
      */
-    void addPlayer(String playerName) throws Exception;
+    void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException;
 
     /**
      *
      * @param playerName is the name of the player that has to be removed from the game
      */
-    void removePlayer(String playerName) throws Exception;
+    void removePlayer(String playerName) throws InvalidParameterException;
 
     ChatModel getChatModel();
 

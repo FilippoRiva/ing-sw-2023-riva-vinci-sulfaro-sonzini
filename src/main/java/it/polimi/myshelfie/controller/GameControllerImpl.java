@@ -6,6 +6,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.GameModel;
@@ -32,7 +33,7 @@ public class GameControllerImpl implements GameController, ChatController {
     public void drawTiles(List<Position> positions, String playerName) {
         try {
             gameModel.drawTiles(positions, playerName);
-        } catch (Exception e) {
+        } catch (InvalidParameterException e) {
             //TODO notify exception to view
         }
     }
@@ -41,7 +42,7 @@ public class GameControllerImpl implements GameController, ChatController {
     public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
         try {
             gameModel.orderChosenTiles(orderedTiles, playerName);
-        } catch (Exception e) {
+        } catch (InvalidParameterException e) {
             //TODO notify exception to view
         }
     }
@@ -50,7 +51,7 @@ public class GameControllerImpl implements GameController, ChatController {
     public void insertTiles(String playerName, int column) {
         try {
             gameModel.insertTiles(playerName, column);
-        } catch (Exception e) {
+        } catch (InvalidParameterException | FullColumnException e) {
             //TODO notify exception to view
         }
 

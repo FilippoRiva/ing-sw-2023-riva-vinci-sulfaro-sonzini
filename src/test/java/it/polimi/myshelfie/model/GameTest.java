@@ -1,6 +1,9 @@
 package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.exceptions.FullColumnException;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import org.junit.jupiter.api.Test;
 
 
@@ -11,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
     @Test
-    void createGame() throws Exception {
+    void createGame() throws InvalidParameterException, LobbyFullException {
         Game game = new Game();
         game.setGameConfig(new GameConfig(4));
 
@@ -35,7 +38,7 @@ class GameTest {
     }
 
     @Test
-    void play() throws Exception {
+    void play() throws InvalidParameterException, LobbyFullException {
         Game game = new Game();
         game.setGameConfig(new GameConfig(2));
         game.addPlayer("pippo");
@@ -49,37 +52,37 @@ class GameTest {
         try {
             game.drawTiles(positions, "pippo");
             fail();
-        }catch (Exception ignored){}
+        }catch (InvalidParameterException ignored){}
         positions = new ArrayList<>();
         positions.add(new Position(1, 2));
         positions.add(new Position(2, 1));
         try {
             game.drawTiles(positions, "pippo");
             fail();
-        }catch (Exception ignored){}
+        }catch (InvalidParameterException ignored){}
 
         positions = new ArrayList<>();
         positions.add(new Position(3, 1));
         positions.add(new Position(3, 0));
         try {
             game.drawTiles(positions, "pippo");
-        }catch (Exception ignored){
+        }catch (InvalidParameterException ignored){
             fail();
         }
 
         try {
             game.orderChosenTiles(game.getPlayer("pippo").getTakenTiles(), "pippo");
-        } catch (Exception e) {
+        } catch (InvalidParameterException e) {
             throw new RuntimeException(e);
         }
         try {
             game.insertTiles("pippo", 10);
             fail();
-        }catch (Exception ignored){}
+        }catch (InvalidParameterException | FullColumnException ignored){}
         try {
             game.insertTiles("pluto", 3);
             fail();
-        }catch (Exception ignored){}
+        }catch (InvalidParameterException | FullColumnException ignored){}
         game.checkCommonGoal("pippo");
         assertEquals(0, game.getPlayer("pippo").getPoints());
 
