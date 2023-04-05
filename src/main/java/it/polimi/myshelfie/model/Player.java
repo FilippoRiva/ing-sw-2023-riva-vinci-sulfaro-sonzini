@@ -8,7 +8,7 @@ public class Player {
     private final String name;
     private int points;
     private final ArrayList<Token> obtainedTokens;
-    private PersonalGoal personalGoal;
+    private List<PersonalGoal> personalGoals;
     private Bookshelf bookshelf;
     private List<ItemTile> takenTiles;
 
@@ -19,8 +19,8 @@ public class Player {
         obtainedTokens = new ArrayList<>();
     }
 
-    public void setPersonalGoal(PersonalGoal personalGoal) {
-        this.personalGoal = personalGoal;
+    public void setPersonalGoals(List<PersonalGoal> personalGoals) {
+        this.personalGoals = personalGoals;
     }
 
     public void setBookshelf(Bookshelf bookshelf){
@@ -52,12 +52,12 @@ public class Player {
         return name;
     }
 
-    public ArrayList<Token> getObtainedTokens() {
+    public List<Token> getObtainedTokens() {
         return new ArrayList<>(obtainedTokens);
     }
 
-    public PersonalGoal getPersonalGoal(){
-        return personalGoal;
+    public List<PersonalGoal> getPersonalGoals(){
+        return personalGoals;
     }
     public Bookshelf getBookshelf(){return bookshelf;}
 
@@ -70,7 +70,9 @@ public class Player {
     }
 
     public void calculatePoints() {
-        points += personalGoal.achievedPoints(bookshelf.getBookshelfItems()) + bookshelf.achievedAdjacentTiles();
+        for(PersonalGoal personalGoal : personalGoals){
+            points += personalGoal.achievedPoints(bookshelf.getBookshelfItems()) + bookshelf.achievedAdjacentTiles();
+        }
     }
 
 

@@ -1,6 +1,8 @@
 package it.polimi.myshelfie.model;
 
-public class ItemTile {
+import java.io.Serializable;
+
+public class ItemTile implements Serializable {
     private final ItemTileType type;
     private final int id;
     public ItemTile(ItemTileType type, int num){

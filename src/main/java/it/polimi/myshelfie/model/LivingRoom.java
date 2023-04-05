@@ -125,6 +125,7 @@ public class LivingRoom {
                 }
             }
         }
+        refill();
     }
 
 
@@ -300,5 +301,9 @@ public class LivingRoom {
         if(p.getX() == offset  || getTile(x+1, y) == null || getTile(x+1, y).getType() == ItemTileType.EMPTY) return true;
         if(p.getY() == -offset || getTile(x, y-1) == null || getTile(x,y-1).getType() == ItemTileType.EMPTY) return true;
         return p.getX() == -offset || getTile(x - 1, y) == null || getTile(x - 1, y).getType() == ItemTileType.EMPTY;
+    }
+
+    public Stack<ItemTile> getBag() {
+        return bag;
     }
 }

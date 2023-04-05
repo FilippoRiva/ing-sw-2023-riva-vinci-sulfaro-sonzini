@@ -3,8 +3,9 @@ package it.polimi.myshelfie;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class GameConfig {
+public class GameConfig implements Serializable {
     private final int numPlayers;
     private final Dimension bookshelfDimension;
     private final int numCommonGoal;

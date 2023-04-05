@@ -9,41 +9,61 @@ import it.polimi.myshelfie.model.goals.*;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+import it.polimi.myshelfie.network.GameEvent;
+import it.polimi.myshelfie.network.LobbyEvent;
+import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.utils.Observer;
 
 
 import java.util.*;
 
 public class Game implements GameModel, LobbyModel {
-    //TODO Observer/Listener implementation
     private GameConfig gameConfig;
-    private Player turn;
+    private it.polimi.myshelfie.utils.Observable<LobbyEvent> lobbyObservable;
+    private it.polimi.myshelfie.utils.Observable<GameEvent> gameObservable;
+    private Player currentPlayer;
     private GameState currentState;
     private final ChatSystem chatSystem;
     private List<CommonGoal> commonGoals;
     private LivingRoom livingRoom;
     private final String lobbyName;
     private final ArrayList<Player> players;
+    private String roomOwner;
+    private String name;
 
 
     public Game(String roomName){
-        currentState = GameState.LOBBY;
-        chatSystem = new ChatSystem();
-        players = new ArrayList<>();
+        this.lobbyObservable = new it.polimi.myshelfie.utils.Observable<LobbyEvent>();
+        this.gameObservable = new it.polimi.myshelfie.utils.Observable<GameEvent>();
+        try {
+            this.gameConfig = new GameConfig(2);
+        } catch (InvalidParameterException ignored) {
+        }
+        this.currentState = GameState.LOBBY;
+        this.chatSystem = new ChatSystem();
+        this.players = new ArrayList<>();
         this.lobbyName =roomName;
     }
 
     @Override
-    public void setGameConfig(GameConfig gameConfig) {
+    public void setGameConfig(GameConfig gameConfig) throws InvalidParameterException{
         //if(isLobbyFull()) throw new Exception("lobby is full");
+        if(gameConfig.getNumPlayers()< players.size()) throw new InvalidParameterException("too few players");
         this.gameConfig = gameConfig;
+        lobbyObservable.setChanged();
+        lobbyObservable.notifyObservers(LobbyEvent.NEW_CONFIG);
     }
 
     @Override
     public void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
         if(isLobbyFull()) throw new LobbyFullException();
         if(!isPlayerNameValid(playerName)) throw new InvalidParameterException("player name is not valid");
-
+        if(players.size()==0) roomOwner = playerName;
         players.add(new Player(playerName));
+        lobbyObservable.setChanged();
+        lobbyObservable.notifyObservers(LobbyEvent.PLAYER_ADD);
     }
 
     public boolean isLobbyFull() {
@@ -65,6 +85,9 @@ public class Game implements GameModel, LobbyModel {
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 players.remove(p);
+                if(p.getName().equals(roomOwner)) roomOwner = players.get(0).getName();
+                lobbyObservable.setChanged();
+                lobbyObservable.notifyObservers(LobbyEvent.PLAYER_REMOVE);
                 return;
             }
         }
@@ -81,11 +104,11 @@ public class Game implements GameModel, LobbyModel {
     public void initialize() {
         //TODO check that who started the game is the lobby creator
         if(!isLobbyFull()) return;
-        turn = players.get(0);
+        Collections.shuffle(players);
+        currentPlayer = players.get(0);
         try {
             commonGoals = CommonGoalDefaultsFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
             livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
-            this.refillLivingRoom();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -97,13 +120,16 @@ public class Game implements GameModel, LobbyModel {
             throw new RuntimeException(e);
         }
 
-        Iterator<PersonalGoal> itr = goals.iterator();
         for(Player p : players){
             p.setBookshelf(new Bookshelf(gameConfig.getBookshelfDimension()));
-            for(int i = 0 ; i < gameConfig.getNumPersonalGoals(); i++){
-                p.setPersonalGoal(itr.next());
-            }
+            List<PersonalGoal> playerGoals = goals.subList(0,gameConfig.getNumPersonalGoals()-1);
+            p.setPersonalGoals(playerGoals);
+            goals.remove(playerGoals);
         }
+        lobbyObservable.setChanged();
+        lobbyObservable.notifyObservers(LobbyEvent.LOBBY_END);
+        gameObservable.setChanged();
+        gameObservable.notifyObservers(GameEvent.GAME_START);
 
     }
 
@@ -117,12 +143,14 @@ public class Game implements GameModel, LobbyModel {
         int currentTurn;
 
         for(Player p : players){
-            if(p.equals(turn)){
+            if(p.equals(currentPlayer)){
                 currentTurn = players.indexOf(p);
-                turn = players.get((currentTurn+1) % players.size());
+                currentPlayer = players.get(currentTurn+1 % players.size());
                 return;
             }
         }
+        gameObservable.setChanged();
+        gameObservable.notifyObservers(GameEvent.TURN);
     }
 
     @Override
@@ -135,6 +163,14 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void setState(GameState state) {
         this.currentState = state;
+        if(state==GameState.LOBBY) {
+            lobbyObservable.setChanged();
+            lobbyObservable.notifyObservers();
+        }
+        else {
+            gameObservable.setChanged();
+            gameObservable.notifyObservers(GameEvent.STATE);
+        }
     }
 
     @Override
@@ -144,7 +180,7 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
-        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
         if(!positionsAreValid(positions)) throw new InvalidParameterException("positions are not valid");
 
         List<ItemTile> items = new ArrayList<>();
@@ -155,6 +191,8 @@ public class Game implements GameModel, LobbyModel {
             if (player.getName().equals(playerName)) {
                 player.setTakenTiles(items);
             }
+            gameObservable.setChanged();
+            gameObservable.notifyObservers(GameEvent.DRAW);
             return;
         }
     }
@@ -175,7 +213,7 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
-        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
 
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
@@ -184,6 +222,8 @@ public class Game implements GameModel, LobbyModel {
                 if (!new HashSet<>(player.getTakenTiles()).containsAll(orderedTiles) || player.getTakenTiles().size() != orderedTiles.size())
                     throw new InvalidParameterException("tiles different from the taken ones in the draw move");
                 player.setTakenTiles(orderedTiles);
+                gameObservable.setChanged();
+                gameObservable.notifyObservers(GameEvent.ORGANIZE);
                 return;
             }
         }
@@ -191,17 +231,19 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
-        if(!playerName.equals(turn.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
         if(column < 0 || column > gameConfig.getBookshelfDimension().width-1) throw new InvalidParameterException("column not available");
 
         for (Player p : players) {
             if (p.getName().equals(playerName)) {
                 int numTakenTiles = p.getTakenTiles().size();
-                if (p.getBookshelf().isColumnFillable(numTakenTiles, column))
+                if (!p.getBookshelf().isColumnFillable(numTakenTiles, column))
                     throw new FullColumnException(column);
                 for(ItemTile t: p.getTakenTiles()) {
                     p.getBookshelf().insertTile(column, t);
                 }
+                gameObservable.setChanged();
+                gameObservable.notifyObservers(GameEvent.INSERT);
                 return;
             }
         }
@@ -210,8 +252,10 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void checkCommonGoal(String playerName) {
         for(CommonGoal cm : commonGoals){
-            if(cm.isVerified(turn.getBookshelf().getBookshelfItems())){
+            if(cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())){
                 addToken(playerName, cm.popToken());
+                gameObservable.setChanged();
+                gameObservable.notifyObservers(GameEvent.TOKEN);
             }
         }
     }
@@ -229,6 +273,8 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void refillLivingRoom(){
         livingRoom.refill();
+        gameObservable.setChanged();
+        gameObservable.notifyObservers(GameEvent.REFILL);
     }
     @Override
     public ChatModel getChatModel() {
@@ -240,9 +286,18 @@ public class Game implements GameModel, LobbyModel {
         return this;
     }
 
+    @Override
+    public void setRoomOwner(String owner) {
+        this.roomOwner = owner;
+    }
+
+    public String getRoomOwner(){
+        return roomOwner;
+    }
+
     //for test:
-    public String getTurn() {
-        return turn.getName();
+    public String getCurrentPlayer() {
+        return currentPlayer.getName();
     }
 
     public Player getPlayer(String playerName) {
@@ -265,5 +320,74 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public String getLobbyName(){
         return lobbyName;
+    }
+    @Override
+    public void addGameObserver(Observer<? extends Observable<?>, GameEvent> obs) {
+        gameObservable.addObserver(obs);
+        gameObservable.setChanged();
+        gameObservable.notifyObservers();
+    }
+
+    @Override
+    public GameModelView getGameModelView() {
+        return new GameModelView(this);
+    }
+
+    @Override
+    public void addLobbyObserver(Observer<? extends Observable<?>, LobbyEvent> obs) {
+        lobbyObservable.addObserver(obs);
+        lobbyObservable.setChanged();
+        lobbyObservable.notifyObservers();
+    }
+
+    @Override
+    public LobbyModelView getLobbyModelView() {
+        return new LobbyModelView(this);
+    }
+
+    public List<Player> getPlayers(){
+        return new ArrayList<>(players);
+    }
+
+    public int getCurrentSize() {
+        return players.size();
+    }
+    public int getMaxSize(){
+        return gameConfig.getNumPlayers();
+    }
+
+    public GameConfig getGameConfig() {
+        return gameConfig;
+    }
+
+    public List<String> getPlayersNames() {
+        return players.stream().map(Player::getName).toList();
+    }
+
+    public List<CommonGoal> getCommonGoals() {
+        return new ArrayList<>(commonGoals);
+    }
+
+    public ItemTile[][] getLivingRoom() {
+        ItemTile[][] livingRoom = this.livingRoom.getTable();
+        ItemTile[][] result = new ItemTile[gameConfig.getLivingRoomSize()][gameConfig.getLivingRoomSize()];
+        for(int i = 0; i<gameConfig.getLivingRoomSize(); i++){
+            for(int j = 0; j<gameConfig.getLivingRoomSize(); j++){
+                result[i][j]=livingRoom[i][j];
+            }
+        }
+        return result;
+    }
+    public int getBagSize(){
+        return livingRoom.getBag().size();
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if(this.name == null) {
+            this.name = name;
+        }
     }
 }

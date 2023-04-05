@@ -101,4 +101,7 @@ public class PersonalGoal {
         }
         return returnValue;
     }
+    public int getId(){
+        return id;
+    }
 }

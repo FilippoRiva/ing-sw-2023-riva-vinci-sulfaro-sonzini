@@ -1,11 +1,12 @@
 package it.polimi.myshelfie.model.chatting;
 
 import it.polimi.myshelfie.model.interfaces.ChatModel;
-import it.polimi.myshelfie.modelview.PlayerChatView;
+import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+import it.polimi.myshelfie.network.ChatEvent;
+import it.polimi.myshelfie.utils.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observer;
 
 public class ChatSystem implements ChatModel {
 
@@ -49,22 +50,23 @@ public class ChatSystem implements ChatModel {
         playerChats.get(message.getSender()).addMessage(message);
     }
 
-    /**
-     *
-     * @param player is the name of a new player that has to be added to this chat system
-     * @param observer is the Observer of the corresponding PlayerChatView representing his chat
-     */
-    public void addPlayerToChat(String player, Observer observer){
-        playerChats.put(player,new PlayerChat(player,observer));
+    @Override
+    public void addChatObserver(String playerName, it.polimi.myshelfie.utils.Observer<? extends Observable<?>, ChatEvent> obs) {
+        playerChats.get(playerName).addObserver(obs);
+        playerChats.get(playerName).setChanged();
+        playerChats.get(playerName).notifyObservers();
+    }
+
+    @Override
+    public PlayerChatModelView getChatModelView(String playerName) {
+        return new PlayerChatModelView(playerChats.get(playerName));
     }
 
     /**
      *
-     * @param player the name of the player whose chat is requested
-     * @return the PlayerChatView of the request player
+     * @param player is the name of a new player that has to be added to this chat system
      */
-    public PlayerChatView getPlayerChatView(String player){
-        if(!playerChats.containsKey(player)) return null;
-        return playerChats.get(player).getPlayerChatView();
+    public void addPlayerToChat(String player){
+        playerChats.put(player,new PlayerChat(player));
     }
 }

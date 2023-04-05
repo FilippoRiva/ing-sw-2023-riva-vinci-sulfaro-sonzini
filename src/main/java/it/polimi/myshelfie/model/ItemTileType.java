@@ -1,8 +1,9 @@
 package it.polimi.myshelfie.model;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public enum ItemTileType {
+public enum ItemTileType implements Serializable {
     CAT("Cat"),         //Green
     BOOK("Book"),       //White
     GAME("Game"),       //Yellow

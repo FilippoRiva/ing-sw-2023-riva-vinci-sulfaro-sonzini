@@ -1,26 +1,23 @@
 package it.polimi.myshelfie.model.chatting;
 
-import it.polimi.myshelfie.modelview.PlayerChatView;
+
+import it.polimi.myshelfie.network.ChatEvent;
+import it.polimi.myshelfie.utils.Observable;
 
 import java.util.ArrayList;
-import java.util.Observer;
 
-public class PlayerChat {
-    //TODO Observer/Listener implementation
+public class PlayerChat extends Observable<ChatEvent> {
     private final ArrayList<Message> messages;
     private final String player;
-    private final PlayerChatView playerChatView;
 
     /**
      * Instantiates a new PlayerChat
      * @param player the name of the owner of this PlayerChat
      * @param observer the Observer of the PlayerChatView
      */
-    public PlayerChat(String player, Observer observer) {
+    public PlayerChat(String player) {
         this.player = player;
         this.messages = new ArrayList<>();
-        this.playerChatView = new PlayerChatView(this);
-        this.playerChatView.addObserver(observer);
     }
 
     /**
@@ -29,8 +26,8 @@ public class PlayerChat {
      */
     public void addMessage (Message message){
         messages.add(message);
-        playerChatView.setChangedStatus();
-        playerChatView.notifyObservers();
+        setChanged();
+        notifyObservers(ChatEvent.NEW_MESSAGE);
     }
 
     /**
@@ -49,13 +46,5 @@ public class PlayerChat {
     public Message getLastMessage(){
         if(messages.size()==0) return new Message(Messages.fromNobody,Messages.toEveryOne,Messages.emptyChat);
         return messages.get(messages.size()-1);
-    }
-
-    /**
-     *
-     * @return the PlayerChatView of this PlayerChat
-     */
-    public PlayerChatView getPlayerChatView(){
-        return playerChatView;
     }
 }

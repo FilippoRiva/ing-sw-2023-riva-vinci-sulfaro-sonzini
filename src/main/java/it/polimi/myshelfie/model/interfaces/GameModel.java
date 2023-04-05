@@ -2,6 +2,10 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
+import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.network.GameEvent;
+import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 
@@ -43,7 +47,7 @@ public interface GameModel {
     /**
      * refill the livingRoom if refillable
      */
-
+    void refillLivingRoom();
 
     /**
      * change the current player playing and notifies every view
@@ -58,9 +62,9 @@ public interface GameModel {
     boolean isBookshelfFull(String playerName);
 
     boolean isLastPlayer(String playerName);
-
-    void refillLivingRoom();
+    void addGameObserver(Observer<? extends Observable<?>, GameEvent> obs);
+    GameModelView getGameModelView();
+    String getName();
 
     String getLobbyName();
-    //TODO methods to manage Observer/Listener
 }

@@ -3,7 +3,9 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Token;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.List;
 import java.util.Stack;
 
 public abstract class CommonGoal {
@@ -21,5 +23,9 @@ public abstract class CommonGoal {
 
     public Token popToken() throws EmptyStackException {
         return tokens.pop();
+    }
+
+    public List<Token> getTokens() {
+        return new ArrayList<>(tokens.stream().toList());
     }
 }

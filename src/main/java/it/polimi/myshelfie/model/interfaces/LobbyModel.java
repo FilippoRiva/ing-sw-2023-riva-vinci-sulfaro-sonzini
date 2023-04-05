@@ -1,6 +1,10 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+import it.polimi.myshelfie.network.LobbyEvent;
+import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 
@@ -13,12 +17,11 @@ public interface LobbyModel {
      */
     void initialize();
 
-
     /**
      * sets the game config to be used by the game
      * @param config configurations for the game
      */
-    void setGameConfig(GameConfig config);
+    void setGameConfig(GameConfig config) throws InvalidParameterException;
     /**
      *
      * @param playerName is the name of the new player that has to be added to the game
@@ -41,6 +44,9 @@ public interface LobbyModel {
 
     String getLobbyName();
 
-    //TODO methods to manage Observer/Listener
+    void setRoomOwner(String owner);
+    void addLobbyObserver(Observer<? extends Observable<?>, LobbyEvent> obs);
+    LobbyModelView getLobbyModelView();
+    String getName();
 
 }

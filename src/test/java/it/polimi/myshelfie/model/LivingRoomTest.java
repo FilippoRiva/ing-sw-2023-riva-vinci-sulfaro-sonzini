@@ -16,7 +16,7 @@ class LivingRoomTest {
         for(int players = 2; players<11; players++){
             GameConfig gc = new GameConfig(players);
             livingRoom = new LivingRoom(gc.getNumTilesPerType(),gc.getLivingRoomSize(),gc.getNumPlayers());
-            assertTrue(livingRoom.isRefillable());
+            assertFalse(livingRoom.isRefillable());
             livingRoom.refill();
             ItemTile[][] table = livingRoom.getTable();
             livingRoom.refill();
@@ -25,7 +25,7 @@ class LivingRoomTest {
         for(int size = 11 ;size<=51;size+=2){
             GameConfig gc = new GameConfig(4,new Dimension(5,6),2,22*size/9,size, 1,0);
             livingRoom = new LivingRoom(gc.getNumTilesPerType(),gc.getLivingRoomSize(),gc.getNumPlayers());
-            assertTrue(livingRoom.isRefillable());
+            assertFalse(livingRoom.isRefillable());
             livingRoom.refill();
             ItemTile[][] table = livingRoom.getTable();
             livingRoom.refill();

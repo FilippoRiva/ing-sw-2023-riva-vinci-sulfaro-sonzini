@@ -1,6 +1,8 @@
 package it.polimi.myshelfie.model.chatting;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
     final private String sender;
     final private String receiver;
     final private String message;
