@@ -21,12 +21,15 @@ public class Game implements GameModel, LobbyModel {
     private final ChatSystem chatSystem;
     private List<CommonGoal> commonGoals;
     private LivingRoom livingRoom;
+    private final String lobbyName;
     private final ArrayList<Player> players;
 
-    public Game(){
+
+    public Game(String roomName){
         currentState = GameState.LOBBY;
         chatSystem = new ChatSystem();
         players = new ArrayList<>();
+        this.lobbyName =roomName;
     }
 
     @Override
@@ -69,13 +72,21 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
+    public boolean isLobbyEmpty(){
+        return players.size() == 0;
+    }
+
+
+    @Override
     public void initialize() {
+        //TODO check that who started the game is the lobby creator
         if(!isLobbyFull()) return;
         turn = players.get(0);
         try {
             commonGoals = CommonGoalDefaultsFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());
             livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());
-        } catch (InvalidParameterException e) {
+            this.refillLivingRoom();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -241,5 +252,18 @@ public class Game implements GameModel, LobbyModel {
             }
         }
         return null;
+    }
+
+    public boolean isBookshelfFull(String playerName){
+        return this.getPlayer(playerName).getBookshelf().isFull();
+    }
+
+    public boolean isLastPlayer(String playerName){
+        return players.get(players.size()-1).getName() == playerName;
+    }
+
+    @Override
+    public String getLobbyName(){
+        return lobbyName;
     }
 }

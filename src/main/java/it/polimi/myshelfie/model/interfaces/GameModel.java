@@ -8,12 +8,6 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import java.util.List;
 
 public interface GameModel {
-    /**
-     * Initialize game with the GameConfig that have been previously set.
-     * If no custom GameConfig is set the default one is used.
-     * Notifies every view on the lobby.
-     */
-    void initialize();
 
     /**
      * change the state of the game and notifies every view on the game
@@ -49,7 +43,7 @@ public interface GameModel {
     /**
      * refill the livingRoom if refillable
      */
-    void refillLivingRoom();
+
 
     /**
      * change the current player playing and notifies every view
@@ -61,8 +55,12 @@ public interface GameModel {
      */
     void calculateWinResults();
 
-    //TODO Methods to manage progress of the game such as:
-    // isLastRound, isBookshelfFull, isLastPlayer, isCurrentPlayer
+    boolean isBookshelfFull(String playerName);
 
+    boolean isLastPlayer(String playerName);
+
+    void refillLivingRoom();
+
+    String getLobbyName();
     //TODO methods to manage Observer/Listener
 }

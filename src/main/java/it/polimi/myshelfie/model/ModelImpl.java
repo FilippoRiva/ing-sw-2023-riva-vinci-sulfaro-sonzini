@@ -14,7 +14,7 @@ public class ModelImpl implements Model {
     public LobbyModel addLobby(String lobbyName) throws LobbyExistanceException {
         if(lobbiesModel.containsKey(lobbyName)) throw new LobbyExistanceException(true, lobbyName);
 
-        LobbyModel lobbyModel = new Game();
+        LobbyModel lobbyModel = new Game(lobbyName);
         lobbiesModel.put(lobbyName, lobbyModel);
         // Notifies Listeners
 

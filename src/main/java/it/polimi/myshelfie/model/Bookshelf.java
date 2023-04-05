@@ -97,4 +97,11 @@ public class Bookshelf {
         }
         return 1+n;
     }
+
+    public boolean isFull(){
+        for(int i=0; i< width; i++){
+            if(bookshelfItems[0][i].getType()==ItemTileType.EMPTY) return false;
+        }
+        return true;
+    }
 }

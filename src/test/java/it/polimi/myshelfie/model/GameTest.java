@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameTest {
     @Test
     void createGame() throws InvalidParameterException, LobbyFullException {
-        Game game = new Game();
+        Game game = new Game("nome");
         game.setGameConfig(new GameConfig(4));
 
         assertFalse(game.isLobbyFull());
@@ -39,7 +39,7 @@ class GameTest {
 
     @Test
     void play() throws InvalidParameterException, LobbyFullException {
-        Game game = new Game();
+        Game game = new Game("nome");
         game.setGameConfig(new GameConfig(2));
         game.addPlayer("pippo");
         game.addPlayer("pluto");

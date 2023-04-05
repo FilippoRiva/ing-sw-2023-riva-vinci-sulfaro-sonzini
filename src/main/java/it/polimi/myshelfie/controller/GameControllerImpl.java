@@ -8,27 +8,27 @@ import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
-import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.GameModel;
+import it.polimi.myshelfie.model.interfaces.LobbyModel;
 
 
-import java.util.HashMap;
 import java.util.List;
 
-public class GameControllerImpl implements GameController, ChatController {
+public class GameControllerImpl implements GameController, ChatController{
+
+    private final LobbyModel lobbyModel;
     private final GameModel gameModel;
     private final ChatModel chatModel;
+    private final ControllerImpl controllerImpl;
 
-    public GameControllerImpl(GameModel gameModel, ChatModel chatModel){
+
+    public GameControllerImpl(LobbyModel lobbyModel, GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
+        this.lobbyModel = lobbyModel;
         this.gameModel = gameModel;
         this.chatModel = chatModel;
-    }
+        this.controllerImpl=controllerImpl;
 
-    public void initializeGame() {
-        gameModel.initialize();
-        gameModel.refillLivingRoom();
     }
-
     @Override
     public void drawTiles(List<Position> positions, String playerName) {
         try {
@@ -65,5 +65,9 @@ public class GameControllerImpl implements GameController, ChatController {
     @Override
     public void addMessage(Message message){
         chatModel.addMessage(message);
+    }
+
+    public LobbyModel getLobbyModel(){
+        return lobbyModel;
     }
 }
