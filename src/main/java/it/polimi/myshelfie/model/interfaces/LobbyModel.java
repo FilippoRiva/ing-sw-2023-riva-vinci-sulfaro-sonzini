@@ -2,8 +2,7 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
-import it.polimi.myshelfie.network.LobbyEvent;
-import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.network.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
@@ -45,7 +44,7 @@ public interface LobbyModel {
     String getLobbyName();
 
     void setRoomOwner(String owner);
-    void addLobbyObserver(Observer<? extends Observable<?>, LobbyEvent> obs);
+    void addLobbyObserver(Observer<LobbyEvent> obs);
     LobbyModelView getLobbyModelView();
     String getName();
 

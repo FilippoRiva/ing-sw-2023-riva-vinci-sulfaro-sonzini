@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
 
 public interface LobbyController {
 
@@ -23,5 +24,5 @@ public interface LobbyController {
 
     GameController startGame(String playerName);
 
-    //TODO methods to manage Observer/Listener between model and view
+    void addLobbyObserver(NetworkLobbyObserver networkLobbyObserver);
 }

@@ -5,16 +5,16 @@ import java.util.Vector;
 public class Observable<Event extends Enum<Event>>{
     private boolean changed = false;
     // Vector, unlike Arraylists, are synchronized
-    private final Vector<Observer<? extends Observable<Event>,Event>> obs;
+    private final Vector<Observer<Event>> obs;
     public Observable() {
         obs = new Vector<>();
     }
-    public synchronized void addObserver(Observer<? extends Observable<Event>,Event> o){
+    public synchronized void addObserver(Observer<Event> o){
         if(o == null) throw new NullPointerException();
         if(!obs.contains(o)) obs.addElement(o);
     }
 
-    public synchronized void deleteObserver(Observer<? extends Observable<Event>,Event> o) {
+    public synchronized void deleteObserver(Observer<Event> o) {
         obs.remove(o);
     }
 
@@ -30,7 +30,7 @@ public class Observable<Event extends Enum<Event>>{
             clearChanged();
         }
         for(Object o : observersCopy){
-            ((Observer<Observable<Event>,Event>) o).update(this,evt);
+            ((Observer<Event>) o).update(evt);
         }
     }
 

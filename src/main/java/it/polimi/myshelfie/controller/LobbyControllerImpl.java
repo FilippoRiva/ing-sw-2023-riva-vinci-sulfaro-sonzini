@@ -7,6 +7,8 @@ import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.network.observers.NetworkChatObserver;
+import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
 
 public class LobbyControllerImpl implements LobbyController, ChatController{
 
@@ -40,7 +42,19 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     @Override
+    public void addLobbyObserver(NetworkLobbyObserver networkLobbyObserver) {
+        networkLobbyObserver.setLobby(lobbyModel);
+        lobbyModel.addLobbyObserver(networkLobbyObserver);
+    }
+
+    @Override
     public void addMessage(Message message){
         chatModel.addMessage(message);
+    }
+
+    @Override
+    public void addChatObserver(NetworkChatObserver networkChatObserver) {
+        networkChatObserver.setChatModel(chatModel);
+        chatModel.addChatObserver(networkChatObserver);
     }
 }

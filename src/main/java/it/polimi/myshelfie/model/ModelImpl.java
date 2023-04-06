@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.network.ModelEvent;
+import it.polimi.myshelfie.network.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -33,8 +33,8 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
     }
 
     @Override
-    public void addModelObserver(Observer<? extends Observable<?>, ModelEvent> obs) {
-        addObserver((Observer<? extends Observable<ModelEvent>, ModelEvent>) obs);
+    public void addModelObserver(Observer<ModelEvent> obs) {
+        addObserver(obs);
         setChanged();
         notifyObservers();
     }
@@ -49,7 +49,7 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
     }
 
     @Override
-    public ClientExceptionsNotifier getNewClientExceptionNotifier(String playerName) {
+    public ClientExceptionsNotifier getNewClientExceptionNotifier() {
         return new ClientsExceptionsNotifierImpl();
     }
 }

@@ -3,8 +3,7 @@ package it.polimi.myshelfie.model.interfaces;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.modelviews.GameModelView;
-import it.polimi.myshelfie.network.GameEvent;
-import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.network.events.GameEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
@@ -62,7 +61,7 @@ public interface GameModel {
     boolean isBookshelfFull(String playerName);
 
     boolean isLastPlayer(String playerName);
-    void addGameObserver(Observer<? extends Observable<?>, GameEvent> obs);
+    void addGameObserver(Observer<GameEvent> obs);
     GameModelView getGameModelView();
     String getName();
 

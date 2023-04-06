@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.network;
+package it.polimi.myshelfie.network.events;
 
 public enum LobbyEvent {
     PLAYER_ADD,

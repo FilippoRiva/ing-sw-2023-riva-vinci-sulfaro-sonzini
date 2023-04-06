@@ -2,9 +2,7 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
-import it.polimi.myshelfie.network.ChatEvent;
-import it.polimi.myshelfie.utils.Observable;
-import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 
 public interface ChatModel {
     /**
@@ -13,6 +11,6 @@ public interface ChatModel {
      */
     void addMessage(Message message);
 
-    void addChatObserver(String playerName, Observer<? extends Observable<?>, ChatEvent> obs);
+    void addChatObserver(NetworkChatObserver obs);
     PlayerChatModelView getChatModelView(String playerName);
 }

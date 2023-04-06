@@ -11,9 +11,8 @@ import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.modelviews.GameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
-import it.polimi.myshelfie.network.GameEvent;
-import it.polimi.myshelfie.network.LobbyEvent;
-import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.network.events.GameEvent;
+import it.polimi.myshelfie.network.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
 
 
@@ -21,22 +20,21 @@ import java.util.*;
 
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
-    private it.polimi.myshelfie.utils.Observable<LobbyEvent> lobbyObservable;
-    private it.polimi.myshelfie.utils.Observable<GameEvent> gameObservable;
+    private final it.polimi.myshelfie.utils.Observable<LobbyEvent> lobbyObservable;
+    private final it.polimi.myshelfie.utils.Observable<GameEvent> gameObservable;
     private Player currentPlayer;
     private GameState currentState;
     private final ChatSystem chatSystem;
     private List<CommonGoal> commonGoals;
     private LivingRoom livingRoom;
-    private final String lobbyName;
+    private String lobbyName;
     private final ArrayList<Player> players;
     private String roomOwner;
-    private String name;
 
 
     public Game(String roomName){
-        this.lobbyObservable = new it.polimi.myshelfie.utils.Observable<LobbyEvent>();
-        this.gameObservable = new it.polimi.myshelfie.utils.Observable<GameEvent>();
+        this.lobbyObservable = new it.polimi.myshelfie.utils.Observable<>();
+        this.gameObservable = new it.polimi.myshelfie.utils.Observable<>();
         try {
             this.gameConfig = new GameConfig(2);
         } catch (InvalidParameterException ignored) {
@@ -314,7 +312,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     public boolean isLastPlayer(String playerName){
-        return players.get(players.size()-1).getName() == playerName;
+        return players.get(players.size() - 1).getName().equals(playerName);
     }
 
     @Override
@@ -322,7 +320,7 @@ public class Game implements GameModel, LobbyModel {
         return lobbyName;
     }
     @Override
-    public void addGameObserver(Observer<? extends Observable<?>, GameEvent> obs) {
+    public void addGameObserver(Observer<GameEvent> obs) {
         gameObservable.addObserver(obs);
         gameObservable.setChanged();
         gameObservable.notifyObservers();
@@ -334,7 +332,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addLobbyObserver(Observer<? extends Observable<?>, LobbyEvent> obs) {
+    public void addLobbyObserver(Observer<LobbyEvent> obs) {
         lobbyObservable.addObserver(obs);
         lobbyObservable.setChanged();
         lobbyObservable.notifyObservers();
@@ -372,9 +370,8 @@ public class Game implements GameModel, LobbyModel {
         ItemTile[][] livingRoom = this.livingRoom.getTable();
         ItemTile[][] result = new ItemTile[gameConfig.getLivingRoomSize()][gameConfig.getLivingRoomSize()];
         for(int i = 0; i<gameConfig.getLivingRoomSize(); i++){
-            for(int j = 0; j<gameConfig.getLivingRoomSize(); j++){
-                result[i][j]=livingRoom[i][j];
-            }
+            if (gameConfig.getLivingRoomSize() >= 0)
+                System.arraycopy(livingRoom[i], 0, result[i], 0, gameConfig.getLivingRoomSize());
         }
         return result;
     }
@@ -382,12 +379,12 @@ public class Game implements GameModel, LobbyModel {
         return livingRoom.getBag().size();
     }
     public String getName() {
-        return name;
+        return lobbyName;
     }
 
     public void setName(String name) {
-        if(this.name == null) {
-            this.name = name;
+        if(this.lobbyName == null) {
+            this.lobbyName = name;
         }
     }
 }

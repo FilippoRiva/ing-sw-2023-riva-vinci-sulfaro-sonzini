@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 
 public interface ChatController {
     /**
@@ -10,6 +11,6 @@ public interface ChatController {
      */
     void addMessage(Message message);
 
-    //TODO methods to manage Observer/Listener between model and view
+    void addChatObserver(NetworkChatObserver networkChatObserver);
 
 }

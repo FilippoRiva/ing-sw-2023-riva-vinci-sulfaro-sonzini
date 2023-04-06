@@ -7,11 +7,6 @@ import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.network.GameEvent;
-import it.polimi.myshelfie.network.LobbyEvent;
-import it.polimi.myshelfie.network.ModelEvent;
-import it.polimi.myshelfie.utils.Observable;
-import it.polimi.myshelfie.utils.Observer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -35,7 +30,7 @@ public class FullModelTest {
         LobbyModel lobby1 = null;
         LobbyModel lobby2 = null;
         try{
-            model.addModelObserver((Observer<? extends Observable<ModelEvent>, ModelEvent>)(o, evt)->{
+            model.addModelObserver((evt)->{
                 setModelView1(model.getModelView());
             });
             lobby1 = model.addLobby("Lobby1");
@@ -48,7 +43,7 @@ public class FullModelTest {
         }catch (Exception ignored){
         }
         try{
-            model.addModelObserver((Observer<? extends Observable<ModelEvent>, ModelEvent>)(o, evt)->{
+            model.addModelObserver((evt)->{
                 setModelView2(model.getModelView());
             });
             lobby2 = model.addLobby("Lobby2");
@@ -116,13 +111,13 @@ public class FullModelTest {
     private void playGame1(GameModel game) {
         //Luca Giovanni Giorgio Pippo
         List<GameModelView> gameModelViewList = new ArrayList<>();
-        game.addGameObserver((Observer<? extends Observable<GameEvent>, GameEvent>)(o,evt)->{
+        game.addGameObserver((evt)->{
             gameModelViewList.add(game.getGameModelView());
         });
     }
     private void playGame2(GameModel game) {
         List<GameModelView> gameModelViewList = new ArrayList<>();
-        game.addGameObserver((Observer<? extends Observable<GameEvent>, GameEvent>)(o, evt)->{
+        game.addGameObserver((evt)->{
             gameModelViewList.add(game.getGameModelView());
         });
         GameModelView lmv = getLastModel(gameModelViewList);
@@ -176,7 +171,7 @@ public class FullModelTest {
 
     private void playLobby(LobbyModel lobby){
         List<LobbyModelView> lobbyModelViewList = new ArrayList<>();
-        lobby.addLobbyObserver((Observer<? extends Observable<LobbyEvent>, LobbyEvent>)(o,evt)->{
+        lobby.addLobbyObserver((evt)->{
             lobbyModelViewList.add(lobby.getLobbyModelView());
         });
         try {

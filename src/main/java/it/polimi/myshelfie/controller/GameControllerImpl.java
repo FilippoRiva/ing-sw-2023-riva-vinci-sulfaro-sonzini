@@ -10,6 +10,8 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.network.observers.NetworkChatObserver;
+import it.polimi.myshelfie.network.observers.NetworkGameObserver;
 
 
 import java.util.List;
@@ -58,6 +60,13 @@ public class GameControllerImpl implements GameController, ChatController{
         endTurn(playerName);
     }
 
+    @Override
+    public void addGameObserver(NetworkGameObserver networkGameObserver) {
+        networkGameObserver.setGameModel(gameModel);
+        gameModel.addGameObserver(networkGameObserver);
+    }
+
+
     /**
      *
      * @param playerName is the current player that has finished its turn
@@ -70,6 +79,12 @@ public class GameControllerImpl implements GameController, ChatController{
     @Override
     public void addMessage(Message message){
         chatModel.addMessage(message);
+    }
+
+    @Override
+    public void addChatObserver(NetworkChatObserver networkChatObserver) {
+        networkChatObserver.setChatModel(chatModel);
+        chatModel.addChatObserver(networkChatObserver);
     }
 
     public LobbyModel getLobbyModel(){

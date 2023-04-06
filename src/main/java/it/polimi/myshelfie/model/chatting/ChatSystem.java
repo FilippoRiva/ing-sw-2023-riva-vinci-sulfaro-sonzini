@@ -2,8 +2,7 @@ package it.polimi.myshelfie.model.chatting;
 
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
-import it.polimi.myshelfie.network.ChatEvent;
-import it.polimi.myshelfie.utils.Observable;
+import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,10 +50,12 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
-    public void addChatObserver(String playerName, it.polimi.myshelfie.utils.Observer<? extends Observable<?>, ChatEvent> obs) {
-        playerChats.get(playerName).addObserver(obs);
-        playerChats.get(playerName).setChanged();
-        playerChats.get(playerName).notifyObservers();
+    public void addChatObserver(NetworkChatObserver obs) {
+        String playerName = obs.getPlayerName();
+        PlayerChat pc = playerChats.get(playerName);
+        pc.addObserver(obs);
+        pc.setChanged();
+        pc.notifyObservers();
     }
 
     @Override

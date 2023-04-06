@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.model.chatting;
 
 
-import it.polimi.myshelfie.network.ChatEvent;
+import it.polimi.myshelfie.network.events.ChatEvent;
 import it.polimi.myshelfie.utils.Observable;
 
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ public class PlayerChat extends Observable<ChatEvent> {
     /**
      * Instantiates a new PlayerChat
      * @param player the name of the owner of this PlayerChat
-     * @param observer the Observer of the PlayerChatView
      */
     public PlayerChat(String player) {
         this.player = player;

@@ -2,7 +2,7 @@ package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
-import it.polimi.myshelfie.network.ExceptionEvent;
+import it.polimi.myshelfie.network.events.ExceptionEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -19,7 +19,7 @@ public class ClientsExceptionsNotifierImpl extends Observable<ExceptionEvent> im
     }
 
     @Override
-    public void addExceptionsObserver(Observer<? extends Observable<?>, ExceptionEvent> obs) {
+    public void addExceptionsObserver(Observer<ExceptionEvent> obs) {
         addObserver(obs);
         setChanged();
         notifyObservers();
