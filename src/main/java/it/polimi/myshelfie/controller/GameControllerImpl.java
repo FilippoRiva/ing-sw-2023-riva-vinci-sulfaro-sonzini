@@ -57,6 +57,11 @@ public class GameControllerImpl implements GameController, ChatController{
 
         endTurn(playerName);
     }
+
+    /**
+     *
+     * @param playerName is the current player that has finished its turn
+     */
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
         gameModel.refillLivingRoom();

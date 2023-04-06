@@ -12,7 +12,7 @@ public interface LobbyController {
 
     /**
      *
-     * @param config has game settings.
+     * @param config is the game's settings.
      */
     void setConfig(GameConfig config) throws Exception;
 

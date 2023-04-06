@@ -49,33 +49,34 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public LobbyController joinLobby(String playerName, String roomName) {
-        LobbyModel lobbyModel = getLobbyModel(roomName);
+    public LobbyController joinLobby(String playerName, String lobbyName) {
+        LobbyModel lobbyModel = getLobbyModel(lobbyName);
         if (lobbyModel != null) {
             try {
-                gamesControllers.get(roomName).getLobbyModel().addPlayer(playerName);
+                gamesControllers.get(lobbyName).getLobbyModel().addPlayer(playerName);
             } catch (LobbyFullException | InvalidParameterException e) {
                 clientExceptionsNotifiers.get(playerName).notifyException(e);
             }
         } else {
-            clientExceptionsNotifiers.get(playerName).notifyException(new LobbyExistanceException(false, roomName));
+            clientExceptionsNotifiers.get(playerName).notifyException(new LobbyExistanceException(false, lobbyName));
         }
-        return lobbiesControllers.get(roomName);
+        return lobbiesControllers.get(lobbyName);
     }
 
 
     private LobbyModel getLobbyModel(String lobbyName) {
         return gamesControllers.get(lobbyName).getLobbyModel();
     }
-    private GameControllerImpl getController(String lobbyName) {
+
+    /**
+     *
+     * @param lobbyName is the name of the lobby that must be deleted
+     */
+    public void deleteLobby(String lobbyName){
+        gamesControllers.remove(lobbyName);
+    }
+
+    public GameControllerImpl getGameController(String lobbyName){
         return gamesControllers.get(lobbyName);
-    }
-
-    public void deleteLobby(String roomName){
-        gamesControllers.remove(roomName);
-    }
-
-    public GameControllerImpl getGameController(String roomName){
-        return gamesControllers.get(roomName);
     }
 }
