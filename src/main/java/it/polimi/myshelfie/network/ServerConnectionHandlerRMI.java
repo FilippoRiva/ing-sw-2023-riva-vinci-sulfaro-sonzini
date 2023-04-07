@@ -29,16 +29,18 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
 
     @Override
     public void send(Object[] args, ViewEvent evt) throws RemoteException {
-        if(evt == ViewEvent.JOIN_REQUEST){
-            String playerName = (String) args[0];
-            String roomName = (String) args[1];
-            lobbyController = controller.joinLobby(client,playerName,roomName);
-            if(lobbyController != null)  lobbyController.addLobbyObserver(new NetworkLobbyObserver(client));
-        } else if (evt == ViewEvent.CREATE_REQUEST) {
-            String playerName = (String) args[0];
-            String roomName = (String) args[1];
-            lobbyController = controller.createLobby(client,playerName,roomName);
-            if(lobbyController != null)  lobbyController.addLobbyObserver(new NetworkLobbyObserver(client));
-        }
+        new Thread(()->{
+            if(evt == ViewEvent.JOIN_REQUEST){
+                String playerName = (String) args[0];
+                String roomName = (String) args[1];
+                lobbyController = controller.joinLobby(client,playerName,roomName);
+                if(lobbyController != null)  lobbyController.addLobbyObserver(new NetworkLobbyObserver(client));
+            } else if (evt == ViewEvent.CREATE_REQUEST) {
+                String playerName = (String) args[0];
+                String roomName = (String) args[1];
+                lobbyController = controller.createLobby(client,playerName,roomName);
+                if(lobbyController != null)  lobbyController.addLobbyObserver(new NetworkLobbyObserver(client));
+            }
+        }).start();
     }
 }

@@ -30,7 +30,7 @@ public class GameControllerImpl implements GameController, ChatController{
 
     }
     @Override
-    public void drawTiles(List<Position> positions, String playerName) {
+    public synchronized void drawTiles(List<Position> positions, String playerName) {
         try {
             gameModel.drawTiles(positions, playerName);
         } catch (InvalidParameterException e) {
@@ -39,7 +39,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
+    public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
         try {
             gameModel.orderChosenTiles(orderedTiles, playerName);
         } catch (InvalidParameterException e) {
@@ -48,7 +48,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public void insertTiles(String playerName, int column) {
+    public synchronized void insertTiles(String playerName, int column) {
         try {
             gameModel.insertTiles(playerName, column);
         } catch (InvalidParameterException | FullColumnException e) {
@@ -59,7 +59,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public void addGameObserver(NetworkGameObserver networkGameObserver) {
+    public synchronized void addGameObserver(NetworkGameObserver networkGameObserver) {
         networkGameObserver.setGameModel(gameModel);
         gameModel.addGameObserver(networkGameObserver);
     }
@@ -75,12 +75,12 @@ public class GameControllerImpl implements GameController, ChatController{
         gameModel.nextTurn();
     }
     @Override
-    public void addMessage(Message message){
+    public synchronized void addMessage(Message message){
         chatModel.addMessage(message);
     }
 
     @Override
-    public void addChatObserver(NetworkChatObserver networkChatObserver) {
+    public synchronized void addChatObserver(NetworkChatObserver networkChatObserver) {
         networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
     }

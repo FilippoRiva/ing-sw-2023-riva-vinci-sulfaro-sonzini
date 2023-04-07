@@ -11,7 +11,9 @@ import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.observers.NetworkExceptionsObserver;
 import it.polimi.myshelfie.network.observers.NetworkModelObserver;
+import it.polimi.myshelfie.view.ViewType;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 
 public class ControllerImpl implements Controller {
@@ -36,7 +38,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public LobbyController createLobby(Client client, String playerName, String lobbyName){
+    public synchronized LobbyController createLobby(Client client, String playerName, String lobbyName){
         LobbyModel lobbyModel;
         try {
             lobbyModel = model.addLobby(lobbyName);
@@ -50,11 +52,17 @@ public class ControllerImpl implements Controller {
         gamesControllers.put(lobbyName,gameController);
         lobbiesControllers.put(lobbyName,lobbyController);
         clientStringHashMap.put(client,playerName);
+        new Thread(()->{
+            try {
+                client.setViewType(ViewType.LOBBY);
+            } catch (RemoteException ignored) {
+            }
+        }).start();
         return lobbyController;
     }
 
     @Override
-    public LobbyController joinLobby(Client client, String playerName, String lobbyName) {
+    public synchronized LobbyController joinLobby(Client client, String playerName, String lobbyName) {
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
         if (lobbyModel != null) {
             try {
@@ -67,10 +75,17 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(new LobbyExistanceException(false, lobbyName));
             return null;
         }
+        new Thread(()-> {
+            try {
+                client.setViewType(ViewType.LOBBY);
+            } catch (RemoteException ignored) {
+            }
+        }).start();
         return lobbiesControllers.get(lobbyName);
     }
 
-    public void addClient(Client client, NetworkModelObserver networkModelObserver, NetworkExceptionsObserver networkExceptionsObserver){
+    @Override
+    public synchronized void addClient(Client client, NetworkModelObserver networkModelObserver, NetworkExceptionsObserver networkExceptionsObserver){
 
         networkModelObserver.setModel(model);
         model.addModelObserver(networkModelObserver);
@@ -80,6 +95,12 @@ public class ControllerImpl implements Controller {
         cen.addExceptionsObserver(networkExceptionsObserver);
 
         clientExceptionsNotifiers.put(client,cen);
+        new Thread(()->{
+            try {
+                client.setViewType(ViewType.INIT);
+            } catch (RemoteException ignored) {
+            }
+        }).start();
     }
 
     private LobbyModel getLobbyModel(String lobbyName) {

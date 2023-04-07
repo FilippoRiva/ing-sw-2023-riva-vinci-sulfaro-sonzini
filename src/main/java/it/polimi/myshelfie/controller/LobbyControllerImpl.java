@@ -23,7 +23,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     @Override
-    public void exitLobby(String playerName) throws Exception {
+    public synchronized void exitLobby(String playerName) throws Exception {
         lobbyModel.removePlayer(playerName);
         if(lobbyModel.isLobbyEmpty()){
             controllerImpl.deleteLobby(lobbyModel.getLobbyName());
@@ -31,29 +31,29 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     @Override
-    public void setConfig(GameConfig config) throws Exception{
+    public synchronized void setConfig(GameConfig config) throws Exception{
         lobbyModel.setGameConfig(config);
     }
 
     @Override
-    public GameController startGame(String playerName){
+    public synchronized GameController startGame(String playerName){
         lobbyModel.initialize();
         return controllerImpl.getGameController(lobbyModel.getLobbyName());
     }
 
     @Override
-    public void addLobbyObserver(NetworkLobbyObserver networkLobbyObserver) {
+    public synchronized void addLobbyObserver(NetworkLobbyObserver networkLobbyObserver) {
         networkLobbyObserver.setLobby(lobbyModel);
         lobbyModel.addLobbyObserver(networkLobbyObserver);
     }
 
     @Override
-    public void addMessage(Message message){
+    public synchronized void addMessage(Message message){
         chatModel.addMessage(message);
     }
 
     @Override
-    public void addChatObserver(NetworkChatObserver networkChatObserver) {
+    public synchronized void addChatObserver(NetworkChatObserver networkChatObserver) {
         networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
     }

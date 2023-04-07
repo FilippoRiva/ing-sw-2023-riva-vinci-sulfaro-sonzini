@@ -25,10 +25,11 @@ public class NetworkViewObserver implements Observer<ViewEvent> {
 
     @Override
     public void update(ViewEvent evt) {
-        try {
-            server.send(view.getUpdateParameters(),evt);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(()->{
+            try {
+                server.send(view.getUpdateParameters(),evt);
+            } catch (RemoteException ignored) {
+            }
+        }).start();
     }
 }
