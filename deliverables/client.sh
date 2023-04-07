@@ -1,0 +1,1 @@
+java -jar --enable-preview jar/ms_client.jar
