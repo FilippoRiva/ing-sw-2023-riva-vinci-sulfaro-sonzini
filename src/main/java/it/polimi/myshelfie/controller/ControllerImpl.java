@@ -45,7 +45,7 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(e);
             return null;
         }
-        GameControllerImpl gameController = new GameControllerImpl(lobbyModel, lobbyModel.getGameModel(), lobbyModel.getChatModel(), this);
+        GameControllerImpl gameController = new GameControllerImpl(lobbyModel.getGameModel(), lobbyModel.getChatModel(), this);
         LobbyControllerImpl lobbyController = new LobbyControllerImpl(lobbyModel, lobbyModel.getChatModel(), this);
         gamesControllers.put(lobbyName,gameController);
         lobbiesControllers.put(lobbyName,lobbyController);
@@ -58,7 +58,7 @@ public class ControllerImpl implements Controller {
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
         if (lobbyModel != null) {
             try {
-                gamesControllers.get(lobbyName).getLobbyModel().addPlayer(playerName);
+                lobbiesControllers.get(lobbyName).getLobbyModel().addPlayer(playerName);
             } catch (LobbyFullException | InvalidParameterException e) {
                 clientExceptionsNotifiers.get(client).notifyException(e);
                 return null;
@@ -83,7 +83,9 @@ public class ControllerImpl implements Controller {
     }
 
     private LobbyModel getLobbyModel(String lobbyName) {
-        return gamesControllers.get(lobbyName).getLobbyModel();
+        LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
+        if(lobbyController==null) return null;
+        return lobbyController.getLobbyModel();
     }
 
     /**

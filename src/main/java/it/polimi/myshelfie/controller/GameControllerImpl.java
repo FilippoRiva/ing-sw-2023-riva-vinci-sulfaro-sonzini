@@ -18,14 +18,12 @@ import java.util.List;
 
 public class GameControllerImpl implements GameController, ChatController{
 
-    private final LobbyModel lobbyModel;
     private final GameModel gameModel;
     private final ChatModel chatModel;
     private final ControllerImpl controllerImpl;
 
 
-    public GameControllerImpl(LobbyModel lobbyModel, GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
-        this.lobbyModel = lobbyModel;
+    public GameControllerImpl(GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.gameModel = gameModel;
         this.chatModel = chatModel;
         this.controllerImpl=controllerImpl;
@@ -85,9 +83,5 @@ public class GameControllerImpl implements GameController, ChatController{
     public void addChatObserver(NetworkChatObserver networkChatObserver) {
         networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
-    }
-
-    public LobbyModel getLobbyModel(){
-        return lobbyModel;
     }
 }

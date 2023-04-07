@@ -14,6 +14,7 @@ import java.rmi.registry.Registry;
 
 public class ServerApp {
     public static void main (String[] args){
+        System.out.println("Server starting up");
         ControllerImpl controller = new ControllerImpl();
         ModelImpl model = new ModelImpl();
         controller.setModel(model);
@@ -37,9 +38,11 @@ public class ServerApp {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("RMI up and running");
     }
 
     public static void startSocket(Controller controller, Model model){
         //TODO
+        System.out.println("Socket not implemented");
     }
 }

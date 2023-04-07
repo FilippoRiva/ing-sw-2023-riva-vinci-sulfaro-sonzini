@@ -57,4 +57,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
     }
+
+    public LobbyModel getLobbyModel(){
+        return lobbyModel;
+    }
 }
