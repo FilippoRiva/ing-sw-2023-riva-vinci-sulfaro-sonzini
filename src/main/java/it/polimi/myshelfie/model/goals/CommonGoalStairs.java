@@ -52,4 +52,9 @@ public class CommonGoalStairs extends CommonGoal{
     public int getId() {
         return id;
     }
+
+    @Override
+    public String getDescription() {
+        return "Five columns of increasing or decreasing height";
+    }
 }

@@ -47,4 +47,9 @@ public class CommonGoalFourLines extends CommonGoal{
     public int getId() {
         return id;
     }
+
+    @Override
+    public String getDescription() {
+        return "Four lines formed by 5 tiles of maximum three different types";
+    }
 }

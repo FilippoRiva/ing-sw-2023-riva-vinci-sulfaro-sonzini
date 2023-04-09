@@ -39,4 +39,9 @@ public class CommonGoalTwoColumns extends CommonGoal{
     public int getId() {
         return id;
     }
+
+    @Override
+    public String getDescription() {
+        return "Two columns each formed by 6 different types of tiles";
+    }
 }

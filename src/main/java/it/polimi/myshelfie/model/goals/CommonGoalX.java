@@ -36,4 +36,9 @@ public class CommonGoalX extends CommonGoal{
     public int getId() {
         return id;
     }
+
+    @Override
+    public String getDescription() {
+        return "Five tiles of the same type forming an X";
+    }
 }

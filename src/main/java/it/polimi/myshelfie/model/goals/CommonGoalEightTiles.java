@@ -37,4 +37,9 @@ public class CommonGoalEightTiles extends CommonGoal{
     public int getId() {
         return id;
     }
+
+    @Override
+    public String getDescription() {
+        return "Eight tiles of the same type";
+    }
 }

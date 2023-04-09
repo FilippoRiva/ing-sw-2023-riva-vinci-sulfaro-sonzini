@@ -25,4 +25,9 @@ public class CommonGoalCorner extends CommonGoal{
     public int getId() {
         return id;
     }
+
+    @Override
+    public String getDescription() {
+        return "Four tiles of the same type in the four corners";
+    }
 }

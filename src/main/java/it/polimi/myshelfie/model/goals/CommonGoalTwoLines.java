@@ -29,6 +29,11 @@ public class CommonGoalTwoLines extends CommonGoal{
         return id;
     }
 
+    @Override
+    public String getDescription() {
+        return "Two lines each formed by 5 different types of tiles";
+    }
+
     private boolean checkRow(ItemTile[] row, int width){
         for(int i=0; i<=width; i++){
             if(row[i].getType() == ItemTileType.EMPTY) return false;

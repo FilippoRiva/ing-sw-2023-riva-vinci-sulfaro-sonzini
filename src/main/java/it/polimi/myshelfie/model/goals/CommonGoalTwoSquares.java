@@ -41,6 +41,11 @@ public class CommonGoalTwoSquares extends CommonGoal{
         return id;
     }
 
+    @Override
+    public String getDescription() {
+        return "Two groups each containing 4 tiles of the same type in a 2x2 square";
+    }
+
     private boolean check (ItemTile[][] bookshelf, int i, int j){
         if(bookshelf[i][j].getType()!=bookshelf[i+1][j+1].getType()) return false;
         if(bookshelf[i][j].getType()!=bookshelf[i][j+1].getType()) return false;
