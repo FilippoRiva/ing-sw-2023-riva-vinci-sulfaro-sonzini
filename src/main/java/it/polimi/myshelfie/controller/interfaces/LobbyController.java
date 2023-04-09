@@ -9,13 +9,13 @@ public interface LobbyController {
      *
      * @param playerName is the name of the player that leaves the current game.
      */
-    void exitLobby(String playerName) throws Exception;
+    void exitLobby(String playerName);
 
     /**
      *
      * @param config is the game's settings.
      */
-    void setConfig(GameConfig config) throws Exception;
+    void setConfig(GameConfig config);
 
     /**
      *

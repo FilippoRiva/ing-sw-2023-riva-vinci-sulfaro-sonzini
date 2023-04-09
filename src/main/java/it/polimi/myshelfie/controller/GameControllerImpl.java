@@ -9,7 +9,7 @@ import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
-import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 import it.polimi.myshelfie.network.observers.NetworkGameObserver;
 
@@ -21,6 +21,7 @@ public class GameControllerImpl implements GameController, ChatController{
     private final GameModel gameModel;
     private final ChatModel chatModel;
     private final ControllerImpl controllerImpl;
+    private List<Client> clients;
 
 
     public GameControllerImpl(GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
@@ -62,6 +63,11 @@ public class GameControllerImpl implements GameController, ChatController{
     public synchronized void addGameObserver(NetworkGameObserver networkGameObserver) {
         networkGameObserver.setGameModel(gameModel);
         gameModel.addGameObserver(networkGameObserver);
+    }
+
+    @Override
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
     }
 
 

@@ -20,7 +20,7 @@ public class Player {
     }
 
     public void setPersonalGoals(List<PersonalGoal> personalGoals) {
-        this.personalGoals = personalGoals;
+        this.personalGoals = new ArrayList<>(personalGoals);
     }
 
     public void setBookshelf(Bookshelf bookshelf){
@@ -56,8 +56,8 @@ public class Player {
         return new ArrayList<>(obtainedTokens);
     }
 
-    public List<PersonalGoal> getPersonalGoals(){
-        return personalGoals;
+    public synchronized List<PersonalGoal> getPersonalGoals(){
+        return new ArrayList<>(personalGoals);
     }
     public Bookshelf getBookshelf(){return bookshelf;}
 
@@ -66,7 +66,7 @@ public class Player {
     }
 
     public List<ItemTile> getTakenTiles() {
-        return takenTiles;
+        return new ArrayList<>(takenTiles);
     }
 
     public void calculatePoints() {

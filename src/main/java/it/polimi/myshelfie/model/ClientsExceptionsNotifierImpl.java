@@ -26,7 +26,7 @@ public class ClientsExceptionsNotifierImpl extends Observable<ExceptionEvent> im
     }
 
     @Override
-    public ClientExceptionsNotifierView getClientExceptionNotifierView() {
+    public synchronized ClientExceptionsNotifierView getClientExceptionNotifierView() {
         return new ClientExceptionsNotifierView(this);
     }
 

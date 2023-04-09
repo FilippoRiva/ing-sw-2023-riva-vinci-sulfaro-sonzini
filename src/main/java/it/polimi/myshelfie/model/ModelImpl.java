@@ -49,7 +49,7 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
     }
 
     @Override
-    public ClientExceptionsNotifier getNewClientExceptionNotifier() {
+    public synchronized ClientExceptionsNotifier getNewClientExceptionNotifier() {
         return new ClientsExceptionsNotifierImpl();
     }
 }

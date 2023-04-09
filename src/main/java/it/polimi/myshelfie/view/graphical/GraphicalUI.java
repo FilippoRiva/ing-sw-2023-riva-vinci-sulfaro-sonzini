@@ -1,6 +1,8 @@
-package it.polimi.myshelfie.view;
+package it.polimi.myshelfie.view.graphical;
 
 import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.view.View;
+import it.polimi.myshelfie.view.ViewType;
 
 public class GraphicalUI extends View {
     @Override

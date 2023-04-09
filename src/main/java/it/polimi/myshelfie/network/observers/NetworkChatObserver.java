@@ -17,15 +17,17 @@ public class NetworkChatObserver extends NetworkObserver implements Observer<Cha
     }
     @Override
     public void update(ChatEvent evt) {
-        try {
-            client.send(chatModel.getChatModelView(playerName),evt);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(()->{
+            try {
+                client.send(chatModel.getChatModelView(playerName),evt);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     public void setChatModel(ChatModel chatModel) {
-        chatModel = chatModel;
+        this.chatModel = chatModel;
     }
 
     public String getPlayerName(){

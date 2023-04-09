@@ -25,12 +25,14 @@ public class NetworkModelObserver extends NetworkObserver implements Observer<Mo
         }
     }
     private void send(ModelEvent evt){
-        try {
-            client.send(model.getModelView(),evt);
-            firstNotify = true;
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(()->{
+            try {
+                client.send(model.getModelView(),evt);
+                firstNotify = true;
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     public void setModel(Model model) {

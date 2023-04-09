@@ -3,31 +3,23 @@ package it.polimi.myshelfie.network.observers;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observer;
-import it.polimi.myshelfie.view.View;
+import it.polimi.myshelfie.view.ViewBuffer;
 
 import java.rmi.RemoteException;
 
 public class NetworkViewObserver implements Observer<ViewEvent> {
     ServerConnectionHandler server;
-    View view;
-    public NetworkViewObserver(ServerConnectionHandler server, View view){
+    ViewBuffer viewBuffer;
+    public NetworkViewObserver(ServerConnectionHandler server, ViewBuffer viewBuffer){
         this.server = server;
-        this.view = view;
-    }
-
-    /**
-     * used to dynamically change view type (textual or graphical).
-     * @param view the new view to be used
-     */
-    public void setView(View view){
-        this.view = view;
+        this.viewBuffer= viewBuffer;
     }
 
     @Override
     public void update(ViewEvent evt) {
         new Thread(()->{
             try {
-                server.send(view.getUpdateParameters(),evt);
+                server.send(viewBuffer.getUpdateParameters(),evt);
             } catch (RemoteException ignored) {
             }
         }).start();

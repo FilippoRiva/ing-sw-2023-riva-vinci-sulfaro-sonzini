@@ -59,7 +59,7 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
-    public PlayerChatModelView getChatModelView(String playerName) {
+    public synchronized PlayerChatModelView getChatModelView(String playerName) {
         return new PlayerChatModelView(playerChats.get(playerName));
     }
 

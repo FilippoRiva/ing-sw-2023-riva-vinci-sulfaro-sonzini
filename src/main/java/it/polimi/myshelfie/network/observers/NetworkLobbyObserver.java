@@ -19,10 +19,12 @@ public class NetworkLobbyObserver extends NetworkObserver implements Observer<Lo
 
     @Override
     public void update(LobbyEvent evt) {
-        try {
-            client.send(lobby.getLobbyModelView(),evt);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(()->{
+            try {
+                client.send(lobby.getLobbyModelView(),evt);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 }

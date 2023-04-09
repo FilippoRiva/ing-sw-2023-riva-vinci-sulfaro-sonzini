@@ -120,9 +120,11 @@ public class Game implements GameModel, LobbyModel {
 
         for(Player p : players){
             p.setBookshelf(new Bookshelf(gameConfig.getBookshelfDimension()));
-            List<PersonalGoal> playerGoals = goals.subList(0,gameConfig.getNumPersonalGoals()-1);
+            List<PersonalGoal> playerGoals = goals.subList(0,gameConfig.getNumPersonalGoals());
             p.setPersonalGoals(playerGoals);
-            goals.remove(playerGoals);
+            for(PersonalGoal pp : playerGoals){
+                goals.remove(pp);
+            }
         }
         lobbyObservable.setChanged();
         lobbyObservable.notifyObservers(LobbyEvent.LOBBY_END);
@@ -327,7 +329,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public GameModelView getGameModelView() {
+    public synchronized GameModelView getGameModelView() {
         return new GameModelView(this);
     }
 
@@ -339,7 +341,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public LobbyModelView getLobbyModelView() {
+    public synchronized LobbyModelView getLobbyModelView() {
         return new LobbyModelView(this);
     }
 

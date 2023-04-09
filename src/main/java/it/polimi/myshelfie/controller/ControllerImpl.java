@@ -49,6 +49,7 @@ public class ControllerImpl implements Controller {
         }
         GameControllerImpl gameController = new GameControllerImpl(lobbyModel.getGameModel(), lobbyModel.getChatModel(), this);
         LobbyControllerImpl lobbyController = new LobbyControllerImpl(lobbyModel, lobbyModel.getChatModel(), this);
+        lobbyController.addClient(client);
         gamesControllers.put(lobbyName,gameController);
         lobbiesControllers.put(lobbyName,lobbyController);
         clientStringHashMap.put(client,playerName);
@@ -67,6 +68,7 @@ public class ControllerImpl implements Controller {
         if (lobbyModel != null) {
             try {
                 lobbiesControllers.get(lobbyName).getLobbyModel().addPlayer(playerName);
+                lobbiesControllers.get(lobbyName).addClient(client);
             } catch (LobbyFullException | InvalidParameterException e) {
                 clientExceptionsNotifiers.get(client).notifyException(e);
                 return null;
