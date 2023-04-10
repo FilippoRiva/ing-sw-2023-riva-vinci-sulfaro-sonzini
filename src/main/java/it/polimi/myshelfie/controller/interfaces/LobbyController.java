@@ -15,7 +15,7 @@ public interface LobbyController {
      *
      * @param config is the game's settings.
      */
-    void setConfig(GameConfig config);
+    void setConfig(String playerName,GameConfig config);
 
     /**
      *
@@ -24,5 +24,5 @@ public interface LobbyController {
 
     GameController startGame(String playerName);
 
-    void addLobbyObserver(NetworkLobbyObserver networkLobbyObserver);
+    void addLobbyObserver(String playerName,NetworkLobbyObserver networkLobbyObserver);
 }

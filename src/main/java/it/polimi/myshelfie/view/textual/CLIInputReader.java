@@ -1,16 +1,18 @@
-package it.polimi.myshelfie.view;
+package it.polimi.myshelfie.view.textual;
+
+import it.polimi.myshelfie.view.ViewBuffer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 public class CLIInputReader {
-    //TODO this class is just an EXAMPLE
-    boolean on = true;
+    boolean on;
     BufferedReader in;
-    TextualUI UI;
-    public CLIInputReader(BufferedReader in, TextualUI textualUI) {
+    CLIInputInterpreter interpreter;
+    public CLIInputReader(BufferedReader in, TextualUI textualUI, ViewBuffer viewBuffer) {
         this.in = in;
-        this.UI= textualUI;
+        this.interpreter = new CLIInputInterpreter(textualUI,viewBuffer);
+        this.on = true;
         read();
     }
 
@@ -22,7 +24,7 @@ public class CLIInputReader {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            UI.input(input);
+            interpreter.interpret(input);
         }
     }
 }

@@ -1,13 +1,15 @@
 package it.polimi.myshelfie.view;
 
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.network.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 public class ViewBuffer extends View{
     Observable<ViewUpdate> observable;
-    Object[] parameters;
+    Queue<Object[]> parameters;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
@@ -15,15 +17,16 @@ public class ViewBuffer extends View{
     GameModelView gameModelView;
     ViewType viewType;
     public ViewBuffer(){
-        this.parameters = new Object[1];
+        this.parameters = new ArrayDeque<>();
         this.observable = new Observable<>();
     }
     public synchronized void setUpdateParameters(Object[] updateParameters){
-        parameters = updateParameters;
+        if(updateParameters==null) parameters.add(new Object[0]);
+        else parameters.add(updateParameters);
     }
     @Override
     public synchronized Object[] getUpdateParameters() {
-        return parameters;
+        return parameters.poll();
     }
 
     @Override

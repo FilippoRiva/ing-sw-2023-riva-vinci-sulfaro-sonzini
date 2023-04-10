@@ -3,6 +3,7 @@ package it.polimi.myshelfie.controller.interfaces;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.observers.NetworkGameObserver;
 
 
@@ -32,5 +33,4 @@ public interface GameController {
     void insertTiles(String playerName, int column);
 
     void addGameObserver(NetworkGameObserver networkGameObserver);
-    void setClients(List<Client> clients);
 }

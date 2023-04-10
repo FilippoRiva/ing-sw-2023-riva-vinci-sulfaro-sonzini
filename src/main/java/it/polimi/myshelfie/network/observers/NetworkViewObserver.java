@@ -17,11 +17,9 @@ public class NetworkViewObserver implements Observer<ViewEvent> {
 
     @Override
     public void update(ViewEvent evt) {
-        new Thread(()->{
-            try {
-                server.send(viewBuffer.getUpdateParameters(),evt);
-            } catch (RemoteException ignored) {
-            }
-        }).start();
+        try {
+            server.send(viewBuffer.getUpdateParameters(),evt);
+        } catch (RemoteException ignored) {
+        }
     }
 }

@@ -1,9 +1,9 @@
 package it.polimi.myshelfie;
 
 import it.polimi.myshelfie.network.*;
-import it.polimi.myshelfie.view.CLIInputReader;
-import it.polimi.myshelfie.view.View;
-import it.polimi.myshelfie.view.TextualUI;
+import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.textual.CLIInputReader;
+import it.polimi.myshelfie.view.textual.TextualUI;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,20 +16,22 @@ public class ClientApp {
     static String host = "localhost";
     static int registryPort = 1099;
     public static void main(String[] args){
-        TextualUI view = new TextualUI();
+        ViewBuffer viewBuffer = new ViewBuffer();
+        TextualUI view = new TextualUI(viewBuffer);
+        viewBuffer.addUpdateObserver(view);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        new Thread(()->new CLIInputReader(in,view)).start();
+        new Thread(()->new CLIInputReader(in,view,viewBuffer)).start();
         try {
-            startRMIConnection(view);
+            startRMIConnection(viewBuffer);
         } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void startRMIConnection(View view) throws RemoteException, NotBoundException {
+    private static void startRMIConnection(ViewBuffer viewBuffer) throws RemoteException, NotBoundException {
         Registry registry;
         registry = LocateRegistry.getRegistry(host,registryPort);
         Server server = (Server) registry.lookup("server");
-        server.connect(new ClientRMI(view));
+        server.connect(new ClientRMI(viewBuffer));
     }
 }
