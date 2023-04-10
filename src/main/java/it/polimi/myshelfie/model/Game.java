@@ -100,7 +100,7 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void initialize() {
-        //TODO check that who started the game is the lobby creator
+        //TODO check that who's starting the game is the lobby creator
         if(!isLobbyFull()) return;
         Collections.shuffle(players);
         currentPlayer = players.get(0);
@@ -145,7 +145,7 @@ public class Game implements GameModel, LobbyModel {
         for(Player p : players){
             if(p.equals(currentPlayer)){
                 currentTurn = players.indexOf(p);
-                currentPlayer = players.get(currentTurn+1 % players.size());
+                currentPlayer = players.get((currentTurn+1)% players.size());
                 return;
             }
         }
@@ -190,11 +190,11 @@ public class Game implements GameModel, LobbyModel {
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
                 player.setTakenTiles(items);
+                break;
             }
-            gameObservable.setChanged();
-            gameObservable.notifyObservers(GameEvent.DRAW);
-            return;
         }
+        gameObservable.setChanged();
+        gameObservable.notifyObservers(GameEvent.DRAW);
     }
 
     private boolean positionsAreValid(List<Position> positions){
@@ -214,7 +214,11 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
-
+        if(orderedTiles==null) { //keeping the order
+            gameObservable.setChanged();
+            gameObservable.notifyObservers(GameEvent.ORGANIZE);
+            return;
+        }
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
                 // for ArrayLists the complexity of containsAll is O(n*m) where n are the items in the list and m are

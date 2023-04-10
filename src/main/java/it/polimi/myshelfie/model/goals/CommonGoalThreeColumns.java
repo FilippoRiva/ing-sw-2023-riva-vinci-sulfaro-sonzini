@@ -50,7 +50,7 @@ public class CommonGoalThreeColumns extends CommonGoal{
 
     @Override
     public String getDescription() {
-        return "Three columns each formed by 6 tiles of maximum three differen types.\n" +
+        return "Three columns. Maximum three different types per column.\n" +
                 "Different columns can have different combinations";
     }
 }

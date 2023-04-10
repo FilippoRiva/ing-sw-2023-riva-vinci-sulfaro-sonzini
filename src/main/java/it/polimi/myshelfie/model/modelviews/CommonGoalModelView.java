@@ -9,9 +9,11 @@ import java.util.List;
 public class CommonGoalModelView implements Serializable {
     private final List<Token> tokens;
     private final int id;
+    private final String description;
     public CommonGoalModelView(CommonGoal commonGoal){
-        this.tokens = commonGoal.getTokens();
-        this.id = commonGoal.getId();
+            this.tokens = commonGoal.getTokens();
+            this.id = commonGoal.getId();
+            this.description = commonGoal.getDescription();
     }
 
     public List<Token> getTokens(){
@@ -20,5 +22,8 @@ public class CommonGoalModelView implements Serializable {
 
     public int getId(){
         return id;
+    }
+    public String getDescription(){
+        return description;
     }
 }
