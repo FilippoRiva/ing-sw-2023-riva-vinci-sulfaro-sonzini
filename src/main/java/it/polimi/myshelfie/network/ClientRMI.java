@@ -1,52 +1,47 @@
 package it.polimi.myshelfie.network;
 
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.network.events.*;
 import it.polimi.myshelfie.network.observers.NetworkViewObserver;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ClientRMI extends UnicastRemoteObject implements Client {
-    ServerConnectionHandler server;
-    ViewBuffer viewBuffer;
-    public ClientRMI(ViewBuffer viewBuffer) throws RemoteException {
-        this.viewBuffer = viewBuffer;
+    View view;
+
+    public ClientRMI(View view) throws RemoteException {
+        this.view = view;
     }
+
+    @Override
     public void handshake(ServerConnectionHandler server) throws RemoteException {
-        this.server = server;
-        new Thread(()-> viewBuffer.addObserver(new NetworkViewObserver(server, viewBuffer))).start();
+        new Thread(()-> view.addObserver(new NetworkViewObserver(server, view))).start();
     }
 
     @Override
-    public void send(Object obj, ModelEvent evt) throws RemoteException {
-        new Thread(()-> viewBuffer.setModelView((ModelView) obj)).start();
-    }
-
-    @Override
-    public void send(Object obj, ExceptionEvent evt) throws RemoteException {
-        new Thread(()-> viewBuffer.setExceptionView((ClientExceptionsNotifierView)obj)).start();
-    }
-
-    @Override
-    public void send(Object obj, ChatEvent evt) throws RemoteException {
-        new Thread(()-> viewBuffer.setChatView((PlayerChatModelView) obj)).start();
-    }
-
-    @Override
-    public void send(Object obj, LobbyEvent evt) throws RemoteException {
-        new Thread(()-> viewBuffer.setLobbyModelView((LobbyModelView) obj)).start();
-    }
-
-    @Override
-    public void send(Object obj, GameEvent evt) throws RemoteException {
-        new Thread(()-> viewBuffer.setGameModelView((GameModelView) obj)).start();
-    }
-
-    @Override
-    public void setViewType(ViewType type) throws RemoteException {
-        new Thread(()-> viewBuffer.setView(type)).start();
+    public void send(NetworkMessage networkMessage){
+        MessageType type = networkMessage.getMessageType();
+        switch (type){
+            case MODELMESSAGE -> {
+                new Thread(()->view.setModelView((ModelView) networkMessage.getParameters()[0])).start();
+            }
+            case CHATMESSAGE -> {
+                new Thread(()-> view.setChatView((PlayerChatModelView) networkMessage.getParameters()[0])).start();
+            }
+            case LOBBYMESSAGE -> {
+                new Thread(()-> view.setLobbyModelView((LobbyModelView) networkMessage.getParameters()[0])).start();
+            }
+            case GAMEMESSAGE -> {
+                new Thread(()-> view.setGameModelView((GameModelView) networkMessage.getParameters()[0])).start();
+            }
+            case EXCEPTIONMESSAGE -> {
+                new Thread(()-> view.setExceptionView((ClientExceptionsNotifierView) networkMessage.getParameters()[0])).start();
+            }
+            case SELECTVIEWMESSAGE -> {
+                new Thread(()-> view.setView((ViewType) networkMessage.getParameters()[0])).start();
+            }
+        }
     }
 }

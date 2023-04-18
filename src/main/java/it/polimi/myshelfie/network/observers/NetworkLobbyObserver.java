@@ -2,6 +2,7 @@ package it.polimi.myshelfie.network.observers;
 
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -21,7 +22,7 @@ public class NetworkLobbyObserver extends NetworkObserver implements Observer<Lo
     public void update(LobbyEvent evt) {
         new Thread(()->{
             try {
-                client.send(lobby.getLobbyModelView(),evt);
+                client.send(new NetworkMessage(evt,lobby.getLobbyModelView()));
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

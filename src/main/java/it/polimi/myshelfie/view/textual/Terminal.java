@@ -20,7 +20,7 @@ public class Terminal {
     int INPUT_COLUMN = 15;
     int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
     int EXCEPTION_LINE= ACTION_LINE+1;
-    int INFOPOS = 40;
+    int INFOPOS = 41;
     public Terminal(){
         out = System.out;
         String ANSI_ON_str = System.getenv("ANSI_ON");
@@ -34,7 +34,8 @@ public class Terminal {
 
     public void printTitle(String title){
         positionCursor(0,WIDTH/2-title.length());
-        println(ANSI.BOLD+title.toUpperCase()+ANSI.RESET);
+        if(ANSI_ON)println(ANSI.BOLD+title.toUpperCase()+ANSI.RESET);
+        else println(title.toUpperCase());
         moveToInput();
     }
     public void printError(String message) {
@@ -56,7 +57,7 @@ public class Terminal {
     }
     public void print(String message,int line, int column){
         positionCursor(line,column);
-        out.print(message);
+        print(message);
     }
     private void println(String message){
         out.println(message);
@@ -64,8 +65,7 @@ public class Terminal {
     }
     public void println(String message,int line, int column){
         positionCursor(line,column);
-        out.println(message);
-        moveToInput();
+        println(message);
     }
 
     public void printDivider(int line) {
@@ -90,8 +90,26 @@ public class Terminal {
     }
 
     public void printInInfoTable(String info,int pos){
-        println(info,pos,INFOPOS+1);
+        println(info,pos,INFOPOS);
         moveToInput();
+    }
+
+    private void printTile(ItemTile tile) {
+        if(tile == null){
+            print("|   ");
+        } else {
+            print("| ");
+            switch (tile.getType()){
+                case CAT -> print(ANSI.GREEN_BG+"C"+ANSI.RESET);
+                case BOOK -> print(ANSI.WHITE_BG+"B"+ANSI.RESET);
+                case GAME -> print(ANSI.YELLOW_BG+"G"+ANSI.RESET);
+                case FRAME -> print(ANSI.BLUE_BG+"F"+ANSI.RESET);
+                case TROPHY -> print(ANSI.LIGHTBLUE_BG+"T"+ANSI.RESET);
+                case PLANT -> print(ANSI.PINK_BG+"P"+ANSI.RESET);
+                case EMPTY -> print(" ");
+            }
+            print(" ");
+        }
     }
 
     public void printBookshelf(ItemTile[][] bookshelf, String currentPlayer,int line, int column) {
@@ -120,8 +138,8 @@ public class Terminal {
         moveToInput();
     }
 
-    public void printTokens(List<Token> tokens){
-        //TODO make this print position dependant
+    public void printTokens(List<Token> tokens,int line, int column){
+        positionCursor(line,column);
         print(" | ");
         for (Token tok : tokens) {
             print(tok.getValue() + " | ");
@@ -163,23 +181,6 @@ public class Terminal {
     private synchronized void printLine(int length) {
         for (int i = 0; i < length; i++) out.print("-");
         out.print("\n");
-    }
-    private void printTile(ItemTile tile) {
-        if(tile == null){
-            print("|   ");
-        } else {
-            print("| ");
-            switch (tile.getType()){
-                case CAT -> print(ANSI.GREEN_BG+"C"+ANSI.RESET);
-                case BOOK -> print(ANSI.WHITE_BG+"B"+ANSI.RESET);
-                case GAME -> print(ANSI.YELLOW_BG+"G"+ANSI.RESET);
-                case FRAME -> print(ANSI.BLUE_BG+"F"+ANSI.RESET);
-                case TROPHY -> print(ANSI.LIGHTBLUE_BG+"T"+ANSI.RESET);
-                case PLANT -> print(ANSI.PINK_BG+"P"+ANSI.RESET);
-                case EMPTY -> print(" ");
-            }
-            print(" ");
-        }
     }
 
 
@@ -233,8 +234,14 @@ public class Terminal {
         if(ANSI_ON){
             goOnTop();
             cursorDown(line);
+            if(column == 0 && width == WIDTH) {
+                eraseLine();
+                return;
+            }
             cursorRight(column);
-            for(int i =0; i<width; i++) out.print(" ");
+            String blank = "";
+            for(int i =0; i<width; i++) blank = blank.concat(" ");
+            out.print(blank);
         }
     }
 
@@ -253,7 +260,7 @@ public class Terminal {
     private void cursorRight(int times) {
         if(times==0) return;
         if(ANSI_ON) {
-            for(int i =0; i<times;i++) out.print(ANSI.CURSOR_RIGHT);
+            out.print("\033["+times+"C");
         }
     }
 
@@ -272,7 +279,7 @@ public class Terminal {
         }
     }
     private void goOnTop() {
-        out.print(ANSI.HOME);
+        if(ANSI_ON) out.print(ANSI.HOME);
     }
     private void goToBottom() {
         positionCursor(HEIGHT,0);

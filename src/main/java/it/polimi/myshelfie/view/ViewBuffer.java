@@ -1,15 +1,17 @@
 package it.polimi.myshelfie.view;
 
 import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.network.NetworkMessage;
+import it.polimi.myshelfie.network.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class ViewBuffer extends View{
-    Observable<ViewUpdate> observable;
-    Queue<Object[]> parameters;
+public class ViewBuffer extends View {
+    Observable<ViewUpdate> UINotifier;
+    Queue<NetworkMessage> networkMessages;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
@@ -17,66 +19,69 @@ public class ViewBuffer extends View{
     GameModelView gameModelView;
     ViewType viewType;
     public ViewBuffer(){
-        this.parameters = new ArrayDeque<>();
-        this.observable = new Observable<>();
+        this.networkMessages = new ArrayDeque<>();
+        this.UINotifier = new Observable<>();
     }
-    public synchronized void setUpdateParameters(Object[] updateParameters){
-        if(updateParameters==null) parameters.add(new Object[0]);
-        else parameters.add(updateParameters);
-    }
-    @Override
-    public synchronized Object[] getUpdateParameters() {
-        return parameters.poll();
+    public synchronized void sendMessage(NetworkMessage networkMessage){
+        if(networkMessage ==null) return;
+        networkMessages.add(networkMessage);
+        setChanged();
+        notifyObservers((ViewEvent) networkMessage.getEvent());
     }
 
     @Override
     public synchronized void setModelView(ModelView modelView) {
         this.modelView = modelView;
-        observable.setChanged();
-        observable.notifyObservers(ViewUpdate.MODEL_UPDATE);
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE);
     }
 
     @Override
     public synchronized void setExceptionView(ClientExceptionsNotifierView exceptionView) {
         this.clientExceptionsNotifierView = exceptionView;
-        observable.setChanged();
-        observable.notifyObservers(ViewUpdate.EXCEPTION_UPDATE);
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE);
     }
 
     @Override
     public synchronized void setChatView(PlayerChatModelView chatView) {
         this.playerChatModelView = chatView;
-        observable.setChanged();
-        observable.notifyObservers(ViewUpdate.CHAT_UPDATE);
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE);
     }
 
     @Override
     public synchronized void setLobbyModelView(LobbyModelView lobbyModelView) {
         this.lobbyModelView = lobbyModelView;
-        observable.setChanged();
-        observable.notifyObservers(ViewUpdate.LOBBY_UPDATE);
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE);
     }
 
     @Override
     public synchronized void setGameModelView(GameModelView gameModelView) {
         this.gameModelView = gameModelView;
-        observable.setChanged();
-        observable.notifyObservers(ViewUpdate.GAME_UPDATE);
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE);
     }
 
     @Override
     public synchronized void setView(ViewType viewType) {
         this.viewType = viewType;
-        observable.setChanged();
-        observable.notifyObservers(ViewUpdate.VIEWTYPE_UPDATE);
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.VIEWTYPE_UPDATE);
     }
 
-    public synchronized void addUpdateObserver(Observer<ViewUpdate> o) {
-        observable.addObserver(o);
+    @Override
+    public NetworkMessage getMessage() {
+        return networkMessages.poll();
     }
 
-    public synchronized void removeUpdateObserver(Observer<ViewUpdate> o ){
-        observable.deleteObserver(o);
+    public synchronized void addUI(Observer<ViewUpdate> o) {
+        UINotifier.addObserver(o);
+    }
+
+    public synchronized void removeUI(Observer<ViewUpdate> o ){
+        UINotifier.deleteObserver(o);
     }
 
     public synchronized ModelView getModelView() {

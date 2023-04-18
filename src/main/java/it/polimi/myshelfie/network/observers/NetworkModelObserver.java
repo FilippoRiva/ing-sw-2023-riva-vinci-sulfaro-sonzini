@@ -2,6 +2,7 @@ package it.polimi.myshelfie.network.observers;
 
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -27,7 +28,7 @@ public class NetworkModelObserver extends NetworkObserver implements Observer<Mo
     private void send(ModelEvent evt){
         new Thread(()->{
             try {
-                client.send(model.getModelView(),evt);
+                client.send(new NetworkMessage(evt,model.getModelView()));
                 firstNotify = true;
             } catch (RemoteException e) {
                 throw new RuntimeException(e);

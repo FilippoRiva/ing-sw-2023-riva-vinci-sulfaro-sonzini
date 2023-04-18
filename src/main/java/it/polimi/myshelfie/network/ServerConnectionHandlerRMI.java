@@ -46,10 +46,15 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
     public void setChatController(ChatController chatController) throws RemoteException{
         this.chatController = chatController;
     }
+
     @Override
-    public void send(Object[] args, ViewEvent evt) throws RemoteException {
+    public void send(NetworkMessage networkMessage) throws RemoteException {
+        MessageType messageType = networkMessage.getMessageType();
+        if(messageType!=MessageType.VIEWMESSAGE) return;
+        ViewEvent viewEvent = (ViewEvent) networkMessage.getEvent();
+        Object[] args = networkMessage.getParameters();
         new Thread(()->{
-            switch (evt){
+            switch (viewEvent){
                 case CREATE_REQUEST -> {
                     createRequest(args);
                 }

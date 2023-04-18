@@ -95,6 +95,7 @@ public class TextualUI implements Observer<ViewUpdate> {
     }
 
     public synchronized void printAvailableLobbies() {
+        //TODO merge with joinPrint
         ModelView modelView = viewBuffer.getModelView();
         if (viewBuffer.getViewType() != ViewType.INIT || modelView == null) return;
         t.clearScreen();
@@ -186,8 +187,8 @@ public class TextualUI implements Observer<ViewUpdate> {
         for (CommonGoalModelView c : gmv.getCommonGoals()) {
             t.println(c.getId() + ". :" + c.getDescription().split("\n")[0],21+idx,0);
             t.print("Tokens : ",22+idx,1);
+            t.printTokens(c.getTokens(),22+idx,1+10);
             idx+=2;
-            t.printTokens(c.getTokens());
         }
     }
 

@@ -18,7 +18,7 @@ public class ClientApp {
     public static void main(String[] args){
         ViewBuffer viewBuffer = new ViewBuffer();
         TextualUI view = new TextualUI(viewBuffer);
-        viewBuffer.addUpdateObserver(view);
+        viewBuffer.addUI(view);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         new Thread(()->new CLIInputReader(in,view,viewBuffer)).start();
         try {

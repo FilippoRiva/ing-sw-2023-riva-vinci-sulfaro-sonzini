@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.events.ViewEvent;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewType;
@@ -227,40 +228,44 @@ public class CLIInputInterpreter {
 
     private void joinRequest(String lobby, String playerName){
         synchronized (viewBuffer) {
-            viewBuffer.setUpdateParameters(new Object[]{playerName, lobby});
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.JOIN_REQUEST);
+            try {
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST,playerName,lobby));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private void createRequest(String lobby, String playerName){
         synchronized (viewBuffer) {
-            viewBuffer.setUpdateParameters(new Object[]{playerName, lobby});
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.CREATE_REQUEST);
+            try {
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CREATE_REQUEST, playerName, lobby));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private void startRequest() {
         synchronized (viewBuffer){
-            viewBuffer.setUpdateParameters(new Object[]{});
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.START_REQUEST);
+            try {
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.START_REQUEST));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private void moveRequest(List<Position> positions, int column) {
         synchronized (viewBuffer){
             Object[] args = new Object[]{positions.stream().toList()};
-            viewBuffer.setUpdateParameters(args);
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.DRAW_REQUEST);
-            viewBuffer.setUpdateParameters(null);
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.ORGANIZE_REQUEST);
-            viewBuffer.setUpdateParameters(new Object[]{column});
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.INSERT_REQUEST);
+            try {
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST,positions));
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,new ArrayList<>()));
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST,column));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -268,15 +273,18 @@ public class CLIInputInterpreter {
         LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
         if(currentSize==2) return false;
-
+        GameConfig config = null;
+        try {
+            config = new GameConfig(currentSize-1);
+        } catch (InvalidParameterException ignored) {
+            return false;
+        }
         synchronized (viewBuffer) {
             try {
-                viewBuffer.setUpdateParameters(new Object[]{new GameConfig(currentSize - 1)});
-            } catch (InvalidParameterException ignored) {
-                return false;
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
             }
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.CONFIG_REQUEST);
         }
         return true;
     }
@@ -285,15 +293,18 @@ public class CLIInputInterpreter {
         LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
         if(currentSize==4) return false;
-
+        GameConfig config;
+        try {
+            config = new GameConfig(currentSize+1);
+        } catch (InvalidParameterException e) {
+            return false;
+        }
         synchronized (viewBuffer) {
             try {
-                viewBuffer.setUpdateParameters(new Object[]{new GameConfig(currentSize + 1)});
-            } catch (InvalidParameterException ignored) {
-                return false;
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
             }
-            viewBuffer.setChanged();
-            viewBuffer.notifyObservers(ViewEvent.CONFIG_REQUEST);
         }
         return true;
     }

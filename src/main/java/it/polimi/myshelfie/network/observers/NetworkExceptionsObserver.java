@@ -2,6 +2,7 @@ package it.polimi.myshelfie.network.observers;
 
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.events.ExceptionEvent;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -22,7 +23,7 @@ public class NetworkExceptionsObserver extends NetworkObserver implements Observ
     public void update(ExceptionEvent evt) {
         new Thread(()->{
             try {
-                if(evt!=null) client.send(exceptionsNotifier.getClientExceptionNotifierView(),evt);
+                if(evt!=null) client.send(new NetworkMessage(evt,exceptionsNotifier.getClientExceptionNotifierView()));
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

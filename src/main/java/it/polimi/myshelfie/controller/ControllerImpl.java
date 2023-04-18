@@ -7,6 +7,7 @@ import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.observers.NetworkExceptionsObserver;
 import it.polimi.myshelfie.network.observers.NetworkModelObserver;
@@ -51,7 +52,7 @@ public class ControllerImpl implements Controller {
         lobbiesControllers.put(lobbyName,lobbyController);
         new Thread(()->{
             try {
-                client.setViewType(ViewType.LOBBY);
+                client.send(new NetworkMessage(ViewType.LOBBY));
             } catch (RemoteException ignored) {
             }
         }).start();
@@ -69,7 +70,7 @@ public class ControllerImpl implements Controller {
         }
         new Thread(()-> {
             try {
-                client.setViewType(ViewType.LOBBY);
+                client.send(new NetworkMessage(ViewType.LOBBY));
             } catch (RemoteException ignored) {
             }
         }).start();
@@ -89,7 +90,7 @@ public class ControllerImpl implements Controller {
         clientExceptionsNotifiers.put(client,cen);
         new Thread(()->{
             try {
-                client.setViewType(ViewType.INIT);
+                client.send(new NetworkMessage(ViewType.INIT));
             } catch (RemoteException ignored) {
             }
         }).start();

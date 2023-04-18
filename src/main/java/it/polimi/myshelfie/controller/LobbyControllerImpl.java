@@ -11,6 +11,7 @@ import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
@@ -68,7 +69,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             new Thread(()-> {
                 try {
                     for(Client c : clientsMap.values()){
-                        c.setViewType(ViewType.GAME);
+                        c.send(new NetworkMessage(ViewType.GAME));
                     }
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);

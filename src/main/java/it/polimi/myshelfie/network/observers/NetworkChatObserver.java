@@ -2,6 +2,7 @@ package it.polimi.myshelfie.network.observers;
 
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.events.ChatEvent;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -19,7 +20,7 @@ public class NetworkChatObserver extends NetworkObserver implements Observer<Cha
     public void update(ChatEvent evt) {
         new Thread(()->{
             try {
-                client.send(chatModel.getChatModelView(playerName),evt);
+                client.send(new NetworkMessage(evt, chatModel.getChatModelView(playerName)));
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

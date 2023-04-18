@@ -1,15 +1,11 @@
 package it.polimi.myshelfie.view.graphical;
 
 import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewType;
 
 public class GraphicalUI extends View {
-    @Override
-    public Object[] getUpdateParameters() {
-        return new Object[0];
-    }
-
     @Override
     public void setModelView(ModelView modelView) {
 
@@ -38,5 +34,10 @@ public class GraphicalUI extends View {
     @Override
     public void setView(ViewType viewType) {
 
+    }
+
+    @Override
+    public NetworkMessage getMessage() {
+        return null;
     }
 }
