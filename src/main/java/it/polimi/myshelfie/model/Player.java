@@ -15,8 +15,9 @@ public class Player {
 
     public Player(String name){
         this.name = name;
-        points = 0;
-        obtainedTokens = new ArrayList<>();
+        this.points = 0;
+        this.obtainedTokens = new ArrayList<>();
+        this. takenTiles = new ArrayList<>();
     }
 
     public void setPersonalGoals(List<PersonalGoal> personalGoals) {
@@ -75,5 +76,7 @@ public class Player {
         }
     }
 
-
+    public void clearTakenTiles() {
+        this.takenTiles = new ArrayList<>();
+    }
 }

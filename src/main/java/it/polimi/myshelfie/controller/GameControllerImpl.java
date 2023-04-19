@@ -41,8 +41,12 @@ public class GameControllerImpl implements GameController, ChatController{
     }
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) {
+        GameState currentGameState = gameModel.getState();
+        if(currentGameState != GameState.DRAW && currentGameState != GameState.LASTDRAW) return;
         try {
             gameModel.drawTiles(positions, playerName);
+            if(gameModel.getState()==GameState.DRAW) gameModel.setState(GameState.ORGANIZE);
+            else gameModel.setState(GameState.LASTORGANIZE);
         } catch (InvalidParameterException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
@@ -50,8 +54,12 @@ public class GameControllerImpl implements GameController, ChatController{
 
     @Override
     public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
+        GameState currentGameState = gameModel.getState();
+        if(currentGameState != GameState.ORGANIZE && currentGameState != GameState.LASTORGANIZE) return;
         try {
             gameModel.orderChosenTiles(orderedTiles, playerName);
+            if(currentGameState==GameState.ORGANIZE) gameModel.setState(GameState.INSERT);
+            else gameModel.setState(GameState.LASTINSERT);
         } catch (InvalidParameterException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
@@ -59,13 +67,38 @@ public class GameControllerImpl implements GameController, ChatController{
 
     @Override
     public synchronized void insertTiles(String playerName, int column) {
+        GameState currentGameState = gameModel.getState();
+        if(currentGameState != GameState.INSERT && currentGameState != GameState.LASTINSERT) return;
         try {
             gameModel.insertTiles(playerName, column);
+            if(currentGameState == GameState.INSERT) gameModel.setState(GameState.COUNTINGPOINTS);
+            else gameModel.setState(GameState.LASTCOUNTINGPOINTS);
         } catch (InvalidParameterException | FullColumnException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
+            return;
         }
+        if(gameModel.isBookshelfFull(playerName) || gameModel.getState() == GameState.LASTCOUNTINGPOINTS){
+            if(gameModel.isLastPlayer(playerName)){
+                gameModel.calculateWinResults();
+                gameModel.setState(GameState.WIN);
+            } else {
+                endTurn(playerName);
+            }
+        } else {
+            endTurn(playerName);
+        }
+    }
 
-        endTurn(playerName);
+    /**
+     *
+     * @param playerName is the current player that has finished its turn
+     */
+    private void endTurn(String playerName){
+        gameModel.checkCommonGoal(playerName);
+        gameModel.refillLivingRoom();
+        gameModel.nextTurn();
+        if(gameModel.getState()==GameState.COUNTINGPOINTS) gameModel.setState(GameState.DRAW);
+        else gameModel.setState(GameState.LASTDRAW);
     }
 
     @Override
@@ -93,15 +126,6 @@ public class GameControllerImpl implements GameController, ChatController{
         gameModel.setState(GameState.DRAW);
     }
 
-    /**
-     *
-     * @param playerName is the current player that has finished its turn
-     */
-    private void endTurn(String playerName){
-        gameModel.checkCommonGoal(playerName);
-        gameModel.refillLivingRoom();
-        gameModel.nextTurn();
-    }
     @Override
     public synchronized void addMessage(Message message){
         chatModel.addMessage(message);

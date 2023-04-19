@@ -126,11 +126,6 @@ public class Game implements GameModel, LobbyModel {
                 goals.remove(pp);
             }
         }
-        lobbyObservable.setChanged();
-        lobbyObservable.notifyObservers(LobbyEvent.LOBBY_END);
-        gameObservable.setChanged();
-        gameObservable.notifyObservers(GameEvent.GAME_START);
-
     }
 
     private List<PersonalGoal> generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal) throws Exception {
@@ -149,8 +144,6 @@ public class Game implements GameModel, LobbyModel {
                 return;
             }
         }
-        gameObservable.setChanged();
-        gameObservable.notifyObservers(GameEvent.TURN);
     }
 
     @Override
@@ -169,7 +162,14 @@ public class Game implements GameModel, LobbyModel {
         }
         else {
             gameObservable.setChanged();
-            gameObservable.notifyObservers(GameEvent.STATE);
+            switch (state){
+                case DRAW, LASTDRAW -> gameObservable.notifyObservers(GameEvent.REFILL);
+                case ORGANIZE, LASTORGANIZE -> gameObservable.notifyObservers(GameEvent.DRAW);
+                case INSERT, LASTINSERT -> gameObservable.notifyObservers(GameEvent.ORGANIZE);
+                case COUNTINGPOINTS, LASTCOUNTINGPOINTS -> gameObservable.notifyObservers(GameEvent.INSERT);
+                case REFILL -> gameObservable.notifyObservers(GameEvent.COUNTINGPOINTS);
+                case WIN -> gameObservable.notifyObservers(GameEvent.WIN);
+            }
         }
     }
 
@@ -193,8 +193,6 @@ public class Game implements GameModel, LobbyModel {
                 break;
             }
         }
-        gameObservable.setChanged();
-        gameObservable.notifyObservers(GameEvent.DRAW);
     }
 
     private boolean positionsAreValid(List<Position> positions){
@@ -214,20 +212,14 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
-        if(orderedTiles==null) { //keeping the order
-            gameObservable.setChanged();
-            gameObservable.notifyObservers(GameEvent.ORGANIZE);
+        if(orderedTiles.size()==0) { //keeping the order
             return;
         }
         for(Player player : players) {
             if (player.getName().equals(playerName)) {
-                // for ArrayLists the complexity of containsAll is O(n*m) where n are the items in the list and m are
-                // the items of the argument. Creating a HashSet is O(n) and the containsAll is O(1) so it's faster
-                if (!new HashSet<>(player.getTakenTiles()).containsAll(orderedTiles) || player.getTakenTiles().size() != orderedTiles.size())
+                if (!player.getTakenTiles().containsAll(orderedTiles) || player.getTakenTiles().size() != orderedTiles.size())
                     throw new InvalidParameterException("tiles different from the taken ones in the draw move");
                 player.setTakenTiles(orderedTiles);
-                gameObservable.setChanged();
-                gameObservable.notifyObservers(GameEvent.ORGANIZE);
                 return;
             }
         }
@@ -246,8 +238,7 @@ public class Game implements GameModel, LobbyModel {
                 for(ItemTile t: p.getTakenTiles()) {
                     p.getBookshelf().insertTile(column, t);
                 }
-                gameObservable.setChanged();
-                gameObservable.notifyObservers(GameEvent.INSERT);
+                p.clearTakenTiles();
                 return;
             }
         }
@@ -258,8 +249,6 @@ public class Game implements GameModel, LobbyModel {
         for(CommonGoal cm : commonGoals){
             if(cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())){
                 addToken(playerName, cm.popToken());
-                gameObservable.setChanged();
-                gameObservable.notifyObservers(GameEvent.TOKEN);
             }
         }
     }
@@ -277,8 +266,6 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void refillLivingRoom(){
         livingRoom.refill();
-        gameObservable.setChanged();
-        gameObservable.notifyObservers(GameEvent.REFILL);
     }
     @Override
     public ChatModel getChatModel() {

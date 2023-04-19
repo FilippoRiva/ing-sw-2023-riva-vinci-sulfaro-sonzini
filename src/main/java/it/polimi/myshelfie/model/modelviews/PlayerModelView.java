@@ -13,6 +13,7 @@ public class PlayerModelView implements Serializable {
     final private String name;
     final private List<PersonalGoalModelView> personalGoals;
     final private int points;
+    final private List<ItemTile> takenTiles;
     final private List<Token> tokens;
     final private ItemTile[][] bookshelf;
     public PlayerModelView(Player player){
@@ -25,6 +26,7 @@ public class PlayerModelView implements Serializable {
         this.points = player.getPoints();
         this.tokens = player.getObtainedTokens();
         this.bookshelf = player.getBookshelf().getBookshelfItems();
+        this.takenTiles = player.getTakenTiles();
     }
 
     public String getName() {
@@ -45,5 +47,9 @@ public class PlayerModelView implements Serializable {
 
     public ItemTile[][] getBookshelf() {
         return bookshelf;
+    }
+
+    public List<ItemTile> getTakenTiles() {
+        return takenTiles;
     }
 }

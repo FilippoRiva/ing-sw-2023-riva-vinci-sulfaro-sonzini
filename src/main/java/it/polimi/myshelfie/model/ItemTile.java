@@ -16,4 +16,15 @@ public class ItemTile implements Serializable {
     public ItemTileType getType() {
         return type;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        ItemTile tile;
+        try{
+            tile = (ItemTile)obj;
+        } catch (ClassCastException e){
+            return false;
+        }
+        return this.type.equals(tile.getType());
+    }
 }
