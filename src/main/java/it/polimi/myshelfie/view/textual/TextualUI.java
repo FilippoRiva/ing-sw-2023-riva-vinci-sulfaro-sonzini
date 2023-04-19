@@ -1,5 +1,7 @@
 package it.polimi.myshelfie.view.textual;
 
+import it.polimi.myshelfie.model.GameState;
+import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.utils.Observer;
@@ -157,7 +159,21 @@ public class TextualUI implements Observer<ViewUpdate> {
         t.printVerticalDivider(27, 30, 7);
         printGameInfo(gameModelView);
         t.printBookshelf(gameModelView.getPlayer(currentLibraryOwner).getBookshelf(),currentLibraryOwner,27,36);
-        t.printAction("n/p : next/previous bookshelf, c <args> : choice and insert");
+        if(!gameModelView.getCurrentPlayer().equals(myUsername)) {
+            t.printAction("help, chat");
+        } else {
+            switch (gameModelView.getCurrentState()){
+                case DRAW,LASTDRAW -> {
+                    t.printAction("help, chat, c <args>");
+                }
+                case ORGANIZE,LASTORGANIZE -> {
+                    t.printAction("help, chat, o <args>");
+                }
+                case INSERT,LASTINSERT -> {
+                    t.printAction("help, chat, i <column>");
+                }
+            }
+        }
     }
 
     private synchronized void printGameInfo(GameModelView gameModelView) {
@@ -178,6 +194,19 @@ public class TextualUI implements Observer<ViewUpdate> {
             idx++;
             pos++;
         }
+        if(gameModelView.getCurrentPlayer().equals(myUsername)) {
+            List<ItemTile> takenTiles = gameModelView.getPlayer(myUsername).getTakenTiles();
+            if (takenTiles.size() != 0) {
+                t.printInInfoTable("Taken Tiles :", 14);
+                t.printTakenTiles(takenTiles, 16, 43, gameModelView.getCurrentState() == GameState.ORGANIZE);
+            }
+        } else {
+            List<ItemTile> currenPlayerTakenTiles = gameModelView.getPlayer(gameModelView.getCurrentPlayer()).getTakenTiles();
+            if(currenPlayerTakenTiles.size() != 0){
+                t.printInInfoTable(gameModelView.getCurrentPlayer()+" taken tiles :",14);
+                t. printTakenTiles(currenPlayerTakenTiles, 16, 43, false);
+            }
+        }
         t.printInInfoTable("Remaining tiles : " + gameModelView.getRemainingTiles(), 19);
     }
 
@@ -196,7 +225,11 @@ public class TextualUI implements Observer<ViewUpdate> {
     }
 
     public synchronized void wrongInput() {
-        t.printError("insert a valid option");
+        wrongInput("insert a valid option");
+    }
+
+    public synchronized void wrongInput(String message){
+        t.printError(message);
     }
 
     public synchronized void clearInput() {
@@ -229,5 +262,39 @@ public class TextualUI implements Observer<ViewUpdate> {
         if(index == 0) currentLibraryOwner = players.get(players.size()-1);
         else currentLibraryOwner = players.get(index-1);
         printGameModelView();
+    }
+
+    public void goToChat() {
+        t.clearScreen();
+        t.print("Harambe : monkey",1,1);
+        t.printAction("enter to go back");
+    }
+
+    public void goToGame() {
+        t.clearScreen();
+        printGameModelView();
+    }
+
+    public void goToHelp() {
+        t.clearScreen();
+        t.print("help : lists all possible commands", 1, 1);
+        t.print("chat : goes to chat mode",2,1);
+        t.print("game : returns to the game mode",3 ,1);
+        t.print("Game Commands :", 4, 1);
+        t.print("n        : shows the next player's library",5,3);
+        t.print("p        : shows the previous player's library", 6, 3);
+        t.print("d <args> : selects the tiles you want to draw",7,3);
+        t.print("           given x and y coordinates.",8,3);
+        t.print("           Example : \"c -1 3 0 3 1 3\" will draw positions ",9,3);
+        t.print("                      (-1,3) (0,3) (1,3)",10,3);
+        t.print("o <args> : order the drawn tiles",11,3);
+        t.print("           Example : \"o 0 2 1\" will swap the second",12,3);
+        t.print("                     and the third drawn tile  ",13,3);
+        t.print("i <args> : inserts the ordered tiles into the given column",14,3);
+        t.print("           Example : \"i 1\" will insert the tiles into the ",15,3);
+        t.print("                     first column",16,3);
+        t.print("Chat Commands : ", 20, 1);
+        t.print(" none ",21 ,3 );
+        t.printAction("enter anything to go back to the game");
     }
 }

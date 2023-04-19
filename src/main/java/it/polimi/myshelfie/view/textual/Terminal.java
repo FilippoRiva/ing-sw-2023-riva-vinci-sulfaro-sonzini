@@ -45,6 +45,13 @@ public class Terminal {
         }
         else out.println("! "+message);
         moveToInput();
+        new Thread(()->{
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ignored) {
+            }
+            clearError();
+        }).start();
     }
     public void printAction(String s) {
         positionCursor(ACTION_LINE,0);
@@ -109,6 +116,18 @@ public class Terminal {
                 case EMPTY -> print(" ");
             }
             print(" ");
+        }
+    }
+
+    public void printTakenTiles(List<ItemTile> takenTiles, int line, int column, boolean printNumbers){
+        positionCursor(line,column);
+        for(ItemTile it : takenTiles){
+            printTile(it);
+        }
+        println("|");
+        if(!printNumbers) return;
+        for(int i = 0; i<takenTiles.size();i++){
+            print(String.valueOf(i),line+1,column+i*4+2);
         }
     }
 
@@ -189,7 +208,7 @@ public class Terminal {
         clearInput();
     }
     public void clearScreen(){
-        eraseLines(0, SCREEN_HEIGHT);
+        eraseLines(0, SCREEN_HEIGHT+1);
         moveToInput();
     }
 

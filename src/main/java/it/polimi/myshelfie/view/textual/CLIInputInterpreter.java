@@ -1,8 +1,10 @@
 package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.model.modelviews.GameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -11,6 +13,7 @@ import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CLIInputInterpreter {
@@ -18,8 +21,10 @@ public class CLIInputInterpreter {
     final ViewBuffer viewBuffer;
     String[] readStrings;
     int stringCount;
+    boolean helping;
     boolean creating;
     boolean joining;
+    boolean chatting;
     boolean inputError;
 
     /**
@@ -85,25 +90,45 @@ public class CLIInputInterpreter {
                     UI.wrongInput();
                 }
             }
-            case EXCEPTION -> {
-
-            }
             case GAME -> {
-                if(input.equals("n")) {
-                    UI.showNextLibrary();
-                } else if (input.equals("p")) {
-                    UI.showPrevLibrary();
-                } else if(!input.equals("") && input.charAt(0)=='c'){
-                    interpretMove(input);
+                if (helping) {
+                    UI.goToGame();
+                    helping = false;
+                } else if (chatting){
+                    if(input.equals("game")){
+                        UI.goToGame();
+                        chatting = false;
+                    }
+                    //TODO
                 } else {
-                    inputError = true;
-                    UI.wrongInput();
+                    if(input.equals("")){
+                        return;
+                    }
+                    else if(input.equals("n")) {
+                        UI.showNextLibrary();
+                    } else if (input.equals("p")) {
+                        UI.showPrevLibrary();
+                    } else if(input.equals("help")) {
+                        UI.goToHelp();
+                        helping = true;
+                    } else if (input.equals("chat")){
+                        UI.goToChat();
+                        chatting = true;
+                    } else if(input.charAt(0)=='d') {
+                        interpretChoice(input);
+                    } else if(input.charAt(0)=='o') {
+                        interpretOrder(input);
+                    } else if(input.charAt(0)=='i') {
+                        interpretInsert(input);
+                    } else {
+                        inputError = true;
+                        UI.wrongInput();
+                    }
                 }
             }
         }
         UI.clearInput();
     }
-
 
     private void interpretInit(String input) {
         int in;
@@ -177,54 +202,71 @@ public class CLIInputInterpreter {
         }
     }
 
-    private void interpretMove(String input) {
-        input = input.replace(" ","");
-        input = input.substring(1,input.length());
+    private void interpretChoice(String input) {
+        if(input.length()==1) return;
+        input = input.substring(2);
         List<Position> positions = new ArrayList<>();
-        boolean read = false;
-        boolean minus = false;
-        boolean completed = false;
-        boolean end = false;
-        int x=-10;
-        int y=-10;
-        int column = -1;
-        for(int i = 0; i<input.length(); i++){
-            char c = input.charAt(i);
-            if(!end && Character.isDigit(c)){
-                int value = minus ? -Character.digit(c, 10) : Character.digit(c, 10);
-                if(read) {
-                    y = value;
-                    read = false;
-                    completed = true;
-                }
-                else {
-                    x = value;
-                    read = true;
-                }
-            } else if(c=='-'){
-                minus = true;
-            } else if(c==':'){
-                end = true;
-            } else if(end){
-                column = Character.digit(c,10);
-                if(column==-1){
-                    UI.wrongInput();
-                    inputError = true;
-                }
-                break;
-            }
-            if(completed){
-                completed = false;
-                if(x<-4 || x>4 || y<-4 || y>4) {
-                    inputError = true;
-                    UI.wrongInput();
-                } else {
-                    positions.add(new Position(x,y));
-                }
-            }
+        List<Integer> coordinates;
+        try{
+            coordinates = Arrays.stream(input.split(" ")).map(Integer::parseInt).toList();
+        } catch (NumberFormatException e){
+            UI.wrongInput("please enter valid coordinates");
+            return;
         }
-        moveRequest(positions,column);
+        for(int i = 0; i<coordinates.size()/2;i++){
+            Position position = new Position(coordinates.get(i*2),coordinates.get(i*2+1));
+            positions.add(position);
+        }
+        drawRequest(positions);
     }
+
+    private void interpretOrder(String input) {
+        if(input.equals("")){
+            organizeRequest(new ArrayList<>());
+            return;
+        }
+        GameModelView gmv = viewBuffer.getGameModelView();
+        List<ItemTile> takenTiles = gmv.getPlayer(UI.myUsername).getTakenTiles();
+        input = input.substring(1);
+        input = input.replace(" ","");
+        if (input.length()!=takenTiles.size()){
+            UI.wrongInput();
+            return;
+        }
+        List<Integer> choices = new ArrayList<>();
+        for(char c : input.toCharArray()){
+            int option = Character.digit(c,10);
+            if(option==-1) {
+                UI.wrongInput("please insert valid numbers");
+                return;
+            }
+            choices.add(option);
+        }
+        if(choices.stream().distinct().count() != choices.size()){
+            UI.wrongInput("please insert distinct values");
+            return;
+        }
+        if(choices.stream().anyMatch(x -> x>(takenTiles.size()-1))){
+            UI.wrongInput("please insert valid numbers");
+            return;
+        }
+        organizeRequest(choices.stream().map(takenTiles::get).toList());
+    }
+
+    private void interpretInsert(String input) {
+        input = input.substring(1);
+        input = input.replace(" ","");
+        int column;
+        try {
+            column = Integer.parseInt(input);
+            if(column > 5 || column < 0) throw new NumberFormatException();
+        } catch (NumberFormatException e){
+            UI.wrongInput("insert a valid column");
+            return;
+        }
+        insertRequest(column);
+    }
+
 
     private void joinRequest(String lobby, String playerName){
         synchronized (viewBuffer) {
@@ -256,12 +298,29 @@ public class CLIInputInterpreter {
         }
     }
 
-    private void moveRequest(List<Position> positions, int column) {
+    private void drawRequest(List<Position> positions) {
         synchronized (viewBuffer){
-            Object[] args = new Object[]{positions.stream().toList()};
             try {
                 viewBuffer.sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST,positions));
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,new ArrayList<>()));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void organizeRequest(List<ItemTile> orderedTiles){
+        synchronized (viewBuffer){
+            try{
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,orderedTiles));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void insertRequest(int column){
+        synchronized (viewBuffer){
+            try{
                 viewBuffer.sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST,column));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
