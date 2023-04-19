@@ -103,52 +103,16 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
     }
 
     private void drawRequest(Object[] args) {
-        //guarded lock to make sure that the methods flow is always draw -> organize -> request;
-        synchronized (actionLock) {
-            while (actionCounter != 0) {
-                try {
-                    actionLock.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            gameController.drawTiles((List<Position>) args[0], playerName);
-            actionCounter = 1;
-            actionLock.notifyAll();
-        }
+        gameController.drawTiles((List<Position>) args[0], playerName);
     }
 
     private void organizeRequest(Object[] args) {
-        //guarded lock to make sure that the methods flow is always draw -> organize -> request;
-        synchronized (actionLock) {
-            while (actionCounter != 1) {
-                try {
-                    actionLock.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (args == null || args.length==0) gameController.orderChosenTiles(null, playerName);
-            else gameController.orderChosenTiles((List<ItemTile>) args[0], playerName);
-            actionCounter = 2;
-            actionLock.notifyAll();
-        }
+        if (args == null || args.length==0) gameController.orderChosenTiles(null, playerName);
+        else gameController.orderChosenTiles((List<ItemTile>) args[0], playerName);
     }
 
     private void insertRequest(Object[] args) {
-        //guarded lock to make sure that the methods flow is always draw -> organize -> request;
-        synchronized (actionLock) {
-            while (actionCounter != 2) {
-                try {
-                    actionLock.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            gameController.insertTiles(playerName, (int) args[0]);
-            actionCounter = 0;
-            actionLock.notifyAll();
-        }
+        gameController.insertTiles(playerName, (int) args[0]);
     }
 
 

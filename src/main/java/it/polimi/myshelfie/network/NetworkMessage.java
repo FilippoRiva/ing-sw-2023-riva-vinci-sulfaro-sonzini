@@ -71,19 +71,19 @@ public class NetworkMessage implements Serializable {
         this.messageType = MessageType.EXCEPTIONMESSAGE;
         this.event = evt;
         this.parameters = new Object[1];
-        this.parameters[0]=exceptionsNotifierView;
+        this.parameters[0] = exceptionsNotifierView;
     }
     public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView){
         this.messageType = MessageType.CHATMESSAGE;
         this.event = evt;
         this.parameters = new Object[1];
-        this.parameters[0]=chatModelView;
+        this.parameters[0] = chatModelView;
     }
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
         this.messageType = MessageType.MODELMESSAGE;
         this.event = evt;
         this.parameters = new Object[1];
-        this.parameters[0]=modelView;
+        this.parameters[0] = modelView;
     }
 
     public MessageType getMessageType() {
