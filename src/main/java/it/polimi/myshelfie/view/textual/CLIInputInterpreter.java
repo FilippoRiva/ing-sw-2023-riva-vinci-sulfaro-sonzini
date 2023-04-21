@@ -3,6 +3,8 @@ package it.polimi.myshelfie.view.textual;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.GameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
@@ -19,13 +21,7 @@ import java.util.List;
 public class CLIInputInterpreter {
     TextualUI UI;
     final ViewBuffer viewBuffer;
-    String[] readStrings;
-    int stringCount;
-    boolean helping;
-    boolean creating;
-    boolean joining;
-    boolean chatting;
-    boolean inputError;
+    final List<String> inputParameters;
 
     /**
      * creates a CLIInputInterpreter that given an input string it interprets it, updates the view, and tells the viewBuffer
@@ -36,16 +32,15 @@ public class CLIInputInterpreter {
      *                   like JOIN_REQUEST, CREATE_REQUEST, CONFIG_REQUEST, ... setting the appropriate parameters of
      *                   the ViewBuffer
      */
-    public CLIInputInterpreter(TextualUI UI, ViewBuffer viewBuffer){
+    public CLIInputInterpreter(TextualUI UI, ViewBuffer viewBuffer, List<String> inputParameters){
         this.UI = UI;
         this.viewBuffer = viewBuffer;
-        this.readStrings =  new String[10];
-        this.stringCount = 0;
+        this.inputParameters = inputParameters;
     }
     public void interpret(String input){
-        if(inputError){
-            UI.clearError();
-            inputError = false;
+        if(input.equals("r")) {
+            UI.refresh();
+            return;
         }
         ViewType vtCopy;
         ModelView modelView;
@@ -57,63 +52,62 @@ public class CLIInputInterpreter {
         }
         switch (vtCopy){
             case INIT -> {
-                if(creating){
+                if(UI.getInternalViewState()==InternalViewState.CREATE){
                     interpretCreate(input);
-                } else if(joining){
+                } else if(UI.getInternalViewState()==InternalViewState.JOIN){
                     interpretJoin(input, modelView);
                 } else {
                     interpretInit(input);
                 }
             }
             case LOBBY -> {
-                if(input.equals("+")){
-                    if(!addPlayer()) {
-                        inputError=true;
-                        UI.wrongInput();
+                switch (input) {
+                    case "+" -> {
+                        if (!addPlayer()) {
+                            UI.wrongInput();
+                        }
                     }
-                    else UI.printLobbyView();
-                } else if(input.equals("-")) {
-                    if (!removePlayer()) {
-                        inputError = true;
-                        UI.wrongInput();
-                    } else UI.printLobbyView();
-                } else if (input.equals("s")) {
-                    if(lobbyModelView.getPlayers().size()==lobbyModelView.getGameConfig().getNumPlayers()){
-                        startRequest();
-                    } else {
-                        inputError = true;
-                        UI.wrongInput();
+                    case "-" -> {
+                        if (!removePlayer()) {
+                            UI.wrongInput();
+                        }
                     }
-                }
-                else {
-                    inputError=true;
-                    UI.wrongInput();
+                    case "s" -> {
+                        if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) {
+                            startRequest();
+                        } else {
+                            UI.wrongInput();
+                        }
+                    }
+                    default -> UI.wrongInput();
                 }
             }
             case GAME -> {
-                if (helping) {
-                    UI.goToGame();
-                    helping = false;
-                } else if (chatting){
-                    if(input.equals("game")){
-                        UI.goToGame();
-                        chatting = false;
+                if (UI.getInternalViewState()==InternalViewState.HELP) {
+                    if(!input.equals("chat")){
+                        UI.setInternalViewState(InternalViewState.GAME);
+                    } else {
+                        UI.setInternalViewState(InternalViewState.CHAT);
                     }
-                    //TODO
+                } else if (UI.getInternalViewState()==InternalViewState.CHAT){
+                    if(input.equals("game")){
+                        UI.setInternalViewState(InternalViewState.GAME);
+                    } else if(input.equals("help")){
+                        UI.setInternalViewState(InternalViewState.HELP);
+                    } else {
+                        interpretMessage(input);
+                    }
                 } else {
                     if(input.equals("")){
                         return;
-                    }
-                    else if(input.equals("n")) {
+                    } else if(input.equals("n")) {
                         UI.showNextLibrary();
                     } else if (input.equals("p")) {
                         UI.showPrevLibrary();
                     } else if(input.equals("help")) {
-                        UI.goToHelp();
-                        helping = true;
+                        UI.setInternalViewState(InternalViewState.HELP);
                     } else if (input.equals("chat")){
-                        UI.goToChat();
-                        chatting = true;
+                        UI.setInternalViewState(InternalViewState.CHAT);
                     } else if(input.charAt(0)=='d') {
                         interpretChoice(input);
                     } else if(input.charAt(0)=='o') {
@@ -121,7 +115,6 @@ public class CLIInputInterpreter {
                     } else if(input.charAt(0)=='i') {
                         interpretInsert(input);
                     } else {
-                        inputError = true;
                         UI.wrongInput();
                     }
                 }
@@ -135,70 +128,65 @@ public class CLIInputInterpreter {
         try{
             in = Integer.parseInt(input);
         } catch (NumberFormatException e){
-            inputError=true;
             UI.wrongInput();                                         ;
             return;
         }
         if(viewBuffer.getModelView().getLobbies().size()==0) {
             if(in == 1){
-                creating = true;
-                stringCount = 0;
-                UI.createPrint(null,null);
+                inputParameters.clear();
+                UI.setInternalViewState(InternalViewState.CREATE);
             } else {
-                inputError=true;
                 UI.wrongInput();
             }
         }
         else{
             if (in == 1){
-                creating = true;
-                stringCount = 0;
-                UI.createPrint(null,null);
+                inputParameters.clear();
+                UI.setInternalViewState(InternalViewState.CREATE);
             } else if(in == 2){
-                joining = true;
-                stringCount = 0;
-                UI.joinPrint(null,null);
+                inputParameters.clear();
+                UI.setInternalViewState(InternalViewState.JOIN);
             } else{
-                UI.initPrint();
+                UI.wrongInput();
             }
         }
     }
 
     private void interpretJoin(String input, ModelView modelViewCopy) {
-        if(stringCount==0){
+        if(inputParameters.size()==0){
             int i;
             try{
                 i = Integer.parseInt(input);
             } catch (NumberFormatException e){
-                inputError=true;
                 UI.wrongInput();
-                joining = false;
-                UI.initPrint();
+                UI.setInternalViewState(InternalViewState.INIT);
                 return;
             }
-            readStrings[0] = modelViewCopy.getLobbies().get(i-1);
-            stringCount++;
-            UI.joinPrint(readStrings[0],null);
-        } else if(stringCount==1){
-            readStrings[1] = input;
-            UI.joinPrint(readStrings[0], input);
-            joinRequest(readStrings[0],input);
+            if(i>modelViewCopy.getLobbies().size()){
+                UI.wrongInput();
+                UI.setInternalViewState(InternalViewState.INIT);
+                return;
+            }
+            inputParameters.add(modelViewCopy.getLobbies().get(i-1));
+            UI.setInternalViewState(InternalViewState.JOIN);
+        } else if(inputParameters.size()==1){
+            inputParameters.add(input);
+            UI.setInternalViewState(InternalViewState.JOIN);
+            joinRequest(inputParameters.get(0),inputParameters.get(1));
             UI.setMyUsername(input);
-            stringCount=0;
+            inputParameters.clear();
         }
     }
 
     private void interpretCreate(String input) {
-        if(stringCount==0){
-            readStrings[0] = input;
-            stringCount++;
-            UI.createPrint(input,null);
-        } else if(stringCount==1){
-            readStrings[1] = input;
-            UI.createPrint(readStrings[0], input);
-            createRequest(readStrings[0],input);
+        if(inputParameters.size()==0){
+            inputParameters.add(input);
+            UI.setInternalViewState(InternalViewState.CREATE);
+        } else if(inputParameters.size()==1){
+            inputParameters.add(input);
+            UI.setInternalViewState(InternalViewState.CREATE);
+            createRequest(inputParameters.get(0),inputParameters.get(1));
             UI.setMyUsername(input);
-            stringCount=0;
         }
     }
 
@@ -267,6 +255,26 @@ public class CLIInputInterpreter {
         insertRequest(column);
     }
 
+    private void interpretMessage(String input){
+        if(!input.startsWith("/")){
+            Message message = new Message(UI.myUsername, Messages.toEveryOne,input);
+            sendMessage(message);
+            return;
+        }
+        input = input.substring(1);
+        if(!input.contains(" ")) {
+            UI.wrongInput("insert message");
+            return;
+        }
+        String user = input.substring(0,input.indexOf(" "));
+        if(!viewBuffer.getLobbyModelView().getPlayers().contains(user)){
+            UI.wrongInput("insert a valid username");
+        }
+        String msg = input.substring(user.length()+1);
+        Message message = new Message(UI.myUsername, user, msg);
+        sendMessage(message);
+    }
+
 
     private void joinRequest(String lobby, String playerName){
         synchronized (viewBuffer) {
@@ -322,6 +330,16 @@ public class CLIInputInterpreter {
         synchronized (viewBuffer){
             try{
                 viewBuffer.sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST,column));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void sendMessage(Message message){
+        synchronized (viewBuffer){
+            try{
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.MESSAGE_SEND,message));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }

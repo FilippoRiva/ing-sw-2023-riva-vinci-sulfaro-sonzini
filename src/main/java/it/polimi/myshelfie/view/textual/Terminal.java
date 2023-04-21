@@ -9,38 +9,51 @@ import java.util.List;
 
 public class Terminal {
     PrintStream out;
-    boolean ANSI_ON;
-    int WIDTH = 63;
-    int SCREEN_HEIGHT = 33;
-    int INPUT_HEIGHT = 3;
-    int ACTION_HEIGHT = 1;
-    int ERROR_HEIGHT = 1;
-    int HEIGHT = SCREEN_HEIGHT + INPUT_HEIGHT + ACTION_HEIGHT + ERROR_HEIGHT-1;
-    int INPUT_LINE = SCREEN_HEIGHT +1;
-    int INPUT_COLUMN = 15;
-    int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
-    int EXCEPTION_LINE= ACTION_LINE+1;
-    int INFOPOS = 41;
+    public boolean ANSI_ON;
+    public final int WIDTH = 63;
+    public final int SCREEN_HEIGHT = 33;
+    public final int INPUT_HEIGHT = 3;
+    public final int ACTION_HEIGHT = 1;
+    public final int ERROR_HEIGHT = 1;
+    public final int HEIGHT = SCREEN_HEIGHT + INPUT_HEIGHT + ACTION_HEIGHT + ERROR_HEIGHT-1;
+    public final int INPUT_LINE = SCREEN_HEIGHT +1;
+    public final int INPUT_COLUMN = 15;
+    public final int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
+    public final int EXCEPTION_LINE= ACTION_LINE+1;
+    public final int INFOPOS = 41;
+    public final String[] title =
+            {"  __  __          _____ _          _  __ _      \n",
+            " |  \\/  |        / ____| |        | |/ _(_)     \n",
+            " | \\  / |_   _  | (___ | |__   ___| | |_ _  ___ \n",
+            " | |\\/| | | | |  \\___ \\| '_ \\ / _ \\ |  _| |/ _ \\\n",
+            " | |  | | |_| |  ____) | | | |  __/ | | | |  __/\n" ,
+            " |_|  |_|\\__, | |_____/|_| |_|\\___|_|_| |_|\\___|\n",
+            "          __/ |                                 \n" ,
+            "         |___/                                  \n"};
     public Terminal(){
         out = System.out;
         String ANSI_ON_str = System.getenv("ANSI_ON");
         if(ANSI_ON_str == null) ANSI_ON = false;
         else ANSI_ON = ANSI_ON_str.equals("true");
         if(ANSI_ON) {
+            Thread shutDownHook = new Thread(this::clearAll);
+            Runtime.getRuntime().addShutdownHook(shutDownHook);
             clearAll();
             clearInput();
         }
     }
 
-    public void printTitle(String title){
-        positionCursor(0,WIDTH/2-title.length());
-        if(ANSI_ON)println(ANSI.BOLD+title.toUpperCase()+ANSI.RESET);
-        else println(title.toUpperCase());
+    public void printTitle(){
+        int idx = 0;
+        for(String s : title){
+            print(s,1+idx,8);
+            idx++;
+        }
         moveToInput();
     }
     public void printError(String message) {
         if(ANSI_ON) {
-            positionCursor(EXCEPTION_LINE,0);
+            positionCursor(EXCEPTION_LINE,1);
             out.print(ANSI.RED_FG +message+ANSI.RESET);
         }
         else out.println("! "+message);
@@ -54,7 +67,7 @@ public class Terminal {
         }).start();
     }
     public void printAction(String s) {
-        positionCursor(ACTION_LINE,0);
+        positionCursor(ACTION_LINE,1);
         eraseLine();
         println(s);
         moveToInput();
@@ -65,6 +78,7 @@ public class Terminal {
     public void print(String message,int line, int column){
         positionCursor(line,column);
         print(message);
+        moveToInput();
     }
     private void println(String message){
         out.println(message);
@@ -75,10 +89,15 @@ public class Terminal {
         println(message);
     }
 
+    public void centerPrint(String message, int line){
+        positionCursor(line,WIDTH/2-message.length()/2);
+        println(message);
+    }
+
     public void printDivider(int line) {
         positionCursor(line,0);
         if(ANSI_ON) for(int i = 0; i<WIDTH ; i++) {
-            print(ANSI.WHITE_BG+" "+ANSI.RESET);
+            print("─");
         }
         moveToInput();
     }
@@ -88,7 +107,7 @@ public class Terminal {
             goOnTop();
             positionCursor(line,column);
             for(int i = 0;i<height;i++){
-                print(ANSI.WHITE_BG+" "+ANSI.RESET);
+                print("│");
                 cursorDown(1);
                 cursorLeft(1);
             }
@@ -107,12 +126,12 @@ public class Terminal {
         } else {
             print("| ");
             switch (tile.getType()){
-                case CAT -> print(ANSI.GREEN_BG+"C"+ANSI.RESET);
-                case BOOK -> print(ANSI.WHITE_BG+"B"+ANSI.RESET);
-                case GAME -> print(ANSI.YELLOW_BG+"G"+ANSI.RESET);
-                case FRAME -> print(ANSI.BLUE_BG+"F"+ANSI.RESET);
-                case TROPHY -> print(ANSI.LIGHTBLUE_BG+"T"+ANSI.RESET);
-                case PLANT -> print(ANSI.PINK_BG+"P"+ANSI.RESET);
+                case CAT -> print(ANSI.GREEN_BG+" "+ANSI.RESET);
+                case BOOK -> print(ANSI.WHITE_BG+" "+ANSI.RESET);
+                case GAME -> print(ANSI.YELLOW_BG+" "+ANSI.RESET);
+                case FRAME -> print(ANSI.BLUE_BG+" "+ANSI.RESET);
+                case TROPHY -> print(ANSI.LIGHTBLUE_BG+" "+ANSI.RESET);
+                case PLANT -> print(ANSI.PINK_BG+" "+ANSI.RESET);
                 case EMPTY -> print(" ");
             }
             print(" ");
@@ -205,7 +224,6 @@ public class Terminal {
 
     public void clearAll(){
         out.print(ANSI.CLEAR_ALL);
-        clearInput();
     }
     public void clearScreen(){
         eraseLines(0, SCREEN_HEIGHT+1);
@@ -213,16 +231,17 @@ public class Terminal {
     }
 
     public synchronized void clearInput() {
-        eraseLines(INPUT_LINE,INPUT_LINE+INPUT_HEIGHT-1);
-        printDivider(INPUT_LINE);
+        eraseLine(INPUT_LINE+1,INPUT_COLUMN,WIDTH-INPUT_COLUMN-1);
         if(ANSI_ON) print(">",INPUT_LINE+1,INPUT_COLUMN-1);
-        printDivider(INPUT_LINE+2);
+        moveToInput();
     }
 
 
     public void clearError() {
         positionCursor(EXCEPTION_LINE,0);
         eraseLine();
+        print("│",EXCEPTION_LINE,0);
+        print("│",EXCEPTION_LINE,WIDTH);
         moveToInput();
     }
 

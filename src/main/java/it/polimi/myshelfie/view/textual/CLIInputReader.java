@@ -4,14 +4,15 @@ import it.polimi.myshelfie.view.ViewBuffer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
 public class CLIInputReader {
     boolean on;
     BufferedReader in;
     CLIInputInterpreter interpreter;
-    public CLIInputReader(BufferedReader in, TextualUI textualUI, ViewBuffer viewBuffer) {
+    public CLIInputReader(BufferedReader in, TextualUI textualUI, ViewBuffer viewBuffer, List<String> inputParameters) {
         this.in = in;
-        this.interpreter = new CLIInputInterpreter(textualUI,viewBuffer);
+        this.interpreter = new CLIInputInterpreter(textualUI,viewBuffer,inputParameters);
         this.on = true;
         read();
     }

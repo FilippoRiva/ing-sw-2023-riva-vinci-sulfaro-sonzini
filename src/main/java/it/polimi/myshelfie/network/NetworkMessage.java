@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.network;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.events.*;
@@ -55,6 +56,13 @@ public class NetworkMessage implements Serializable {
         this.parameters[0] = playerName;
         this.parameters[1] = lobby;
     }
+    public NetworkMessage(ViewEvent evt, Message message) throws InvalidParameterException{
+        if((evt!=ViewEvent.MESSAGE_SEND)) throw new InvalidParameterException("wrong event");
+        this.messageType = MessageType.VIEWMESSAGE;
+        this.event = evt;
+        this.parameters = new Object[1];
+        this.parameters[0] = message;
+    }
     public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView){
         this.messageType = MessageType.LOBBYMESSAGE;
         this.event = evt;
@@ -79,6 +87,7 @@ public class NetworkMessage implements Serializable {
         this.parameters = new Object[1];
         this.parameters[0] = chatModelView;
     }
+
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
         this.messageType = MessageType.MODELMESSAGE;
         this.event = evt;

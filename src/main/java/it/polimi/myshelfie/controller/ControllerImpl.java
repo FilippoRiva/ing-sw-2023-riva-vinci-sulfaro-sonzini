@@ -53,6 +53,7 @@ public class ControllerImpl implements Controller {
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
+                connectionHandler.setChatController(lobbyController);
             } catch (RemoteException ignored) {
             }
         }).start();
@@ -62,6 +63,7 @@ public class ControllerImpl implements Controller {
     @Override
     public synchronized LobbyController joinLobby(Client client, ServerConnectionHandler connectionHandler, String playerName, String lobbyName) {
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
+        LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
         if (lobbyModel != null) {
             lobbiesControllers.get(lobbyName).addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
         } else {
@@ -71,6 +73,7 @@ public class ControllerImpl implements Controller {
         new Thread(()-> {
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
+                connectionHandler.setChatController(lobbyController);
             } catch (RemoteException ignored) {
             }
         }).start();

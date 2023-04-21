@@ -8,7 +8,9 @@ import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.network.events.*;
+import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 import it.polimi.myshelfie.network.observers.NetworkExceptionsObserver;
 import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
 import it.polimi.myshelfie.network.observers.NetworkModelObserver;
@@ -45,6 +47,7 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
     @Override
     public void setChatController(ChatController chatController) throws RemoteException{
         this.chatController = chatController;
+        chatController.addChatObserver(new NetworkChatObserver(client,playerName));
     }
 
     @Override
@@ -77,6 +80,9 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
                 }
                 case INSERT_REQUEST -> {
                     insertRequest(args);
+                }
+                case MESSAGE_SEND -> {
+                    chatController.addMessage((Message) args[0]);
                 }
             }
         }).start();

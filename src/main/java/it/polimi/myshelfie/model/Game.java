@@ -62,6 +62,7 @@ public class Game implements GameModel, LobbyModel {
         players.add(new Player(playerName));
         lobbyObservable.setChanged();
         lobbyObservable.notifyObservers(LobbyEvent.PLAYER_ADD);
+        chatSystem.addPlayerToChat(playerName);
     }
 
     public boolean isLobbyFull() {
