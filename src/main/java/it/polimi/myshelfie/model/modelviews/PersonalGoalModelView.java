@@ -12,9 +12,19 @@ public class PersonalGoalModelView implements Serializable {
         this.id = pg.getId();
         this.goal = pg.getGoal();
     }
+
+    /**
+     *
+     * @return the id of that personal goal.
+     */
     public int getId() {
         return id;
     }
+
+    /**
+     *
+     * @return a copy of the personal goal.
+     */
     public ItemTile[][] getGoal() {
         return goal;
     }

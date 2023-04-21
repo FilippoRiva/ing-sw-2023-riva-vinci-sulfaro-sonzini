@@ -10,9 +10,18 @@ public class ItemTile implements Serializable {
         this.id = num;
     }
 
+    /**
+     * Id is used to identify a certain ItemTile of a specific ItemTileType.
+     * @return the number of the tile.
+     */
     public int getId() {
         return id;
     }
+
+    /**
+     *
+     * @return the type of the ItemTile.
+     */
     public ItemTileType getType() {
         return type;
     }

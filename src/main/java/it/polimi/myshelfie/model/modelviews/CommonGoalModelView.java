@@ -16,13 +16,26 @@ public class CommonGoalModelView implements Serializable {
             this.description = commonGoal.getDescription();
     }
 
+    /**
+     *
+     * @return the list of tokens on the common goal.
+     */
     public List<Token> getTokens(){
         return tokens;
     }
 
+    /**
+     *
+     * @return the id of that common goal.
+     */
     public int getId(){
         return id;
     }
+
+    /**
+     *
+     * @return the description of that common goal.
+     */
     public String getDescription(){
         return description;
     }

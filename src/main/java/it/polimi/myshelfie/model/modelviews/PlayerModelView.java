@@ -29,26 +29,50 @@ public class PlayerModelView implements Serializable {
         this.takenTiles = player.getTakenTiles();
     }
 
+    /**
+     *
+     * @return the player name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return the player's list of personal goals.
+     */
     public List<PersonalGoalModelView> getPersonalGoals() {
         return personalGoals;
     }
 
+    /**
+     *
+     * @return the player's points.
+     */
     public int getPoints() {
         return points;
     }
 
+    /**
+     *
+     * @return the player's list of obtained tokens.
+     */
     public List<Token> getTokens() {
         return tokens;
     }
 
+    /**
+     *
+     * @return a copy of the player's bookshelf.
+     */
     public ItemTile[][] getBookshelf() {
         return bookshelf;
     }
 
+    /**
+     *
+     * @return the list of the tiles taken from the player.
+     */
     public List<ItemTile> getTakenTiles() {
         return takenTiles;
     }

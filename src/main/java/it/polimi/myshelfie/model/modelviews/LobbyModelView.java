@@ -17,15 +17,35 @@ public class LobbyModelView implements Serializable {
         this.gameConfig = game.getGameConfig();
         this.name = game.getName();
     }
+
+    /**
+     *
+     * @return the room owner's name.
+     */
     public String getRoomOwner() {
         return roomOwner;
     }
+
+    /**
+     *
+     * @return the list of the player names.
+     */
     public List<String> getPlayers() {
         return players;
     }
+
+    /**
+     *
+     * @return the game config of that lobby.
+     */
     public GameConfig getGameConfig(){
         return gameConfig;
     }
+
+    /**
+     *
+     * @return the lobby name.
+     */
     public String getName(){
         return name;
     }

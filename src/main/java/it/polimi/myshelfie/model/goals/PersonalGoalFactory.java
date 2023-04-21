@@ -19,7 +19,7 @@ public class PersonalGoalFactory {
     }
 
     /**
-     *
+     * Generates a list of personal goals.
      * @param numPersonalGoals the num of personal goals per player
      * @param numPlayers the number of players
      * @return a List of (numPersonalGoals * numPlayers) personal goals

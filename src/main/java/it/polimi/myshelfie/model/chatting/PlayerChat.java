@@ -11,8 +11,8 @@ public class PlayerChat extends Observable<ChatEvent> {
     private final String player;
 
     /**
-     * Instantiates a new PlayerChat
-     * @param player the name of the owner of this PlayerChat
+     * Instantiates a new PlayerChat.
+     * @param player the name of the owner of this PlayerChat.
      */
     public PlayerChat(String player) {
         this.player = player;
@@ -20,8 +20,8 @@ public class PlayerChat extends Observable<ChatEvent> {
     }
 
     /**
-     * Adds a message to this player's chat and triggers Observers
-     * @param message the new message to be added
+     * Adds a message to this player's chat and triggers Observers.
+     * @param message the new message to be added.
      */
     public void addMessage (Message message){
         messages.add(message);
@@ -31,7 +31,7 @@ public class PlayerChat extends Observable<ChatEvent> {
 
     /**
      *
-     * @return the entire list of received messages by the player
+     * @return the entire list of received messages by the player.
      */
     public ArrayList<Message> getMessages() {
         return messages;
@@ -40,7 +40,7 @@ public class PlayerChat extends Observable<ChatEvent> {
     /**
      *
      * @return the last message received by the player. If the player has never received any message it returns
-     * an Empty Chat Message
+     * an Empty Chat Message.
      */
     public Message getLastMessage(){
         if(messages.size()==0) return new Message(Messages.fromNobody,Messages.toEveryOne,Messages.emptyChat);

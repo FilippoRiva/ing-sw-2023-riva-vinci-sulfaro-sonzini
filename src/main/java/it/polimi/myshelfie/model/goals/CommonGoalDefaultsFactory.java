@@ -11,8 +11,8 @@ import java.util.List;
 public class CommonGoalDefaultsFactory {
 
     /**
-     * @param playerNum number of players for this game
-     * @return a list containing random common goals with Tokens already stacked on top
+     * @param playerNum is the number of players in this game.
+     * @return a list containing random common goals with Tokens already stacked on top.
      */
     public static List<CommonGoal> getGoals(int playerNum, int commonGoalNum) throws InvalidParameterException{
         if(playerNum<2) throw new InvalidParameterException("invalid player number");

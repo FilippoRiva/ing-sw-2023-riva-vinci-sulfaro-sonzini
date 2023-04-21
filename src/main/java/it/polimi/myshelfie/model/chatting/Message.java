@@ -18,7 +18,7 @@ public class Message implements Serializable {
 
     /**
      *
-     * @return the sender's name
+     * @return the sender's name.
      */
     public String getSender() {
         return sender;
@@ -26,7 +26,7 @@ public class Message implements Serializable {
 
     /**
      *
-     * @return the receiver's name
+     * @return the receiver's name.
      */
     public String getReceiver() {
         return receiver;
@@ -34,7 +34,7 @@ public class Message implements Serializable {
 
     /**
      *
-     * @return the message String
+     * @return the message String.
      */
 
     public String getMessage() {

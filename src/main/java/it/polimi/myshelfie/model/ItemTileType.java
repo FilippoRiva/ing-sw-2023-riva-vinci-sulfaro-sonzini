@@ -14,8 +14,8 @@ public enum ItemTileType implements Serializable {
     private final String name;
 
     /**
-     *
-     * @return a random ItemTile excluding the EMPTY tile
+     * Use to generate a random ItemTileType.
+     * @return a random ItemTileType excluding the EMPTY tile.
      */
     public static ItemTileType random(){
         Random rand = new Random();
@@ -27,6 +27,10 @@ public enum ItemTileType implements Serializable {
         this.name = name;
     }
 
+    /**
+     *
+     * @return the name of the ItemTileType (cat, game, frame, book, plant, trophy and empty)
+     */
     public String getName() {
         return name;
     }

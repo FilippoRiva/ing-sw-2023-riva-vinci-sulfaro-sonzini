@@ -30,6 +30,10 @@ public class ClientsExceptionsNotifierImpl extends Observable<ExceptionEvent> im
         return new ClientExceptionsNotifierView(this);
     }
 
+    /**
+     *
+     * @return the last exception notified.
+     */
     public Exception getLastException() {
         if(exceptionList.size()==0) return null;
         return exceptionList.get(exceptionList.size()-1);

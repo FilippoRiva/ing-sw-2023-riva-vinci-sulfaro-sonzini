@@ -65,10 +65,20 @@ public class Game implements GameModel, LobbyModel {
         chatSystem.addPlayerToChat(playerName);
     }
 
+
+    /**
+     * Returns true when the number of the players that wants to play is grater than the param NumPlayers set in the game config.
+     * @return true or false.
+     */
     public boolean isLobbyFull() {
         return players.size() == gameConfig.getNumPlayers();
     }
 
+    /**
+     * Returns true if the chosen username is already taken by another player.
+     * @param playerName is the username the player choose to play with.
+     * @return true or false.
+     */
     public boolean isPlayerNameValid(String playerName) {
         //TODO define rules for available characters in playerName
         for(Player p : players){
@@ -129,6 +139,13 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * Return the list of personal goals that have to be assigned to every player.
+     * @param numOfPlayers is the number of the players in the game.
+     * @param numOfPersonalGoal is the number of the personal goals assigned to every player.
+     * @return the list of personal goals that have to be assigned to every player in the game.
+     * @throws Exception ??
+     */
     private List<PersonalGoal> generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal) throws Exception {
         return PersonalGoalFactory.getDistinctPersonalGoals(numOfPersonalGoal,gameConfig.getBookshelfDimension(),numOfPlayers,gameConfig.getPersonalGoalRatio());
     }
@@ -196,6 +213,11 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * Returns true if the selected tiles from the board can be taken.
+     * @param positions are the positions of the items selected from the board.
+     * @return true or false.
+     */
     private boolean positionsAreValid(List<Position> positions){
         for(Position p : positions){
             if(!livingRoom.isValid(p)) return false;
@@ -254,6 +276,12 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * When a player completes a common goal, he obtained the token on the top of its stack, and
+     * the points on the token are added to the points of the player.
+     * @param playerName is the name of the player that obtained the token.
+     * @param token is the token obtained.
+     */
     private void addToken(String playerName, Token token) {
         for(Player p : players){
             if(p.getName().equals(playerName)){
@@ -283,11 +311,18 @@ public class Game implements GameModel, LobbyModel {
         this.roomOwner = owner;
     }
 
+    /**
+     * @return the name of the player that created the lobby.
+     */
     public String getRoomOwner(){
         return roomOwner;
     }
 
     //for test:
+
+    /**
+     * @return the name of the player playing in that turn.
+     */
     public String getCurrentPlayer() {
         return currentPlayer.getName();
     }
@@ -301,10 +336,22 @@ public class Game implements GameModel, LobbyModel {
         return null;
     }
 
+
+    /**
+     * Return true if the bookshelf of the selected player is full.
+     * @param playerName is the name of the player whose bookshelf has to be controlled.
+     * @return true of false.
+     */
+    @Override
     public boolean isBookshelfFull(String playerName){
         return this.getPlayer(playerName).getBookshelf().isFull();
     }
 
+    /**
+     * Return true if the player playing is the last one of that turn.
+     * @param playerName is the name of the player that has to be controlled.
+     * @return true or false.
+     */
     public boolean isLastPlayer(String playerName){
         return players.get(players.size() - 1).getName().equals(playerName);
     }
@@ -337,29 +384,58 @@ public class Game implements GameModel, LobbyModel {
         return new LobbyModelView(this);
     }
 
+    /**
+     *
+     * @return the list of the players in the game.
+     */
     public List<Player> getPlayers(){
         return new ArrayList<>(players);
     }
 
+    /**
+     * Returns the number of the players of the game in a specific moment.
+     * @return the size of the list of players.
+     */
     public int getCurrentSize() {
         return players.size();
     }
+
+    /**
+     * Return the max number of players admitted in the game.
+     * @return a number.
+     */
     public int getMaxSize(){
         return gameConfig.getNumPlayers();
     }
 
+    /**
+     *
+     * @return the game config.
+     */
     public GameConfig getGameConfig() {
         return gameConfig;
     }
 
+    /**
+     * Return the list with all the player names.
+     * @return a list of strings.
+     */
     public List<String> getPlayersNames() {
         return players.stream().map(Player::getName).toList();
     }
 
+    /**
+     * Return the list of the common goals of the game.
+     * @return a list of common goals.
+     */
     public List<CommonGoal> getCommonGoals() {
         return new ArrayList<>(commonGoals);
     }
 
+    /**
+     * Return a copy of the living room.
+     * @return a matrix of the item tiles in the living room.
+     */
     public ItemTile[][] getLivingRoom() {
         ItemTile[][] livingRoom = this.livingRoom.getTable();
         ItemTile[][] result = new ItemTile[gameConfig.getLivingRoomSize()][gameConfig.getLivingRoomSize()];
@@ -369,13 +445,28 @@ public class Game implements GameModel, LobbyModel {
         }
         return result;
     }
+
+    /**
+     *
+     * Return the number of item tiles remained in the bag.
+     * @return the dimension of the bag stack.
+     */
     public int getBagSize(){
         return livingRoom.getBag().size();
     }
+
+    /**
+     * Return the name of the game.
+     * @return a string with the name of the game.
+     */
     public String getName() {
         return lobbyName;
     }
 
+    /**
+     * Initialize the name of the game.
+     * @param name is the name that has to be assigned to the game.
+     */
     public void setName(String name) {
         if(this.lobbyName == null) {
             this.lobbyName = name;

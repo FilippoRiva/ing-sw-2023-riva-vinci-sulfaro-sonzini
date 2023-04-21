@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model;
 
+
 public enum Token {
     ENDGAME(1,0),
     TWO_FIRST(2,1),
@@ -14,10 +15,18 @@ public enum Token {
     private final int value;
     private final int romanNumeral;
 
+    /**
+     * Returns the roman numeral on the back of the token card.
+     * @return the roman numeral.
+     */
     public int getRomanNumeral() {
         return romanNumeral;
     }
 
+    /**
+     * Returns the numeric value (2, 4, 6 or 8) on the token card.
+     * @return the token value.
+     */
     public int getValue() {
         return value;
     }

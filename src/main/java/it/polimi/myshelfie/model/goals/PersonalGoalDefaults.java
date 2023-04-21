@@ -108,6 +108,10 @@ public enum PersonalGoalDefaults{
     private final ItemTile[][] goal;
     private final int id;
 
+    /**
+     *
+     * @return a copy of the goal.
+     */
     public ItemTile[][] getGoal() {
         ItemTile[][] returnValue = new ItemTile[6][5];
         for(int y = 0; y < 6; y++){
@@ -116,6 +120,10 @@ public enum PersonalGoalDefaults{
         return returnValue;
     }
 
+    /**
+     *
+     * @return the id of this default personal goal.
+     */
     public int getId(){
         return id;
     }

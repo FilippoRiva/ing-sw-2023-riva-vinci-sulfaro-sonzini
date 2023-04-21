@@ -10,6 +10,10 @@ public class ClientExceptionsNotifierView implements Serializable {
         this.lastException = c.getLastException();
     }
 
+    /**
+     *
+     * @return the last exception notified.
+     */
     public Exception getLastException() {
         return lastException;
     }

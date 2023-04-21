@@ -26,10 +26,10 @@ public class Bookshelf {
     }
 
     /**
-     *
-     * @param column the column in which to insert the tile
-     * @param tile the tile to insert
-     * @throws FullColumnException if the selected column is full
+     * Inserts the taken tiles from the board in the chosen column.
+     * @param column the column in which to insert the tile.
+     * @param tile the tile to insert.
+     * @throws FullColumnException if the selected column is full.
      */
     public void insertTile(int column, ItemTile tile) throws FullColumnException {
         if(tile.getType().equals(ItemTileType.EMPTY)) return;
@@ -54,10 +54,20 @@ public class Bookshelf {
         return returnValue;
     }
 
+    /**
+     * Returns true if that column is not full and can be filled with the item tiles.
+     * @param numTakenTiles is the number of tiles taken from the board in that turn.
+     * @param column is the column that has to be controlled.
+     * @return true or false.
+     */
     public boolean isColumnFillable(int numTakenTiles, int column){
         return bookshelfItems[numTakenTiles-1][column].getType() == ItemTileType.EMPTY;
     }
 
+    /**
+     * Controls how many adjacent tiles there are in the bookshelf and assigned the correct number of points.
+     * @return the points obtained from the adjacent tiles in the bookshelf.
+     */
     public int achievedAdjacentTiles(){
         boolean[][] boolBookshelf = new boolean[height][width];
         int points = 0, n;
@@ -98,6 +108,10 @@ public class Bookshelf {
         return 1+n;
     }
 
+    /**
+     * Return true if the bookshelf is full.
+     * @return true or false.
+     */
     public boolean isFull(){
         for(int i=0; i< width; i++){
             if(bookshelfItems[0][i].getType()==ItemTileType.EMPTY) return false;

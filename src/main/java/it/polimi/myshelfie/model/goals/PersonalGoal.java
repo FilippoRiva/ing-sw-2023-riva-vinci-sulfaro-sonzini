@@ -94,6 +94,10 @@ public class PersonalGoal {
         }
     }
 
+    /**
+     *
+     * @return a copy of the personal goal.
+     */
     public ItemTile[][] getGoal() {
         ItemTile[][] returnValue = new ItemTile[height][width];
         for(int y = 0; y < height; y++){
@@ -101,6 +105,11 @@ public class PersonalGoal {
         }
         return returnValue;
     }
+
+    /**
+     *
+     * @return the id of the personal goal.
+     */
     public int getId(){
         return id;
     }

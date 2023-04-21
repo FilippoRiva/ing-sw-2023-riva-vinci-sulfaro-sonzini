@@ -14,6 +14,11 @@ public class ModelView implements Serializable {
     public ModelView(ModelView modelView){
         lobbies = new ArrayList<>(modelView.lobbies);
     }
+
+    /**
+     *
+     * @return the list with the lobby names.
+     */
     public List<String> getLobbies() {
         return lobbies;
     }

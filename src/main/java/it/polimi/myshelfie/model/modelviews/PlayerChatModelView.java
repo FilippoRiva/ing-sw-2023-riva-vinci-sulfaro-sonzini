@@ -13,8 +13,18 @@ public class PlayerChatModelView implements Serializable {
         this.lastMessage=playerChat.getLastMessage();
         this.messages = playerChat.getMessages();
     }
+
+    /**
+     *
+     * @return the player's last message sent in his personal chat.
+     */
     public Message getLastMessage() {
         return lastMessage;
     }
+
+    /**
+     *
+     * @return the player's list of messages in the chat.
+     */
     public List<Message> getMessages() {return messages;}
 }

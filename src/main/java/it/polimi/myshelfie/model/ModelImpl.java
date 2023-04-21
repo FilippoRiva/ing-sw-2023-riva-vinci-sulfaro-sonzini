@@ -15,6 +15,12 @@ import java.util.List;
 public class ModelImpl extends Observable<ModelEvent> implements Model {
     private final HashMap<String, Game> lobbiesModel = new HashMap<>();
 
+    /**
+     * Add a lobby to the list of lobbies.
+     * @param lobbyName is the name of the lobby you want to add.
+     * @return the lobby model associated to this specific lobby.
+     * @throws LobbyExistanceException if the name of the lobby you want to add already exists.
+     */
     public LobbyModel addLobby(String lobbyName) throws LobbyExistanceException {
         if(lobbiesModel.containsKey(lobbyName)) throw new LobbyExistanceException(true, lobbyName);
 
@@ -25,6 +31,11 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
         return lobbyModel;
     }
 
+    /**
+     * Removes a lobby from the list of lobbies.
+     * @param lobbyName is the name of the lobby you want to remove.
+     * @throws LobbyExistanceException if the name of the lobby you want to remove does not exist.
+     */
     public void removeLobby(String lobbyName) throws LobbyExistanceException {
         if(!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistanceException(false, lobbyName);
         lobbiesModel.remove(lobbyName);
@@ -44,6 +55,9 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
         return new ModelView(this);
     }
 
+    /**
+     * @return the list of lobby names.
+     */
     public List<String> getLobbies(){
         return lobbiesModel.keySet().stream().toList();
     }

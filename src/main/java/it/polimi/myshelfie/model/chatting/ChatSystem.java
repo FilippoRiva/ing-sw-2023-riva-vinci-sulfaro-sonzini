@@ -13,7 +13,7 @@ public class ChatSystem implements ChatModel {
     private final HashMap<String, PlayerChat> playerChats;
 
     /**
-     * Creates a Chat System
+     * Creates a Chat System.
      */
     public ChatSystem(){
         messages = new ArrayList<>();
@@ -22,16 +22,16 @@ public class ChatSystem implements ChatModel {
 
     /**
      *
-     * @return all the messages ever sent to this game
+     * @return all the messages ever sent to this game.
      */
     public ArrayList<Message> getMessages() {
         return messages;
     }
 
     /**
-     *
+     * Adds a message to the chat system.
      * @param message a new message to add to this chat system. This message will be redirected to the corresponding
-     *                PlayerChats. If this message is to be sent to a non-existing player it will be discarded
+     *                PlayerChats. If this message is to be sent to a non-existing player it will be discarded.
      */
     @Override
     public void addMessage(Message message) {
@@ -64,8 +64,8 @@ public class ChatSystem implements ChatModel {
     }
 
     /**
-     *
-     * @param player is the name of a new player that has to be added to this chat system
+     * Adds a player to the chat system.
+     * @param player is the name of a new player that has to be added to this chat system.
      */
     public void addPlayerToChat(String player){
         playerChats.put(player,new PlayerChat(player));
