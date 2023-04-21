@@ -18,11 +18,12 @@ public class NetworkChatObserver extends NetworkObserver implements Observer<Cha
     }
     @Override
     public void update(ChatEvent evt) {
+        if(evt==null) return;
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt, chatModel.getChatModelView(playerName)));
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Unable to reach a client");
             }
         }).start();
     }

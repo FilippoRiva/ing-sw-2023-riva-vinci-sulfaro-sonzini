@@ -10,21 +10,18 @@ import java.rmi.RemoteException;
 
 public class NetworkGameObserver extends NetworkObserver implements Observer<GameEvent> {
     private GameModel gameModel;
-    private boolean firstNotify;
     public NetworkGameObserver(Client client){
         this.client = client;
-        this.firstNotify = false;
     }
 
     @Override
     public void update(GameEvent evt) {
-        if(evt==null && firstNotify) return;
+        if(evt==null) return;
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,gameModel.getGameModelView()));
-                firstNotify = true;
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Unable to reach a client");
             }
         }).start();
     }

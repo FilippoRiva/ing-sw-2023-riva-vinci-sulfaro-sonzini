@@ -21,11 +21,12 @@ public class NetworkExceptionsObserver extends NetworkObserver implements Observ
     }
     @Override
     public void update(ExceptionEvent evt) {
+        if(evt==null) return;
         new Thread(()->{
             try {
-                if(evt!=null) client.send(new NetworkMessage(evt,exceptionsNotifier.getClientExceptionNotifierView()));
+                client.send(new NetworkMessage(evt,exceptionsNotifier.getClientExceptionNotifierView()));
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Unable to reach a client");
             }
         }).start();
     }

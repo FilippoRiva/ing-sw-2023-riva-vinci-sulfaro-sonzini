@@ -17,6 +17,7 @@ public class NetworkViewObserver implements Observer<ViewEvent> {
 
     @Override
     public void update(ViewEvent evt) {
+        if(evt==null) return;
         try {
             server.send(view.getMessage());
         } catch (RemoteException ignored) {

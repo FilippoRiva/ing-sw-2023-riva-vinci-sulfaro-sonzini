@@ -10,8 +10,10 @@ import java.rmi.RemoteException;
 
 public class NetworkLobbyObserver extends NetworkObserver implements Observer<LobbyEvent> {
     private LobbyModel lobby;
+    private boolean firstNotify;
     public NetworkLobbyObserver(Client client){
         this.client = client;
+        this.firstNotify = false;
     }
 
     public void setLobby(LobbyModel lobby) {
@@ -20,11 +22,13 @@ public class NetworkLobbyObserver extends NetworkObserver implements Observer<Lo
 
     @Override
     public void update(LobbyEvent evt) {
+        if(evt==null && firstNotify) return;
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,lobby.getLobbyModelView()));
+                firstNotify = true;
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Unable to reach a client");
             }
         }).start();
     }

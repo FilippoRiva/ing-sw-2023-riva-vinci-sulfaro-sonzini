@@ -17,21 +17,13 @@ public class NetworkModelObserver extends NetworkObserver implements Observer<Mo
     }
     @Override
     public void update(ModelEvent evt) {
-        if(evt==null){
-            if(!firstNotify) {
-                send(null);
-            }
-        } else {
-            send(evt);
-        }
-    }
-    private void send(ModelEvent evt){
+        if(evt==null && firstNotify) return;
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,model.getModelView()));
                 firstNotify = true;
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Unable to reach a client");
             }
         }).start();
     }

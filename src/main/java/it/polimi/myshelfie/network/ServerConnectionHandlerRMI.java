@@ -10,10 +10,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.network.events.*;
-import it.polimi.myshelfie.network.observers.NetworkChatObserver;
-import it.polimi.myshelfie.network.observers.NetworkExceptionsObserver;
-import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
-import it.polimi.myshelfie.network.observers.NetworkModelObserver;
+import it.polimi.myshelfie.network.observers.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -26,13 +23,9 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
     private LobbyController lobbyController;
     private GameController gameController;
     private ChatController chatController;
-    private int actionCounter = 0;
-    private final Object actionLock;
     public ServerConnectionHandlerRMI(Client client, Controller controller) throws RemoteException {
         this.client = client;
         this.controller = controller;
-        this.actionLock = new Object();
-        this.actionCounter = 0;
     }
     public void start() throws RemoteException {
         client.handshake(this);
@@ -40,12 +33,13 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
     }
 
     @Override
-    public void setGameController(GameControllerImpl gameController) throws RemoteException{
+    public synchronized void setGameController(GameControllerImpl gameController) throws RemoteException{
         this.gameController = gameController;
+        gameController.addGameObserver(new NetworkGameObserver(client));
     }
 
     @Override
-    public void setChatController(ChatController chatController) throws RemoteException{
+    public synchronized void setChatController(ChatController chatController) throws RemoteException{
         this.chatController = chatController;
         chatController.addChatObserver(new NetworkChatObserver(client,playerName));
     }
@@ -70,16 +64,18 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
                 }
                 case START_REQUEST -> {
                     if(lobbyController==null) return;
-                    gameController = lobbyController.startGame(playerName);
+                    GameController gc = lobbyController.startGame(playerName);
+                    if(gc!=null) gameController = gc;
                 }
                 case DRAW_REQUEST -> {
-                    drawRequest(args);
+                    gameController.drawTiles((List<Position>) args[0], playerName);
                 }
                 case ORGANIZE_REQUEST -> {
-                    organizeRequest(args);
+                    if (args == null || args.length==0) gameController.orderChosenTiles(null, playerName);
+                    else gameController.orderChosenTiles((List<ItemTile>) args[0], playerName);
                 }
                 case INSERT_REQUEST -> {
-                    insertRequest(args);
+                    gameController.insertTiles(playerName, (int) args[0]);
                 }
                 case MESSAGE_SEND -> {
                     chatController.addMessage((Message) args[0]);
@@ -88,7 +84,7 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
         }).start();
     }
 
-    private void createRequest(Object[] args) {
+    private synchronized void createRequest(Object[] args) {
         String playerName = (String) args[0];
         String roomName = (String) args[1];
         lobbyController = controller.createLobby(client,this,playerName,roomName);
@@ -98,7 +94,7 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
         }
     }
 
-    private void joinRequest(Object[] args) {
+    private synchronized void joinRequest(Object[] args) {
         String playerName = (String) args[0];
         String roomName = (String) args[1];
         lobbyController = controller.joinLobby(client,this,playerName,roomName);
@@ -107,19 +103,4 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
             this.playerName = playerName;
         }
     }
-
-    private void drawRequest(Object[] args) {
-        gameController.drawTiles((List<Position>) args[0], playerName);
-    }
-
-    private void organizeRequest(Object[] args) {
-        if (args == null || args.length==0) gameController.orderChosenTiles(null, playerName);
-        else gameController.orderChosenTiles((List<ItemTile>) args[0], playerName);
-    }
-
-    private void insertRequest(Object[] args) {
-        gameController.insertTiles(playerName, (int) args[0]);
-    }
-
-
 }
