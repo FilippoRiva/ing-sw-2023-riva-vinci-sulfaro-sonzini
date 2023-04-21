@@ -83,4 +83,7 @@ public interface LobbyModel {
      */
     String getName();
 
+    boolean isRoomOwner(String username);
+
+    boolean hasStarted();
 }

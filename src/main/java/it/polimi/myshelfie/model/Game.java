@@ -268,9 +268,9 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void checkCommonGoal(String playerName) {
+    public void checkCommonGoal(String playerName){
         for(CommonGoal cm : commonGoals){
-            if(cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())){
+            if(cm.getTokens().size()!=0 && cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())){
                 addToken(playerName, cm.popToken());
             }
         }
@@ -471,5 +471,16 @@ public class Game implements GameModel, LobbyModel {
         if(this.lobbyName == null) {
             this.lobbyName = name;
         }
+    }
+
+    @Override
+    public boolean isRoomOwner(String username){
+        if(username==null) return false;
+        return roomOwner.equals(username);
+    }
+
+    @Override
+    public boolean hasStarted(){
+        return commonGoals!=null;
     }
 }

@@ -53,6 +53,7 @@ public class ChatSystem implements ChatModel {
     public void addChatObserver(NetworkChatObserver obs) {
         String playerName = obs.getPlayerName();
         PlayerChat pc = playerChats.get(playerName);
+        if(pc==null) return;
         pc.addObserver(obs);
         pc.setChanged();
         pc.notifyObservers();

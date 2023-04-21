@@ -44,9 +44,8 @@ public abstract class CommonGoal {
     /**
      * Removes a token from the stack of a common goal.
      * @return the token removed.
-     * @throws EmptyStackException if there are no tokens available.
      */
-    public Token popToken() throws EmptyStackException {
+    public Token popToken(){
         return tokens.pop();
     }
 

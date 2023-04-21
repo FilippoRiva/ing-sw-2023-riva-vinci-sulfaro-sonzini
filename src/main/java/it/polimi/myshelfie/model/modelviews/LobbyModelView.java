@@ -49,4 +49,5 @@ public class LobbyModelView implements Serializable {
     public String getName(){
         return name;
     }
+    public boolean isRoomOwner(String username) { return roomOwner.equals(username);}
 }

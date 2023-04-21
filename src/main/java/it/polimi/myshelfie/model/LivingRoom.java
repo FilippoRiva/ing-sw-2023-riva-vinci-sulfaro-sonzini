@@ -271,8 +271,8 @@ public class LivingRoom {
         for(int y = offset; y>=-offset; y--){
             for(int x = -offset; x<=offset; x++){
                 if(getTile(x,y)!=null && getTile(x,y).getType()!= ItemTileType.EMPTY){
-                    if(getTile(x+1,y)!=null && getTile(x+1,y).getType()!= ItemTileType.EMPTY) return false;
-                    if(getTile(x,y-1)!=null && getTile(x,y-1).getType()!= ItemTileType.EMPTY) return false;
+                    if(x!=4 && getTile(x+1,y)!=null && getTile(x+1,y).getType()!= ItemTileType.EMPTY) return false;
+                    if(y!=-4 && getTile(x,y-1)!=null && getTile(x,y-1).getType()!= ItemTileType.EMPTY) return false;
                 }
             }
         }
