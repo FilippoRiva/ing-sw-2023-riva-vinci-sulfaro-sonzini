@@ -240,14 +240,9 @@ public class Terminal {
     public void clearError() {
         positionCursor(EXCEPTION_LINE,0);
         eraseLine();
+        if(!ANSI_ON) return;
         print("│",EXCEPTION_LINE,0);
         print("│",EXCEPTION_LINE,WIDTH);
-        moveToInput();
-    }
-
-    public synchronized void clearAction(){
-        positionCursor(ACTION_LINE,0);
-        eraseLine();
         moveToInput();
     }
 

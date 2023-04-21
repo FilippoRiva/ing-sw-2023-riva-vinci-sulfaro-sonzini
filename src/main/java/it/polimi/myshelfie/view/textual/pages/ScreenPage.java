@@ -23,6 +23,7 @@ public abstract class ScreenPage {
         t.printDivider(t.INPUT_LINE+t.INPUT_HEIGHT-1);
         t.printVerticalDivider(0,0,40);
         t.printVerticalDivider(0,63,40);
+        if(!t.ANSI_ON) return;
         t.print("┌",0,0);
         t.print("┐",0,63);
         t.print("└",40,0);

@@ -7,8 +7,10 @@ import it.polimi.myshelfie.view.textual.Terminal;
 import java.util.List;
 
 public class LobbyPage extends ScreenPage{
-    public LobbyPage(Terminal t, ViewBuffer viewBuffer, List<String> inputParameters) {
+    String username;
+    public LobbyPage(Terminal t, ViewBuffer viewBuffer, List<String> inputParameters, String username) {
         super(t, viewBuffer, inputParameters);
+        this.username = username;
     }
 
     @Override
@@ -16,15 +18,15 @@ public class LobbyPage extends ScreenPage{
         LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
         if(lobbyModelView == null) return;
         t.clearScreen();
-        t.println("Name : " + lobbyModelView.getName(),1,1);
-        t.println("Owner : " + lobbyModelView.getRoomOwner(),2,1);
+        t.centerPrint(lobbyModelView.getName()+" " +
+                lobbyModelView.getPlayers().size()+"/"+lobbyModelView.getGameConfig().getNumPlayers(),2);
         int idx = 1;
         for (String player : lobbyModelView.getPlayers()) {
-            t.println(idx + ". " + player,3+idx,4);
+            t.centerPrint(idx + ". " + player,4+idx);
             idx++;
         }
-        t.println("Max players : " + lobbyModelView.getGameConfig().getNumPlayers(),3+idx+1,1);
-        t.printAction("+ : add player, - : remove player, s : start game");
+        if(viewBuffer.getLobbyModelView().isRoomOwner(username))t.printAction("help, chat, +, -, s");
+        else t.printAction("help, chat");
         printBorder();
     }
 }

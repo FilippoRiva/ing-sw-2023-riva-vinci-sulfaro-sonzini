@@ -38,6 +38,10 @@ public class CLIInputInterpreter {
         this.inputParameters = inputParameters;
     }
     public void interpret(String input){
+        if(input.equals("")) {
+            UI.clearInput();
+            return;
+        }
         if(input.equals("r")) {
             UI.refresh();
             return;
@@ -52,6 +56,16 @@ public class CLIInputInterpreter {
         }
         switch (vtCopy){
             case INIT -> {
+                if(input.startsWith("autoplay")){
+                   AutoPlayer autoPlayer = new AutoPlayer(viewBuffer,UI);
+                    try {
+                        autoPlayer.start(Integer.parseInt(input.replace(" ","").substring(8)));
+                    } catch (InvalidParameterException e) {
+                        UI.wrongInput("Unable to start autoplay mode");
+                    } catch (NumberFormatException e){
+                        UI.wrongInput("Please enter room size");
+                    }
+                } else
                 if(UI.getInternalViewState()==InternalViewState.CREATE){
                     interpretCreate(input);
                 } else if(UI.getInternalViewState()==InternalViewState.JOIN){
@@ -61,25 +75,44 @@ public class CLIInputInterpreter {
                 }
             }
             case LOBBY -> {
-                switch (input) {
-                    case "+" -> {
-                        if (!addPlayer()) {
-                            UI.wrongInput();
-                        }
+                if(UI.getInternalViewState()==InternalViewState.HELP){
+                    if(!input.equals("chat")){
+                        UI.setInternalViewState(InternalViewState.LOBBY);
+                    } else {
+                        UI.setInternalViewState(InternalViewState.CHAT);
                     }
-                    case "-" -> {
-                        if (!removePlayer()) {
-                            UI.wrongInput();
-                        }
+                } else if (UI.getInternalViewState()==InternalViewState.CHAT){
+                    if(input.equals("lobby")){
+                        UI.setInternalViewState(InternalViewState.LOBBY);
+                    } else if(input.equals("help")){
+                        UI.setInternalViewState(InternalViewState.HELP);
+                    } else {
+                        interpretMessage(input);
                     }
-                    case "s" -> {
-                        if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) {
-                            startRequest();
-                        } else {
-                            UI.wrongInput();
+                } else {
+                    switch (input) {
+                        case "help" -> UI.setInternalViewState(InternalViewState.HELP);
+                        case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
+                        case "lobby" -> UI.setInternalViewState(InternalViewState.LOBBY);
+                        case "+" -> {
+                            if (!addPlayer()) {
+                                UI.wrongInput();
+                            }
                         }
+                        case "-" -> {
+                            if (!removePlayer()) {
+                                UI.wrongInput();
+                            }
+                        }
+                        case "s" -> {
+                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) {
+                                startRequest();
+                            } else {
+                                UI.wrongInput();
+                            }
+                        }
+                        default -> UI.wrongInput();
                     }
-                    default -> UI.wrongInput();
                 }
             }
             case GAME -> {
@@ -98,9 +131,7 @@ public class CLIInputInterpreter {
                         interpretMessage(input);
                     }
                 } else {
-                    if(input.equals("")){
-                        return;
-                    } else if(input.equals("n")) {
+                    if(input.equals("n")) {
                         UI.showNextLibrary();
                     } else if (input.equals("p")) {
                         UI.showPrevLibrary();
@@ -128,7 +159,7 @@ public class CLIInputInterpreter {
         try{
             in = Integer.parseInt(input);
         } catch (NumberFormatException e){
-            UI.wrongInput();                                         ;
+            UI.wrongInput();
             return;
         }
         if(viewBuffer.getModelView().getLobbies().size()==0) {
@@ -350,7 +381,7 @@ public class CLIInputInterpreter {
         LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
         if(currentSize==2) return false;
-        GameConfig config = null;
+        GameConfig config;
         try {
             config = new GameConfig(currentSize-1);
         } catch (InvalidParameterException ignored) {

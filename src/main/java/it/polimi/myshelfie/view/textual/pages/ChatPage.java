@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.Terminal;
 
@@ -45,7 +46,8 @@ public class ChatPage extends ScreenPage{
                 idx++;
             }
         }
-        t.printAction("help, game");
+        if(viewBuffer.getViewType() == ViewType.GAME) t.printAction("help, game");
+        if(viewBuffer.getViewType() == ViewType.LOBBY) t.printAction("help, lobby");
         printBorder();
     }
 }

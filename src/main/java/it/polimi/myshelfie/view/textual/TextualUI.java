@@ -79,7 +79,7 @@ public class TextualUI implements Observer<ViewUpdate> {
             }
             case LOBBY -> {
                 internalViewState = InternalViewState.LOBBY;
-                currentPage = new LobbyPage(t, viewBuffer,inputParameters);
+                currentPage = new LobbyPage(t, viewBuffer,inputParameters,myUsername);
             }
             case GAME -> {
                 internalViewState = InternalViewState.GAME;
@@ -109,10 +109,6 @@ public class TextualUI implements Observer<ViewUpdate> {
         t.printError(message);
     }
 
-    public synchronized void clearError() {
-        t.clearError();
-    }
-
     public synchronized void setMyUsername(String myUsername) {
         this.myUsername = myUsername;
     }
@@ -137,15 +133,6 @@ public class TextualUI implements Observer<ViewUpdate> {
         currentPage.render();
     }
 
-    public void goToChat() {
-    }
-
-    public void goToGame() {
-    }
-
-    public void goToHelp() {
-    }
-
     public InternalViewState getInternalViewState() {
         return internalViewState;
     }
@@ -156,7 +143,7 @@ public class TextualUI implements Observer<ViewUpdate> {
             case INIT -> currentPage = new InitPage(t,viewBuffer,inputParameters);
             case JOIN -> currentPage = new JoinPage(t,viewBuffer,inputParameters);
             case CREATE -> currentPage = new CreatePage(t,viewBuffer,inputParameters);
-            case LOBBY -> currentPage = new LobbyPage(t,viewBuffer,inputParameters);
+            case LOBBY -> currentPage = new LobbyPage(t,viewBuffer,inputParameters,myUsername);
             case GAME -> currentPage = new GamePage(t,viewBuffer,inputParameters,myUsername,currentLibraryOwner);
             case CHAT -> currentPage = new ChatPage(t,viewBuffer,inputParameters,myUsername);
             case HELP -> currentPage = new HelpPage(t,viewBuffer,inputParameters);
