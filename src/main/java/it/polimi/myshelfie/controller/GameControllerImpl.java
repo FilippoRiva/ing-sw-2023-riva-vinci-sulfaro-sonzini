@@ -108,11 +108,6 @@ public class GameControllerImpl implements GameController, ChatController{
     }
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
                      Map<String, ClientExceptionsNotifier> notifiersMap){
-        for(Client c : clientsMap.values()) {
-            NetworkGameObserver ngo = new NetworkGameObserver(c);
-            ngo.setGameModel(gameModel);
-            addGameObserver(ngo);
-        }
         this.clientsMap = clientsMap;
         this.connectionHandlersMap = connectionHandlersMap;
         this.exceptionsNotifiersMap = notifiersMap;

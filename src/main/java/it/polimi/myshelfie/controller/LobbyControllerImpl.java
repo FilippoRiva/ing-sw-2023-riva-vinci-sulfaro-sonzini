@@ -54,6 +54,10 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
     @Override
     public synchronized void setConfig(String playerName, GameConfig config){
+        if(!lobbyModel.isRoomOwner(playerName)){
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
+            return;
+        }
         try {
             lobbyModel.setGameConfig(config);
         } catch (InvalidParameterException e) {
@@ -63,6 +67,11 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
     @Override
     public synchronized GameController startGame(String playerName){
+        if(!lobbyModel.isRoomOwner(playerName)){
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
+            return null;
+        }
+        if(lobbyModel.hasStarted()) return null;
         lobbyModel.initialize();
         GameControllerImpl result = controllerImpl.getGameController(lobbyModel.getLobbyName());
         if(result!=null) { //sets the correct view type for every client and adds observer to the game
