@@ -9,21 +9,16 @@ import it.polimi.myshelfie.utils.Observer;
 import java.rmi.RemoteException;
 
 public class NetworkModelObserver extends NetworkObserver implements Observer<ModelEvent> {
-    boolean firstNotify;
     Model model;
     public NetworkModelObserver(Client client){
         this.client = client;
-        firstNotify = false;
     }
     @Override
     public void update(ModelEvent evt) {
-        if(evt==null && firstNotify) return;
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,model.getModelView()));
-                firstNotify = true;
-            } catch (RemoteException e) {
-                System.err.println("Unable to reach a client");
+            } catch (RemoteException ignored) {
             }
         }).start();
     }

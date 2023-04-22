@@ -11,9 +11,23 @@ import it.polimi.myshelfie.utils.Observer;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ModelImpl extends Observable<ModelEvent> implements Model {
     private final HashMap<String, Game> lobbiesModel = new HashMap<>();
+
+    public ModelImpl(){
+        //notifies periodically every client about new lobbies (used to notify config and player changes)
+        new Thread(()->{
+            ScheduledExecutorService ex = Executors.newScheduledThreadPool(1);
+            ex.scheduleAtFixedRate(()->{
+                setChanged();
+                notifyObservers();
+            },5,10, TimeUnit.SECONDS);
+        }).start();
+    }
 
     /**
      * Add a lobby to the list of lobbies.
@@ -65,5 +79,13 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
     @Override
     public synchronized ClientExceptionsNotifier getNewClientExceptionNotifier() {
         return new ClientsExceptionsNotifierImpl();
+    }
+
+    public int getLobbyCurrentSize(String lobby) {
+        return lobbiesModel.get(lobby).getCurrentSize();
+    }
+
+    public int getLobbyMaxSize(String lobby) {
+        return lobbiesModel.get(lobby).getMaxSize();
     }
 }
