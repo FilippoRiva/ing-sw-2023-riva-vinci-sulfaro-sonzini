@@ -20,8 +20,10 @@ public class InitPage extends ScreenPage{
         if (modelView!=null && modelView.getLobbies().size() != 0) {
             t.centerPrint("1. create",20);
             t.centerPrint("2. join",21);
+            t.printAction("1, 2");
         } else {
             t.centerPrint("1. create",20);
+            t.printAction("1");
         }
         printBorder();
     }

@@ -93,6 +93,13 @@ public class Terminal {
         positionCursor(line,WIDTH/2-message.length()/2);
         println(message);
     }
+    /**
+     * Used for colored messages where the actual length of the message is not the length of the string
+     */
+    public void centerPrint(String message, int line,int messageLength){
+        positionCursor(line,WIDTH/2-messageLength/2);
+        println(message);
+    }
 
     public void printDivider(int line) {
         positionCursor(line,0);
@@ -320,5 +327,9 @@ public class Terminal {
 
     private void moveToInput(){
         if(ANSI_ON) positionCursor(INPUT_LINE+INPUT_HEIGHT/2,INPUT_COLUMN);
+    }
+
+    public void clearAction() {
+        printAction("");
     }
 }

@@ -37,11 +37,19 @@ public class ChatPage extends ScreenPage{
             for(Message msg : messages){
                 String color = colors[lobby.getPlayers().indexOf(msg.getSender())];
                 if(msg.getReceiver().equals(Messages.toEveryOne)){
-                    t.centerPrint(color+msg.getSender() +ANSI.RESET+
-                            " : "+msg.getMessage(),line+idx);
+                    t.centerPrint(
+                            color+msg.getSender() +ANSI.RESET+" : "+msg.getMessage(),
+                            line+idx,
+                            (msg.getSender()+msg.getMessage()).length()+3);
                 } else {
-                    if(msg.getSender().equals(username))t.centerPrint("w(to :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),line+idx);
-                    else t.centerPrint("w(from :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),line+idx);
+                    if(msg.getSender().equals(username))t.centerPrint(
+                            "w(to :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),
+                            line+idx,
+                            (msg.getSender()+msg.getMessage()).length()+10);
+                    else t.centerPrint(
+                            "w(from :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),
+                            line+idx,
+                            (msg.getSender()+msg.getMessage()).length()+12);
                 }
                 idx++;
             }

@@ -14,10 +14,19 @@ public class CreatePage extends ScreenPage{
     public void render() {
         t.clearScreen();
         t.printTitle();
-        switch (inputParameters.size()){
-            case 0 -> t.centerPrint("Choose a lobby name",20);
-            case 1 -> t.centerPrint("Choose an username for joining " + inputParameters.get(0),20);
-            case 2 -> t.centerPrint("Creating " + inputParameters.get(0),20);
+        switch (inputParameters.size()) {
+            case 0 -> {
+                t.centerPrint("Choose a lobby name", 20);
+                t.printAction("back, <lobby name>");
+            }
+            case 1 -> {
+                t.centerPrint("Choose an username for joining " + inputParameters.get(0), 20);
+                t.printAction("back, <username>");
+            }
+            case 2 -> {
+                t.centerPrint("Creating " + inputParameters.get(0), 20);
+                t.printAction("back");
+            }
         }
         printBorder();
     }

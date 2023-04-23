@@ -150,6 +150,14 @@ public class CLIInputInterpreter {
                     }
                 }
             }
+            case WIN -> {
+                if(input.equals("exit")){
+                    UI.setInternalViewState(InternalViewState.INIT);
+                    //TODO EXIT_REQUEST to the server
+                } else {
+                    UI.wrongInput("pls stop playing this game");
+                }
+            }
         }
         UI.clearInput();
     }
@@ -184,6 +192,11 @@ public class CLIInputInterpreter {
     }
 
     private void interpretJoin(String input, ModelView modelViewCopy) {
+        if(input.equals("back")||input.equals("b")){
+            inputParameters.clear();
+            UI.setInternalViewState(InternalViewState.INIT);
+            return;
+        }
         if(inputParameters.size()==0){
             int i;
             try{
@@ -210,6 +223,11 @@ public class CLIInputInterpreter {
     }
 
     private void interpretCreate(String input) {
+        if(input.equals("back")||input.equals("b")){
+            inputParameters.clear();
+            UI.setInternalViewState(InternalViewState.INIT);
+            return;
+        }
         if(inputParameters.size()==0){
             inputParameters.add(input);
             UI.setInternalViewState(InternalViewState.CREATE);

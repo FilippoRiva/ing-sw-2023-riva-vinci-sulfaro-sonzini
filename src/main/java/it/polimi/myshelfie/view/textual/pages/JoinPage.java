@@ -20,23 +20,33 @@ public class JoinPage extends ScreenPage{
                 t.centerPrint("Choose a lobby number" + " :",20);
                 printAvailableLobbies();
             }
-            case 1 -> t.centerPrint("Choose an username for " + inputParameters.get(0) + " :",20);
-            case 2 -> t.centerPrint("Joining " + inputParameters.get(0),20);
+            case 1 -> {
+                t.centerPrint("Choose an username for " + inputParameters.get(0) + " :",20);
+                t.printAction("back, <username>");
+            }
+            case 2 -> {
+                t.centerPrint("Joining " + inputParameters.get(0),20);
+                t.printAction("back");
+            }
         }
         printBorder();
     }
 
     public void printAvailableLobbies() {
         ModelView modelView = viewBuffer.getModelView();
-        if (modelView.getLobbies().size() == 0) {
+        List<String> lobbies = modelView.getLobbies();
+        if (lobbies.size() == 0) {
             t.centerPrint("none",21);
             return;
         }
         int idx = 1;
-        for (String lobby : modelView.getLobbies()) {
-            t.centerPrint(idx + ". " + lobby,21+idx);
+        for (String lobby : lobbies) {
+            t.centerPrint(
+                    idx + ". " + lobby+" "+ modelView.getCurrentSize(lobby)+"/"+ modelView.getMaxSize(lobby),
+                    21+idx);
             idx++;
             if(idx>13) break;
         }
+        t.printAction("back, [1, ..., "+lobbies.size()+"]");
     }
 }
