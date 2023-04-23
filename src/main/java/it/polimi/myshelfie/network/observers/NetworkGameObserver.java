@@ -20,8 +20,7 @@ public class NetworkGameObserver extends NetworkObserver implements Observer<Gam
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,gameModel.getGameModelView()));
-            } catch (RemoteException e) {
-                System.err.println("Unable to reach a client");
+            } catch (RemoteException ignored) {
             }
         }).start();
     }

@@ -27,8 +27,7 @@ public class NetworkLobbyObserver extends NetworkObserver implements Observer<Lo
             try {
                 client.send(new NetworkMessage(evt,lobby.getLobbyModelView()));
                 firstNotify = true;
-            } catch (RemoteException e) {
-                System.err.println("Unable to reach a client");
+            } catch (RemoteException ignored) {
             }
         }).start();
     }

@@ -22,8 +22,7 @@ public class NetworkChatObserver extends NetworkObserver implements Observer<Cha
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt, chatModel.getChatModelView(playerName)));
-            } catch (RemoteException e) {
-                System.err.println("Unable to reach a client");
+            } catch (RemoteException ignored) {
             }
         }).start();
     }

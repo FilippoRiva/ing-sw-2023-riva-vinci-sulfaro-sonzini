@@ -25,8 +25,7 @@ public class NetworkExceptionsObserver extends NetworkObserver implements Observ
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,exceptionsNotifier.getClientExceptionNotifierView()));
-            } catch (RemoteException e) {
-                System.err.println("Unable to reach a client");
+            } catch (RemoteException ignored) {
             }
         }).start();
     }
