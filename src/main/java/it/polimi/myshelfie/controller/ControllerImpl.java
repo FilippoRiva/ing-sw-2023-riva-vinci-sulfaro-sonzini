@@ -2,7 +2,9 @@ package it.polimi.myshelfie.controller;
 
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyExistanceException;
+import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
@@ -47,7 +49,16 @@ public class ControllerImpl implements Controller {
         }
         GameControllerImpl gameController = new GameControllerImpl(lobbyModel.getGameModel(), lobbyModel.getChatModel(), this);
         LobbyControllerImpl lobbyController = new LobbyControllerImpl(lobbyModel, lobbyModel.getChatModel(), this);
-        lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
+        try {
+            lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
+        } catch (InvalidParameterException | LobbyFullException e) {
+            clientExceptionsNotifiers.get(client).notifyException(e);
+            try {
+                client.send(new NetworkMessage(ViewType.INIT));
+            } catch (RemoteException ignored) {
+            }
+            return null;
+        }
         gamesControllers.put(lobbyName,gameController);
         lobbiesControllers.put(lobbyName,lobbyController);
         new Thread(()->{
@@ -65,7 +76,16 @@ public class ControllerImpl implements Controller {
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
         LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
         if (lobbyModel != null) {
-            lobbiesControllers.get(lobbyName).addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
+            try {
+                lobbiesControllers.get(lobbyName).addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
+            } catch (InvalidParameterException | LobbyFullException e) {
+                clientExceptionsNotifiers.get(client).notifyException(e);
+                try {
+                    client.send(new NetworkMessage(ViewType.INIT));
+                } catch (RemoteException ignored) {
+                }
+                return null;
+            }
         } else {
             clientExceptionsNotifiers.get(client).notifyException(new LobbyExistanceException(false, lobbyName));
             return null;

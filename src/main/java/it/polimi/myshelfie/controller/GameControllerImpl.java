@@ -12,9 +12,11 @@ import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.network.Client;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 import it.polimi.myshelfie.network.observers.NetworkGameObserver;
+import it.polimi.myshelfie.view.ViewType;
 
 
 import java.rmi.RemoteException;
@@ -81,6 +83,12 @@ public class GameControllerImpl implements GameController, ChatController{
             if(gameModel.isLastPlayer(playerName)){
                 gameModel.calculateWinResults();
                 gameModel.setState(GameState.WIN);
+                for(Client c : clientsMap.values()){
+                    try {
+                        c.send(new NetworkMessage(ViewType.WIN));
+                    } catch (RemoteException ignored) {
+                    }
+                }
             } else {
                 endTurn(playerName);
             }

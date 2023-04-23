@@ -71,6 +71,10 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
             return null;
         }
+        if(!lobbyModel.isLobbyFull()){
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Too few players to start"));
+            return null;
+        }
         if(lobbyModel.hasStarted()) return null;
         lobbyModel.initialize();
         GameControllerImpl result = controllerImpl.getGameController(lobbyModel.getLobbyName());
@@ -110,12 +114,11 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         return lobbyModel;
     }
 
-    public void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) {
+    public void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {
         try {
             lobbyModel.addPlayer(playerName);
         } catch (LobbyFullException | InvalidParameterException e) {
-            //notify
-            return;
+            throw e;
         }
         clientsMap.put(playerName,client);
         connectionHandlersMap.put(playerName,connectionHandler);
