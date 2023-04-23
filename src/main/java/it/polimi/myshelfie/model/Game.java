@@ -56,8 +56,8 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
-        if(isLobbyFull()) throw new LobbyFullException();
-        if(!isPlayerNameValid(playerName)) throw new InvalidParameterException("player name is not valid");
+        if(isLobbyFull()) throw new LobbyFullException("Full Lobby");
+        if(!isPlayerNameValid(playerName)) throw new InvalidParameterException("Player name is not valid");
         if(players.size()==0) roomOwner = playerName;
         players.add(new Player(playerName));
         lobbyObservable.setChanged();

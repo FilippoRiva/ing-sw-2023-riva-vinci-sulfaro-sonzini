@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.model.exceptions;
 
 public class FullColumnException extends Exception{
-    private String message = "too many tiles for column";
+    private String message = "too many tiles for column ";
 
     @Override
     public String getMessage() {
