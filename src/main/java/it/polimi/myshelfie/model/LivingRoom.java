@@ -293,6 +293,10 @@ public class LivingRoom {
         return validPositions[x+offset][offset-y];
     }
 
+    public boolean emptyPosition(Position p) {
+        return getTile(p.getX(), p.getY()).getType().equals(ItemTileType.EMPTY);
+    }
+
     public boolean atLeastOneSideFree(Position p){
         int x = p.getX();
         int y = p.getY();

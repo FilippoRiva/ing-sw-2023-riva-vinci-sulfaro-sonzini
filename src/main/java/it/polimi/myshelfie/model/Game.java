@@ -221,6 +221,7 @@ public class Game implements GameModel, LobbyModel {
     private boolean positionsAreValid(List<Position> positions){
         for(Position p : positions){
             if(!livingRoom.isValid(p)) return false;
+            if(livingRoom.emptyPosition(p)) return false;
             if(!livingRoom.atLeastOneSideFree(p)) return false;
         }
 
@@ -268,10 +269,17 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void checkCommonGoal(String playerName){
+    public void checkCommonGoal(String playerName) {
         for(CommonGoal cm : commonGoals){
-            if(cm.getTokens().size()!=0 && cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())){
-                addToken(playerName, cm.popToken());
+            for(Player p : players){
+                if(p.getName().equals(playerName)){
+                    if(cm.getTokens().size()!=0 && !p.getObtainedTokens().stream().map(Token::getRomanNumeral).toList().contains(cm.peekToken().getRomanNumeral())) {
+                        if (cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())) {
+                            addToken(playerName, cm.popToken());
+                        }
+                    }
+                    break;
+                }
             }
         }
     }
