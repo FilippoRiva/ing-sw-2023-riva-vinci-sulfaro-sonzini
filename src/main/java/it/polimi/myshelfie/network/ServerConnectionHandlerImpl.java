@@ -16,14 +16,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements ServerConnectionHandler {
+public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements ServerConnectionHandler {
     private final Client client;
     private String playerName;
     private final Controller controller;
     private LobbyController lobbyController;
     private GameController gameController;
     private ChatController chatController;
-    public ServerConnectionHandlerRMI(Client client, Controller controller) throws RemoteException {
+    public ServerConnectionHandlerImpl(Client client, Controller controller) throws RemoteException {
         this.client = client;
         this.controller = controller;
     }
@@ -49,7 +49,7 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
         MessageType messageType = networkMessage.getMessageType();
         if(messageType!=MessageType.VIEWMESSAGE) return;
         ViewEvent viewEvent = (ViewEvent) networkMessage.getEvent();
-        Object[] args = networkMessage.getParameters();
+        List<Object> args = networkMessage.getParameters();
         new Thread(()->{
             switch (viewEvent){
                 case CREATE_REQUEST -> {
@@ -60,7 +60,7 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
                 }
                 case CONFIG_REQUEST -> {
                     if(lobbyController==null) return;
-                    lobbyController.setConfig(playerName,(GameConfig) args[0]);
+                    lobbyController.setConfig(playerName,(GameConfig) args.get(0));
                 }
                 case START_REQUEST -> {
                     if(lobbyController==null) return;
@@ -68,25 +68,25 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
                     if(gc!=null) gameController = gc;
                 }
                 case DRAW_REQUEST -> {
-                    gameController.drawTiles((List<Position>) args[0], playerName);
+                    gameController.drawTiles((List<Position>) args.get(0), playerName);
                 }
                 case ORGANIZE_REQUEST -> {
-                    if (args == null || args.length==0) gameController.orderChosenTiles(null, playerName);
-                    else gameController.orderChosenTiles((List<ItemTile>) args[0], playerName);
+                    if (args == null || args.size()==0) gameController.orderChosenTiles(null, playerName);
+                    else gameController.orderChosenTiles((List<ItemTile>) args.get(0), playerName);
                 }
                 case INSERT_REQUEST -> {
-                    gameController.insertTiles(playerName, (int) args[0]);
+                    gameController.insertTiles(playerName, (int) args.get(0));
                 }
                 case MESSAGE_SEND -> {
-                    chatController.addMessage((Message) args[0]);
+                    chatController.addMessage((Message) args.get(0));
                 }
             }
         }).start();
     }
 
-    private synchronized void createRequest(Object[] args) {
-        String playerName = (String) args[0];
-        String roomName = (String) args[1];
+    private synchronized void createRequest(List<Object> args) {
+        String playerName = (String) args.get(0);
+        String roomName = (String) args.get(1);
         lobbyController = controller.createLobby(client,this,playerName,roomName);
         if(lobbyController != null)  {
             lobbyController.addLobbyObserver(playerName,new NetworkLobbyObserver(client));
@@ -94,9 +94,9 @@ public class ServerConnectionHandlerRMI extends UnicastRemoteObject implements S
         }
     }
 
-    private synchronized void joinRequest(Object[] args) {
-        String playerName = (String) args[0];
-        String roomName = (String) args[1];
+    private synchronized void joinRequest(List<Object> args) {
+        String playerName = (String) args.get(0);
+        String roomName = (String) args.get(1);
         lobbyController = controller.joinLobby(client,this,playerName,roomName);
         if(lobbyController != null)  {
             lobbyController.addLobbyObserver(playerName,new NetworkLobbyObserver(client));

@@ -25,22 +25,22 @@ public class ClientRMI extends UnicastRemoteObject implements Client {
         MessageType type = networkMessage.getMessageType();
         switch (type){
             case MODELMESSAGE -> {
-                new Thread(()->view.setModelView((ModelView) networkMessage.getParameters()[0])).start();
+                new Thread(()->view.setModelView((ModelView) networkMessage.getParameters().get(0))).start();
             }
             case CHATMESSAGE -> {
-                new Thread(()-> view.setChatView((PlayerChatModelView) networkMessage.getParameters()[0])).start();
+                new Thread(()-> view.setChatView((PlayerChatModelView) networkMessage.getParameters().get(0))).start();
             }
             case LOBBYMESSAGE -> {
-                new Thread(()-> view.setLobbyModelView((LobbyModelView) networkMessage.getParameters()[0])).start();
+                new Thread(()-> view.setLobbyModelView((LobbyModelView) networkMessage.getParameters().get(0))).start();
             }
             case GAMEMESSAGE -> {
-                new Thread(()-> view.setGameModelView((GameModelView) networkMessage.getParameters()[0])).start();
+                new Thread(()-> view.setGameModelView((GameModelView) networkMessage.getParameters().get(0))).start();
             }
             case EXCEPTIONMESSAGE -> {
-                new Thread(()-> view.setExceptionView((ClientExceptionsNotifierView) networkMessage.getParameters()[0])).start();
+                new Thread(()-> view.setExceptionView((ClientExceptionsNotifierView) networkMessage.getParameters().get(0))).start();
             }
             case SELECTVIEWMESSAGE -> {
-                new Thread(()-> view.setView((ViewType) networkMessage.getParameters()[0])).start();
+                new Thread(()-> view.setView((ViewType) networkMessage.getParameters().get(0))).start();
             }
         }
     }
