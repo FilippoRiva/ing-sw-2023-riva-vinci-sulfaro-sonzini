@@ -1,0 +1,1 @@
+Start-Process java -ArgumentList "-jar", "./ms_server.jar"
