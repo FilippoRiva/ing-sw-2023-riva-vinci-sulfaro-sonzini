@@ -5,9 +5,9 @@ import it.polimi.myshelfie.controller.interfaces.Controller;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ServerRMI extends UnicastRemoteObject implements Server{
+public class ServerImpl extends UnicastRemoteObject implements Server{
     private final Controller controller;
-    public ServerRMI(Controller controller) throws RemoteException{
+    public ServerImpl(Controller controller) throws RemoteException{
         super();
         this.controller = controller;
     }
@@ -15,7 +15,7 @@ public class ServerRMI extends UnicastRemoteObject implements Server{
     public synchronized void connect(Client client) throws RemoteException {
         new Thread(()->{
             try {
-                ServerConnectionHandlerRMI s = new ServerConnectionHandlerRMI(client,controller);
+                ServerConnectionHandlerImpl s = new ServerConnectionHandlerImpl(client,controller);
                 s.start();
             } catch (RemoteException e) {
                 e.printStackTrace();

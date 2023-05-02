@@ -8,10 +8,10 @@ import it.polimi.myshelfie.view.ViewType;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ClientRMI extends UnicastRemoteObject implements Client {
+public class ClientImpl extends UnicastRemoteObject implements Client {
     View view;
 
-    public ClientRMI(View view) throws RemoteException {
+    public ClientImpl(View view) throws RemoteException {
         this.view = view;
     }
 
@@ -24,24 +24,18 @@ public class ClientRMI extends UnicastRemoteObject implements Client {
     public void send(NetworkMessage networkMessage){
         MessageType type = networkMessage.getMessageType();
         switch (type){
-            case MODELMESSAGE -> {
-                new Thread(()->view.setModelView((ModelView) networkMessage.getParameters().get(0))).start();
-            }
-            case CHATMESSAGE -> {
-                new Thread(()-> view.setChatView((PlayerChatModelView) networkMessage.getParameters().get(0))).start();
-            }
-            case LOBBYMESSAGE -> {
-                new Thread(()-> view.setLobbyModelView((LobbyModelView) networkMessage.getParameters().get(0))).start();
-            }
-            case GAMEMESSAGE -> {
-                new Thread(()-> view.setGameModelView((GameModelView) networkMessage.getParameters().get(0))).start();
-            }
-            case EXCEPTIONMESSAGE -> {
-                new Thread(()-> view.setExceptionView((ClientExceptionsNotifierView) networkMessage.getParameters().get(0))).start();
-            }
-            case SELECTVIEWMESSAGE -> {
-                new Thread(()-> view.setView((ViewType) networkMessage.getParameters().get(0))).start();
-            }
+            case MODELMESSAGE ->
+                    new Thread(()->view.setModelView((ModelView) networkMessage.getParameters().get(0))).start();
+            case CHATMESSAGE ->
+                    new Thread(()-> view.setChatView((PlayerChatModelView) networkMessage.getParameters().get(0))).start();
+            case LOBBYMESSAGE ->
+                    new Thread(()-> view.setLobbyModelView((LobbyModelView) networkMessage.getParameters().get(0))).start();
+            case GAMEMESSAGE ->
+                    new Thread(()-> view.setGameModelView((GameModelView) networkMessage.getParameters().get(0))).start();
+            case EXCEPTIONMESSAGE ->
+                    new Thread(()-> view.setExceptionView((ClientExceptionsNotifierView) networkMessage.getParameters().get(0))).start();
+            case SELECTVIEWMESSAGE ->
+                    new Thread(()-> view.setView((ViewType) networkMessage.getParameters().get(0))).start();
         }
     }
 }

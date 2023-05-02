@@ -115,6 +115,7 @@ public class ControllerImpl implements Controller {
             try {
                 client.send(new NetworkMessage(ViewType.INIT));
             } catch (RemoteException ignored) {
+
             }
         }).start();
     }

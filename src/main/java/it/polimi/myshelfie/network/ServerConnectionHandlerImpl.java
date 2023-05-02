@@ -45,19 +45,15 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
 
     @Override
-    public void send(NetworkMessage networkMessage) throws RemoteException {
+    public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
         MessageType messageType = networkMessage.getMessageType();
         if(messageType!=MessageType.VIEWMESSAGE) return;
         ViewEvent viewEvent = (ViewEvent) networkMessage.getEvent();
         List<Object> args = networkMessage.getParameters();
         new Thread(()->{
             switch (viewEvent){
-                case CREATE_REQUEST -> {
-                    createRequest(args);
-                }
-                case JOIN_REQUEST -> {
-                    joinRequest(args);
-                }
+                case CREATE_REQUEST -> createRequest(args);
+                case JOIN_REQUEST -> joinRequest(args);
                 case CONFIG_REQUEST -> {
                     if(lobbyController==null) return;
                     lobbyController.setConfig(playerName,(GameConfig) args.get(0));
@@ -67,19 +63,15 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
                     GameController gc = lobbyController.startGame(playerName);
                     if(gc!=null) gameController = gc;
                 }
-                case DRAW_REQUEST -> {
-                    gameController.drawTiles((List<Position>) args.get(0), playerName);
-                }
+                case DRAW_REQUEST ->
+                        gameController.drawTiles((List<Position>) args.get(0), playerName);
                 case ORGANIZE_REQUEST -> {
                     if (args == null || args.size()==0) gameController.orderChosenTiles(null, playerName);
                     else gameController.orderChosenTiles((List<ItemTile>) args.get(0), playerName);
                 }
-                case INSERT_REQUEST -> {
-                    gameController.insertTiles(playerName, (int) args.get(0));
-                }
-                case MESSAGE_SEND -> {
-                    chatController.addMessage((Message) args.get(0));
-                }
+                case INSERT_REQUEST -> gameController.insertTiles(playerName, (int) args.get(0));
+                case MESSAGE_SEND ->
+                        chatController.addMessage((Message) args.get(0));
             }
         }).start();
     }

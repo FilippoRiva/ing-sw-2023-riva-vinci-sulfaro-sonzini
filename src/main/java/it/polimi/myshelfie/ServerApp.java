@@ -3,10 +3,13 @@ package it.polimi.myshelfie;
 import it.polimi.myshelfie.controller.ControllerImpl;
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.model.ModelImpl;
-import it.polimi.myshelfie.model.interfaces.Model;
-import it.polimi.myshelfie.network.Server;
-import it.polimi.myshelfie.network.ServerRMI;
+import it.polimi.myshelfie.network.ClientSkeleton;
+import it.polimi.myshelfie.network.ServerConnectionHandlerImpl;
+import it.polimi.myshelfie.network.ServerImpl;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -18,10 +21,16 @@ public class ServerApp {
         ControllerImpl controller = new ControllerImpl();
         ModelImpl model = new ModelImpl();
         controller.setModel(model);
-        new Thread(()->startRMI(controller)).start();
-        new Thread(()->startSocket(controller,model)).start();
+        ServerImpl server;
+        try {
+            server = new ServerImpl(controller);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        new Thread(()->startRMI(server)).start();
+        new Thread(()->startSocket(controller)).start();
     }
-    public static void startRMI(Controller controller){
+    public static void startRMI(ServerImpl server){
         Registry registry;
         try {
             registry = LocateRegistry.createRegistry(1099);
@@ -33,16 +42,43 @@ public class ServerApp {
             }
         }
         try {
-            Server serverRMI = new ServerRMI(controller);
-            registry.rebind("server",serverRMI);
+            registry.rebind("server",server);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
         System.out.println("RMI up and running");
     }
 
-    public static void startSocket(Controller controller, Model model){
-        //TODO
-        System.out.println("Socket not implemented");
+    public static void startSocket(Controller controller) {
+        try (ServerSocket serverSocket = new ServerSocket(54321)) {
+            System.out.println("Socket up and running");
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.print("Client connected "+socket.getInetAddress());
+                new Thread(() -> {
+                    try {
+                        ClientSkeleton clientSkeleton = new ClientSkeleton(socket);
+                        ServerConnectionHandlerImpl serverConnectionHandler =
+                                new ServerConnectionHandlerImpl(clientSkeleton, controller);
+                        serverConnectionHandler.start();
+                        while (true) {
+                            clientSkeleton.receive(serverConnectionHandler);
+                        }
+                    } catch (RemoteException e) {
+                        System.err.println("Cannot receive from client. Closing this connection...");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            System.err.println("Cannot close socket");
+                        }
+                    }
+                }).start();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot start socket server", e);
+        }
     }
 }
