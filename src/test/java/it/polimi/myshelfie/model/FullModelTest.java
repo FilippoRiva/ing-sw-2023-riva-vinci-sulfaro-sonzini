@@ -3,6 +3,7 @@ package it.polimi.myshelfie.model;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.interfaces.Model;
@@ -90,14 +91,35 @@ public class FullModelTest {
         t2.start();
         t1.join();
         t2.join();
+
         try {
             finalLobby1.setGameConfig(new GameConfig(4));
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+
+        try{
+            finalLobby1.initialize();
+            fail();
+        }catch(LobbyFullException ignored){
+
+        }
+
+        try {
             finalLobby1.addPlayer("Pippo");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        finalLobby1.initialize();
-        finalLobby2.initialize();
+        try {
+            finalLobby1.initialize();
+        }catch(LobbyFullException ignored){
+            fail();
+        }
+        try {
+            finalLobby2.initialize();
+        }catch(LobbyFullException ignored){
+            fail();
+        }
         GameModel game1 = finalLobby1.getGameModel();
         GameModel game2 = finalLobby2.getGameModel();
         t1 = new Thread(() -> playGame1(game1));
@@ -106,28 +128,25 @@ public class FullModelTest {
         t2.start();
         t1.join();
         t2.join();
+
+
+
     }
 
+
     private void playGame1(GameModel game) {
-        //Luca Giovanni Giorgio Pippo
-        List<GameModelView> gameModelViewList = new ArrayList<>();
-        game.addGameObserver((evt)->{
-            gameModelViewList.add(game.getGameModelView());
-        });
-    }
-    private void playGame2(GameModel game) {
         List<GameModelView> gameModelViewList = new ArrayList<>();
         game.addGameObserver((evt)->{
             gameModelViewList.add(game.getGameModelView());
         });
         GameModelView lmv = getLastModel(gameModelViewList);
-        String player = lmv.getCurrentPlayer();
+        String currPlayer = lmv.getCurrentPlayer();
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0,0));
         positions.add(new Position(0,1));
         positions.add(new Position(0,2));
         try {
-            game.drawTiles(positions,player);
+            game.drawTiles(positions,currPlayer);
             fail();
         } catch (InvalidParameterException ignored) {
         }
@@ -135,7 +154,7 @@ public class FullModelTest {
         positions.add(new Position(-1,3));
         positions.add(new Position(-1,4));
         try {
-            game.drawTiles(positions,player);
+            game.drawTiles(positions,currPlayer);
         } catch (InvalidParameterException ignored) {
             fail();
         }
@@ -144,12 +163,12 @@ public class FullModelTest {
         tiles.add(lmv.getTile(-1,4));
         Collections.shuffle(tiles);
         try {
-            game.orderChosenTiles(tiles,player);
+            game.orderChosenTiles(tiles,currPlayer);
         } catch (InvalidParameterException e) {
             fail();
         }
         try {
-            game.insertTiles(player,0);
+            game.insertTiles(currPlayer,0);
         } catch (InvalidParameterException | FullColumnException e) {
             fail();
         }
@@ -163,6 +182,285 @@ public class FullModelTest {
             }
         }
         game.nextTurn();
+        lmv = getLastModel(gameModelViewList);
+        String oldPlayer = new String(currPlayer);
+        currPlayer=lmv.getCurrentPlayer();
+        positions.add(new Position(0,3));
+        positions.add(new Position(0,4));
+        try {
+            game.drawTiles(positions,oldPlayer);
+            fail();
+        } catch (InvalidParameterException ignored) {
+        }
+        try{
+            game.drawTiles(positions, currPlayer);
+        }catch(InvalidParameterException e) {
+            fail();
+        }
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(0,3));
+        tiles.add(lmv.getTile(0,4));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,currPlayer);
+        } catch (InvalidParameterException e) {
+            fail();
+        }
+        try {
+            game.insertTiles(currPlayer,0);
+        } catch (InvalidParameterException | FullColumnException e) {
+            fail();
+        }
+        lmv = getLastModel(gameModelViewList);
+        updatedBookshelf = lmv.getPlayer(lmv.getCurrentPlayer()).getBookshelf();
+        for(int i = 0 ; i< updatedBookshelf.length; i++){
+            for(int j = 0; j< updatedBookshelf[0].length;j++){
+                if(i==5 && j==0) assertEquals(tiles.get(0).getType(),updatedBookshelf[i][j].getType());
+                else if(i==4 && j==0) assertEquals(tiles.get(1).getType(),updatedBookshelf[i][j].getType());
+                else assertEquals(ItemTileType.EMPTY,updatedBookshelf[i][j].getType());
+            }
+        }
+        game.nextTurn();
+    }
+
+    private void playGame2(GameModel game) {
+        List<GameModelView> gameModelViewList = new ArrayList<>();
+        game.addGameObserver((evt)->{
+            gameModelViewList.add(game.getGameModelView());
+        });
+        GameModelView lmv = getLastModel(gameModelViewList);
+        String currPlayer = lmv.getCurrentPlayer();
+        fillBookshelf(lmv, game);
+        if(!game.isBookshelfFull(currPlayer)){
+            fail("Bookshelf non piena");
+        }else{
+            game.setState(GameState.LASTDRAW);
+            game.nextTurn();
+            List<Position> positions = new ArrayList<>();
+            positions.add(new Position (-1, 3));
+            try {
+                game.drawTiles(positions,lmv.getCurrentPlayer());
+            } catch (InvalidParameterException ignored) {}
+            List<ItemTile> tiles = new ArrayList<>();
+            tiles.add(lmv.getTile(-1,3));
+            Collections.shuffle(tiles);
+            try {
+                game.orderChosenTiles(tiles,lmv.getCurrentPlayer());
+            } catch (InvalidParameterException ignored) {}
+            try {
+                game.insertTiles(lmv.getCurrentPlayer(),0);
+            } catch (InvalidParameterException | FullColumnException ignored) {}
+        }
+    }
+
+    private void fillBookshelf(GameModelView lmv, GameModel game){
+        String p = lmv.getCurrentPlayer();
+        List<Position> positions = new ArrayList<>();
+        positions = new ArrayList<>();
+        positions.add(new Position(0,3));
+        positions.add(new Position(-1,3));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        List<ItemTile> tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(0,3));
+        tiles.add(lmv.getTile(-1,3));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,0);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(-1,2));
+        positions.add(new Position(0,2));
+        positions.add(new Position(1, 2));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(-1,2));
+        tiles.add(lmv.getTile(0,2));
+        tiles.add(lmv.getTile(1,2));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,0);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(1,1));
+        positions.add(new Position(2,1));
+        positions.add(new Position(3, 1));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(1,1));
+        tiles.add(lmv.getTile(2,1));
+        tiles.add(lmv.getTile(3,1));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,1);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(0,1));
+        positions.add(new Position(-1,1));
+        positions.add(new Position(-2, 1));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(0,1));
+        tiles.add(lmv.getTile(-1,1));
+        tiles.add(lmv.getTile(-2,1));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,1);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(-3,0));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(-3,0));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,0);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(-2,0));
+        positions.add(new Position(-1,0));
+        positions.add(new Position(0, 0));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(-2,0));
+        tiles.add(lmv.getTile(-1,0));
+        tiles.add(lmv.getTile(0,0));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,2);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(1,0));
+        positions.add(new Position(2,0));
+        positions.add(new Position(3, 0));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(1,0));
+        tiles.add(lmv.getTile(2,0));
+        tiles.add(lmv.getTile(3,0));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,2);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(-3,-1));
+        positions.add(new Position(-2,-1));
+        positions.add(new Position(-1, -1));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(-3,-1));
+        tiles.add(lmv.getTile(-2,-1));
+        tiles.add(lmv.getTile(-1,-1));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,3);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(0,-1));
+        positions.add(new Position(1,-1));
+        positions.add(new Position(2, -1));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(0,-1));
+        tiles.add(lmv.getTile(1,-1));
+        tiles.add(lmv.getTile(2,-1));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,3);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(-1,-2));
+        positions.add(new Position(0,-2));
+        positions.add(new Position(1, -2));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(-1,-2));
+        tiles.add(lmv.getTile(0,-2));
+        tiles.add(lmv.getTile(1,-2));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,4);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+
+        positions.add(new Position(0,-3));
+        positions.add(new Position(1,-3));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(0,-3));
+        tiles.add(lmv.getTile(1,-3));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,4);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
+        game.refillLivingRoom();
+
+        positions.add(new Position(0,3));
+        try {
+            game.drawTiles(positions,p);
+        } catch (InvalidParameterException ignored) {}
+        tiles = new ArrayList<>();
+        tiles.add(lmv.getTile(0,3));
+        Collections.shuffle(tiles);
+        try {
+            game.orderChosenTiles(tiles,p);
+        } catch (InvalidParameterException ignored) {}
+        try {
+            game.insertTiles(p,4);
+        } catch (InvalidParameterException | FullColumnException ignored) {}
     }
 
     private GameModelView getLastModel(List<GameModelView> list){

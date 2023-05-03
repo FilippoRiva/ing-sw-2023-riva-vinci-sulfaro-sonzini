@@ -14,7 +14,7 @@ public interface LobbyModel {
      * If no custom GameConfig is set the default one is used.
      * Notifies every view on the lobby.
      */
-    void initialize();
+    void initialize() throws LobbyFullException;
 
     /**
      * Sets the game config to be used by the game.

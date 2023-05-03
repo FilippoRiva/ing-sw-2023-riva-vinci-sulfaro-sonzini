@@ -56,7 +56,7 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
-        if(isLobbyFull()) throw new LobbyFullException("Full Lobby");
+        if(isLobbyFull()) throw new LobbyFullException(true);
         if(!isPlayerNameValid(playerName)) throw new InvalidParameterException("Player name is not valid");
         if(players.size()==0) roomOwner = playerName;
         players.add(new Player(playerName));
@@ -110,9 +110,9 @@ public class Game implements GameModel, LobbyModel {
 
 
     @Override
-    public void initialize() {
+    public void initialize() throws LobbyFullException{
         //TODO check that who's starting the game is the lobby creator
-        if(!isLobbyFull()) return;
+        if(!isLobbyFull()) throw new LobbyFullException(false);
         Collections.shuffle(players);
         currentPlayer = players.get(0);
         try {

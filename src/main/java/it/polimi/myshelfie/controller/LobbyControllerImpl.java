@@ -71,12 +71,13 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
             return null;
         }
-        if(!lobbyModel.isLobbyFull()){
-            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Too few players to start"));
-            return null;
-        }
+
         if(lobbyModel.hasStarted()) return null;
-        lobbyModel.initialize();
+        try {
+            lobbyModel.initialize();
+        }catch(LobbyFullException e){
+            exceptionsNotifiersMap.get(playerName).notifyException(e);
+        }
         GameControllerImpl result = controllerImpl.getGameController(lobbyModel.getLobbyName());
         if(result!=null) { //sets the correct view type for every client and adds observer to the game
             new Thread(()-> {
