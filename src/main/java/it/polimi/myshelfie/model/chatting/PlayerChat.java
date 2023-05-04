@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.model.chatting;
 
 
-import it.polimi.myshelfie.network.events.ChatEvent;
+import it.polimi.myshelfie.model.events.ChatEvent;
 import it.polimi.myshelfie.utils.Observable;
 
 import java.util.ArrayList;

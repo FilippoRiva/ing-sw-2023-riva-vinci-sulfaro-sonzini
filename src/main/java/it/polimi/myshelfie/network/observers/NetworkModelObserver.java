@@ -3,7 +3,7 @@ package it.polimi.myshelfie.network.observers;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
-import it.polimi.myshelfie.network.events.ModelEvent;
+import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observer;
 
 import java.rmi.RemoteException;

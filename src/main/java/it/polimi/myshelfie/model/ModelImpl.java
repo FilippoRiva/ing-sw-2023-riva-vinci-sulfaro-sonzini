@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.network.events.ModelEvent;
+import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 

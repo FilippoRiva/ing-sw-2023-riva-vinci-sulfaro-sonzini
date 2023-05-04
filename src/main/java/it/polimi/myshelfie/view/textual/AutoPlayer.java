@@ -9,7 +9,7 @@ import it.polimi.myshelfie.model.modelviews.GameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.NetworkMessage;
-import it.polimi.myshelfie.network.events.ViewEvent;
+import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewType;

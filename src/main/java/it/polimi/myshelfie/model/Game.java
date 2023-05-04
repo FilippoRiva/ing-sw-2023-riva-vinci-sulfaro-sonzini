@@ -11,8 +11,8 @@ import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.modelviews.GameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
-import it.polimi.myshelfie.network.events.GameEvent;
-import it.polimi.myshelfie.network.events.LobbyEvent;
+import it.polimi.myshelfie.model.events.GameEvent;
+import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
 
 

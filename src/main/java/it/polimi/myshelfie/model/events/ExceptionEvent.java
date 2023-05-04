@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.network.events;
+package it.polimi.myshelfie.model.events;
 
 public enum ExceptionEvent {
     NEW_EXCEPTION

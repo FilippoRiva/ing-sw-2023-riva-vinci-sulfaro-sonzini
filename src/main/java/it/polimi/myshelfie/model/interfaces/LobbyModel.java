@@ -2,7 +2,7 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
-import it.polimi.myshelfie.network.events.LobbyEvent;
+import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;

@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.network.observers;
 
 import it.polimi.myshelfie.network.ServerConnectionHandler;
-import it.polimi.myshelfie.network.events.ViewEvent;
+import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.View;
 

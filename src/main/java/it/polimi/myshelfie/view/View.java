@@ -2,7 +2,7 @@ package it.polimi.myshelfie.view;
 
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.NetworkMessage;
-import it.polimi.myshelfie.network.events.ViewEvent;
+import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 
 

@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.network.events;
+package it.polimi.myshelfie.view.events;
 
 public enum ViewEvent {
     CREATE_REQUEST,
@@ -8,5 +8,6 @@ public enum ViewEvent {
     START_REQUEST,
     DRAW_REQUEST,
     ORGANIZE_REQUEST,
-    INSERT_REQUEST
+    INSERT_REQUEST,
+    EXIT_REQUEST
 }

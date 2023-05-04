@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.network.events.ModelEvent;
+import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observer;
 
 import it.polimi.myshelfie.model.exceptions.LobbyExistanceException;

@@ -2,10 +2,11 @@ package it.polimi.myshelfie.network;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.events.*;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.network.events.*;
 import it.polimi.myshelfie.view.ViewType;
+import it.polimi.myshelfie.view.events.ViewEvent;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -9,7 +9,7 @@ import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
-import it.polimi.myshelfie.network.events.*;
+import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.network.observers.*;
 
 import java.rmi.RemoteException;
