@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
-import it.polimi.myshelfie.network.events.ExceptionEvent;
+import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.utils.Observer;
 
 public interface ClientExceptionsNotifier {
@@ -16,6 +16,12 @@ public interface ClientExceptionsNotifier {
      * @param obs is the observer to add.
      */
     void addExceptionsObserver(Observer<ExceptionEvent> obs);
+
+    /**
+     * Removes an exception observer.
+     * @param obs the observer to remove
+     */
+    void removeExceptionsObserver(Observer<ExceptionEvent> obs);
 
     /**
      *

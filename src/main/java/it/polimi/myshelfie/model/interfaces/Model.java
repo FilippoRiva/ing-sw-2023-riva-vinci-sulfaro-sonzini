@@ -28,6 +28,12 @@ public interface Model {
     void addModelObserver(Observer<ModelEvent> obs);
 
     /**
+     * Removes a Model Observer
+      * @param obs the observer to remove
+     */
+    void removeModelObserver(Observer<ModelEvent> obs);
+
+    /**
      *
      * @return the model view
      */

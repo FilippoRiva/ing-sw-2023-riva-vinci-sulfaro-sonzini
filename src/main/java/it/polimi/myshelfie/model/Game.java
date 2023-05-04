@@ -376,6 +376,11 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
+    public void removeGameObserver(Observer<GameEvent> obs) {
+        gameObservable.deleteObserver(obs);
+    }
+
+    @Override
     public synchronized GameModelView getGameModelView() {
         return new GameModelView(this);
     }
@@ -385,6 +390,11 @@ public class Game implements GameModel, LobbyModel {
         lobbyObservable.addObserver(obs);
         lobbyObservable.setChanged();
         lobbyObservable.notifyObservers();
+    }
+
+    @Override
+    public void removeLobbyObserver(Observer<LobbyEvent> obs) {
+        lobbyObservable.deleteObserver(obs);
     }
 
     @Override

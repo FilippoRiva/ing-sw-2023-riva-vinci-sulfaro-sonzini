@@ -11,6 +11,6 @@ public interface ChatController {
      */
     void addMessage(Message message);
 
-    void addChatObserver(NetworkChatObserver networkChatObserver);
+    void addChatObserver(String playerName, NetworkChatObserver networkChatObserver);
 
 }

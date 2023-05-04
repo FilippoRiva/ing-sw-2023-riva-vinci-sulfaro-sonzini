@@ -18,6 +18,12 @@ public interface ChatModel {
     void addChatObserver(NetworkChatObserver obs);
 
     /**
+     * Removes a chat observer
+     * @param obs the observer to remove
+     */
+    void removeChatObserver(NetworkChatObserver obs);
+
+    /**
      * Returns the chat view associated to that player.
      * @param playerName is the name of the player whose view i want.
      * @return this player chat view.

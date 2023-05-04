@@ -29,7 +29,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     private final Map<String,Client> clientsMap;
     private final Map<String,ServerConnectionHandler> connectionHandlersMap;
     private final Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
-
+    private final Map<String,NetworkLobbyObserver> lobbyObserverMap;
+    private final Map<String,NetworkChatObserver> chatObserverMap;
     public LobbyControllerImpl(LobbyModel lobbyModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.lobbyModel = lobbyModel;
         this.chatModel = chatModel;
@@ -37,6 +38,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         this.clientsMap = new HashMap<>();
         this.connectionHandlersMap = new HashMap<>();
         this.exceptionsNotifiersMap = new HashMap<>();
+        this.lobbyObserverMap = new HashMap<>();
+        this.chatObserverMap = new HashMap<>();
     }
 
     @Override
@@ -98,6 +101,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     public synchronized void addLobbyObserver(String playerName,NetworkLobbyObserver networkLobbyObserver) {
         networkLobbyObserver.setLobby(lobbyModel);
         lobbyModel.addLobbyObserver(networkLobbyObserver);
+        lobbyObserverMap.put(playerName,networkLobbyObserver);
     }
 
     @Override
@@ -106,9 +110,10 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     @Override
-    public synchronized void addChatObserver(NetworkChatObserver networkChatObserver) {
+    public synchronized void addChatObserver(String playerName,NetworkChatObserver networkChatObserver) {
         networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
+        chatObserverMap.put(playerName,networkChatObserver);
     }
 
     public LobbyModel getLobbyModel(){

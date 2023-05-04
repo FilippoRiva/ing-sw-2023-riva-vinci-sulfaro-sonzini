@@ -62,6 +62,15 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
+    public void removeChatObserver(NetworkChatObserver obs) {
+        String playerName = obs.getPlayerName();
+        PlayerChat pc = playerChats.get(playerName);
+        if(pc == null) return;
+        pc.deleteObserver(obs);
+        playerChats.remove(pc);
+    }
+
+    @Override
     public synchronized PlayerChatModelView getChatModelView(String playerName) {
         return new PlayerChatModelView(playerChats.get(playerName));
     }

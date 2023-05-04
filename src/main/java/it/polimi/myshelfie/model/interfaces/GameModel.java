@@ -3,7 +3,7 @@ package it.polimi.myshelfie.model.interfaces;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.modelviews.GameModelView;
-import it.polimi.myshelfie.network.events.GameEvent;
+import it.polimi.myshelfie.model.events.GameEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
@@ -82,6 +82,12 @@ public interface GameModel {
      * @param obs is the observer to add.
      */
     void addGameObserver(Observer<GameEvent> obs);
+
+    /**
+     * Removes a game observer.
+     * @param obs the game observer to remove.
+     */
+    void removeGameObserver(Observer<GameEvent> obs);
 
     /**
      * Return the game model view of that game.

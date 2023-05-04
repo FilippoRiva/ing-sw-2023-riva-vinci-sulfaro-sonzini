@@ -72,6 +72,12 @@ public interface LobbyModel {
     void addLobbyObserver(Observer<LobbyEvent> obs);
 
     /**
+     * Removes a lobby observer
+     * @param obs the observer to remove
+     */
+    void removeLobbyObserver(Observer<LobbyEvent> obs);
+
+    /**
      *
      * @return the lobby model view.
      */

@@ -65,6 +65,11 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
     }
 
     @Override
+    public void removeModelObserver(Observer<ModelEvent> obs) {
+        deleteObserver(obs);
+    }
+
+    @Override
     public ModelView getModelView() {
         return new ModelView(this);
     }

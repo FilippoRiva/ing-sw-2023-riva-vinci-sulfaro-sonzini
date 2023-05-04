@@ -16,6 +16,7 @@ import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.observers.NetworkChatObserver;
 import it.polimi.myshelfie.network.observers.NetworkGameObserver;
+import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
 import it.polimi.myshelfie.view.ViewType;
 
 
@@ -32,6 +33,9 @@ public class GameControllerImpl implements GameController, ChatController{
     private Map<String,Client> clientsMap;
     private Map<String,ServerConnectionHandler> connectionHandlersMap;
     private Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
+    private Map<String, NetworkLobbyObserver> lobbyObserverMap;
+    private Map<String, NetworkChatObserver> chatObserverMap;
+    private Map<String, NetworkGameObserver> gameObserverMap;
 
     public GameControllerImpl(GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.gameModel = gameModel;
@@ -115,10 +119,14 @@ public class GameControllerImpl implements GameController, ChatController{
         gameModel.addGameObserver(networkGameObserver);
     }
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
-                     Map<String, ClientExceptionsNotifier> notifiersMap){
+                     Map<String, ClientExceptionsNotifier> notifiersMap,
+                     Map<String, NetworkLobbyObserver> lobbyObserverMap,
+                     Map<String, NetworkChatObserver> chatObserverMap){
         this.clientsMap = clientsMap;
         this.connectionHandlersMap = connectionHandlersMap;
         this.exceptionsNotifiersMap = notifiersMap;
+        this.lobbyObserverMap = lobbyObserverMap;
+        this.chatObserverMap = chatObserverMap;
         for(ServerConnectionHandler sch : connectionHandlersMap.values()){
             try {
                 sch.setGameController(this);
@@ -135,7 +143,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public synchronized void addChatObserver(NetworkChatObserver networkChatObserver) {
+    public synchronized void addChatObserver(String playername, NetworkChatObserver networkChatObserver) {
         networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
     }
