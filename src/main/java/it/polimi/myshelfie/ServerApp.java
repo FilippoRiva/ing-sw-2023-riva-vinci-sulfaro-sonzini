@@ -7,6 +7,7 @@ import it.polimi.myshelfie.network.ClientSkeleton;
 import it.polimi.myshelfie.network.ServerConnectionHandlerImpl;
 import it.polimi.myshelfie.network.ServerImpl;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,18 +55,25 @@ public class ServerApp {
             System.out.println("Socket up and running");
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.print("Client connected "+socket.getInetAddress());
+                System.out.println("Client connected "+socket.getInetAddress());
                 new Thread(() -> {
+                    ServerConnectionHandlerImpl serverConnectionHandler = null;
                     try {
                         ClientSkeleton clientSkeleton = new ClientSkeleton(socket);
-                        ServerConnectionHandlerImpl serverConnectionHandler =
-                                new ServerConnectionHandlerImpl(clientSkeleton, controller);
+                        serverConnectionHandler = new ServerConnectionHandlerImpl(clientSkeleton, controller);
                         serverConnectionHandler.start();
                         while (true) {
                             clientSkeleton.receive(serverConnectionHandler);
                         }
                     } catch (RemoteException e) {
                         System.err.println("Cannot receive from client. Closing this connection...");
+                    } catch (EOFException e) {
+                        try {
+                            serverConnectionHandler.close();
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException("Unable to close client connection", ex);
+                        }
+                        System.out.println("Client Disconnected");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     } finally {
