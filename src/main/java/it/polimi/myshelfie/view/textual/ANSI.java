@@ -4,7 +4,7 @@ public class ANSI {
     public static String RESET = "\033[0m";
     public static String RED_FG = "\033[31m";
     public static String GREEN_FG = "\033[32m";
-    public static String WHITE_FG = "\033[37m";
+    public static String GRAY_FG = "\033[37m";
     public static String YELLOW_FG = "\033[93m";
     public static String BLUE_FG = "\033[34m";
     public static String LIGHTBLUE_FG = "\033[36m";

@@ -43,6 +43,8 @@ public class ChatSystem implements ChatModel {
         }
         //not a player
         if(!playerChats.containsKey(message.getSender())) return;
+        //ignoring messages to yourself
+        if(message.getSender().equals(message.getReceiver())) return;
         //to a specific player
         messages.add(message);
         playerChats.get(message.getReceiver()).addMessage(message);

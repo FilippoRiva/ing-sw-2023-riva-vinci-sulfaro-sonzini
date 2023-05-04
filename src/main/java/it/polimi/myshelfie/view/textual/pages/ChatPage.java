@@ -35,17 +35,25 @@ public class ChatPage extends ScreenPage{
             if(messages.size()>29) messages = messages.subList(messages.size()-29,messages.size());
             int idx=0;
             for(Message msg : messages){
-                String color = colors[lobby.getPlayers().indexOf(msg.getSender())];
+                int playerIndex = lobby.getPlayers().indexOf(msg.getSender());
+                String color;
+                if(playerIndex!=-1) color = colors[lobby.getPlayers().indexOf(msg.getSender())];
+                else color = ANSI.GRAY_FG; //if player has left
                 if(msg.getReceiver().equals(Messages.toEveryOne)){
                     t.centerPrint(
                             color+msg.getSender() +ANSI.RESET+" : "+msg.getMessage(),
                             line+idx,
                             (msg.getSender()+msg.getMessage()).length()+3);
                 } else {
-                    if(msg.getSender().equals(username))t.centerPrint(
-                            "w(to :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),
-                            line+idx,
-                            (msg.getSender()+msg.getMessage()).length()+10);
+                    if(msg.getSender().equals(username)){
+                        playerIndex = lobby.getPlayers().indexOf(msg.getReceiver());
+                        if(playerIndex!=-1) color = colors[lobby.getPlayers().indexOf(msg.getReceiver())];
+                        else color = ANSI.GRAY_FG; //if player has left
+                        t.centerPrint(
+                                "w(to :"+color+msg.getReceiver() +ANSI.RESET+ ") : "+msg.getMessage(),
+                                line+idx,
+                                (msg.getSender()+msg.getMessage()).length()+10);
+                    }
                     else t.centerPrint(
                             "w(from :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),
                             line+idx,
