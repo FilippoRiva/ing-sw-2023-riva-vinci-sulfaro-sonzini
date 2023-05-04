@@ -25,9 +25,10 @@ public class HelpPage extends ScreenPage{
         t.print("game  : goes to game mode",line++ ,3);
         t.printDivider(line++);
         t.print(color+"Mode : Lobby "+ANSI.RESET,line++,1);
-        t.print("+ : increases room size up to 4",line++,3);
-        t.print("- : decreases room size down to 2",line++,3);
-        t.print("s : starts the game if possible",line++,3);
+        t.print("+    : increases room size up to 4",line++,3);
+        t.print("-    : decreases room size down to 2",line++,3);
+        t.print("s    : starts the game if possible",line++,3);
+        t.print("exit: leave lobby",line++,3);
         t.printDivider(line++);
         t.print(color+"Mode : Game "+ ANSI.RESET, line++, 1);
         t.print("n        : shows the next player's library",line++,3);

@@ -30,8 +30,8 @@ public class LobbyPage extends ScreenPage{
             else t.centerPrint(idx + ". " + player,4+idx);
             idx++;
         }
-        if(viewBuffer.getLobbyModelView().isRoomOwner(username))t.printAction("help, chat, +, -, s");
-        else t.printAction("help, chat");
+        if(viewBuffer.getLobbyModelView().isRoomOwner(username))t.printAction("help, chat, exit, +, -, s");
+        else t.printAction("help, chat, exit");
         printBorder();
     }
 }
