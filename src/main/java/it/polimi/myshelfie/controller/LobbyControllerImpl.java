@@ -46,8 +46,17 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     public synchronized void exitLobby(String playerName){
         try {
             lobbyModel.removePlayer(playerName);
+            lobbyModel.removeLobbyObserver(lobbyObserverMap.get(playerName));
+            chatModel.removeChatObserver(chatObserverMap.get(playerName));
+            new Thread(()->{
+                try {
+                    clientsMap.get(playerName).send(new NetworkMessage(ViewType.INIT));
+                } catch (RemoteException e) {
+                    clientsMap.remove(playerName); //this means that the client crashed or lost connection
+                }
+            }).start();
         } catch (InvalidParameterException e) {
-            //TODO implement
+            exceptionsNotifiersMap.get(playerName).notifyException(e);
             return;
         }
         if(lobbyModel.isLobbyEmpty()){
@@ -92,7 +101,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
                     throw new RuntimeException(e);
                 }
             }).start();
-            result.init(clientsMap, connectionHandlersMap, exceptionsNotifiersMap);
+            result.init(clientsMap, connectionHandlersMap, exceptionsNotifiersMap,lobbyObserverMap,chatObserverMap);
         }
         return result;
     }

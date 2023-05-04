@@ -46,7 +46,7 @@ public class NetworkMessage implements Serializable {
         this.parameters.add(positionsOrOrderedTiles);
     }
     public NetworkMessage(ViewEvent evt) throws InvalidParameterException {
-        if(evt!=ViewEvent.START_REQUEST) throw new InvalidParameterException("wrong event");
+        if(evt!=ViewEvent.START_REQUEST && evt!= ViewEvent.EXIT_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEWMESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();

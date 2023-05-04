@@ -120,6 +120,11 @@ public class ControllerImpl implements Controller {
         }).start();
     }
 
+    @Override
+    public void quit(Client client) {
+        clientExceptionsNotifiers.remove(client);
+    }
+
     private LobbyModel getLobbyModel(String lobbyName) {
         LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
         if(lobbyController==null) return null;
@@ -132,6 +137,11 @@ public class ControllerImpl implements Controller {
      */
     public void deleteLobby(String lobbyName){
         gamesControllers.remove(lobbyName);
+        try {
+            model.removeLobby(lobbyName);
+        } catch (LobbyExistanceException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public GameControllerImpl getGameController(String lobbyName){

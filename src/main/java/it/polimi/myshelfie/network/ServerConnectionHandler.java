@@ -10,4 +10,5 @@ public interface ServerConnectionHandler extends Remote {
     void send(NetworkMessage networkMessage) throws RemoteException;
     void setGameController(GameControllerImpl gameController) throws RemoteException;
     void setChatController(ChatController chatController) throws RemoteException;
+    void close() throws RemoteException;
 }

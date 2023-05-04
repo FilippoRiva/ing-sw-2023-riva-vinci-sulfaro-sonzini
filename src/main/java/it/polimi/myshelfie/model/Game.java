@@ -94,7 +94,7 @@ public class Game implements GameModel, LobbyModel {
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 players.remove(p);
-                if(p.getName().equals(roomOwner)) roomOwner = players.get(0).getName();
+                if(p.getName().equals(roomOwner) && players.size()!=0) roomOwner = players.get(0).getName();
                 lobbyObservable.setChanged();
                 lobbyObservable.notifyObservers(LobbyEvent.PLAYER_REMOVE);
                 return;

@@ -41,7 +41,14 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public synchronized void setChatController(ChatController chatController) throws RemoteException{
         this.chatController = chatController;
-        chatController.addChatObserver(new NetworkChatObserver(client,playerName));
+        chatController.addChatObserver(playerName, new NetworkChatObserver(client,playerName));
+    }
+
+    @Override
+    public void close() throws RemoteException {
+        controller.quit(client);
+        if(gameController!=null) gameController.exitGame(playerName);
+        else if(lobbyController!=null) lobbyController.exitLobby(playerName);
     }
 
     @Override
@@ -69,9 +76,12 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
                     if (args == null || args.size()==0) gameController.orderChosenTiles(null, playerName);
                     else gameController.orderChosenTiles((List<ItemTile>) args.get(0), playerName);
                 }
-                case INSERT_REQUEST -> gameController.insertTiles(playerName, (int) args.get(0));
+                case INSERT_REQUEST ->
+                        gameController.insertTiles(playerName, (int) args.get(0));
                 case MESSAGE_SEND ->
                         chatController.addMessage((Message) args.get(0));
+                case EXIT_REQUEST ->
+                        lobbyController.exitLobby(playerName);
             }
         }).start();
     }

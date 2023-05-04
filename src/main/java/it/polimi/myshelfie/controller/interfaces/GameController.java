@@ -33,4 +33,5 @@ public interface GameController {
     void insertTiles(String playerName, int column);
 
     void addGameObserver(NetworkGameObserver networkGameObserver);
+    void exitGame(String playerName);
 }

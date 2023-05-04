@@ -118,6 +118,12 @@ public class GameControllerImpl implements GameController, ChatController{
         networkGameObserver.setGameModel(gameModel);
         gameModel.addGameObserver(networkGameObserver);
     }
+
+    @Override
+    public void exitGame(String playerName) {
+        //TODO termine della partita per tutti i player o gestire le disconnessioni
+    }
+
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
                      Map<String, ClientExceptionsNotifier> notifiersMap,
                      Map<String, NetworkLobbyObserver> lobbyObserverMap,

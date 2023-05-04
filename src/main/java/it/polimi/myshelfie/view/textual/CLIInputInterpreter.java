@@ -111,6 +111,9 @@ public class CLIInputInterpreter {
                                 UI.wrongInput();
                             }
                         }
+                        case "exit" -> {
+                            exitRequest();
+                        }
                         default -> UI.wrongInput();
                     }
                 }
@@ -160,6 +163,14 @@ public class CLIInputInterpreter {
             }
         }
         UI.clearInput();
+    }
+
+    private void exitRequest() {
+        try {
+            viewBuffer.sendMessage(new NetworkMessage(ViewEvent.EXIT_REQUEST));
+        } catch (InvalidParameterException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void interpretInit(String input) {

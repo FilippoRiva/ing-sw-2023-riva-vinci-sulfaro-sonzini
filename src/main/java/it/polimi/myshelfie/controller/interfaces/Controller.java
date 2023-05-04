@@ -22,4 +22,5 @@ public interface Controller {
 
     void addClient(Client client,NetworkModelObserver networkModelObserver, NetworkExceptionsObserver networkExceptionsObserver);
 
+    void quit(Client client);
 }
