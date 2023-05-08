@@ -9,7 +9,7 @@ import it.polimi.myshelfie.model.goals.*;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
-import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.events.GameEvent;
 import it.polimi.myshelfie.model.events.LobbyEvent;
@@ -387,8 +387,8 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public synchronized GameModelView getGameModelView() {
-        return new GameModelView(this);
+    public synchronized FullGameModelView getGameModelView() {
+        return new FullGameModelView(this);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class ViewBuffer extends View {
     ClientExceptionsNotifierView clientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
     LobbyModelView lobbyModelView;
-    GameModelView gameModelView;
+    FullGameModelView fullGameModelView;
     ViewType viewType;
     public ViewBuffer(){
         this.networkMessages = new ArrayDeque<>();
@@ -58,8 +58,8 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public synchronized void setGameModelView(GameModelView gameModelView) {
-        this.gameModelView = gameModelView;
+    public synchronized void setGameModelView(FullGameModelView fullGameModelView) {
+        this.fullGameModelView = fullGameModelView;
         UINotifier.setChanged();
         UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE);
     }
@@ -100,8 +100,8 @@ public class ViewBuffer extends View {
         return lobbyModelView;
     }
 
-    public synchronized GameModelView getGameModelView() {
-        return gameModelView;
+    public synchronized FullGameModelView getGameModelView() {
+        return fullGameModelView;
     }
 
     public synchronized ViewType getViewType() {

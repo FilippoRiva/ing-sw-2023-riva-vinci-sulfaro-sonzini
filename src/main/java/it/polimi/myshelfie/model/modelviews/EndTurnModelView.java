@@ -7,12 +7,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EndTurnModelView implements Serializable {
+public class EndTurnModelView implements Serializable, GameModelView {
     private final String lastPlayer;
     private final int points;
     private final List<Token> playerTokens;
     private final List<CommonGoalModelView> commonGoals;
-    private ItemTile[][] livingRoom;
+    private final ItemTile[][] livingRoom;
     private final int remainingTiles;
 
     private final GameState currentState;

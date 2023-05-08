@@ -12,7 +12,7 @@ public abstract class View extends Observable<ViewEvent>{
     public abstract void setExceptionView(ClientExceptionsNotifierView exceptionView);
     public abstract void setChatView(PlayerChatModelView chatView);
     public abstract void setLobbyModelView(LobbyModelView obj);
-    public abstract void setGameModelView(GameModelView obj);
+    public abstract void setGameModelView(FullGameModelView obj);
     public abstract void setView(ViewType viewType);
     public abstract NetworkMessage getMessage();
 }

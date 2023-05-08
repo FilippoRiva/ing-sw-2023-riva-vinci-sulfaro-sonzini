@@ -7,7 +7,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import java.io.Serializable;
 import java.util.List;
 
-public class OrganizeModelView implements Serializable {
+public class OrganizeModelView implements Serializable, GameModelView {
     private final String currentPlayer;
     private final GameState currentState;
     private final List<ItemTile> orderedTiles;

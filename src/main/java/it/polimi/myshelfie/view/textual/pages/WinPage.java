@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.view.textual.pages;
 
-import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.textual.ANSI;
@@ -16,7 +16,7 @@ public class WinPage extends ScreenPage{
     @Override
     public void render() {
         t.clearScreen();
-        GameModelView gmv = viewBuffer.getGameModelView();
+        FullGameModelView gmv = viewBuffer.getGameModelView();
         List<PlayerModelView> players = gmv.getPlayers();
         players = players.stream().sorted((x,y)->{
             if(x.getPoints()==y.getPoints()) return 0;

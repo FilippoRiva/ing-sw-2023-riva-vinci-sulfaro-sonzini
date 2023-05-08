@@ -2,7 +2,7 @@ package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Token;
-import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -193,9 +193,9 @@ public class Terminal {
         moveToInput();
     }
 
-    public void printLivingRoom(GameModelView gameModelView) {
+    public void printLivingRoom(FullGameModelView fullGameModelView) {
         //TODO make this print position dependant
-        int size = gameModelView.getLivingRoom().length*4;
+        int size = fullGameModelView.getLivingRoom().length*4;
         goOnTop();
         print("   ");
         for (int i = -4; i < 5; i++) {
@@ -211,7 +211,7 @@ public class Terminal {
             if (y >= 0) print(" " + y);
             else print(String.valueOf(y));
             for (int x = -4; x <= 4; x++) {
-                printTile(gameModelView.getTile(x, y));
+                printTile(fullGameModelView.getTile(x, y));
             }
             println("|");
             idx++;

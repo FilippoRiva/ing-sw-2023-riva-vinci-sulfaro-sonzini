@@ -31,9 +31,7 @@ public class FullModelTest {
         LobbyModel lobby1 = null;
         LobbyModel lobby2 = null;
         try{
-            model.addModelObserver((evt)->{
-                setModelView1(model.getModelView());
-            });
+            model.addModelObserver((evt)-> setModelView1(model.getModelView()));
             lobby1 = model.addLobby("Lobby1");
         }catch (Exception e){
             fail();
@@ -44,9 +42,7 @@ public class FullModelTest {
         }catch (Exception ignored){
         }
         try{
-            model.addModelObserver((evt)->{
-                setModelView2(model.getModelView());
-            });
+            model.addModelObserver((evt)->setModelView2(model.getModelView()));
             lobby2 = model.addLobby("Lobby2");
         }catch (Exception e){
             fail();
@@ -135,11 +131,9 @@ public class FullModelTest {
 
 
     private void playGame1(GameModel game) {
-        List<GameModelView> gameModelViewList = new ArrayList<>();
-        game.addGameObserver((evt)->{
-            gameModelViewList.add(game.getGameModelView());
-        });
-        GameModelView lmv = getLastModel(gameModelViewList);
+        List<FullGameModelView> fullGameModelViewList = new ArrayList<>();
+        game.addGameObserver((evt)-> fullGameModelViewList.add(game.getGameModelView()));
+        FullGameModelView lmv = getLastModel(fullGameModelViewList);
         String currPlayer = lmv.getCurrentPlayer();
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(0,0));
@@ -172,7 +166,7 @@ public class FullModelTest {
         } catch (InvalidParameterException | FullColumnException e) {
             fail();
         }
-        lmv = getLastModel(gameModelViewList);
+        lmv = getLastModel(fullGameModelViewList);
         ItemTile[][] updatedBookshelf = lmv.getPlayer(lmv.getCurrentPlayer()).getBookshelf();
         for(int i = 0 ; i< updatedBookshelf.length; i++){
             for(int j = 0; j< updatedBookshelf[0].length;j++){
@@ -182,8 +176,8 @@ public class FullModelTest {
             }
         }
         game.nextTurn();
-        lmv = getLastModel(gameModelViewList);
-        String oldPlayer = new String(currPlayer);
+        lmv = getLastModel(fullGameModelViewList);
+        String oldPlayer = currPlayer;
         currPlayer=lmv.getCurrentPlayer();
         positions.add(new Position(0,3));
         positions.add(new Position(0,4));
@@ -211,7 +205,7 @@ public class FullModelTest {
         } catch (InvalidParameterException | FullColumnException e) {
             fail();
         }
-        lmv = getLastModel(gameModelViewList);
+        lmv = getLastModel(fullGameModelViewList);
         updatedBookshelf = lmv.getPlayer(lmv.getCurrentPlayer()).getBookshelf();
         for(int i = 0 ; i< updatedBookshelf.length; i++){
             for(int j = 0; j< updatedBookshelf[0].length;j++){
@@ -224,11 +218,9 @@ public class FullModelTest {
     }
 
     private void playGame2(GameModel game) {
-        List<GameModelView> gameModelViewList = new ArrayList<>();
-        game.addGameObserver((evt)->{
-            gameModelViewList.add(game.getGameModelView());
-        });
-        GameModelView lmv = getLastModel(gameModelViewList);
+        List<FullGameModelView> fullGameModelViewList = new ArrayList<>();
+        game.addGameObserver((evt)-> fullGameModelViewList.add(game.getGameModelView()));
+        FullGameModelView lmv = getLastModel(fullGameModelViewList);
         String currPlayer = lmv.getCurrentPlayer();
         fillBookshelf(lmv, game);
         if(!game.isBookshelfFull(currPlayer)){
@@ -253,10 +245,9 @@ public class FullModelTest {
         }
     }
 
-    private void fillBookshelf(GameModelView lmv, GameModel game){
+    private void fillBookshelf(FullGameModelView lmv, GameModel game){
         String p = lmv.getCurrentPlayer();
         List<Position> positions = new ArrayList<>();
-        positions = new ArrayList<>();
         positions.add(new Position(0,3));
         positions.add(new Position(-1,3));
         try {
@@ -463,15 +454,13 @@ public class FullModelTest {
         } catch (InvalidParameterException | FullColumnException ignored) {}
     }
 
-    private GameModelView getLastModel(List<GameModelView> list){
+    private FullGameModelView getLastModel(List<FullGameModelView> list){
         return list.get(list.size()-1);
     }
 
     private void playLobby(LobbyModel lobby){
         List<LobbyModelView> lobbyModelViewList = new ArrayList<>();
-        lobby.addLobbyObserver((evt)->{
-            lobbyModelViewList.add(lobby.getLobbyModelView());
-        });
+        lobby.addLobbyObserver((evt)-> lobbyModelViewList.add(lobby.getLobbyModelView()));
         try {
             lobby.addPlayer("Giorgio");
         } catch (Exception e) {
@@ -507,7 +496,7 @@ public class FullModelTest {
         try{
             lobby.addPlayer("Luca");
             fail("Lobby should be full cause default size is 2");
-        } catch (Exception e){
+        } catch (Exception ignored){
         }
         lmv = getLast(lobbyModelViewList);
         assertEquals("Giorgio",lmv.getPlayers().get(0));
@@ -541,7 +530,7 @@ public class FullModelTest {
         try {
             lobby.setGameConfig(new GameConfig(2));
             fail("there are 3 players in the lobby");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         lmv = getLast(lobbyModelViewList);
         assertEquals("Giorgio",lmv.getPlayers().get(0));

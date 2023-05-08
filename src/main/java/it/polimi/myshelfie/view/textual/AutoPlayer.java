@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
-import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -65,21 +65,13 @@ public class AutoPlayer implements Observer<ViewUpdate> {
                 }
                 case GAME_UPDATE -> {
                     if (vt != ViewType.GAME) return;
-                    GameModelView gmv = viewBuffer.getGameModelView();
+                    FullGameModelView gmv = viewBuffer.getGameModelView();
                     if (!gmv.getCurrentPlayer().equals(username)) return;
                     switch (gmv.getCurrentState()) {
-                        case DRAW, LASTDRAW -> {
-                            draw(gmv);
-                        }
-                        case ORGANIZE, LASTORGANIZE -> {
-                            organize(gmv);
-                        }
-                        case INSERT, LASTINSERT -> {
-                            insert(gmv);
-                        }
-                        case WIN -> {
-                            finished = true;
-                        }
+                        case DRAW, LASTDRAW -> draw(gmv);
+                        case ORGANIZE, LASTORGANIZE -> organize(gmv);
+                        case INSERT, LASTINSERT -> insert(gmv);
+                        case WIN -> finished = true;
                     }
                 }
                 case VIEWTYPE_UPDATE -> {
@@ -95,7 +87,7 @@ public class AutoPlayer implements Observer<ViewUpdate> {
         }
     }
 
-    private synchronized void draw(GameModelView gmv) throws InvalidParameterException {
+    private synchronized void draw(FullGameModelView gmv) throws InvalidParameterException {
         boolean finish = false;
         for(int y = 4;y>=-4;y--){
             for(int x = -4; x<=4;x++){
@@ -112,12 +104,12 @@ public class AutoPlayer implements Observer<ViewUpdate> {
         }
     }
 
-    private synchronized void organize(GameModelView gmv) throws InvalidParameterException {
+    private synchronized void organize(FullGameModelView gmv) throws InvalidParameterException {
         List<ItemTile> takenTiles = gmv.getPlayer(username).getTakenTiles();
         viewBuffer.sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,takenTiles));
     }
 
-    private synchronized void insert(GameModelView gmv) throws InvalidParameterException {
+    private synchronized void insert(FullGameModelView gmv) throws InvalidParameterException {
         List<ItemTile> firstLine = Arrays.stream(gmv.getPlayer(username).getBookshelf()[0]).toList();
         List<Integer> columns = firstLine.stream().map(x -> isValidColumn(x, firstLine.indexOf(x))).filter(x->x!=-1).toList();
         Random rand = new Random();

@@ -6,7 +6,7 @@ import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
-import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -111,9 +111,7 @@ public class CLIInputInterpreter {
                                 UI.wrongInput();
                             }
                         }
-                        case "exit" -> {
-                            exitRequest();
-                        }
+                        case "exit" -> exitRequest();
                         default -> UI.wrongInput();
                     }
                 }
@@ -273,7 +271,7 @@ public class CLIInputInterpreter {
             organizeRequest(new ArrayList<>());
             return;
         }
-        GameModelView gmv = viewBuffer.getGameModelView();
+        FullGameModelView gmv = viewBuffer.getGameModelView();
         List<ItemTile> takenTiles = gmv.getPlayer(UI.myUsername).getTakenTiles();
         input = input.substring(1);
         input = input.replace(" ","");

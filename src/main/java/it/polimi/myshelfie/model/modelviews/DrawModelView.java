@@ -7,7 +7,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import java.io.Serializable;
 import java.util.List;
 
-public class DrawModelView  implements Serializable {
+public class DrawModelView  implements Serializable, GameModelView {
     private final String currentPlayer;
     private final GameState currentState;
     private final ItemTile[][] livingRoom;

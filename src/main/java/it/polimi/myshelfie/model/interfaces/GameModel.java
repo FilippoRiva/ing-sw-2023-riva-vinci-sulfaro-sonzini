@@ -2,7 +2,7 @@ package it.polimi.myshelfie.model.interfaces;
 
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
-import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.events.GameEvent;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
@@ -28,7 +28,7 @@ public interface GameModel {
      * @param positions are the positions of the tiles that have to be removed from the board, where the first in the list is the first one to be
      *                  inserted into the player's bookshelf, and the last one is the last one to be inserted.
      * @param playerName the name of the player drawing the tiles.
-     * @throws Exception if the given positions/column are/is not valid.
+     * @throws InvalidParameterException if the given positions/column are/is not valid.
      */
     void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException;
 
@@ -93,7 +93,7 @@ public interface GameModel {
      * Return the game model view of that game.
      * @return a game model view.
      */
-    GameModelView getGameModelView();
+    FullGameModelView getGameModelView();
 
     /**
      *

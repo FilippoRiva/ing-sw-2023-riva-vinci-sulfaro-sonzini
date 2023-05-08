@@ -114,7 +114,7 @@ public class TextualUI implements Observer<ViewUpdate> {
     }
 
     public synchronized void showNextLibrary() {
-        GameModelView gmv = viewBuffer.getGameModelView();
+        FullGameModelView gmv = viewBuffer.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
         int index = players.indexOf(currentLibraryOwner);
         if(index == players.size()-1) currentLibraryOwner = players.get(0);
@@ -124,7 +124,7 @@ public class TextualUI implements Observer<ViewUpdate> {
     }
 
     public synchronized void showPrevLibrary() {
-        GameModelView gmv = viewBuffer.getGameModelView();
+        FullGameModelView gmv = viewBuffer.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
         int index = players.indexOf(currentLibraryOwner);
         if(index == 0) currentLibraryOwner = players.get(players.size()-1);

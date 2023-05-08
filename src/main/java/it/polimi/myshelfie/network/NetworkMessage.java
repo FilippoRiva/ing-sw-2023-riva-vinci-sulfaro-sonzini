@@ -72,11 +72,11 @@ public class NetworkMessage implements Serializable {
         this.parameters = new ArrayList<>();
         this.parameters.add(lobbyModelView);
     }
-    public NetworkMessage(GameEvent evt, GameModelView gameModelView){
+    public NetworkMessage(GameEvent evt, FullGameModelView fullGameModelView){
         this.messageType = MessageType.GAMEMESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
-        this.parameters.add(gameModelView);
+        this.parameters.add(fullGameModelView);
     }
 
     public NetworkMessage(GameEvent evt, DrawModelView drawModelView) throws InvalidParameterException {

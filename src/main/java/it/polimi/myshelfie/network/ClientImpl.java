@@ -31,7 +31,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
             case LOBBYMESSAGE ->
                     new Thread(()-> view.setLobbyModelView((LobbyModelView) networkMessage.getParameters().get(0))).start();
             case GAMEMESSAGE ->
-                    new Thread(()-> view.setGameModelView((GameModelView) networkMessage.getParameters().get(0))).start();
+                    new Thread(()-> view.setGameModelView((FullGameModelView) networkMessage.getParameters().get(0))).start();
             case EXCEPTIONMESSAGE ->
                     new Thread(()-> view.setExceptionView((ClientExceptionsNotifierView) networkMessage.getParameters().get(0))).start();
             case SELECTVIEWMESSAGE ->

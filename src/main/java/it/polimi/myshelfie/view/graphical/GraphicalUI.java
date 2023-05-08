@@ -29,7 +29,7 @@ public class GraphicalUI extends View implements Observer<ViewUpdate> {
     }
 
     @Override
-    public void setGameModelView(GameModelView obj) {
+    public void setGameModelView(FullGameModelView obj) {
 
     }
 
