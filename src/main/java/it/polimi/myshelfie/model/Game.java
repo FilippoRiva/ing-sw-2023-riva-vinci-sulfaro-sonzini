@@ -181,11 +181,10 @@ public class Game implements GameModel, LobbyModel {
         else {
             gameObservable.setChanged();
             switch (state){
-                case DRAW, LASTDRAW -> gameObservable.notifyObservers(GameEvent.REFILL);
+                case DRAW, LASTDRAW -> gameObservable.notifyObservers(GameEvent.COUNTINGPOINTS);
                 case ORGANIZE, LASTORGANIZE -> gameObservable.notifyObservers(GameEvent.DRAW);
                 case INSERT, LASTINSERT -> gameObservable.notifyObservers(GameEvent.ORGANIZE);
                 case COUNTINGPOINTS, LASTCOUNTINGPOINTS -> gameObservable.notifyObservers(GameEvent.INSERT);
-                case REFILL -> gameObservable.notifyObservers(GameEvent.COUNTINGPOINTS);
                 case WIN -> gameObservable.notifyObservers(GameEvent.WIN);
             }
         }

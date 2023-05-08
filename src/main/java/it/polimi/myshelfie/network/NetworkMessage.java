@@ -60,7 +60,7 @@ public class NetworkMessage implements Serializable {
         this.parameters.add(lobby);
     }
     public NetworkMessage(ViewEvent evt, Message message) throws InvalidParameterException{
-        if((evt!=ViewEvent.MESSAGE_SEND)) throw new InvalidParameterException("wrong event");
+        if(evt!=ViewEvent.MESSAGE_SEND) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEWMESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
@@ -77,6 +77,38 @@ public class NetworkMessage implements Serializable {
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(gameModelView);
+    }
+
+    public NetworkMessage(GameEvent evt, DrawModelView drawModelView) throws InvalidParameterException {
+        if(evt!=GameEvent.DRAW) throw new InvalidParameterException("wrong event");
+        this.messageType = MessageType.GAMEMESSAGE;
+        this.event = evt;
+        this.parameters = new ArrayList<>();
+        this.parameters.add(drawModelView);
+    }
+
+    public NetworkMessage(GameEvent evt, OrganizeModelView organizeModelView) throws InvalidParameterException {
+        if(evt!=GameEvent.ORGANIZE) throw new InvalidParameterException("wrong event");
+        this.messageType = MessageType.GAMEMESSAGE;
+        this.event = evt;
+        this.parameters = new ArrayList<>();
+        this.parameters.add(organizeModelView);
+    }
+
+    public NetworkMessage(GameEvent evt, InsertModelView insertModelView) throws InvalidParameterException {
+        if(evt!=GameEvent.INSERT) throw new InvalidParameterException("wrong event");
+        this.messageType = MessageType.GAMEMESSAGE;
+        this.event = evt;
+        this.parameters = new ArrayList<>();
+        this.parameters.add(insertModelView);
+    }
+
+    public NetworkMessage(GameEvent evt, EndTurnModelView endTurnModelView) throws InvalidParameterException {
+        if(evt!=GameEvent.COUNTINGPOINTS) throw new InvalidParameterException("wrong event");
+        this.messageType = MessageType.GAMEMESSAGE;
+        this.event = evt;
+        this.parameters = new ArrayList<>();
+        this.parameters.add(endTurnModelView);
     }
     public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierView exceptionsNotifierView){
         this.messageType = MessageType.EXCEPTIONMESSAGE;
