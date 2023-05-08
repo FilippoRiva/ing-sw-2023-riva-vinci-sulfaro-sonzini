@@ -12,10 +12,10 @@ import java.util.List;
 public class PlayerModelView implements Serializable {
     final private String name;
     final private List<PersonalGoalModelView> personalGoals;
-    final private int points;
-    final private List<ItemTile> takenTiles;
-    final private List<Token> tokens;
-    final private ItemTile[][] bookshelf;
+    private int points;
+    private List<ItemTile> takenTiles;
+    private List<Token> tokens;
+    private ItemTile[][] bookshelf;
     public PlayerModelView(Player player){
         this.name = player.getName();
         List<PersonalGoal> goals = player.getPersonalGoals();
@@ -76,4 +76,22 @@ public class PlayerModelView implements Serializable {
     public List<ItemTile> getTakenTiles() {
         return takenTiles;
     }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setTakenTiles(List<ItemTile> takenTiles) {
+        this.takenTiles = takenTiles;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public void setBookshelf(ItemTile[][] bookshelf) {
+        this.bookshelf = bookshelf;
+    }
 }
+
+

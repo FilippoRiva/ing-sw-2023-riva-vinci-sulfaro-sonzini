@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class CommonGoalModelView implements Serializable {
-    private final List<Token> tokens;
+    private List<Token> tokens;
     private final int id;
     private final String description;
     public CommonGoalModelView(CommonGoal commonGoal){
@@ -38,5 +38,9 @@ public class CommonGoalModelView implements Serializable {
      */
     public String getDescription(){
         return description;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
     }
 }

@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModelView implements Serializable {
-    private final List<PlayerModelView> players;
-    private final String currentPlayer;
-    private final GameState currentState;
-    private final List<CommonGoalModelView> commonGoals;
-    private final ItemTile[][] livingRoom;
-    private final int remainingTiles;
-    private final GameConfig gameConfig;
-    private final String roomName;
+    private  List<PlayerModelView> players;
+    private String currentPlayer;
+    private GameState currentState;
+    private List<CommonGoalModelView> commonGoals;
+    private ItemTile[][] livingRoom;
+    private int remainingTiles;
+    private GameConfig gameConfig;
+    private String roomName;
     public GameModelView(Game game){
         List<Player> actualPlayers = game.getPlayers();
         players = new ArrayList<>();
@@ -142,5 +142,25 @@ public class GameModelView implements Serializable {
     public ItemTile getTile(int x, int y){
         int offset = (livingRoom.length-1)/2;
         return livingRoom[x+offset][offset-y];
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void setCurrentState(GameState currentState) {
+        this.currentState = currentState;
+    }
+
+    public void setCommonGoals(List<CommonGoalModelView> commonGoals) {
+        this.commonGoals = commonGoals;
+    }
+
+    public void setLivingRoom(ItemTile[][] livingRoom) {
+        this.livingRoom = livingRoom;
+    }
+
+    public void setRemainingTiles(int remainingTiles) {
+        this.remainingTiles = remainingTiles;
     }
 }

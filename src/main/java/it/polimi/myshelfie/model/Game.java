@@ -334,6 +334,13 @@ public class Game implements GameModel, LobbyModel {
     public String getCurrentPlayer() {
         return currentPlayer.getName();
     }
+    public String getLastPlayer() {
+        int index = players.indexOf(currentPlayer);
+        if (index==0) {
+            return players.get(players.size()-1).getName();
+        }
+        return players.get(index-1).getName();
+    }
 
     public Player getPlayer(String playerName) {
         for(Player p : players){
