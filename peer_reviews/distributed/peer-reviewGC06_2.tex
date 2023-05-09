@@ -1,0 +1,50 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+
+\title{Peer-Review : Network}
+\author{Riva Filippo, Vinci Francesco, Sulfaro Antonio, Sonzini Anna\\Gruppo 16}
+
+\begin{document}
+
+\maketitle
+
+Valutazione dello strato di rete del gruppo 06.
+
+\section{Lati Positivi}
+
+I punti di forza di questa progettazione :
+\begin{enumerate}
+    \item La semplicità della modellazione. Nonostante il ridotto numero di classi e di messaggi questo approccio è in grado di soddisfare tutte le specifiche e le funzionalità aggiuntive scelte, con un limitato numero di metodi e senza complicare eccessivamente la logica all'interno e all'esterno dello strato di rete.
+    \item La leggibilità dell'UML. 
+    \item Un limitato numero di messaggi. 
+\end{enumerate}
+
+\section{Lati negativi}
+
+I punti deboli che abbiamo riscontrato nella progettazione sono : 
+\begin{enumerate}
+    \item Un UML non sufficientemente dettagliato alla comprensione dello scambio di messaggi, in quanto non specifica cosa essi possano contenere e come il ricevente sia in grado di interpretarli. 
+    \item Manca un diagramma di flusso per comprendere meglio come viene sfruttato il pattern observer (che nell'UML è ovviamente difficile da rappresentare in assenza di classi che lo implementano) anche se in ogni caso è stato spiegato nel commento all'UML.
+    \item Invio dell'oggetto Client ad ogni messaggio del Client verso il Server, appesantendo inutilmente i messaggi quando basterebbe mandare il nome del giocatore.
+\end{enumerate}
+
+\section{Confronto tra le architetture}
+
+Il problema di progettazione da parte del nostro gruppo è stato affrontato con un approccio simile. 
+Le principali differenze sono :
+\begin{itemize}
+    \item La gestione delle connessioni, in quanto nel nostro caso non vi è un unico oggetto server a cui mandare i messaggi ma ogni client parla al proprio oggetto ServerConnectionHandler lato server che ne gestisce i messaggi.  
+    \item Il sistema di ping utilizzato dal client per notificare il server della propria connessione, utile alla funzionalità avanzata della resilienza alle disconnessioni. 
+\end{itemize}
+
+
+Dei possibili miglioramenti del nostro strato di rete potrebbero essere :
+
+\begin{itemize}
+    \item Una riduzione del numero di messaggi e delle classi rendendone più facile la comprensione ed eventuali modifiche future.
+    \item L'implementazione di un sistema di rilevazione delle disconnessioni tramite ping o simili. 
+\end{itemize}
+
+\end{document}
