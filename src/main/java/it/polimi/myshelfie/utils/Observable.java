@@ -18,8 +18,8 @@ public class Observable<Event extends Enum<Event>, Representation>{
         obs.remove(o);
     }
 
-    public void notifyObservers(){
-        notifyObservers(null, null);
+    public void notifyObservers(Representation representation){
+        notifyObservers(null, representation);
     }
 
     public void notifyObservers(Event event, Representation representation){

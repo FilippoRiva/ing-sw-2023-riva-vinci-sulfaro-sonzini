@@ -12,7 +12,6 @@ import java.rmi.RemoteException;
 public class NetworkChatObserver extends NetworkObserver implements Observer<ChatEvent, PlayerChatModelView> {
 
     String playerName;
-    ChatModel chatModel;
     public NetworkChatObserver(Client client, String playerName){
         this.client = client;
         this.playerName = playerName;
@@ -22,14 +21,10 @@ public class NetworkChatObserver extends NetworkObserver implements Observer<Cha
         if(evt==null) return;
         new Thread(()->{
             try {
-                client.send(new NetworkMessage(evt, chatModel.getChatModelView(playerName)));
+                client.send(new NetworkMessage(evt, playerChatModelView));
             } catch (RemoteException ignored) {
             }
         }).start();
-    }
-
-    public void setChatModel(ChatModel chatModel) {
-        this.chatModel = chatModel;
     }
 
     public String getPlayerName(){

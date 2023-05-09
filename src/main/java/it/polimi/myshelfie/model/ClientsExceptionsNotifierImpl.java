@@ -22,7 +22,7 @@ public class ClientsExceptionsNotifierImpl extends Observable<ExceptionEvent, Cl
     public void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
         addObserver(obs);
         setChanged();
-        notifyObservers();
+        notifyObservers(new ClientExceptionsNotifierView(this));
     }
 
     @Override

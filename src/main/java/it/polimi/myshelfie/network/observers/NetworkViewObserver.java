@@ -8,19 +8,18 @@ import it.polimi.myshelfie.view.View;
 
 import java.rmi.RemoteException;
 
+//TODO to remove -> replaced with lambda
 public class NetworkViewObserver implements Observer<ViewEvent, NetworkMessage> {
     ServerConnectionHandler server;
-    View view;
-    public NetworkViewObserver(ServerConnectionHandler server, View view){
+    public NetworkViewObserver(ServerConnectionHandler server){
         this.server = server;
-        this.view= view;
     }
 
     @Override
-    public void update(ViewEvent evt, NetworkMessage unused) {
+    public void update(ViewEvent evt, NetworkMessage message) {
         if(evt==null) return;
         try {
-            server.send(view.getMessage());
+            server.send(message);
         } catch (RemoteException ignored) {
         }
     }

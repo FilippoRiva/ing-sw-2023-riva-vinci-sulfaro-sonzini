@@ -58,7 +58,7 @@ public class ChatSystem implements ChatModel {
         if(pc==null) return;
         pc.addObserver(obs);
         pc.setChanged();
-        pc.notifyObservers();
+        pc.notifyObservers(new PlayerChatModelView(pc));
     }
 
     @Override

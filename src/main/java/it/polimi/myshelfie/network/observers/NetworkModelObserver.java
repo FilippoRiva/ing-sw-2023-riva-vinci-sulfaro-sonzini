@@ -10,7 +10,6 @@ import it.polimi.myshelfie.utils.Observer;
 import java.rmi.RemoteException;
 
 public class NetworkModelObserver extends NetworkObserver implements Observer<ModelEvent, ModelView> {
-    Model model;
     public NetworkModelObserver(Client client){
         this.client = client;
     }
@@ -18,13 +17,9 @@ public class NetworkModelObserver extends NetworkObserver implements Observer<Mo
     public void update(ModelEvent evt, ModelView modelView) {
         new Thread(()->{
             try {
-                client.send(new NetworkMessage(evt,model.getModelView()));
+                client.send(new NetworkMessage(evt,modelView));
             } catch (RemoteException ignored) {
             }
         }).start();
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
     }
 }

@@ -24,7 +24,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
             ScheduledExecutorService ex = Executors.newScheduledThreadPool(1);
             ex.scheduleAtFixedRate(()->{
                 setChanged();
-                notifyObservers();
+                notifyObservers(new ModelView(this));
             },5,10, TimeUnit.SECONDS);
         }).start();
     }
@@ -61,7 +61,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
     public void addModelObserver(Observer<ModelEvent, ModelView> obs) {
         addObserver(obs);
         setChanged();
-        notifyObservers();
+        notifyObservers(new ModelView(this));
     }
 
     @Override

@@ -103,11 +103,9 @@ public class ControllerImpl implements Controller {
     @Override
     public synchronized void addClient(Client client, NetworkModelObserver networkModelObserver, NetworkExceptionsObserver networkExceptionsObserver){
 
-        networkModelObserver.setModel(model);
         model.addModelObserver(networkModelObserver);
 
         ClientExceptionsNotifier cen = model.getNewClientExceptionNotifier();
-        networkExceptionsObserver.setExceptionsNotifier(cen);
         cen.addExceptionsObserver(networkExceptionsObserver);
 
         clientExceptionsNotifiers.put(client,cen);

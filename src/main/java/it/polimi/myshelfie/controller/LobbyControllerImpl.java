@@ -108,7 +108,6 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
     @Override
     public synchronized void addLobbyObserver(String playerName,NetworkLobbyObserver networkLobbyObserver) {
-        networkLobbyObserver.setLobby(lobbyModel);
         lobbyModel.addLobbyObserver(networkLobbyObserver);
         lobbyObserverMap.put(playerName,networkLobbyObserver);
     }
@@ -120,7 +119,6 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
     @Override
     public synchronized void addChatObserver(String playerName,NetworkChatObserver networkChatObserver) {
-        networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
         chatObserverMap.put(playerName,networkChatObserver);
     }

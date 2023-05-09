@@ -10,15 +10,10 @@ import it.polimi.myshelfie.utils.Observer;
 import java.rmi.RemoteException;
 
 public class NetworkLobbyObserver extends NetworkObserver implements Observer<LobbyEvent, LobbyModelView> {
-    private LobbyModel lobby;
     private boolean firstNotify;
     public NetworkLobbyObserver(Client client){
         this.client = client;
         this.firstNotify = false;
-    }
-
-    public void setLobby(LobbyModel lobby) {
-        this.lobby = lobby;
     }
 
     @Override
@@ -26,7 +21,7 @@ public class NetworkLobbyObserver extends NetworkObserver implements Observer<Lo
         if(evt==null && firstNotify) return;
         new Thread(()->{
             try {
-                client.send(new NetworkMessage(evt,lobby.getLobbyModelView()));
+                client.send(new NetworkMessage(evt,lobbyModelView));
                 firstNotify = true;
             } catch (RemoteException ignored) {
             }

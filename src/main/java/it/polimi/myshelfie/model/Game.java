@@ -180,7 +180,7 @@ public class Game implements GameModel, LobbyModel {
         this.currentState = state;
         if(state==GameState.LOBBY) {
             lobbyObservable.setChanged();
-            lobbyObservable.notifyObservers();
+            lobbyObservable.notifyObservers(new LobbyModelView(this));
         }
         else {
             gameObservable.setChanged();
@@ -382,7 +382,7 @@ public class Game implements GameModel, LobbyModel {
     public void addGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.addObserver(obs);
         gameObservable.setChanged();
-        gameObservable.notifyObservers();
+        gameObservable.notifyObservers(new FullGameModelView(this));
     }
 
     @Override
@@ -399,7 +399,7 @@ public class Game implements GameModel, LobbyModel {
     public void addLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.addObserver(obs);
         lobbyObservable.setChanged();
-        lobbyObservable.notifyObservers();
+        lobbyObservable.notifyObservers(new LobbyModelView(this));
     }
 
     @Override

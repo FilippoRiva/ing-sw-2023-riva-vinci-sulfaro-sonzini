@@ -115,7 +115,6 @@ public class GameControllerImpl implements GameController, ChatController{
 
     @Override
     public synchronized void addGameObserver(NetworkGameObserver networkGameObserver) {
-        networkGameObserver.setGameModel(gameModel);
         gameModel.addGameObserver(networkGameObserver);
     }
 
@@ -150,7 +149,6 @@ public class GameControllerImpl implements GameController, ChatController{
 
     @Override
     public synchronized void addChatObserver(String playername, NetworkChatObserver networkChatObserver) {
-        networkChatObserver.setChatModel(chatModel);
         chatModel.addChatObserver(networkChatObserver);
     }
 }

@@ -10,7 +10,6 @@ import it.polimi.myshelfie.utils.Observer;
 import java.rmi.RemoteException;
 
 public class NetworkGameObserver extends NetworkObserver implements Observer<GameEvent, GameModelView> {
-    private GameModel gameModel;
     public NetworkGameObserver(Client client){
         this.client = client;
     }
@@ -24,9 +23,5 @@ public class NetworkGameObserver extends NetworkObserver implements Observer<Gam
             } catch (RemoteException ignored) {
             }
         }).start();
-    }
-
-    public void setGameModel(GameModel gameModel) {
-        this.gameModel = gameModel;
     }
 }

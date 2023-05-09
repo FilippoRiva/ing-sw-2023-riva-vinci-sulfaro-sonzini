@@ -10,12 +10,8 @@ import it.polimi.myshelfie.utils.Observer;
 import java.rmi.RemoteException;
 
 public class NetworkExceptionsObserver extends NetworkObserver implements Observer<ExceptionEvent, ClientExceptionsNotifierView> {
-    ClientExceptionsNotifier exceptionsNotifier;
     public NetworkExceptionsObserver(Client client){
         this.client = client;
-    }
-    public void setExceptionsNotifier(ClientExceptionsNotifier exceptionsNotifier) {
-        this.exceptionsNotifier = exceptionsNotifier;
     }
 
     @Override
@@ -23,7 +19,7 @@ public class NetworkExceptionsObserver extends NetworkObserver implements Observ
         if(evt==null) return;
         new Thread(()->{
             try {
-                client.send(new NetworkMessage(evt,exceptionsNotifier.getClientExceptionNotifierView()));
+                client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
             } catch (RemoteException ignored) {
             }
         }).start();
