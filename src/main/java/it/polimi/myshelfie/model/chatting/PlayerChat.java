@@ -2,11 +2,12 @@ package it.polimi.myshelfie.model.chatting;
 
 
 import it.polimi.myshelfie.model.events.ChatEvent;
+import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import it.polimi.myshelfie.utils.Observable;
 
 import java.util.ArrayList;
 
-public class PlayerChat extends Observable<ChatEvent> {
+public class PlayerChat extends Observable<ChatEvent, PlayerChatModelView> {
     private final ArrayList<Message> messages;
     private final String player;
 
@@ -26,7 +27,7 @@ public class PlayerChat extends Observable<ChatEvent> {
     public void addMessage (Message message){
         messages.add(message);
         setChanged();
-        notifyObservers(ChatEvent.NEW_MESSAGE);
+        notifyObservers(ChatEvent.NEW_MESSAGE, new PlayerChatModelView(this));
     }
 
     /**

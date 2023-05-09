@@ -42,7 +42,7 @@ public class ClientApp {
         }
         ViewBuffer viewBuffer = new ViewBuffer();
         List<String> inputParameters = new ArrayList<>();
-        Observer<ViewUpdate> view;
+        Observer<ViewUpdate, NetworkMessage> view;
         if(viewChoice == 1) view = new TextualUI(viewBuffer,inputParameters);
         else view = new GraphicalUI();
         viewBuffer.addUI(view);

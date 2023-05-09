@@ -17,7 +17,7 @@ import it.polimi.myshelfie.view.ViewUpdate;
 
 import java.util.*;
 
-public class AutoPlayer implements Observer<ViewUpdate> {
+public class AutoPlayer implements Observer<ViewUpdate, NetworkMessage> {
     private final ViewBuffer viewBuffer;
     private final TextualUI UI;
     private boolean owner;
@@ -50,7 +50,7 @@ public class AutoPlayer implements Observer<ViewUpdate> {
 
 
     @Override
-    public synchronized void update(ViewUpdate evt) {
+    public synchronized void update(ViewUpdate evt, NetworkMessage unused) {
         if(finished) return;
         if(evt==null) return;
         ViewType vt = viewBuffer.getViewType();
@@ -66,15 +66,15 @@ public class AutoPlayer implements Observer<ViewUpdate> {
                 case GAME_UPDATE -> {
                     if (vt != ViewType.GAME) return;
                     FullGameModelView gmv = viewBuffer.getGameModelView();
-                    if (!gmv.getCurrentPlayer().equals(username)) return;
+                    if (!gmv.getCurrentPlayerName().equals(username)) return;
                     switch (gmv.getCurrentState()) {
-                        case DRAW, LASTDRAW -> draw(gmv);
-                        case ORGANIZE, LASTORGANIZE -> organize(gmv);
-                        case INSERT, LASTINSERT -> insert(gmv);
+                        case DRAW, LAST_DRAW -> draw(gmv);
+                        case ORGANIZE, LAST_ORGANIZE -> organize(gmv);
+                        case INSERT, LAST_INSERT -> insert(gmv);
                         case WIN -> finished = true;
                     }
                 }
-                case VIEWTYPE_UPDATE -> {
+                case VIEW_TYPE_UPDATE -> {
                     if (Objects.requireNonNull(vt) == ViewType.LOBBY) {
                         if (owner) {
                             viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, new GameConfig(numPlayers)));

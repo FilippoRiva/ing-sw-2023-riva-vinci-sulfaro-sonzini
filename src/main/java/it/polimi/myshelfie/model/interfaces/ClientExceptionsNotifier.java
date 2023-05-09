@@ -15,13 +15,13 @@ public interface ClientExceptionsNotifier {
      * Add an exception observer.
      * @param obs is the observer to add.
      */
-    void addExceptionsObserver(Observer<ExceptionEvent> obs);
+    void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs);
 
     /**
      * Removes an exception observer.
      * @param obs the observer to remove
      */
-    void removeExceptionsObserver(Observer<ExceptionEvent> obs);
+    void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs);
 
     /**
      *

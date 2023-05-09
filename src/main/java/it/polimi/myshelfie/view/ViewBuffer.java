@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class ViewBuffer extends View {
-    Observable<ViewUpdate> UINotifier;
+    Observable<ViewUpdate, NetworkMessage> UINotifier;
     Queue<NetworkMessage> networkMessages;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
@@ -26,35 +26,35 @@ public class ViewBuffer extends View {
         if(networkMessage ==null) return;
         networkMessages.add(networkMessage);
         setChanged();
-        notifyObservers((ViewEvent) networkMessage.getEvent());
+        notifyObservers((ViewEvent) networkMessage.getEvent(), null);
     }
 
     @Override
     public synchronized void setModelView(ModelView modelView) {
         this.modelView = modelView;
         UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE);
+        UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE, null);
     }
 
     @Override
     public synchronized void setExceptionView(ClientExceptionsNotifierView exceptionView) {
         this.clientExceptionsNotifierView = exceptionView;
         UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE);
+        UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
     }
 
     @Override
     public synchronized void setChatView(PlayerChatModelView chatView) {
         this.playerChatModelView = chatView;
         UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE);
+        UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE, null);
     }
 
     @Override
     public synchronized void setLobbyModelView(LobbyModelView lobbyModelView) {
         this.lobbyModelView = lobbyModelView;
         UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE);
+        UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE, null);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ViewBuffer extends View {
     public synchronized void setView(ViewType viewType) {
         this.viewType = viewType;
         UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.VIEWTYPE_UPDATE);
+        UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);
     }
 
     @Override
@@ -76,11 +76,11 @@ public class ViewBuffer extends View {
         return networkMessages.poll();
     }
 
-    public synchronized void addUI(Observer<ViewUpdate> o) {
+    public synchronized void addUI(Observer<ViewUpdate, NetworkMessage> o) {
         UINotifier.addObserver(o);
     }
 
-    public synchronized void removeUI(Observer<ViewUpdate> o ){
+    public synchronized void removeUI(Observer<ViewUpdate, NetworkMessage> o ){
         UINotifier.deleteObserver(o);
     }
 

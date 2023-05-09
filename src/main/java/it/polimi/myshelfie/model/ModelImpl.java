@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ModelImpl extends Observable<ModelEvent> implements Model {
+public class ModelImpl extends Observable<ModelEvent, ModelView> implements Model {
     private final HashMap<String, Game> lobbiesModel = new HashMap<>();
 
     public ModelImpl(){
@@ -41,7 +41,7 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
         Game lobbyModel = new Game(lobbyName);
         lobbiesModel.put(lobbyName, lobbyModel);
         setChanged();
-        notifyObservers(ModelEvent.LOBBY_ADD);
+        notifyObservers(ModelEvent.LOBBY_ADD, new ModelView(this));
         return lobbyModel;
     }
 
@@ -54,18 +54,18 @@ public class ModelImpl extends Observable<ModelEvent> implements Model {
         if(!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistanceException(false, lobbyName);
         lobbiesModel.remove(lobbyName);
         setChanged();
-        notifyObservers(ModelEvent.LOBBY_REMOVE);
+        notifyObservers(ModelEvent.LOBBY_REMOVE, new ModelView(this));
     }
 
     @Override
-    public void addModelObserver(Observer<ModelEvent> obs) {
+    public void addModelObserver(Observer<ModelEvent, ModelView> obs) {
         addObserver(obs);
         setChanged();
         notifyObservers();
     }
 
     @Override
-    public void removeModelObserver(Observer<ModelEvent> obs) {
+    public void removeModelObserver(Observer<ModelEvent, ModelView> obs) {
         deleteObserver(obs);
     }
 

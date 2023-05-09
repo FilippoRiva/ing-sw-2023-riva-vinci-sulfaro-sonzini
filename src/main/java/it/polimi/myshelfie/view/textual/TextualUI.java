@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewType;
@@ -9,7 +10,7 @@ import it.polimi.myshelfie.view.textual.pages.*;
 
 import java.util.List;
 
-public class TextualUI implements Observer<ViewUpdate> {
+public class TextualUI implements Observer<ViewUpdate, NetworkMessage> {
     ViewBuffer viewBuffer;
     Terminal t;
     String myUsername;
@@ -33,7 +34,7 @@ public class TextualUI implements Observer<ViewUpdate> {
      * @param evt the ViewUpdate event passed by the ViewBuffer
      */
     @Override
-    public void update(ViewUpdate evt) {
+    public void update(ViewUpdate evt, NetworkMessage unused) {
         switch (evt) {
             case MODEL_UPDATE -> new Thread(this::initUpdate).start();
             case EXCEPTION_UPDATE -> new Thread(this::printException).start();

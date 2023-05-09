@@ -9,8 +9,7 @@ import it.polimi.myshelfie.model.goals.*;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
-import it.polimi.myshelfie.model.modelviews.FullGameModelView;
-import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.model.events.GameEvent;
 import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
@@ -20,8 +19,8 @@ import java.util.*;
 
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
-    private final it.polimi.myshelfie.utils.Observable<LobbyEvent> lobbyObservable;
-    private final it.polimi.myshelfie.utils.Observable<GameEvent> gameObservable;
+    private final it.polimi.myshelfie.utils.Observable<LobbyEvent, LobbyModelView> lobbyObservable;
+    private final it.polimi.myshelfie.utils.Observable<GameEvent, GameModelView> gameObservable;
     private Player currentPlayer;
     private GameState currentState;
     private final ChatSystem chatSystem;
@@ -51,7 +50,7 @@ public class Game implements GameModel, LobbyModel {
         if(gameConfig.getNumPlayers()< players.size()) throw new InvalidParameterException("too few players");
         this.gameConfig = gameConfig;
         lobbyObservable.setChanged();
-        lobbyObservable.notifyObservers(LobbyEvent.NEW_CONFIG);
+        lobbyObservable.notifyObservers(LobbyEvent.NEW_CONFIG, getLobbyModelView());
     }
 
     @Override
@@ -61,7 +60,7 @@ public class Game implements GameModel, LobbyModel {
         if(players.size()==0) roomOwner = playerName;
         players.add(new Player(playerName));
         lobbyObservable.setChanged();
-        lobbyObservable.notifyObservers(LobbyEvent.PLAYER_ADD);
+        lobbyObservable.notifyObservers(LobbyEvent.PLAYER_ADD, getLobbyModelView());
         chatSystem.addPlayerToChat(playerName);
     }
 
@@ -96,7 +95,7 @@ public class Game implements GameModel, LobbyModel {
                 players.remove(p);
                 if(p.getName().equals(roomOwner) && players.size()!=0) roomOwner = players.get(0).getName();
                 lobbyObservable.setChanged();
-                lobbyObservable.notifyObservers(LobbyEvent.PLAYER_REMOVE);
+                lobbyObservable.notifyObservers(LobbyEvent.PLAYER_REMOVE, getLobbyModelView());
                 return;
             }
         }
@@ -111,7 +110,6 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void initialize() throws LobbyFullException{
-        //TODO check that who's starting the game is the lobby creator
         if(!isLobbyFull()) throw new LobbyFullException(false);
         Collections.shuffle(players);
         currentPlayer = players.get(0);
@@ -181,11 +179,11 @@ public class Game implements GameModel, LobbyModel {
         else {
             gameObservable.setChanged();
             switch (state){
-                case DRAW, LASTDRAW -> gameObservable.notifyObservers(GameEvent.COUNTINGPOINTS);
-                case ORGANIZE, LASTORGANIZE -> gameObservable.notifyObservers(GameEvent.DRAW);
-                case INSERT, LASTINSERT -> gameObservable.notifyObservers(GameEvent.ORGANIZE);
-                case COUNTINGPOINTS, LASTCOUNTINGPOINTS -> gameObservable.notifyObservers(GameEvent.INSERT);
-                case WIN -> gameObservable.notifyObservers(GameEvent.WIN);
+                case DRAW, LAST_DRAW -> gameObservable.notifyObservers(GameEvent.COUNTING_POINTS, new EndTurnModelView(this));
+                case ORGANIZE, LAST_ORGANIZE -> gameObservable.notifyObservers(GameEvent.DRAW, new DrawModelView(this));
+                case INSERT, LAST_INSERT -> gameObservable.notifyObservers(GameEvent.ORGANIZE, new OrganizeModelView(this));
+                case COUNTING_POINTS, LAST_COUNTING_POINTS -> gameObservable.notifyObservers(GameEvent.INSERT, new InsertModelView(this));
+                case WIN -> gameObservable.notifyObservers(GameEvent.WIN,new FullGameModelView(this));
             }
         }
     }
@@ -375,14 +373,14 @@ public class Game implements GameModel, LobbyModel {
         return lobbyName;
     }
     @Override
-    public void addGameObserver(Observer<GameEvent> obs) {
+    public void addGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.addObserver(obs);
         gameObservable.setChanged();
         gameObservable.notifyObservers();
     }
 
     @Override
-    public void removeGameObserver(Observer<GameEvent> obs) {
+    public void removeGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.deleteObserver(obs);
     }
 
@@ -392,14 +390,14 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addLobbyObserver(Observer<LobbyEvent> obs) {
+    public void addLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.addObserver(obs);
         lobbyObservable.setChanged();
         lobbyObservable.notifyObservers();
     }
 
     @Override
-    public void removeLobbyObserver(Observer<LobbyEvent> obs) {
+    public void removeLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.deleteObserver(obs);
     }
 

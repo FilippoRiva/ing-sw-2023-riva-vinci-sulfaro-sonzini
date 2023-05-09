@@ -5,8 +5,7 @@ import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 
-
-public abstract class View extends Observable<ViewEvent>{
+public abstract class View extends Observable<ViewEvent, NetworkMessage>{
 
     public abstract void setModelView(ModelView modelView);
     public abstract void setExceptionView(ClientExceptionsNotifierView exceptionView);
