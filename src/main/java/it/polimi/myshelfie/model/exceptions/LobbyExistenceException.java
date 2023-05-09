@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.model.exceptions;
 
-public class LobbyExistanceException extends Exception{
+public class LobbyExistenceException extends Exception{
     private final String message;
 
     @Override
@@ -8,7 +8,7 @@ public class LobbyExistanceException extends Exception{
         return message;
     }
 
-    public LobbyExistanceException(boolean exists, String lobbyName){
+    public LobbyExistenceException(boolean exists, String lobbyName){
         if(exists) this.message = "this lobby already exists: " + lobbyName;
         else this.message = "this lobby does not exists: " + lobbyName;
     }

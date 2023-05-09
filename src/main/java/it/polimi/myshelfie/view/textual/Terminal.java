@@ -20,7 +20,7 @@ public class Terminal {
     public final int INPUT_COLUMN = 15;
     public final int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
     public final int EXCEPTION_LINE= ACTION_LINE+1;
-    public final int INFOPOS = 41;
+    public final int INFO_POS = 41;
     public final String[] title =
             {"  __  __          _____ _          _  __ _      \n",
             " |  \\/  |        / ____| |        | |/ _(_)     \n",
@@ -123,7 +123,7 @@ public class Terminal {
     }
 
     public void printInInfoTable(String info,int pos){
-        println(info,pos,INFOPOS);
+        println(info,pos, INFO_POS);
         moveToInput();
     }
 

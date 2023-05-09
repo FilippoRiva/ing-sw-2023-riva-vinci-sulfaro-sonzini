@@ -6,5 +6,5 @@ public enum ViewUpdate {
     CHAT_UPDATE,
     LOBBY_UPDATE,
     GAME_UPDATE,
-    VIEWTYPE_UPDATE
+    VIEW_TYPE_UPDATE
 }

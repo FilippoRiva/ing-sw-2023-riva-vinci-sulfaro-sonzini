@@ -41,7 +41,7 @@ public class TextualUI implements Observer<ViewUpdate, NetworkMessage> {
             case CHAT_UPDATE -> new Thread(this::chatUpdate).start();
             case LOBBY_UPDATE -> new Thread(this::lobbyUpdate).start();
             case GAME_UPDATE -> new Thread(this::gameUpdate).start();
-            case VIEWTYPE_UPDATE -> new Thread(this::updateViewType).start();
+            case VIEW_TYPE_UPDATE -> new Thread(this::updateViewType).start();
         }
     }
 

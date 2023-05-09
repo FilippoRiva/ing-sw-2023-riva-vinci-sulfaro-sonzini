@@ -66,32 +66,16 @@ public class PersonalGoal {
                 }
             }
         }
-        switch (verifiedCount){
-            case 0 ->{
-                return 0;
-            }
-            case 1 -> {
-                return 1;
-            }
-            case 2 -> {
-                return 2;
-            }
-            case 3 -> {
-                return 4;
-            }
-            case 4 -> {
-                return 6;
-            }
-            case 5 -> {
-                return 9;
-            }
-            case 6 -> {
-                return 12;
-            }
-            default -> {
-                return 12 + (verifiedCount-6)*3; // each tile match after 6 gives 3 points
-            }
-        }
+        return switch (verifiedCount){
+            case 0 -> 0;
+            case 1 -> 1;
+            case 2 -> 2;
+            case 3 -> 4;
+            case 4 -> 6;
+            case 5 -> 9;
+            case 6 -> 12;
+            default ->  12 + (verifiedCount-6)*3; // each tile match after 6 gives 3 points
+        };
     }
 
     /**

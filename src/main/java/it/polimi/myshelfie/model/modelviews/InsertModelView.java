@@ -10,7 +10,7 @@ import java.util.List;
 public class InsertModelView implements Serializable, GameModelView {
     private final String currentPlayer;
     private final GameState currentState;
-    //todo rimuovere queste tiles perchè sono sempre vuote e farle togliere alla view quando arriva questo messaggio
+    //TODO rimuovere queste tiles perchè sono sempre vuote e farle togliere alla view quando arriva questo messaggio
     final private List<ItemTile> takenTiles;
     private final ItemTile[][] bookshelf;
 

@@ -19,7 +19,7 @@ public class CLIInputReader {
 
     private void read(){
         while(on){
-            String input="";
+            String input;
             try {
                 input = in.readLine();
             } catch (IOException e) {

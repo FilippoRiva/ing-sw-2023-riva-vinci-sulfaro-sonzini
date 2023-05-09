@@ -54,7 +54,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
         MessageType messageType = networkMessage.getMessageType();
-        if(messageType!=MessageType.VIEWMESSAGE) return;
+        if(messageType!=MessageType.VIEW_MESSAGE) return;
         ViewEvent viewEvent = (ViewEvent) networkMessage.getEvent();
         List<Object> args = networkMessage.getParameters();
         new Thread(()->{

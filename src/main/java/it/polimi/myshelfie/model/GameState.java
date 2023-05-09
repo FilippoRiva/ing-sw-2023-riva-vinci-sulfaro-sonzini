@@ -4,14 +4,15 @@ import java.io.Serializable;
 
 public enum GameState implements Serializable {
     LOBBY,
+    FIRST_DRAW,
     DRAW,
     ORGANIZE,
     INSERT,
-    COUNTINGPOINTS,
+    COUNTING_POINTS,
     REFILL,
-    LASTDRAW,
-    LASTORGANIZE,
-    LASTINSERT,
-    LASTCOUNTINGPOINTS,
+    LAST_DRAW,
+    LAST_ORGANIZE,
+    LAST_INSERT,
+    LAST_COUNTING_POINTS,
     WIN
 }

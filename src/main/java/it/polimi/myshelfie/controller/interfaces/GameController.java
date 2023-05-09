@@ -2,8 +2,6 @@ package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
-import it.polimi.myshelfie.network.Client;
-import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.network.observers.NetworkGameObserver;
 
 
@@ -13,7 +11,7 @@ public interface GameController {
 
     /**
      *
-     * @param positions are the positions of the tiles the player wants to select forn the board
+     * @param positions are the positions of the tiles the player wants to select from the board
      * @param playerName is the player playing
      */
     void drawTiles(List<Position> positions, String playerName);

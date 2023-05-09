@@ -11,7 +11,7 @@ public class ItemTile implements Serializable {
     }
 
     /**
-     * Id is used to identify a certain ItemTile of a specific ItemTileType.
+     * id is used to identify a certain ItemTile of a specific ItemTileType.
      * @return the number of the tile.
      */
     public int getId() {

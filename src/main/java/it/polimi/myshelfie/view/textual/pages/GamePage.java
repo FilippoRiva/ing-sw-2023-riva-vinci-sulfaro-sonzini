@@ -34,13 +34,13 @@ public class GamePage extends ScreenPage{
         t.printVerticalDivider(27, 30, 7);
         printGameInfo(fullGameModelView);
         t.printBookshelf(fullGameModelView.getPlayer(currentLibraryOwner).getBookshelf(),currentLibraryOwner,27,36);
-        if(!fullGameModelView.getCurrentPlayer().equals(myUsername)) {
+        if(!fullGameModelView.getCurrentPlayerName().equals(myUsername)) {
             t.printAction("help, chat");
         } else {
             switch (fullGameModelView.getCurrentState()){
-                case DRAW,LASTDRAW -> t.printAction("help, chat, d <args>");
-                case ORGANIZE,LASTORGANIZE -> t.printAction("help, chat, o <args>");
-                case INSERT,LASTINSERT -> t.printAction("help, chat, i <column>");
+                case DRAW, LAST_DRAW -> t.printAction("help, chat, d <args>");
+                case ORGANIZE, LAST_ORGANIZE -> t.printAction("help, chat, o <args>");
+                case INSERT, LAST_INSERT -> t.printAction("help, chat, i <column>");
             }
         }
         printBorder();
@@ -50,7 +50,7 @@ public class GamePage extends ScreenPage{
         int pos = 1;
         t.printInInfoTable("Phase : " + ANSI.BLUE_FG+ fullGameModelView.getCurrentState()+ANSI.RESET, pos);
         pos++;
-        t.printInInfoTable("Playing : "+ fullGameModelView.getCurrentPlayer(), pos);
+        t.printInInfoTable("Playing : "+ fullGameModelView.getCurrentPlayerName(), pos);
         pos += 4;
         int idx = 1;
         for (PlayerModelView p : fullGameModelView.getPlayers()) {
@@ -62,16 +62,16 @@ public class GamePage extends ScreenPage{
             idx++;
             pos++;
         }
-        if(fullGameModelView.getCurrentPlayer().equals(myUsername)) {
+        if(fullGameModelView.getCurrentPlayerName().equals(myUsername)) {
             List<ItemTile> takenTiles = fullGameModelView.getPlayer(myUsername).getTakenTiles();
             if (takenTiles.size() != 0) {
                 t.printInInfoTable("Taken Tiles :", 14);
                 t.printTakenTiles(takenTiles, 16, 43, fullGameModelView.getCurrentState() == GameState.ORGANIZE);
             }
         } else {
-            List<ItemTile> currenPlayerTakenTiles = fullGameModelView.getPlayer(fullGameModelView.getCurrentPlayer()).getTakenTiles();
+            List<ItemTile> currenPlayerTakenTiles = fullGameModelView.getPlayer(fullGameModelView.getCurrentPlayerName()).getTakenTiles();
             if(currenPlayerTakenTiles.size() != 0){
-                t.printInInfoTable(fullGameModelView.getCurrentPlayer()+" taken tiles :",14);
+                t.printInInfoTable(fullGameModelView.getCurrentPlayerName()+" taken tiles :",14);
                 t. printTakenTiles(currenPlayerTakenTiles, 16, 43, false);
             }
         }

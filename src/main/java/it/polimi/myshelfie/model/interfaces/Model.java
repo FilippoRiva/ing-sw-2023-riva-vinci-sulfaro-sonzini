@@ -4,22 +4,22 @@ import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observer;
 
-import it.polimi.myshelfie.model.exceptions.LobbyExistanceException;
+import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
 
 public interface Model {
     /**
      * Adds a lobbyName to this list.
-     * @param lobbyName the lobby name.
-     * @throws Exception if lobbyName is not available.
+     * @param lobbyName the lobby name
+     * @throws LobbyExistenceException if the name of the lobby you want to add already exists.
      */
-    LobbyModel addLobby(String lobbyName) throws LobbyExistanceException;
+    LobbyModel addLobby(String lobbyName) throws LobbyExistenceException;
 
     /**
      * Removes a lobby from the list and notifies the observers.
      * @param lobbyName is the name of the lobby.
-     * @throws LobbyExistanceException if the lobby that has to be removed does not exist.
+     * @throws LobbyExistenceException if the lobby that has to be removed does not exist.
      */
-    void removeLobby(String lobbyName) throws LobbyExistanceException;
+    void removeLobby(String lobbyName) throws LobbyExistenceException;
 
     /**
      * Add a model observer.

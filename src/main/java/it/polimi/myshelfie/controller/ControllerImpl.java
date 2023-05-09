@@ -3,7 +3,7 @@ package it.polimi.myshelfie.controller;
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
-import it.polimi.myshelfie.model.exceptions.LobbyExistanceException;
+import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
@@ -43,7 +43,7 @@ public class ControllerImpl implements Controller {
         LobbyModel lobbyModel;
         try {
             lobbyModel = model.addLobby(lobbyName);
-        } catch (LobbyExistanceException e) {
+        } catch (LobbyExistenceException e) {
             clientExceptionsNotifiers.get(client).notifyException(e);
             return null;
         }
@@ -87,7 +87,7 @@ public class ControllerImpl implements Controller {
                 return null;
             }
         } else {
-            clientExceptionsNotifiers.get(client).notifyException(new LobbyExistanceException(false, lobbyName));
+            clientExceptionsNotifiers.get(client).notifyException(new LobbyExistenceException(false, lobbyName));
             return null;
         }
         new Thread(()-> {
@@ -139,7 +139,7 @@ public class ControllerImpl implements Controller {
         gamesControllers.remove(lobbyName);
         try {
             model.removeLobby(lobbyName);
-        } catch (LobbyExistanceException e) {
+        } catch (LobbyExistenceException e) {
             throw new RuntimeException(e);
         }
     }

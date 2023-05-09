@@ -19,41 +19,41 @@ public class NetworkMessage implements Serializable {
     List<Object> parameters;
 
     public NetworkMessage(ViewType viewType){
-        this.messageType = MessageType.SELECTVIEWMESSAGE;
+        this.messageType = MessageType.SELECT_VIEW_MESSAGE;
         this.event = null;
         this.parameters = new ArrayList<>();
         this.parameters.add(viewType);
     }
     public NetworkMessage(ViewEvent evt, GameConfig gameConfig) throws InvalidParameterException {
         if(evt != ViewEvent.CONFIG_REQUEST) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.VIEWMESSAGE;
+        this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(gameConfig);
     }
     public NetworkMessage(ViewEvent evt, int column) throws InvalidParameterException {
         if(evt!=ViewEvent.INSERT_REQUEST) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.VIEWMESSAGE;
+        this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(column);
     }
     public NetworkMessage(ViewEvent evt, List<?> positionsOrOrderedTiles) throws InvalidParameterException {
         if(evt!=ViewEvent.DRAW_REQUEST && evt!=ViewEvent.ORGANIZE_REQUEST) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.VIEWMESSAGE;
+        this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(positionsOrOrderedTiles);
     }
     public NetworkMessage(ViewEvent evt) throws InvalidParameterException {
         if(evt!=ViewEvent.START_REQUEST && evt!= ViewEvent.EXIT_REQUEST) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.VIEWMESSAGE;
+        this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
     }
     public NetworkMessage(ViewEvent evt, String playerName, String lobby) throws InvalidParameterException {
         if((evt!=ViewEvent.JOIN_REQUEST && evt!=ViewEvent.CREATE_REQUEST)|| playerName==null || lobby == null ) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.VIEWMESSAGE;
+        this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(playerName);
@@ -61,70 +61,39 @@ public class NetworkMessage implements Serializable {
     }
     public NetworkMessage(ViewEvent evt, Message message) throws InvalidParameterException{
         if(evt!=ViewEvent.MESSAGE_SEND) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.VIEWMESSAGE;
+        this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(message);
     }
     public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView){
-        this.messageType = MessageType.LOBBYMESSAGE;
+        this.messageType = MessageType.LOBBY_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(lobbyModelView);
     }
-    public NetworkMessage(GameEvent evt, FullGameModelView fullGameModelView){
-        this.messageType = MessageType.GAMEMESSAGE;
+    public NetworkMessage(GameEvent evt, GameModelView gameModelView){
+        this.messageType = MessageType.GAME_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
-        this.parameters.add(fullGameModelView);
+        this.parameters.add(gameModelView);
     }
 
-    public NetworkMessage(GameEvent evt, DrawModelView drawModelView) throws InvalidParameterException {
-        if(evt!=GameEvent.DRAW) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.GAMEMESSAGE;
-        this.event = evt;
-        this.parameters = new ArrayList<>();
-        this.parameters.add(drawModelView);
-    }
-
-    public NetworkMessage(GameEvent evt, OrganizeModelView organizeModelView) throws InvalidParameterException {
-        if(evt!=GameEvent.ORGANIZE) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.GAMEMESSAGE;
-        this.event = evt;
-        this.parameters = new ArrayList<>();
-        this.parameters.add(organizeModelView);
-    }
-
-    public NetworkMessage(GameEvent evt, InsertModelView insertModelView) throws InvalidParameterException {
-        if(evt!=GameEvent.INSERT) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.GAMEMESSAGE;
-        this.event = evt;
-        this.parameters = new ArrayList<>();
-        this.parameters.add(insertModelView);
-    }
-
-    public NetworkMessage(GameEvent evt, EndTurnModelView endTurnModelView) throws InvalidParameterException {
-        if(evt!=GameEvent.COUNTINGPOINTS) throw new InvalidParameterException("wrong event");
-        this.messageType = MessageType.GAMEMESSAGE;
-        this.event = evt;
-        this.parameters = new ArrayList<>();
-        this.parameters.add(endTurnModelView);
-    }
     public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierView exceptionsNotifierView){
-        this.messageType = MessageType.EXCEPTIONMESSAGE;
+        this.messageType = MessageType.EXCEPTION_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(exceptionsNotifierView);
     }
     public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView){
-        this.messageType = MessageType.CHATMESSAGE;
+        this.messageType = MessageType.CHAT_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(chatModelView);
     }
 
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
-        this.messageType = MessageType.MODELMESSAGE;
+        this.messageType = MessageType.MODEL_MESSAGE;
         this.event = evt;
         this.parameters = new ArrayList<>();
         this.parameters.add(modelView);

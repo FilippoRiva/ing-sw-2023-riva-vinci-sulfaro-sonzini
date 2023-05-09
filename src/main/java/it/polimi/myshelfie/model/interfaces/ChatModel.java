@@ -25,7 +25,7 @@ public interface ChatModel {
 
     /**
      * Returns the chat view associated to that player.
-     * @param playerName is the name of the player whose view i want.
+     * @param playerName is the name of the player whose view I want.
      * @return this player chat view.
      */
     PlayerChatModelView getChatModelView(String playerName);
