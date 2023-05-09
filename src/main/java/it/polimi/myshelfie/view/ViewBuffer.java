@@ -61,7 +61,28 @@ public class ViewBuffer extends View {
     public synchronized void setGameModelView(FullGameModelView fullGameModelView) {
         this.fullGameModelView = fullGameModelView;
         UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE);
+        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+    }
+
+    @Override
+    public void updateDrawView(DrawModelView drawModelView) {
+        fullGameModelView.setCurrentPlayer(drawModelView.getCurrentPlayer());
+        fullGameModelView.setCurrentState(drawModelView.getCurrentState());
+        fullGameModelView.setLivingRoom(drawModelView.getLivingRoom());
+        fullGameModelView.getCurrentPlayer().setTakenTiles(drawModelView.getTakenTiles());
+
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+    }
+
+    @Override
+    public void updateTurnView(EndTurnModelView endTurnModelView) {
+        //TODO
+    }
+
+    @Override
+    public void updateBookshelfView(InsertModelView insertModelView) {
+        //TODO
     }
 
     @Override

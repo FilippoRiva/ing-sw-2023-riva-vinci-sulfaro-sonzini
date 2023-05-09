@@ -48,11 +48,11 @@ public class GameControllerImpl implements GameController, ChatController{
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) {
         GameState currentGameState = gameModel.getState();
-        if(currentGameState != GameState.DRAW && currentGameState != GameState.LASTDRAW) return;
+        if(currentGameState != GameState.DRAW && currentGameState != GameState.LAST_DRAW) return;
         try {
             gameModel.drawTiles(positions, playerName);
             if(gameModel.getState()==GameState.DRAW) gameModel.setState(GameState.ORGANIZE);
-            else gameModel.setState(GameState.LASTORGANIZE);
+            else gameModel.setState(GameState.LAST_ORGANIZE);
         } catch (InvalidParameterException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
@@ -61,11 +61,11 @@ public class GameControllerImpl implements GameController, ChatController{
     @Override
     public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
         GameState currentGameState = gameModel.getState();
-        if(currentGameState != GameState.ORGANIZE && currentGameState != GameState.LASTORGANIZE) return;
+        if(currentGameState != GameState.ORGANIZE && currentGameState != GameState.LAST_ORGANIZE) return;
         try {
             gameModel.orderChosenTiles(orderedTiles, playerName);
             if(currentGameState==GameState.ORGANIZE) gameModel.setState(GameState.INSERT);
-            else gameModel.setState(GameState.LASTINSERT);
+            else gameModel.setState(GameState.LAST_INSERT);
         } catch (InvalidParameterException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
@@ -74,16 +74,16 @@ public class GameControllerImpl implements GameController, ChatController{
     @Override
     public synchronized void insertTiles(String playerName, int column) {
         GameState currentGameState = gameModel.getState();
-        if(currentGameState != GameState.INSERT && currentGameState != GameState.LASTINSERT) return;
+        if(currentGameState != GameState.INSERT && currentGameState != GameState.LAST_INSERT) return;
         try {
             gameModel.insertTiles(playerName, column);
-            if(currentGameState == GameState.INSERT) gameModel.setState(GameState.COUNTINGPOINTS);
-            else gameModel.setState(GameState.LASTCOUNTINGPOINTS);
+            if(currentGameState == GameState.INSERT) gameModel.setState(GameState.COUNTING_POINTS);
+            else gameModel.setState(GameState.LAST_COUNTING_POINTS);
         } catch (InvalidParameterException | FullColumnException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
             return;
         }
-        if(gameModel.isBookshelfFull(playerName) || gameModel.getState() == GameState.LASTCOUNTINGPOINTS){
+        if(gameModel.isBookshelfFull(playerName) || gameModel.getState() == GameState.LAST_COUNTING_POINTS){
             if(gameModel.isLastPlayer(playerName)){
                 gameModel.calculateWinResults();
                 gameModel.setState(GameState.WIN);
@@ -109,8 +109,8 @@ public class GameControllerImpl implements GameController, ChatController{
         gameModel.checkCommonGoal(playerName);
         gameModel.refillLivingRoom();
         gameModel.nextTurn();
-        if(gameModel.getState()==GameState.COUNTINGPOINTS) gameModel.setState(GameState.DRAW);
-        else gameModel.setState(GameState.LASTDRAW);
+        if(gameModel.getState()==GameState.COUNTING_POINTS) gameModel.setState(GameState.DRAW);
+        else gameModel.setState(GameState.LAST_DRAW);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class GameControllerImpl implements GameController, ChatController{
 
     @Override
     public void exitGame(String playerName) {
-        //TODO termine della partita per tutti i player o gestire le disconnessioni
+        //TODO
     }
 
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
@@ -140,7 +140,7 @@ public class GameControllerImpl implements GameController, ChatController{
                 throw new RuntimeException(e);
             }
         }
-        gameModel.setState(GameState.DRAW);
+        gameModel.setState(GameState.FIRST_DRAW);
     }
 
     @Override

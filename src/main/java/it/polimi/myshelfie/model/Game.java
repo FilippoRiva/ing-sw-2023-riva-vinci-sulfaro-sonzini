@@ -171,6 +171,12 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public void setState(GameState state) {
+        if(state==GameState.FIRST_DRAW) {
+            this.currentState = GameState.DRAW;
+            gameObservable.setChanged();
+            gameObservable.notifyObservers(GameEvent.GAME_START, new FullGameModelView(this));
+            return;
+        }
         this.currentState = state;
         if(state==GameState.LOBBY) {
             lobbyObservable.setChanged();

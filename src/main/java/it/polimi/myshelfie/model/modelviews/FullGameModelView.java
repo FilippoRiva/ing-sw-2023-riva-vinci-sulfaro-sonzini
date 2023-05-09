@@ -80,8 +80,14 @@ public class FullGameModelView implements Serializable, GameModelView {
      *
      * @return the name of the player playing.
      */
-    public String getCurrentPlayer(){
+    public String getCurrentPlayerName(){
         return currentPlayer;
+    }
+    public PlayerModelView getCurrentPlayer(){
+        for(PlayerModelView p : players){
+            if(p.getName().equals(currentPlayer)) return p;
+        }
+        return null;
     }
 
     /**

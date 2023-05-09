@@ -5,6 +5,6 @@ public enum GameEvent {
     DRAW,
     ORGANIZE,
     INSERT,
-    COUNTINGPOINTS,
+    COUNTING_POINTS,
     WIN
 }
