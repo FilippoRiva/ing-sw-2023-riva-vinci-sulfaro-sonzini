@@ -13,8 +13,8 @@ public abstract class View extends Observable<ViewEvent, NetworkMessage>{
     public abstract void setLobbyModelView(LobbyModelView lobbyModelView);
     public abstract void setGameModelView(FullGameModelView fullGameModelView);
     public abstract void updateDrawView(DrawModelView drawModelView);
+    public abstract void updateOrganizeView(OrganizeModelView organizeModelView);
+    public abstract void updateInsertView(InsertModelView insertModelView);
     public abstract void updateTurnView(EndTurnModelView endTurnModelView);
-    public abstract void updateBookshelfView(InsertModelView insertModelView);
     public abstract void setView(ViewType viewType);
-    public abstract NetworkMessage getMessage();
 }

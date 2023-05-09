@@ -6,12 +6,9 @@ import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class ViewBuffer extends View {
     Observable<ViewUpdate, NetworkMessage> UINotifier;
-    Queue<NetworkMessage> networkMessages;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
@@ -19,14 +16,12 @@ public class ViewBuffer extends View {
     FullGameModelView fullGameModelView;
     ViewType viewType;
     public ViewBuffer(){
-        this.networkMessages = new ArrayDeque<>();
         this.UINotifier = new Observable<>();
     }
     public synchronized void sendMessage(NetworkMessage networkMessage){
-        if(networkMessage ==null) return;
-        networkMessages.add(networkMessage);
+        if(networkMessage == null) return;
         setChanged();
-        notifyObservers((ViewEvent) networkMessage.getEvent(), null);
+        notifyObservers((ViewEvent) networkMessage.getEvent(), networkMessage);
     }
 
     @Override
@@ -76,12 +71,17 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public void updateTurnView(EndTurnModelView endTurnModelView) {
+    public void updateOrganizeView(OrganizeModelView organizeModelView) {
         //TODO
     }
 
     @Override
-    public void updateBookshelfView(InsertModelView insertModelView) {
+    public void updateInsertView(InsertModelView insertModelView) {
+        //TODO
+    }
+
+    @Override
+    public void updateTurnView(EndTurnModelView endTurnModelView) {
         //TODO
     }
 
@@ -90,11 +90,6 @@ public class ViewBuffer extends View {
         this.viewType = viewType;
         UINotifier.setChanged();
         UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);
-    }
-
-    @Override
-    public NetworkMessage getMessage() {
-        return networkMessages.poll();
     }
 
     public synchronized void addUI(Observer<ViewUpdate, NetworkMessage> o) {
