@@ -65,18 +65,16 @@ public class ServerApp {
                         while (true) {
                             clientSkeleton.receive(serverConnectionHandler);
                         }
-                    } catch (RemoteException e) {
+                    } catch (IOException e) {
                         System.err.println("Cannot receive from client. Closing this connection...");
-                    } catch (EOFException e) {
+                    } finally {
                         try {
+                            assert serverConnectionHandler != null;
                             serverConnectionHandler.close();
                         } catch (RemoteException ex) {
                             throw new RuntimeException("Unable to close client connection", ex);
                         }
                         System.out.println("Client Disconnected");
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } finally {
                         try {
                             socket.close();
                         } catch (IOException e) {
