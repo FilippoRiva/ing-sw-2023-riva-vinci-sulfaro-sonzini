@@ -54,6 +54,7 @@ public class ClientApp {
             throw new RuntimeException(e);
         }
         if(viewChoice==1) new Thread(()->new CLIInputReader(in, (TextualUI) view,viewBuffer,inputParameters)).start();
+        else ((GraphicalUI)view).startGUI();
     }
 
     private static void startRMIConnection(ViewBuffer viewBuffer) throws RemoteException {
