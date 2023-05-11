@@ -2,19 +2,21 @@ package it.polimi.myshelfie.controller;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.controller.interfaces.ChatController;
-import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.events.ChatEvent;
+import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
-import it.polimi.myshelfie.network.observers.NetworkChatObserver;
-import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
+import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.rmi.RemoteException;
@@ -29,8 +31,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     private final Map<String,Client> clientsMap;
     private final Map<String,ServerConnectionHandler> connectionHandlersMap;
     private final Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
-    private final Map<String,NetworkLobbyObserver> lobbyObserverMap;
-    private final Map<String,NetworkChatObserver> chatObserverMap;
+    private final Map<String,Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap;
+    private final Map<String,Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
     public LobbyControllerImpl(LobbyModel lobbyModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.lobbyModel = lobbyModel;
         this.chatModel = chatModel;
@@ -47,7 +49,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         try {
             lobbyModel.removePlayer(playerName);
             lobbyModel.removeLobbyObserver(lobbyObserverMap.get(playerName));
-            chatModel.removeChatObserver(chatObserverMap.get(playerName));
+            chatModel.removeChatObserver(playerName, chatObserverMap.get(playerName));
             new Thread(()->{
                 try {
                     clientsMap.get(playerName).send(new NetworkMessage(ViewType.INIT));
@@ -78,13 +80,13 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     @Override
-    public synchronized GameController startGame(String playerName){
+    public synchronized void startGame(String playerName){
         if(!lobbyModel.isRoomOwner(playerName)){
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
-            return null;
+            return;
         }
 
-        if(lobbyModel.hasStarted()) return null;
+        if(lobbyModel.hasStarted()) return;
         try {
             lobbyModel.initialize();
         }catch(LobbyFullException e){
@@ -103,11 +105,10 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             }).start();
             result.init(clientsMap, connectionHandlersMap, exceptionsNotifiersMap,lobbyObserverMap,chatObserverMap);
         }
-        return result;
     }
 
     @Override
-    public synchronized void addLobbyObserver(String playerName,NetworkLobbyObserver networkLobbyObserver) {
+    public synchronized void addLobbyObserver(String playerName,Observer<LobbyEvent, LobbyModelView> networkLobbyObserver) {
         lobbyModel.addLobbyObserver(networkLobbyObserver);
         lobbyObserverMap.put(playerName,networkLobbyObserver);
     }
@@ -118,8 +119,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     @Override
-    public synchronized void addChatObserver(String playerName,NetworkChatObserver networkChatObserver) {
-        chatModel.addChatObserver(networkChatObserver);
+    public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
+        chatModel.addChatObserver(playerName,networkChatObserver);
         chatObserverMap.put(playerName,networkChatObserver);
     }
 
@@ -128,11 +129,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     }
 
     public void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {
-        try {
-            lobbyModel.addPlayer(playerName);
-        } catch (LobbyFullException | InvalidParameterException e) {
-            throw e;
-        }
+        lobbyModel.addPlayer(playerName);
         clientsMap.put(playerName,client);
         connectionHandlersMap.put(playerName,connectionHandler);
         exceptionsNotifiersMap.put(playerName,exceptionsNotifier);

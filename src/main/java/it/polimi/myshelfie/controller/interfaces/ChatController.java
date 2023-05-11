@@ -1,7 +1,9 @@
 package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.chatting.Message;
-import it.polimi.myshelfie.network.observers.NetworkChatObserver;
+import it.polimi.myshelfie.model.events.ChatEvent;
+import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+import it.polimi.myshelfie.utils.Observer;
 
 public interface ChatController {
     /**
@@ -11,6 +13,6 @@ public interface ChatController {
      */
     void addMessage(Message message);
 
-    void addChatObserver(String playerName, NetworkChatObserver networkChatObserver);
+    void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> networkChatObserver);
 
 }

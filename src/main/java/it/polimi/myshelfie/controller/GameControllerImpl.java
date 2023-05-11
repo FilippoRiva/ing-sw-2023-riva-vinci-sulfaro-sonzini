@@ -6,17 +6,21 @@ import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.events.ChatEvent;
+import it.polimi.myshelfie.model.events.GameEvent;
+import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.GameModel;
+import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
-import it.polimi.myshelfie.network.observers.NetworkChatObserver;
-import it.polimi.myshelfie.network.observers.NetworkGameObserver;
-import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
+import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewType;
 
 
@@ -33,9 +37,9 @@ public class GameControllerImpl implements GameController, ChatController{
     private Map<String,Client> clientsMap;
     private Map<String,ServerConnectionHandler> connectionHandlersMap;
     private Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
-    private Map<String, NetworkLobbyObserver> lobbyObserverMap;
-    private Map<String, NetworkChatObserver> chatObserverMap;
-    private Map<String, NetworkGameObserver> gameObserverMap;
+    private Map<String, Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap;
+    private Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
+    private Map<String, Observer<GameEvent, GameModelView>> gameObserverMap;
 
     public GameControllerImpl(GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.gameModel = gameModel;
@@ -114,7 +118,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public synchronized void addGameObserver(NetworkGameObserver networkGameObserver) {
+    public synchronized void addGameObserver(Observer<GameEvent, GameModelView>networkGameObserver) {
         gameModel.addGameObserver(networkGameObserver);
     }
 
@@ -125,8 +129,8 @@ public class GameControllerImpl implements GameController, ChatController{
 
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
                      Map<String, ClientExceptionsNotifier> notifiersMap,
-                     Map<String, NetworkLobbyObserver> lobbyObserverMap,
-                     Map<String, NetworkChatObserver> chatObserverMap){
+                     Map<String, Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap,
+                     Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap){
         this.clientsMap = clientsMap;
         this.connectionHandlersMap = connectionHandlersMap;
         this.exceptionsNotifiersMap = notifiersMap;
@@ -148,7 +152,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public synchronized void addChatObserver(String playername, NetworkChatObserver networkChatObserver) {
-        chatModel.addChatObserver(networkChatObserver);
+    public synchronized void addChatObserver(String playername, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
+        chatModel.addChatObserver(playername,networkChatObserver);
     }
 }

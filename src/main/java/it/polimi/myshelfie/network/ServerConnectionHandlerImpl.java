@@ -5,7 +5,6 @@ import it.polimi.myshelfie.controller.interfaces.ChatController;
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
-import it.polimi.myshelfie.network.observers.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -23,19 +22,48 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
     public void start() throws RemoteException {
         client.handshake(this);
-        controller.addClient(client,new NetworkModelObserver(client),new NetworkExceptionsObserver(client));
+        controller.addClient(client, ((evt, modelView)-> new Thread(()->{
+            try {
+                client.send(new NetworkMessage(evt,modelView));
+            } catch (RemoteException ignored) {
+            }
+        }).start()), ((evt, clientExceptionsNotifierView)->{
+            if(evt==null) return;
+            new Thread(()->{
+                try {
+                    client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
+                } catch (RemoteException ignored) {
+                }
+            }).start();
+        }));
     }
 
     @Override
     public synchronized void setGameController(GameControllerImpl gameController) throws RemoteException{
         this.gameController = gameController;
-        gameController.addGameObserver(new NetworkGameObserver(client));
+        gameController.addGameObserver((evt, gameModelView)->{
+            if(evt==null) return;
+            new Thread(()->{
+                try {
+                    client.send(new NetworkMessage(evt,gameModelView));
+                } catch (RemoteException ignored) {
+                }
+            }).start();
+        });
     }
 
     @Override
     public synchronized void setChatController(ChatController chatController) throws RemoteException{
         this.chatController = chatController;
-        chatController.addChatObserver(playerName, new NetworkChatObserver(client,playerName));
+        chatController.addChatObserver(playerName, ((evt,playerChatModelView)->{
+            if(evt==null) return;
+            new Thread(()->{
+                try {
+                    client.send(new NetworkMessage(evt, playerChatModelView));
+                } catch (RemoteException ignored) {
+                }
+            }).start();
+        }));
     }
 
     @Override

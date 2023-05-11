@@ -2,17 +2,20 @@ package it.polimi.myshelfie.controller;
 
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
+import it.polimi.myshelfie.model.events.ExceptionEvent;
+import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
+import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
-import it.polimi.myshelfie.network.observers.NetworkExceptionsObserver;
-import it.polimi.myshelfie.network.observers.NetworkModelObserver;
+import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.rmi.RemoteException;
@@ -101,7 +104,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public synchronized void addClient(Client client, NetworkModelObserver networkModelObserver, NetworkExceptionsObserver networkExceptionsObserver){
+    public synchronized void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver,
+                                       Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver){
 
         model.addModelObserver(networkModelObserver);
 

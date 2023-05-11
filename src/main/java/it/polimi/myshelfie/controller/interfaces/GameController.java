@@ -2,7 +2,9 @@ package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
-import it.polimi.myshelfie.network.observers.NetworkGameObserver;
+import it.polimi.myshelfie.model.events.GameEvent;
+import it.polimi.myshelfie.model.modelviews.GameModelView;
+import it.polimi.myshelfie.utils.Observer;
 
 
 import java.util.List;
@@ -30,6 +32,6 @@ public interface GameController {
      */
     void insertTiles(String playerName, int column);
 
-    void addGameObserver(NetworkGameObserver networkGameObserver);
+    void addGameObserver(Observer<GameEvent, GameModelView> networkGameObserver);
     void exitGame(String playerName);
 }

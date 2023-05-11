@@ -1,7 +1,9 @@
 package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.GameConfig;
-import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
+import it.polimi.myshelfie.model.events.LobbyEvent;
+import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+import it.polimi.myshelfie.utils.Observer;
 
 public interface LobbyController {
 
@@ -22,7 +24,7 @@ public interface LobbyController {
      * @param playerName is the name of the owner that starts the game.
      */
 
-    GameController startGame(String playerName);
+    void startGame(String playerName);
 
-    void addLobbyObserver(String playerName,NetworkLobbyObserver networkLobbyObserver);
+    void addLobbyObserver(String playerName, Observer<LobbyEvent, LobbyModelView> networkLobbyObserver);
 }

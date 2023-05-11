@@ -8,13 +8,13 @@ import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.events.*;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.network.observers.NetworkLobbyObserver;
 import it.polimi.myshelfie.utils.SerializableConsumer;
 import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.events.ViewEvent;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class NetworkMessage implements Serializable {
@@ -47,7 +47,12 @@ public class NetworkMessage implements Serializable {
                 lobbyController = controllers.getController().createLobby(client, connectionHandler, playerName, lobby);
             }
             if(lobbyController==null) return;
-            lobbyController.addLobbyObserver(playerName,new NetworkLobbyObserver(client));
+            lobbyController.addLobbyObserver(playerName,((event,lobbyModelView)-> new Thread(()->{
+                try {
+                    client.send(new NetworkMessage(event,lobbyModelView));
+                } catch (RemoteException ignored) {
+                }
+            }).start()));
             connectionHandler.setLobbyController(lobbyController);
             connectionHandler.setPlayerName(playerName);
         }).start());
@@ -131,17 +136,15 @@ public class NetworkMessage implements Serializable {
     public NetworkMessage(GameEvent evt, GameModelView gameModelView){
         this.messageType = MessageType.GAME_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)->{
-            new Thread(()->{
-                switch (evt){
-                    case GAME_START, WIN -> view.setGameModelView((FullGameModelView) gameModelView);
-                    case DRAW -> view.updateDrawView((DrawModelView) gameModelView);
-                    case ORGANIZE -> view.updateOrganizeView((OrganizeModelView) gameModelView);
-                    case INSERT -> view.updateInsertView((InsertModelView) gameModelView);
-                    case COUNTING_POINTS -> view.updateTurnView((EndTurnModelView) gameModelView);
-                }
-            }).start();
-        });
+        this.clientFunction = ((view)-> new Thread(()->{
+            switch (evt){
+                case GAME_START, WIN -> view.setGameModelView((FullGameModelView) gameModelView);
+                case DRAW -> view.updateDrawView((DrawModelView) gameModelView);
+                case ORGANIZE -> view.updateOrganizeView((OrganizeModelView) gameModelView);
+                case INSERT -> view.updateInsertView((InsertModelView) gameModelView);
+                case COUNTING_POINTS -> view.updateTurnView((EndTurnModelView) gameModelView);
+            }
+        }).start());
     }
 
     public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierView exceptionsNotifierView){

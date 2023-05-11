@@ -1,8 +1,9 @@
 package it.polimi.myshelfie.model.chatting;
 
+import it.polimi.myshelfie.model.events.ChatEvent;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
-import it.polimi.myshelfie.network.observers.NetworkChatObserver;
+import it.polimi.myshelfie.utils.Observer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,8 +53,7 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
-    public void addChatObserver(NetworkChatObserver obs) {
-        String playerName = obs.getPlayerName();
+    public void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
         PlayerChat pc = playerChats.get(playerName);
         if(pc==null) return;
         pc.addObserver(obs);
@@ -62,17 +62,11 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
-    public void removeChatObserver(NetworkChatObserver obs) {
-        String playerName = obs.getPlayerName();
+    public void removeChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
         PlayerChat pc = playerChats.get(playerName);
         if(pc == null) return;
         pc.deleteObserver(obs);
         playerChats.remove(pc);
-    }
-
-    @Override
-    public synchronized PlayerChatModelView getChatModelView(String playerName) {
-        return new PlayerChatModelView(playerChats.get(playerName));
     }
 
     /**
