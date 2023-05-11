@@ -56,7 +56,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public synchronized void setGameController(GameControllerImpl gameController) throws RemoteException{
         this.gameController = gameController;
-        gameController.addGameObserver((evt, gameModelView)->{
+        gameController.addGameObserver(playerName, (evt, gameModelView)->{
             if(evt==null) return;
             new Thread(()->{
                 try {

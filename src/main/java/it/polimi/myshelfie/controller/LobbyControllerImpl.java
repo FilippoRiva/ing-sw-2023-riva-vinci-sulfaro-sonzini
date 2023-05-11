@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class LobbyControllerImpl implements LobbyController, ChatController{
 
+    private final String lobbyName;
     private final LobbyModel lobbyModel;
     private final ChatModel chatModel;
     private final ControllerImpl controllerImpl;
@@ -33,7 +34,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     private final Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
     private final Map<String,Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap;
     private final Map<String,Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
-    public LobbyControllerImpl(LobbyModel lobbyModel, ChatModel chatModel, ControllerImpl controllerImpl){
+    public LobbyControllerImpl(String lobbyName, LobbyModel lobbyModel, ChatModel chatModel, ControllerImpl controllerImpl){
+        this.lobbyName = lobbyName;
         this.lobbyModel = lobbyModel;
         this.chatModel = chatModel;
         this.controllerImpl = controllerImpl;
@@ -103,8 +105,9 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
                     throw new RuntimeException(e);
                 }
             }).start();
-            result.init(clientsMap, connectionHandlersMap, exceptionsNotifiersMap,lobbyObserverMap,chatObserverMap);
+            result.init(clientsMap, connectionHandlersMap, exceptionsNotifiersMap,chatObserverMap);
         }
+        controllerImpl.deleteLobby(lobbyName);
     }
 
     @Override

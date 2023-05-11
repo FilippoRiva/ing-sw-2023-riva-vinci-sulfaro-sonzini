@@ -32,6 +32,6 @@ public interface GameController {
      */
     void insertTiles(String playerName, int column);
 
-    void addGameObserver(Observer<GameEvent, GameModelView> networkGameObserver);
+    void addGameObserver(String playerName, Observer<GameEvent, GameModelView> networkGameObserver);
     void exitGame(String playerName);
 }

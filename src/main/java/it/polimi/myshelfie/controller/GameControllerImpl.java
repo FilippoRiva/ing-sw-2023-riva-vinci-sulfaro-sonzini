@@ -8,14 +8,13 @@ import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.events.ChatEvent;
 import it.polimi.myshelfie.model.events.GameEvent;
-import it.polimi.myshelfie.model.events.LobbyEvent;
+import it.polimi.myshelfie.model.exceptions.DisconnectionException;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.modelviews.GameModelView;
-import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -31,23 +30,24 @@ import java.util.Map;
 
 public class GameControllerImpl implements GameController, ChatController{
 
+    private final String gameName;
     private final GameModel gameModel;
     private final ChatModel chatModel;
     private final ControllerImpl controllerImpl;
     private Map<String,Client> clientsMap;
-    private Map<String,ServerConnectionHandler> connectionHandlersMap;
     private Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
-    private Map<String, Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap;
     private Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
-    private Map<String, Observer<GameEvent, GameModelView>> gameObserverMap;
+    private final Map<String, Observer<GameEvent, GameModelView>> gameObserverMap;
 
-    public GameControllerImpl(GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
+    public GameControllerImpl(String gameName, GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
+        this.gameName = gameName;
         this.gameModel = gameModel;
         this.chatModel = chatModel;
-        this.controllerImpl=controllerImpl;
+        this.controllerImpl = controllerImpl;
         this.clientsMap = new HashMap<>();
-        this.connectionHandlersMap = new HashMap<>();
         this.exceptionsNotifiersMap = new HashMap<>();
+        this.gameObserverMap = new HashMap<>();
+        this.chatObserverMap = new HashMap<>();
     }
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) {
@@ -118,23 +118,40 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public synchronized void addGameObserver(Observer<GameEvent, GameModelView>networkGameObserver) {
+    public synchronized void addGameObserver(String playerName, Observer<GameEvent, GameModelView>networkGameObserver) {
         gameModel.addGameObserver(networkGameObserver);
+        gameObserverMap.put(playerName, networkGameObserver);
     }
 
     @Override
-    public void exitGame(String playerName) {
-        //TODO
+    public void exitGame(String disconnectedPlayerName) {
+        clientsMap.remove(disconnectedPlayerName);
+        //notifying non disconnected clients
+        for(String player : clientsMap.keySet()){
+            new Thread(()->{
+                try {
+                    clientsMap.get(player).send(new NetworkMessage(ViewType.INIT));
+                    exceptionsNotifiersMap.get(player).notifyException(new DisconnectionException(disconnectedPlayerName));
+                } catch (RemoteException ignored) {
+                }
+            }).start();
+        }
+        //removing observers
+        for(Observer<GameEvent, GameModelView> o : gameObserverMap.values()){
+            gameModel.removeGameObserver(o);
+        }
+        for(String player : chatObserverMap.keySet()){
+            chatModel.removeChatObserver(player,chatObserverMap.get(player));
+        }
+        gameModel.setState(GameState.WIN);
+        controllerImpl.deleteGame(gameName);
     }
 
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
                      Map<String, ClientExceptionsNotifier> notifiersMap,
-                     Map<String, Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap,
                      Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap){
         this.clientsMap = clientsMap;
-        this.connectionHandlersMap = connectionHandlersMap;
         this.exceptionsNotifiersMap = notifiersMap;
-        this.lobbyObserverMap = lobbyObserverMap;
         this.chatObserverMap = chatObserverMap;
         for(ServerConnectionHandler sch : connectionHandlersMap.values()){
             try {
