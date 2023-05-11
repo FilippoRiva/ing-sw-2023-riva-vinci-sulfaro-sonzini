@@ -22,6 +22,21 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
     public void start() throws RemoteException {
         client.handshake(this);
+        System.out.println("Client connected");
+        //RMI disconnection detection
+        new Thread(()->{
+            try {
+                client.lifeline();
+            } catch (RemoteException e) {
+                try {
+                    System.err.println("Cannot receive from client. Closing this connection...");
+                    close();
+                    System.out.println("Client Disconnected");
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }).start();
         controller.addClient(client, ((evt, modelView)-> new Thread(()->{
             try {
                 client.send(new NetworkMessage(evt,modelView));

@@ -7,7 +7,6 @@ import it.polimi.myshelfie.network.ClientSkeleton;
 import it.polimi.myshelfie.network.ServerConnectionHandlerImpl;
 import it.polimi.myshelfie.network.ServerImpl;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -55,7 +54,6 @@ public class ServerApp {
             System.out.println("Socket up and running");
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.println("Client connected "+socket.getInetAddress());
                 new Thread(() -> {
                     ServerConnectionHandlerImpl serverConnectionHandler = null;
                     try {

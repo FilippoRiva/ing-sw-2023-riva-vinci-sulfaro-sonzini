@@ -26,6 +26,7 @@ public class ClientSkeleton implements Client{
 
     @Override
     public void handshake(ServerConnectionHandler server) throws RemoteException {
+        //not needed in socket programming
     }
 
     final Object sendLock = new Object();
@@ -46,12 +47,17 @@ public class ClientSkeleton implements Client{
         }
     }
 
+    @Override
+    public void lifeline() throws RemoteException {
+        //not needed in socket programming
+    }
+
     public void receive(ServerConnectionHandler serverConnectionHandler) throws IOException {
         synchronized (receiveLock) {
             try {
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 serverConnectionHandler.send(message);
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException ignored) {
             }
         }
     }

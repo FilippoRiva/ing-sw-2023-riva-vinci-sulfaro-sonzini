@@ -27,4 +27,17 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
     public void send(NetworkMessage networkMessage){
         networkMessage.clientExecute(view);
     }
+
+    @Override
+    public void lifeline() throws RemoteException {
+        //this method blocks forever
+        Object obj = new Object();
+        synchronized (obj){
+            try {
+                obj.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
