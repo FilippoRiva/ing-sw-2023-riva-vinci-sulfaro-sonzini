@@ -6,6 +6,8 @@ import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
+import java.util.ArrayList;
+
 
 public class ViewBuffer extends View {
     Observable<ViewUpdate, NetworkMessage> UINotifier;
@@ -72,17 +74,34 @@ public class ViewBuffer extends View {
 
     @Override
     public void updateOrganizeView(OrganizeModelView organizeModelView) {
-        //TODO
+        fullGameModelView.setCurrentState(organizeModelView.getCurrentState());
+        fullGameModelView.getCurrentPlayer().setTakenTiles(organizeModelView.getOrderedTiles());
+
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
     }
 
     @Override
     public void updateInsertView(InsertModelView insertModelView) {
-        //TODO
+        fullGameModelView.getCurrentPlayer().setBookshelf(insertModelView.getBookshelf());
+        fullGameModelView.getCurrentPlayer().setTakenTiles(new ArrayList<>());
+        fullGameModelView.setCurrentState(insertModelView.getCurrentState());
+
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
     }
 
     @Override
     public void updateTurnView(EndTurnModelView endTurnModelView) {
-        //TODO
+        fullGameModelView.setCurrentState(endTurnModelView.getCurrentState());
+        fullGameModelView.getCurrentPlayer().setPoints(endTurnModelView.getPoints());
+        fullGameModelView.getCurrentPlayer().setTokens(endTurnModelView.getPlayerTokens());
+        fullGameModelView.setRemainingTiles(endTurnModelView.getRemainingTiles());
+        fullGameModelView.setLivingRoom(endTurnModelView.getLivingRoom());
+        fullGameModelView.setCommonGoals(endTurnModelView.getCommonGoals());
+
+        UINotifier.setChanged();
+        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
     }
 
     @Override
