@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.view;
 
+import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.view.events.ViewEvent;
@@ -63,7 +64,6 @@ public class ViewBuffer extends View {
 
     @Override
     public void updateDrawView(DrawModelView drawModelView) {
-        fullGameModelView.setCurrentPlayer(drawModelView.getCurrentPlayer());
         fullGameModelView.setCurrentState(drawModelView.getCurrentState());
         fullGameModelView.setLivingRoom(drawModelView.getLivingRoom());
         fullGameModelView.getCurrentPlayer().setTakenTiles(drawModelView.getTakenTiles());
@@ -83,10 +83,11 @@ public class ViewBuffer extends View {
 
     @Override
     public void updateInsertView(InsertModelView insertModelView) {
-        fullGameModelView.getCurrentPlayer().setBookshelf(insertModelView.getBookshelf());
-        fullGameModelView.getCurrentPlayer().setTakenTiles(new ArrayList<>());
-        fullGameModelView.setCurrentState(insertModelView.getCurrentState());
-
+        fullGameModelView.getPlayer(insertModelView.getCurrentPlayer()).setBookshelf(insertModelView.getBookshelf());
+        fullGameModelView.getPlayer(insertModelView.getCurrentPlayer()).setTakenTiles(new ArrayList<>());
+        if(fullGameModelView.getCurrentState()!= GameState.DRAW) {
+            fullGameModelView.setCurrentState(insertModelView.getCurrentState());
+        }
         UINotifier.setChanged();
         UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
     }
@@ -94,11 +95,12 @@ public class ViewBuffer extends View {
     @Override
     public void updateTurnView(EndTurnModelView endTurnModelView) {
         fullGameModelView.setCurrentState(endTurnModelView.getCurrentState());
-        fullGameModelView.getCurrentPlayer().setPoints(endTurnModelView.getPoints());
-        fullGameModelView.getCurrentPlayer().setTokens(endTurnModelView.getPlayerTokens());
+        fullGameModelView.getPlayer(endTurnModelView.getLastPlayer()).setPoints(endTurnModelView.getPoints());
+        fullGameModelView.getPlayer(endTurnModelView.getLastPlayer()).setTokens(endTurnModelView.getPlayerTokens());
         fullGameModelView.setRemainingTiles(endTurnModelView.getRemainingTiles());
         fullGameModelView.setLivingRoom(endTurnModelView.getLivingRoom());
         fullGameModelView.setCommonGoals(endTurnModelView.getCommonGoals());
+        fullGameModelView.setCurrentPlayer(endTurnModelView.getCurrentPlayer());
 
         UINotifier.setChanged();
         UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
