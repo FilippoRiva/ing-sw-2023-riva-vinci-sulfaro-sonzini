@@ -1,44 +1,105 @@
 package it.polimi.myshelfie.model.chatting;
 
+import it.polimi.myshelfie.model.Player;
+import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChatSystemTest {
-    ArrayList<Message> messagesToA = new ArrayList<>();
-    ArrayList<Message> messagesToB = new ArrayList<>();
+
     ChatSystem cs;
 
     @BeforeEach
     void setUp() {
         //adding two players
         cs = new ChatSystem();
-        //todo
-        //todo
+        cs.addPlayerToChat("Pippo");
+        assertEquals(cs.getPlayerChats().size(), 1);
+        assertTrue(cs.getPlayerChats().containsKey("Pippo"));
+        cs.addPlayerToChat("Luca");
+        assertEquals(cs.getPlayerChats().size(), 2);
+        assertTrue(cs.getPlayerChats().containsKey("Pippo"));
+        assertTrue(cs.getPlayerChats().containsKey("Luca"));
+        cs.addPlayerToChat("Andrea");
+        assertEquals(cs.getPlayerChats().size(), 3);
+        assertTrue(cs.getPlayerChats().containsKey("Pippo"));
+        assertTrue(cs.getPlayerChats().containsKey("Luca"));
+        assertTrue(cs.getPlayerChats().containsKey("Andrea"));
     }
     @Test
     void addMessage() {
         Message msg;
-        Messages messages = new Messages() {
-        };
-        //todo
+        Player p1= new Player("Pippo");
+        Player p2= new Player("Luca");
+        Player p3= new Player("Andrea");
+        //cs.addPlayerToChat(p1.getName());
+        //cs.addPlayerToChat(p2.getName());
+        //cs.addPlayerToChat(p3.getName());
+
+        //right message p1->p2
+        msg=new Message(p1.getName(), p2.getName(), "msg2");
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().get(0).getMessage(), "msg2");
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().get(0).getSender(), p1.getName());
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().get(0).getReceiver(), p2.getName());
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().get(0).getMessage(), "msg2");
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().get(0).getSender(), p1.getName());
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().get(0).getReceiver(), p2.getName());
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 0);
+        //sender=receiver ==> ignored
+        msg=new Message(p1.getName(), p1.getName(), "msg0");
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 0);
+        //receiver doesn't exists
+        msg=new Message(p1.getName(), "Nessuno", "msg1");
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 0);
+        //message to everybody
+        msg=new Message(p1.getName(), null, "msg3");
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().get(1).getMessage(), "msg3");
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().get(1).getMessage(), "msg3");
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 1);
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().get(0).getMessage(), "msg3");
+        //message from nobody ==> ignore
+        msg=new Message(null, p1.getName(), "msg4");
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 1);
+        //sender doesn't exists ==> ignore
+        msg=new Message("Marco", p1.getName(), "msg3");
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 1);
+        //empty message ==> ignore
+        msg=new Message(p2.getName(), p1.getName(), null);
+        cs.addMessage(msg);
+        assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 2);
+        assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 1);
     }
 
     @Test
     void getPlayerChatView() {
-        //todo
-    }
+        Player p1= new Player("Pippo");
+        Player p2= new Player("Luca");
+        PlayerChatModelView view1 = new PlayerChatModelView(cs.getPlayerChats().get(p1.getName()));
+        assertEquals(view1.getMessages().size(), cs.getPlayerChats().get(p1.getName()).getMessages().size());
+        cs.addMessage(new Message(p1.getName(), p2.getName(), "msg1"));
+        assertEquals(view1.getLastMessage().getMessage(), "msg1");
 
-
-    @Test
-    void getMessagesTest(){
-        Message msgToB = new Message("A","B","Ciao");
-        Message msgToA = new Message("B", "A","Ciao anche a te");
-        cs.addMessage(msgToB);
-        cs.addMessage(msgToA);
-        //todo
     }
 }
