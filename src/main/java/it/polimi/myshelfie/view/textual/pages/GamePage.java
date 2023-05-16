@@ -26,66 +26,68 @@ public class GamePage extends ScreenPage{
         if(fullGameModelView ==null) return;
         t.clearScreen();
         t.printLivingRoom(fullGameModelView);
-        t.printDivider(20);
-        printCommonGoals(fullGameModelView);
-        t.printDivider(26);
-        t.printPersonalGoal(fullGameModelView.getPlayer(myUsername).getPersonalGoals().get(0).getGoal(),27,4);
-        t.printVerticalDivider(0,40, 20);
-        t.printVerticalDivider(27, 30, 7);
+        t.printPersonalGoal(fullGameModelView.getPlayer(myUsername).getPersonalGoals().get(0).getGoal(),25,4);
         printGameInfo(fullGameModelView);
-        t.printBookshelf(fullGameModelView.getPlayer(currentLibraryOwner).getBookshelf(),currentLibraryOwner,27,36);
+        t.printBookshelf(fullGameModelView.getPlayer(currentLibraryOwner).getBookshelf(),currentLibraryOwner,25,36);
         if(!fullGameModelView.getCurrentPlayerName().equals(myUsername)) {
-            t.printAction("help, chat");
+            t.printAction("help, chat, goals");
         } else {
             switch (fullGameModelView.getCurrentState()){
-                case DRAW, LAST_DRAW -> t.printAction("help, chat, d <args>");
-                case ORGANIZE, LAST_ORGANIZE -> t.printAction("help, chat, o <args>");
-                case INSERT, LAST_INSERT -> t.printAction("help, chat, i <column>");
+                case DRAW, LAST_DRAW -> t.printAction("help, chat, goals, d <args>");
+                case ORGANIZE, LAST_ORGANIZE -> t.printAction("help, chat, goals, o <args>");
+                case INSERT, LAST_INSERT -> t.printAction("help, chat, goals, i <column>");
             }
         }
         printBorder();
+        t.printDivider(24);
+        t.printVerticalDivider(0,42, 25);
+        t.printVerticalDivider(24, 30, 11);
     }
 
     private void printGameInfo(FullGameModelView fullGameModelView) {
         int pos = 1;
         t.printInInfoTable("Phase : " + ANSI.BLUE_FG+ fullGameModelView.getCurrentState()+ANSI.RESET, pos);
         pos++;
-        t.printInInfoTable("Playing : "+ fullGameModelView.getCurrentPlayerName(), pos);
-        pos += 4;
+        String currentPlayer = fullGameModelView.getCurrentPlayer().getName();
+        String formattedCurrentPlayer = String.format(currentPlayer.length()>10 ? currentPlayer.substring(0,9) : currentPlayer , "%-10s");
+        t.printInInfoTable("Playing : "+ formattedCurrentPlayer, pos);
+        pos += 1;
+        t.printInInfoTable("Players :",pos);
+        pos++;
         int idx = 1;
         for (PlayerModelView p : fullGameModelView.getPlayers()) {
-            if(p.getName().equals(myUsername)){
-                t.printInInfoTable("   "+idx+". "+ ANSI.PINK_FG+ANSI.BOLD+p.getName()+ANSI.RESET+" "+ p.getPoints(),pos);
+            String username = p.getName();
+            String trimmedUsername = String.format(username.length()>10 ? username.substring(0,9) : username , "%-10s");
+            if(username.equals(myUsername)){
+                t.printInInfoTable("   "+idx+". "+ ANSI.PINK_FG+ANSI.BOLD+trimmedUsername+ANSI.RESET+" "+ p.getPoints(),pos);
             } else {
-                t.printInInfoTable("   "+idx+". "+p.getName() + " " + p.getPoints(), pos);
+                t.printInInfoTable("   "+idx+". "+trimmedUsername + " " + p.getPoints(), pos);
             }
             idx++;
             pos++;
         }
+        t.printInInfoTable("Common Goal Tokens:",10);
+        idx = 1;
+        for (CommonGoalModelView c : fullGameModelView.getCommonGoals()) {
+            t.printInInfoTable("   "+idx + " :",10+idx);
+            t.printTokens(c.getTokens(),10+idx,48);
+            idx++;
+        }
+        int numberOfCommonGoals = fullGameModelView.getCommonGoals().size();
         if(fullGameModelView.getCurrentPlayerName().equals(myUsername)) {
             List<ItemTile> takenTiles = fullGameModelView.getPlayer(myUsername).getTakenTiles();
             if (takenTiles.size() != 0) {
-                t.printInInfoTable("Taken Tiles :", 14);
-                t.printTakenTiles(takenTiles, 16, 43, fullGameModelView.getCurrentState() == GameState.ORGANIZE);
+                t.printInInfoTable("Taken Tiles :", 10+numberOfCommonGoals+3);
+                t.printTakenTiles(takenTiles, 10+numberOfCommonGoals+4, 43, fullGameModelView.getCurrentState() == GameState.ORGANIZE);
             }
         } else {
             List<ItemTile> currenPlayerTakenTiles = fullGameModelView.getPlayer(fullGameModelView.getCurrentPlayerName()).getTakenTiles();
             if(currenPlayerTakenTiles.size() != 0){
                 t.printInInfoTable(fullGameModelView.getCurrentPlayerName()+" taken tiles :",14);
-                t. printTakenTiles(currenPlayerTakenTiles, 16, 43, false);
+                t.printTakenTiles(currenPlayerTakenTiles, 16, 43, false);
             }
         }
-        t.printInInfoTable("Remaining tiles : " + fullGameModelView.getRemainingTiles(), 19);
-    }
-
-    private void printCommonGoals(FullGameModelView gmv) {
-        t.println("Common Goals :",21,1);
-        int idx = 1;
-        for (CommonGoalModelView c : gmv.getCommonGoals()) {
-            t.println(c.getId() + ". :" + c.getDescription().split("\n")[0],21+idx,1);
-            t.print("Tokens : ",22+idx,2);
-            t.printTokens(c.getTokens(),22+idx,2+10);
-            idx+=2;
-        }
+        t.printInInfoTable("Remaining tiles :", 22);
+        t.printInInfoTable("   "+fullGameModelView.getRemainingTiles(),23);
     }
 }

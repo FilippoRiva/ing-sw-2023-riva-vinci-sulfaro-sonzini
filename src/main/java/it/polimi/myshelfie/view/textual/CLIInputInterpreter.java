@@ -14,6 +14,7 @@ import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewType;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -104,12 +105,10 @@ public class CLIInputInterpreter {
                                 UI.wrongInput();
                             }
                         }
+                        case "?" -> weirdConfig();
                         case "s" -> {
-                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) {
-                                startRequest();
-                            } else {
-                                UI.wrongInput();
-                            }
+                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) startRequest();
+                            else UI.wrongInput();
                         }
                         case "exit" -> exitRequest();
                         default -> UI.wrongInput();
@@ -118,18 +117,23 @@ public class CLIInputInterpreter {
             }
             case GAME -> {
                 if (UI.getInternalViewState()==InternalViewState.HELP) {
-                    if(!input.equals("chat")){
-                        UI.setInternalViewState(InternalViewState.GAME);
-                    } else {
-                        UI.setInternalViewState(InternalViewState.CHAT);
+                    switch (input) {
+                        case "game" -> UI.setInternalViewState(InternalViewState.GAME);
+                        case "goals" -> UI.setInternalViewState(InternalViewState.GOALS);
+                        case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
                     }
                 } else if (UI.getInternalViewState()==InternalViewState.CHAT){
-                    if(input.equals("game")){
-                        UI.setInternalViewState(InternalViewState.GAME);
-                    } else if(input.equals("help")){
-                        UI.setInternalViewState(InternalViewState.HELP);
-                    } else {
-                        interpretMessage(input);
+                    switch (input) {
+                        case "game" -> UI.setInternalViewState(InternalViewState.GAME);
+                        case "goals" -> UI.setInternalViewState(InternalViewState.GOALS);
+                        case "help" -> UI.setInternalViewState(InternalViewState.HELP);
+                        default -> interpretMessage(input);
+                    }
+                } else if (UI.getInternalViewState()==InternalViewState.GOALS){
+                    switch (input) {
+                        case "game" -> UI.setInternalViewState(InternalViewState.GAME);
+                        case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
+                        case "help" -> UI.setInternalViewState(InternalViewState.HELP);
                     }
                 } else {
                     if(input.equals("n")) {
@@ -146,6 +150,8 @@ public class CLIInputInterpreter {
                         interpretOrder(input);
                     } else if(input.charAt(0)=='i') {
                         interpretInsert(input);
+                    } else if(input.equals("goals")) {
+                        UI.setInternalViewState(InternalViewState.GOALS);
                     } else {
                         UI.wrongInput();
                     }
@@ -154,7 +160,7 @@ public class CLIInputInterpreter {
             case WIN -> {
                 if(input.equals("exit")){
                     UI.setInternalViewState(InternalViewState.INIT);
-                    //TODO EXIT_REQUEST to the server
+                    exitRequest();
                 } else {
                     UI.wrongInput("pls stop playing this game");
                 }
@@ -442,5 +448,22 @@ public class CLIInputInterpreter {
             }
         }
         return true;
+    }
+
+    private void weirdConfig(){
+        GameConfig config;
+        try {
+            config = new GameConfig(2,new Dimension(5,6),5,123,9,1,0.5);
+        } catch (InvalidParameterException e) {
+            return;
+        }
+        synchronized (viewBuffer) {
+            try {
+                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        UI.wrongInput(ANSI.PINK_FG+"weird config set"+ANSI.PINK_FG);
     }
 }

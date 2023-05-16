@@ -146,6 +146,7 @@ public class TextualUI implements Observer<ViewUpdate, NetworkMessage> {
             case CREATE -> currentPage = new CreatePage(t,viewBuffer,inputParameters);
             case LOBBY -> currentPage = new LobbyPage(t,viewBuffer,inputParameters,myUsername);
             case GAME -> currentPage = new GamePage(t,viewBuffer,inputParameters,myUsername,currentLibraryOwner);
+            case GOALS -> currentPage = new GoalPage(t,viewBuffer,inputParameters);
             case CHAT -> currentPage = new ChatPage(t,viewBuffer,inputParameters,myUsername);
             case HELP -> currentPage = new HelpPage(t,viewBuffer,inputParameters);
             case WIN -> currentPage = new WinPage(t,viewBuffer,inputParameters);
