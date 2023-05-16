@@ -7,6 +7,7 @@ public enum InternalViewState {
     LOBBY,
     GAME,
     CHAT,
+    GOALS,
     HELP,
     WIN
 }

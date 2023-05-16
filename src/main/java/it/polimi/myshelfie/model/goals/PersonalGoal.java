@@ -40,7 +40,7 @@ public class PersonalGoal {
         this.id = id;
         if(width == 5 && height == 6) throw new Exception("This Constructor should be used only when " +
                 "the size of the bookshelf isn't the default one");
-        if(width<height) throw new Exception("Height must be greater equal than width");
+        if(width>height) throw new Exception("Height must be greater equal than width");
         goal = new ItemTile[height][width];
         Random rand = new Random();
         for(int x = 0; x<width; x++){

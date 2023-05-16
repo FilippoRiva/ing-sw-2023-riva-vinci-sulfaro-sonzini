@@ -129,7 +129,7 @@ public class Game implements GameModel, LobbyModel {
 
         for(Player p : players){
             p.setBookshelf(new Bookshelf(gameConfig.getBookshelfDimension()));
-            List<PersonalGoal> playerGoals = goals.subList(0,gameConfig.getNumPersonalGoals());
+            List<PersonalGoal> playerGoals = new ArrayList<>(goals.subList(0,gameConfig.getNumPersonalGoals()));
             p.setPersonalGoals(playerGoals);
             for(PersonalGoal pp : playerGoals){
                 goals.remove(pp);

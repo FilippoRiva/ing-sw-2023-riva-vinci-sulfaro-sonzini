@@ -50,7 +50,7 @@ public class HelpPage extends ScreenPage{
         t.printDivider(line++);
         t.print(color+"Utils"+ANSI.RESET, line++, 1);
         t.print("r : refreshes the UI",line,3);
-        if(viewBuffer.getViewType()!= ViewType.LOBBY) t.printAction("game, chat");
+        if(viewBuffer.getViewType()!= ViewType.LOBBY) t.printAction("game, chat, goals");
         else t.printAction("lobby,chat");
         printBorder();
     }
