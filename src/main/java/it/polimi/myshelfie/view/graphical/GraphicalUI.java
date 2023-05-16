@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class GraphicalUI extends Application implements Observer<ViewUpdate, NetworkMessage> {
-
     private final double SCALE = (double) 2/3;
 
     @Override
@@ -23,8 +22,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Net
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/home-view.fxml"));
-                                                    //(1280, 720)
-        Scene scene = new Scene(fxmlLoader.load(), 1920 *SCALE, 1080*SCALE);
+        Scene scene = new Scene(fxmlLoader.load(), 1920 * SCALE, 1080 * SCALE); //(1280, 720)
         stage.setTitle("My Shelfie");
         stage.setResizable(false);
         stage.setScene(scene);
