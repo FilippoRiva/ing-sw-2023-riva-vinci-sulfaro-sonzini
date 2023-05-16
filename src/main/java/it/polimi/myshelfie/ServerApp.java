@@ -64,7 +64,7 @@ public class ServerApp {
                             clientSkeleton.receive(serverConnectionHandler);
                         }
                     } catch (IOException e) {
-                        System.err.println("Cannot receive from client. Closing this connection...");
+                        System.err.println("Cannot receive from client. Closing connection...");
                     } finally {
                         try {
                             assert serverConnectionHandler != null;

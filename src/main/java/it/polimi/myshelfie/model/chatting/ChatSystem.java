@@ -13,6 +13,10 @@ public class ChatSystem implements ChatModel {
     private final ArrayList<Message> messages;
     private final HashMap<String, PlayerChat> playerChats;
 
+    public HashMap<String, PlayerChat> getPlayerChats() {
+        return playerChats;
+    }
+
     /**
      * Creates a Chat System.
      */
@@ -36,6 +40,8 @@ public class ChatSystem implements ChatModel {
      */
     @Override
     public void addMessage(Message message) {
+        //ignoring empty messages or messages without sender
+        if(message.getSender().equals(Messages.fromNobody) || message.getMessage().equals(Messages.emptyMessage)) return;
         //to everyone
         if(message.getReceiver().equals(Messages.toEveryOne)){
             messages.add(message);
@@ -44,6 +50,7 @@ public class ChatSystem implements ChatModel {
         }
         //not a player
         if(!playerChats.containsKey(message.getSender())) return;
+        if(!playerChats.containsKey(message.getReceiver())) return;
         //ignoring messages to yourself
         if(message.getSender().equals(message.getReceiver())) return;
         //to a specific player
