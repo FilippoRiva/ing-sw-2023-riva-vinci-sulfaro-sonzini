@@ -29,7 +29,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
                 client.lifeline();
             } catch (RemoteException e) {
                 try {
-                    System.err.println("Cannot receive from client. Closing this connection...");
+                    System.err.println("Cannot receive from client. Closing connection...");
                     close();
                     System.out.println("Client Disconnected");
                 } catch (RemoteException ex) {
