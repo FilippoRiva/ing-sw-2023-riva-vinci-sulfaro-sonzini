@@ -138,7 +138,8 @@ public class ControllerImpl implements Controller {
      * @param lobbyName is the name of the lobby that must be deleted
      */
     public void deleteLobby(String lobbyName){
-        gamesControllers.remove(lobbyName);
+        if(!lobbiesControllers.containsKey(lobbyName)) return;
+        lobbiesControllers.remove(lobbyName);
         try {
             model.removeLobby(lobbyName);
         } catch (LobbyExistenceException e) {
