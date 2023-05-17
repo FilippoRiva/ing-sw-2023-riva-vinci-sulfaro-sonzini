@@ -34,6 +34,14 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     private final Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
     private final Map<String,Observer<LobbyEvent, LobbyModelView>> lobbyObserverMap;
     private final Map<String,Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
+
+    /**
+     * Constructor for the LobbyControllerImpl class
+     * @param lobbyName the name of the lobby.
+     * @param lobbyModel the model associated to the lobby.
+     * @param chatModel the model associated to the game chat.
+     * @param controllerImpl the controller of the game.
+     */
     public LobbyControllerImpl(String lobbyName, LobbyModel lobbyModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.lobbyName = lobbyName;
         this.lobbyModel = lobbyModel;
@@ -127,10 +135,23 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         chatObserverMap.put(playerName,networkChatObserver);
     }
 
+    /**
+     * Returns the lobby model associated to that lobby.
+     * @return a lobby model.
+     */
     public LobbyModel getLobbyModel(){
         return lobbyModel;
     }
 
+    /**
+     * Adds a player to the game.
+     * @param client represents the player.
+     * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
+     * @param exceptionsNotifier is the client expception notifier of this client.
+     * @param playerName is the name of the player that must be added to the lobby.
+     * @throws InvalidParameterException if one of the parameter passed is not valid.
+     * @throws LobbyFullException if the lobby is full.
+     */
     public void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {
         lobbyModel.addPlayer(playerName);
         clientsMap.put(playerName,client);

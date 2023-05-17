@@ -260,6 +260,7 @@ public class Game implements GameModel, LobbyModel {
         for (Player p : players) {
             if (p.getName().equals(playerName)) {
                 int numTakenTiles = p.getTakenTiles().size();
+                if(numTakenTiles == 0) throw new InvalidParameterException("player has not yet drawn any tiles");
                 if (!p.getBookshelf().isColumnFillable(numTakenTiles, column))
                     throw new FullColumnException(column);
                 for(ItemTile t: p.getTakenTiles()) {

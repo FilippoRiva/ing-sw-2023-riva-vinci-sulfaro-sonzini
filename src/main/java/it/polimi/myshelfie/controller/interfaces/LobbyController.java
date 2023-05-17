@@ -8,23 +8,27 @@ import it.polimi.myshelfie.utils.Observer;
 public interface LobbyController {
 
     /**
-     *
-     * @param playerName is the name of the player that leaves the current game.
+     * Allows a player to exit the lobby he joined.
+     * @param playerName is the name of the player that leaves the lobby.
      */
     void exitLobby(String playerName);
 
     /**
-     *
-     * @param config is the game's settings.
+     * Allows the room owner to set the game settings.
+     * @param config are the game's settings.
      */
     void setConfig(String playerName,GameConfig config);
 
     /**
-     *
-     * @param playerName is the name of the owner that starts the game.
+     * Allows the room owner to start the game when ready.
+     * @param playerName is the name of the player that can start the game.
      */
-
     void startGame(String playerName);
 
+    /**
+     * Adds a lobby observer.
+     * @param playerName the name of the player.
+     * @param networkLobbyObserver the observer to add.
+     */
     void addLobbyObserver(String playerName, Observer<LobbyEvent, LobbyModelView> networkLobbyObserver);
 }

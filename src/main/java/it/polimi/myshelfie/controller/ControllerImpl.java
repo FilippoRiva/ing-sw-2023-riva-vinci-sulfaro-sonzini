@@ -31,12 +31,19 @@ public class ControllerImpl implements Controller {
 
     private Model model;
 
+    /**
+     * Constructor for the ControllerImpl class.
+     */
     public ControllerImpl(){
         this.gamesControllers = new HashMap<>();
         this.lobbiesControllers = new HashMap<>();
         this.clientExceptionsNotifiers = new HashMap<>();
     }
 
+    /**
+     * Sets the model.
+     * @param model is the model to set.
+     */
     public void setModel(Model model){
         this.model = model;
     }
@@ -127,6 +134,11 @@ public class ControllerImpl implements Controller {
         clientExceptionsNotifiers.remove(client);
     }
 
+    /**
+     * Returns the lobby model associated to that specific lobby.
+     * @param lobbyName the lobby whose model I want.
+     * @return the associated lobby model.
+     */
     private LobbyModel getLobbyModel(String lobbyName) {
         LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
         if(lobbyController==null) return null;
@@ -134,8 +146,8 @@ public class ControllerImpl implements Controller {
     }
 
     /**
-     *
-     * @param lobbyName is the name of the lobby that must be deleted
+     * Removes a lobby from the lobby list.
+     * @param lobbyName is the name of the lobby that must be deleted.
      */
     public void deleteLobby(String lobbyName){
         if(!lobbiesControllers.containsKey(lobbyName)) return;
@@ -147,10 +159,19 @@ public class ControllerImpl implements Controller {
         }
     }
 
+    /**
+     * Returns the game controller associated to that specific game.
+     * @param lobbyName is the lobby/game whose controller I want.
+     * @return the associated game controller.
+     */
     public GameControllerImpl getGameController(String lobbyName){
         return gamesControllers.get(lobbyName);
     }
 
+    /**
+     * Removes a game from the game list.
+     * @param gameName is the name of the game that must be deleted.
+     */
     public void deleteGame(String gameName) {
         gamesControllers.remove(gameName);
     }

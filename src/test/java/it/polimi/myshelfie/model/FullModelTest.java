@@ -182,7 +182,7 @@ public class FullModelTest {
         game.setState(GameState.DRAW);
         lmv = getLastModel(fullGameModelViewList);
         assertNotEquals(currPlayer, lmv.getCurrentPlayerName(), "Current player is the same of the previuos turn");
-        String oldPlayer = currPlayer;
+        String oldPlayer = new String(currPlayer);
         currPlayer=lmv.getCurrentPlayerName();
         positions = new ArrayList<>();
         positions.add(new Position(0,3));

@@ -39,6 +39,13 @@ public class GameControllerImpl implements GameController, ChatController{
     private Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
     private final Map<String, Observer<GameEvent, GameModelView>> gameObserverMap;
 
+    /**
+     * Constructor for the GameControllerImpl class.
+     * @param gameName the name of the game.
+     * @param gameModel the model associated to the game.
+     * @param chatModel the model associated to the game chat.
+     * @param controllerImpl the controller of the game.
+     */
     public GameControllerImpl(String gameName, GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
         this.gameName = gameName;
         this.gameModel = gameModel;
@@ -106,8 +113,9 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     /**
-     *
-     * @param playerName is the current player that has finished its turn
+     * This method process the end turn: it checks if the player achieved a common goal; checks if the living room is refillable;
+     * sets the next turn.
+     * @param playerName is the current player that has finished its turn.
      */
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
@@ -147,6 +155,13 @@ public class GameControllerImpl implements GameController, ChatController{
         controllerImpl.deleteGame(gameName);
     }
 
+    /**
+     * This method initializes the attributes of the GameControllerImpl class.
+     * @param clientsMap the list of clients and their players.
+     * @param connectionHandlersMap the list of connection handlers.
+     * @param notifiersMap the list of the exceptions notifiers.
+     * @param chatObserverMap the list of the chat observers.
+     */
     public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
                      Map<String, ClientExceptionsNotifier> notifiersMap,
                      Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap){
