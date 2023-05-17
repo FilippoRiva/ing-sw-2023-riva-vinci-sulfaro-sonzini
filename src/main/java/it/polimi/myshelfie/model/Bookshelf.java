@@ -118,4 +118,16 @@ public class Bookshelf {
         }
         return true;
     }
+
+    public int columnFreeSpace(){
+        int max=0, count;
+        for(int i=0; i<width; i++){
+            count=0;
+            for(int j=0; j<height; j++){
+                if(bookshelfItems[j][i].getType()==ItemTileType.EMPTY) count++;
+            }
+            if(count>max) max=count;
+        }
+        return max;
+    }
 }

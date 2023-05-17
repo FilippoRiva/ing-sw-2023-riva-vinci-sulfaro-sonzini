@@ -1,11 +1,12 @@
 package it.polimi.myshelfie.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * It represents the position of a tile on the board. The centre of the board has coordinates (0,0).
  */
-public class Position implements Serializable {
+public class Position implements Serializable{
     private final int x;
     private final int y;
     public Position(int x, int y){
