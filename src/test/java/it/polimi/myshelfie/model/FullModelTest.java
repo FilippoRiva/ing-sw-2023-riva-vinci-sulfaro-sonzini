@@ -26,6 +26,7 @@ public class FullModelTest {
     private void setModelView2(ModelView mv2){
         modelView2 = mv2;
     }
+
     @Test
     public void fullModelTest() throws InterruptedException {
         LobbyModel lobby1 = null;
@@ -143,6 +144,14 @@ public class FullModelTest {
             game.drawTiles(positions,currPlayer);
             fail();
         } catch (InvalidParameterException ignored) {
+        }
+        positions = new ArrayList<>();
+        positions.add(new Position(-1,3));
+        positions.add(new Position(0,3));
+        try {
+            game.drawTiles(positions,currPlayer);
+        } catch (Exception e) {
+            fail();
         }
         positions = new ArrayList<>();
         positions.add(new Position(-1,3));
