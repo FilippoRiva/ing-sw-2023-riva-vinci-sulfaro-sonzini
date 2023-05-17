@@ -1,6 +1,5 @@
 package it.polimi.myshelfie.view.graphical;
 
-import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewUpdate;
 import javafx.application.Application;
@@ -11,18 +10,18 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
-public class GraphicalUI extends Application implements Observer<ViewUpdate, NetworkMessage> {
+public class GraphicalUI extends Application implements Observer<ViewUpdate, Object> {
     private final double SCALE = (double) 2/3;
 
     @Override
-    public void update(ViewUpdate evt, NetworkMessage networkMessage) {
-
+    public void update(ViewUpdate evt, Object networkMessage) {
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/home-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1920 * SCALE, 1080 * SCALE); //(1280, 720)
+
         stage.setTitle("My Shelfie");
         stage.setResizable(false);
         stage.setScene(scene);

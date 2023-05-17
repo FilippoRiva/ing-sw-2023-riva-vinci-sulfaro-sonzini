@@ -40,11 +40,12 @@ public class ClientApp {
             System.err.println("Invalid Option");
             return;
         }
-        ViewBuffer viewBuffer = new ViewBuffer();
+        ViewBuffer viewBuffer = ViewBuffer.getInstance();
         List<String> inputParameters = new ArrayList<>();
-        Observer<ViewUpdate, NetworkMessage> view;
+        Observer<ViewUpdate, Object> view;
         if(viewChoice == 1) view = new TextualUI(viewBuffer,inputParameters);
         else view = new GraphicalUI();
+
         viewBuffer.addUI(view);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         try {
@@ -54,7 +55,9 @@ public class ClientApp {
             throw new RuntimeException(e);
         }
         if(viewChoice==1) new Thread(()->new CLIInputReader(in, (TextualUI) view,viewBuffer,inputParameters)).start();
-        else ((GraphicalUI)view).startGUI();
+        else {
+            ((GraphicalUI)view).startGUI();
+        }
     }
 
     private static void startRMIConnection(ViewBuffer viewBuffer) throws RemoteException {

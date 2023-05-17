@@ -17,7 +17,7 @@ import it.polimi.myshelfie.view.ViewUpdate;
 
 import java.util.*;
 
-public class AutoPlayer implements Observer<ViewUpdate, NetworkMessage> {
+public class AutoPlayer implements Observer<ViewUpdate, Object> {
     private final ViewBuffer viewBuffer;
     private final TextualUI UI;
     private boolean owner;
@@ -50,7 +50,7 @@ public class AutoPlayer implements Observer<ViewUpdate, NetworkMessage> {
 
 
     @Override
-    public synchronized void update(ViewUpdate evt, NetworkMessage unused) {
+    public synchronized void update(ViewUpdate evt, Object unused) {
         if(finished) return;
         if(evt==null) return;
         ViewType vt = viewBuffer.getViewType();
