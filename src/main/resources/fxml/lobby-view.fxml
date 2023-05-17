@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.PreGameController">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.LobbyController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/misc/home.png" />
@@ -23,15 +23,20 @@
                   <Font size="40.0" />
                </font>
             </Label>
+            <Label fx:id="lobbyNameLabel" layoutX="81.0" layoutY="34.0" text="lobbyName" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Label>
          </children></AnchorPane>
-      <AnchorPane layoutX="899.0" layoutY="375.0" onMouseClicked="#onCreateMouseClicked" onMouseEntered="#onCreateMouseEntered" onMouseExited="#onCreateMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.topAnchor="375.0">
+      <AnchorPane layoutX="899.0" layoutY="375.0" onMouseClicked="#onStartMouseClicked" onMouseEntered="#onStartMouseEntered" onMouseExited="#onStartMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.topAnchor="375.0">
          <children>
             <ImageView fitHeight="80.0" fitWidth="350.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@../images/misc/base_pagina2.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="createLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Create" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label fx:id="startLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="40.0" />
                </font>

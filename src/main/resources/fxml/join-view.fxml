@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.PreGameController">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.JoinController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/misc/home.png" />
         </ImageView>
-      <TextField fx:id="playerName" layoutX="946.0" layoutY="417.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="25.0">
+      <TextField fx:id="playerNameField" layoutX="946.0" layoutY="417.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="25.0">
          <font>
             <Font size="40.0" />
          </font>

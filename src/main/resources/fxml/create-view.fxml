@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.PreGameController">
+<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.CreateController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/misc/home.png" />
         </ImageView>
-      <TextField fx:id="roomName" layoutX="564.0" layoutY="348.0" prefHeight="100.0" prefWidth="600.0" promptText="Room name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="320.0">
+      <TextField fx:id="lobbyNameField" layoutX="564.0" layoutY="348.0" prefHeight="100.0" prefWidth="600.0" promptText="Room name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="320.0">
          <font>
             <Font size="40.0" />
          </font>
@@ -20,7 +20,7 @@
             <Font size="40.0" />
          </font>
       </Label>
-      <TextField fx:id="playerName" layoutX="572.0" layoutY="455.0" prefHeight="100.0" prefWidth="600.0" promptText="Player name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="460.0">
+      <TextField fx:id="playerNameField" layoutX="572.0" layoutY="455.0" prefHeight="100.0" prefWidth="600.0" promptText="Player name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="460.0">
          <font>
             <Font size="40.0" />
          </font>
