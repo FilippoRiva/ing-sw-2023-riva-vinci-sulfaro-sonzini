@@ -1,15 +1,12 @@
 package it.polimi.myshelfie.view.graphical.controllers;
 
-import javafx.fxml.FXMLLoader;
+import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
-
-public class HomeController {
-    public AnchorPane rootPane;
+public class HomeController extends ViewController{
     public Label createLabel;
     public Label joinLabel;
 
@@ -25,16 +22,12 @@ public class HomeController {
     public void onJoinMouseExited(MouseEvent mouseEvent) {
         joinLabel.setTextFill(Color.color(1, 1, 1));
     }
-    public void onCreateChoice(MouseEvent mouseEvent) throws IOException {
-        changeScreen("create-view");
+    public void onCreateChoice(MouseEvent mouseEvent) {
+        GraphicalUI.changeScene("create");
+        progress.setVisible(true);
     }
-    public void onJoinChoice(MouseEvent mouseEvent) throws IOException {
-        changeScreen("join-view");
-    }
-
-    private void changeScreen(String fxmlName) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/"+fxmlName+".fxml"));
-        AnchorPane pane = loader.load();
-        rootPane.getChildren().setAll(pane);
+    public void onJoinChoice(MouseEvent mouseEvent) {
+        GraphicalUI.changeScene("join");
+        progress.setVisible(true);
     }
 }

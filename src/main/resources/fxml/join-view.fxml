@@ -1,35 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.JoinController">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.JoinController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Image url="@../images/misc/home.png" />
+            <Image url="@../images/background.png" />
         </ImageView>
-      <TextField fx:id="playerNameField" layoutX="946.0" layoutY="417.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="25.0">
+      <TextField fx:id="playerNameField" layoutX="946.0" layoutY="417.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="360.0">
          <font>
             <Font size="40.0" />
          </font>
       </TextField>
-      <Label alignment="CENTER" layoutX="964.0" layoutY="332.0" prefHeight="85.0" prefWidth="370.0" text="Player name" textAlignment="CENTER" AnchorPane.rightAnchor="25.0">
+      <Label alignment="CENTER" layoutX="964.0" layoutY="332.0" prefHeight="85.0" prefWidth="370.0" text="Player name" textAlignment="CENTER" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="280.0">
          <font>
             <Font size="40.0" />
          </font>
       </Label>
-      <ScrollPane layoutX="12.0" layoutY="280.0" prefHeight="420.0" prefWidth="840.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0">
-         <content>
+      <ProgressIndicator fx:id="progress" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
+      <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1032.0" layoutY="308.0" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="140.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <StackPane layoutX="20.0" layoutY="286.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
+         <children>
             <ImageView fitHeight="420.0" fitWidth="840.0" pickOnBounds="true">
                <image>
-                  <Image url="@../images/misc/base_pagina2.jpg" />
+                  <Image url="@../images/darkWood.jpg" />
                </image>
             </ImageView>
-         </content></ScrollPane>
+            <ScrollPane hbarPolicy="NEVER" hmax="0.0" prefHeight="420.0" prefWidth="840.0" stylesheets="@../css/style.css">
+               <content>
+                  <VBox fx:id="lobbiesVBox" alignment="CENTER" maxWidth="838.0" prefWidth="838.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </StackPane>
+      <AnchorPane fx:id="joinButton" disable="true" layoutX="970.0" layoutY="521.0" onMouseClicked="#onJoinMouseClicked" onMouseEntered="#onJoinMouseEntered" onMouseExited="#onJoinMouseExited" prefHeight="60.0" prefWidth="200.0" AnchorPane.bottomAnchor="150.0" AnchorPane.rightAnchor="110.0">
+         <children>
+            <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <image>
+                  <Image url="@../images/darkWood.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="joinLabel" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" text="Join" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="30.0" layoutY="35.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <image>
+            <Image url="@../images/back-arrow.jpg" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>

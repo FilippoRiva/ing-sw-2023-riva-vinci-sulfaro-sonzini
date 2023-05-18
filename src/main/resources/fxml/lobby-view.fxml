@@ -1,39 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.LobbyController">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Image url="@../images/misc/home.png" />
+            <Image url="@../images/background.png" />
         </ImageView>
-      <AnchorPane layoutX="12.0" layoutY="280.0" prefHeight="420.0" prefWidth="840.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0">
-         <children>
-            <ImageView fitHeight="420.0" fitWidth="840.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../images/misc/base_pagina2.jpg" />
-               </image>
-            </ImageView>
-            <Label alignment="CENTER" layoutX="661.0" layoutY="41.0" prefHeight="85.0" prefWidth="100.0" text="1/4" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="740.0" AnchorPane.topAnchor="0.0">
-               <font>
-                  <Font size="40.0" />
-               </font>
-            </Label>
-            <Label fx:id="lobbyNameLabel" layoutX="81.0" layoutY="34.0" text="lobbyName" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <font>
-                  <Font size="40.0" />
-               </font>
-            </Label>
-         </children></AnchorPane>
-      <AnchorPane layoutX="899.0" layoutY="375.0" onMouseClicked="#onStartMouseClicked" onMouseEntered="#onStartMouseEntered" onMouseExited="#onStartMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.topAnchor="375.0">
+      <AnchorPane fx:id="startButton" disable="true" layoutX="899.0" layoutY="375.0" onMouseClicked="#onStartMouseClicked" onMouseEntered="#onStartMouseEntered" onMouseExited="#onStartMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.topAnchor="375.0">
          <children>
             <ImageView fitHeight="80.0" fitWidth="350.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
-                  <Image url="@../images/misc/base_pagina2.jpg" />
+                  <Image url="@../images/darkWood.jpg" />
                </image>
             </ImageView>
             <Label fx:id="startLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -43,5 +30,54 @@
             </Label>
          </children>
       </AnchorPane>
+      <ProgressIndicator fx:id="progress" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
+      <StackPane layoutX="30.0" layoutY="296.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
+         <children>
+            <ImageView fitHeight="420.0" fitWidth="840.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/darkWood.jpg" />
+               </image>
+            </ImageView>
+            <ScrollPane hbarPolicy="NEVER" hmax="0.0" maxHeight="350.0" prefHeight="350.0" prefWidth="840.0" stylesheets="@../css/style.css" StackPane.alignment="BOTTOM_CENTER">
+               <content>
+                  <VBox fx:id="playersVBox" alignment="CENTER" maxWidth="838.0" prefWidth="838.0" />
+               </content>
+            </ScrollPane>
+            <AnchorPane maxHeight="70.0" prefHeight="70.0" prefWidth="840.0" StackPane.alignment="TOP_CENTER">
+               <children>
+                  <Label fx:id="lobbyNameLabel" contentDisplay="CENTER" text="lobbyName" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="playersInLabel" alignment="CENTER" contentDisplay="CENTER" text="1/4" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="minusButton" disable="true" layoutX="690.0" layoutY="14.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="-" textFill="WHITE" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="15.0">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="plusButton" disable="true" layoutX="502.0" layoutY="14.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="+" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+      <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="50.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="30.0" layoutY="35.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <image>
+            <Image url="@../images/back-arrow.jpg" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>
