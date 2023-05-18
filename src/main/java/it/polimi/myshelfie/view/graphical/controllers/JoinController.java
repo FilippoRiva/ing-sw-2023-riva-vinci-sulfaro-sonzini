@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical;
+package it.polimi.myshelfie.view.graphical.controllers;
 
 import javafx.scene.control.TextField;
 

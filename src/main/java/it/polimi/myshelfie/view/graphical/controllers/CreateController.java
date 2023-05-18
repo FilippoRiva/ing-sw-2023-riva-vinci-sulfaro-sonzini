@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical;
+package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.ViewBuffer;
 import javafx.fxml.FXMLLoader;
