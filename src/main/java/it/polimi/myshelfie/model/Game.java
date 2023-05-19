@@ -203,17 +203,17 @@ public class Game implements GameModel, LobbyModel {
     public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
         if(!positionsAreValid(positions)) throw new InvalidParameterException("positions are not valid");
+        if(positions.size() > 3) throw new InvalidParameterException("player has taken more tiles than allowed");
+        if(positions.size() > currentPlayer.getBookshelf().columnFreeSpace() || positions.size() > 3) throw new InvalidParameterException("player has taken more tiles than allowed");
+
+
 
         List<ItemTile> items = new ArrayList<>();
         for(Position p : positions){
             items.add(livingRoom.removeTile(p.getX(), p.getY()));
         }
-        for(Player player : players) {
-            if (player.getName().equals(playerName)) {
-                player.setTakenTiles(items);
-                break;
-            }
-        }
+
+        currentPlayer.setTakenTiles(items);
     }
 
     /**
@@ -232,8 +232,21 @@ public class Game implements GameModel, LobbyModel {
     }
 
     private boolean aligned(List<Position> positions){
-        return positions.stream().map(Position::getX).distinct().limit(2).count()==1 ||
-                positions.stream().map(Position::getY).distinct().limit(2).count()==1;
+        if(positions.stream().map(Position::getX).distinct().limit(2).count()==1){
+            positions.sort(Comparator.comparingInt(Position::getY));
+            for(int i=0; i< positions.size()-1; i++){
+                if(!(positions.get(i).getY() == positions.get(i+1).getY()+1)) return false;
+            }
+            return true;
+        }else if(positions.stream().map(Position::getY).distinct().limit(2).count()==1){
+            positions.sort(Comparator.comparingInt(Position::getX));
+            for(int i=0; i< positions.size()-1; i++){
+                if(!(positions.get(i).getX()+1 == positions.get(i+1).getX())) return false;
+            }
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

@@ -96,21 +96,21 @@ public class CLIInputInterpreter {
                         case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
                         case "lobby" -> UI.setInternalViewState(InternalViewState.LOBBY);
                         case "+" -> {
-                            if (!addPlayer()) {
+                            if (!viewBuffer.addPlayer()) {
                                 UI.wrongInput();
                             }
                         }
                         case "-" -> {
-                            if (!removePlayer()) {
+                            if (!viewBuffer.removePlayer()) {
                                 UI.wrongInput();
                             }
                         }
                         case "?" -> weirdConfig();
                         case "s" -> {
-                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) startRequest();
+                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) viewBuffer.startRequest();
                             else UI.wrongInput();
                         }
-                        case "exit" -> exitRequest();
+                        case "exit" -> viewBuffer.exitRequest();
                         default -> UI.wrongInput();
                     }
                 }
@@ -160,21 +160,13 @@ public class CLIInputInterpreter {
             case WIN -> {
                 if(input.equals("exit")){
                     UI.setInternalViewState(InternalViewState.INIT);
-                    exitRequest();
+                    viewBuffer.exitRequest();
                 } else {
                     UI.wrongInput("pls stop playing this game");
                 }
             }
         }
         UI.clearInput();
-    }
-
-    private void exitRequest() {
-        try {
-            viewBuffer.sendMessage(new NetworkMessage(ViewEvent.EXIT_REQUEST));
-        } catch (InvalidParameterException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void interpretInit(String input) {
@@ -231,7 +223,7 @@ public class CLIInputInterpreter {
         } else if(inputParameters.size()==1){
             inputParameters.add(input);
             UI.setInternalViewState(InternalViewState.JOIN);
-            joinRequest(inputParameters.get(0),inputParameters.get(1));
+            viewBuffer.joinRequest(inputParameters.get(0),inputParameters.get(1));
             UI.setMyUsername(input);
             inputParameters.clear();
         }
@@ -249,7 +241,7 @@ public class CLIInputInterpreter {
         } else if(inputParameters.size()==1){
             inputParameters.add(input);
             UI.setInternalViewState(InternalViewState.CREATE);
-            createRequest(inputParameters.get(0),inputParameters.get(1));
+            viewBuffer.createRequest(inputParameters.get(0),inputParameters.get(1));
             UI.setMyUsername(input);
         }
     }
@@ -269,12 +261,12 @@ public class CLIInputInterpreter {
             Position position = new Position(coordinates.get(i*2),coordinates.get(i*2+1));
             positions.add(position);
         }
-        drawRequest(positions);
+        viewBuffer.drawRequest(positions);
     }
 
     private void interpretOrder(String input) {
         if(input.equals("")){
-            organizeRequest(new ArrayList<>());
+            viewBuffer.organizeRequest(new ArrayList<>());
             return;
         }
         FullGameModelView gmv = viewBuffer.getGameModelView();
@@ -302,7 +294,7 @@ public class CLIInputInterpreter {
             UI.wrongInput("please insert valid numbers");
             return;
         }
-        organizeRequest(choices.stream().map(takenTiles::get).toList());
+        viewBuffer.organizeRequest(choices.stream().map(takenTiles::get).toList());
     }
 
     private void interpretInsert(String input) {
@@ -316,13 +308,13 @@ public class CLIInputInterpreter {
             UI.wrongInput("insert a valid column");
             return;
         }
-        insertRequest(column);
+        viewBuffer.insertRequest(column);
     }
 
     private void interpretMessage(String input){
         if(!input.startsWith("/")){
             Message message = new Message(UI.myUsername, Messages.toEveryOne,input);
-            sendMessage(message);
+            viewBuffer.sendChatMessage(message);
             return;
         }
         input = input.substring(1);
@@ -336,118 +328,7 @@ public class CLIInputInterpreter {
         }
         String msg = input.substring(user.length()+1);
         Message message = new Message(UI.myUsername, user, msg);
-        sendMessage(message);
-    }
-
-
-    private void joinRequest(String lobby, String playerName){
-        synchronized (viewBuffer) {
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST,playerName,lobby));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void createRequest(String lobby, String playerName){
-        synchronized (viewBuffer) {
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CREATE_REQUEST, playerName, lobby));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void startRequest() {
-        synchronized (viewBuffer){
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.START_REQUEST));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void drawRequest(List<Position> positions) {
-        synchronized (viewBuffer){
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST,positions));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void organizeRequest(List<ItemTile> orderedTiles){
-        synchronized (viewBuffer){
-            try{
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,orderedTiles));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void insertRequest(int column){
-        synchronized (viewBuffer){
-            try{
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST,column));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void sendMessage(Message message){
-        synchronized (viewBuffer){
-            try{
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.MESSAGE_SEND,message));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private boolean removePlayer() {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
-        int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
-        if(currentSize==2) return false;
-        GameConfig config;
-        try {
-            config = new GameConfig(currentSize-1);
-        } catch (InvalidParameterException ignored) {
-            return false;
-        }
-        synchronized (viewBuffer) {
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return true;
-    }
-
-    private boolean addPlayer() {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
-        int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
-        if(currentSize==4) return false;
-        GameConfig config;
-        try {
-            config = new GameConfig(currentSize+1);
-        } catch (InvalidParameterException e) {
-            return false;
-        }
-        synchronized (viewBuffer) {
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return true;
+        viewBuffer.sendChatMessage(message);
     }
 
     private void weirdConfig(){

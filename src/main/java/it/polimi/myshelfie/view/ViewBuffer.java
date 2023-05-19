@@ -1,6 +1,11 @@
 package it.polimi.myshelfie.view;
 
+import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.GameState;
+import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.view.events.ViewEvent;
@@ -8,10 +13,12 @@ import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ViewBuffer extends View {
-    Observable<ViewUpdate, NetworkMessage> UINotifier;
+    Observable<ViewUpdate, Object> UINotifier;
+    private static ViewBuffer viewBuffer;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
@@ -25,6 +32,131 @@ public class ViewBuffer extends View {
         if(networkMessage == null) return;
         setChanged();
         notifyObservers((ViewEvent) networkMessage.getEvent(), networkMessage);
+    }
+
+    public static ViewBuffer getInstance(){
+        if(viewBuffer==null){
+            ViewBuffer.viewBuffer = new ViewBuffer();
+        }
+        return viewBuffer;
+    }
+
+    public void joinRequest(String lobby, String playerName){
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST,playerName,lobby));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void createRequest(String lobby, String playerName){
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.CREATE_REQUEST, playerName, lobby));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void exitRequest() {
+        try {
+            sendMessage(new NetworkMessage(ViewEvent.EXIT_REQUEST));
+        } catch (InvalidParameterException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void startRequest() {
+        synchronized (this){
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.START_REQUEST));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void drawRequest(List<Position> positions) {
+        synchronized (this){
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST,positions));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void organizeRequest(List<ItemTile> orderedTiles){
+        synchronized (this){
+            try{
+                sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,orderedTiles));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void insertRequest(int column){
+        synchronized (this){
+            try{
+                sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST,column));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendChatMessage(Message message){
+        synchronized (this){
+            try{
+                sendMessage(new NetworkMessage(ViewEvent.MESSAGE_SEND,message));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public boolean removePlayer() {
+        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+        int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
+        if(currentSize==2) return false;
+        GameConfig config;
+        try {
+            config = new GameConfig(currentSize-1);
+        } catch (InvalidParameterException ignored) {
+            return false;
+        }
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
+    }
+
+    public boolean addPlayer() {
+        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+        int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
+        if(currentSize==4) return false;
+        GameConfig config;
+        try {
+            config = new GameConfig(currentSize+1);
+        } catch (InvalidParameterException e) {
+            return false;
+        }
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
     }
 
     @Override
@@ -113,11 +245,11 @@ public class ViewBuffer extends View {
         UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);
     }
 
-    public synchronized void addUI(Observer<ViewUpdate, NetworkMessage> o) {
+    public synchronized void addUI(Observer<ViewUpdate, Object> o) {
         UINotifier.addObserver(o);
     }
 
-    public synchronized void removeUI(Observer<ViewUpdate, NetworkMessage> o ){
+    public synchronized void removeUI(Observer<ViewUpdate, Object> o ){
         UINotifier.deleteObserver(o);
     }
 

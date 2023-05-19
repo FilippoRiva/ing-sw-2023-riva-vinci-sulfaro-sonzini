@@ -1,0 +1,15 @@
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.button {
+    -fx-background-color: brown;
+}
+
+.button:hover {
+    -fx-background-color: black;
+}
