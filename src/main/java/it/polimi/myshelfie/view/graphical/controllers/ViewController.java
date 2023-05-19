@@ -2,6 +2,7 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 
@@ -25,7 +26,8 @@ public abstract class ViewController {
         progress.setVisible(false);
     }
 
-    public void onBackArrowClick(){
+    @FXML
+    protected void onBackArrowClick(){
         GraphicalUI.changeScene("home");
     }
 

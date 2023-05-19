@@ -5,6 +5,7 @@ import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -31,10 +32,12 @@ public class LobbyController extends ViewController implements Initializable {
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
-    public void onStartMouseEntered(MouseEvent mouseEvent) {
+    @FXML
+    protected void onStartMouseEntered(MouseEvent mouseEvent) {
         startLabel.setTextFill(Color.color(1, 0, 0));
     }
-    public void onStartMouseExited(MouseEvent mouseEvent) {
+    @FXML
+    protected void onStartMouseExited(MouseEvent mouseEvent) {
         startLabel.setTextFill(Color.color(1, 1, 1));
     }
     @Override
@@ -43,15 +46,18 @@ public class LobbyController extends ViewController implements Initializable {
         createListPlayers();
     }
 
-    public void onStartMouseClicked(MouseEvent mouseEvent) {
+    @FXML
+    protected void onStartMouseClicked(MouseEvent mouseEvent) {
         viewBuffer.startRequest();
     }
 
-    public void onMouseMinusClicked(MouseEvent mouseEvent) {
+    @FXML
+    protected void onMouseMinusClicked(MouseEvent mouseEvent) {
         if(!viewBuffer.removePlayer()) displayError("cannot remove player");
     }
 
-    public void onMousePlusClicked(MouseEvent mouseEvent) {
+    @FXML
+    protected void onMousePlusClicked(MouseEvent mouseEvent) {
         if(!viewBuffer.addPlayer()) displayError("cannot add player");
     }
 
