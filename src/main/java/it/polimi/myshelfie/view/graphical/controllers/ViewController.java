@@ -15,9 +15,13 @@ public abstract class ViewController {
 
     public void displayError(String errorMessage){
         stopLoading();
-        Platform.runLater(() -> errorLabel.setText(errorMessage));
-        errorLabel.setVisible(true);
-        timer(() -> errorLabel.setVisible(false), 3000);
+        Platform.runLater(() -> {
+            if(errorLabel != null) errorLabel.setText(errorMessage);
+        });
+        if(errorLabel != null) errorLabel.setVisible(true);
+        timer(() -> {
+            if (errorLabel != null) errorLabel.setVisible(false);
+        }, 3000);
     }
     public void startLoading(){
         progress.setVisible(true);
