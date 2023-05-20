@@ -30,4 +30,24 @@ public class Position implements Serializable{
         return y;
     }
 
+    @Override
+    public int hashCode() {
+        return (x*100)+y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Position p;
+        try {
+            p = (Position) obj;
+        }catch (Exception e){
+            return false;
+        }
+        return p.getX() == x && p.getY() == y;
+    }
+
+    public Position centered(int livingRoomSize){
+        int offset = (livingRoomSize-1)/2;
+        return new Position(x-offset, offset-y);
+    }
 }
