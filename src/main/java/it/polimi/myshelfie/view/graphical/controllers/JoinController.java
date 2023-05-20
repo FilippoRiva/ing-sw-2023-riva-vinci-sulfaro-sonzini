@@ -4,6 +4,7 @@ import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -11,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,10 +29,12 @@ public class JoinController extends ViewController implements Initializable {
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String selected = null;
 
-    public void onJoinMouseEntered(MouseEvent mouseEvent) {
+    @FXML
+    protected void onJoinMouseEntered(MouseEvent mouseEvent) {
         joinLabel.setTextFill(Color.color(1, 0, 0));
     }
-    public void onJoinMouseExited(MouseEvent mouseEvent) {
+    @FXML
+    protected void onJoinMouseExited(MouseEvent mouseEvent) {
         joinLabel.setTextFill(Color.color(1, 1, 1));
     }
 

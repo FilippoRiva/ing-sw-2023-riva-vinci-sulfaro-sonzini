@@ -2,6 +2,7 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 
@@ -14,9 +15,13 @@ public abstract class ViewController {
 
     public void displayError(String errorMessage){
         stopLoading();
-        Platform.runLater(() -> errorLabel.setText(errorMessage));
-        errorLabel.setVisible(true);
-        timer(() -> errorLabel.setVisible(false), 3000);
+        Platform.runLater(() -> {
+            if(errorLabel != null) errorLabel.setText(errorMessage);
+        });
+        if(errorLabel != null) errorLabel.setVisible(true);
+        timer(() -> {
+            if (errorLabel != null) errorLabel.setVisible(false);
+        }, 3000);
     }
     public void startLoading(){
         progress.setVisible(true);
@@ -25,7 +30,8 @@ public abstract class ViewController {
         progress.setVisible(false);
     }
 
-    public void onBackArrowClick(){
+    @FXML
+    protected void onBackArrowClick(){
         GraphicalUI.changeScene("home");
     }
 
