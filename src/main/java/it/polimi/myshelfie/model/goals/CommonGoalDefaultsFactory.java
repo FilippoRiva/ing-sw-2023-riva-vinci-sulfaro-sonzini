@@ -82,40 +82,43 @@ public class CommonGoalDefaultsFactory {
     private static CommonGoal generateGoal(int id){
         switch (id){
             case 0 -> {
-                return new CommonGoalSixOfTwo();
-            }
-            case 1 -> {
-                return new CommonGoalDiagonal();
-            }
-            case 2 -> {
-                return new CommonGoalCorner();
-            }
-            case 3 -> {
-                return new CommonGoalFourLines();
-            }
-            case 4 -> {
-                return new CommonGoalFourOfFour();
-            }
-            case 5 -> {
-                return new CommonGoalTwoColumns();
-            }
-            case 6 -> {
                 return new CommonGoalTwoSquares();
             }
-            case 7 -> {
+            case 1 -> {
+                return new CommonGoalTwoColumns();
+            }
+            case 2 -> {
+                return new CommonGoalFourOfFour();
+            }
+            case 3 -> {
+                return new CommonGoalSixOfTwo();
+            }
+            case 4 -> {
+                return new CommonGoalThreeColumns();
+            }
+            case 5 -> {
                 return new CommonGoalTwoLines();
             }
+            case 6 -> {
+                return new CommonGoalFourLines();
+            }
+            case 7 -> {
+                return new CommonGoalCorner();
+            }
             case 8 -> {
-                return new CommonGoalThreeColumns();
+                return new CommonGoalEightTiles();
             }
             case 9 -> {
                 return new CommonGoalX();
             }
             case 10 -> {
-                return new CommonGoalEightTiles();
+                return new CommonGoalDiagonal();
+            }
+            case 11 -> {
+                return new CommonGoalStairs();
             }
             default -> {
-                return new CommonGoalStairs();
+                return null;
             }
         }
     }
