@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view.graphical.controllers;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
+import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -10,9 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -34,7 +37,7 @@ public class LobbyController extends ViewController implements Initializable {
 
     @FXML
     protected void onStartMouseEntered(MouseEvent mouseEvent) {
-        startLabel.setTextFill(Color.color(1, 0, 0));
+        startLabel.setTextFill(Color.rgb(229, 146, 93));
     }
     @FXML
     protected void onStartMouseExited(MouseEvent mouseEvent) {
@@ -69,12 +72,18 @@ public class LobbyController extends ViewController implements Initializable {
     private void createListPlayers(){
         LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
         List<String> playersIn = lobbyModelView.getPlayers();
+
         for(String player : playersIn){
             Label label = new Label(player);
             label.setMaxWidth(837);
-            label.setFont(Font.font(30));
-            if(lobbyModelView.isRoomOwner(player)) label.setTextFill(Color.BLUE);
-            else if(player.equals(GraphicalUI.getPlayerName())) label.setTextFill(Color.YELLOW);
+            label.setFont(Font.font("Kristen ITC", 40));
+            if(lobbyModelView.isRoomOwner(player)) {
+                label.setTextFill(Color.WHITE);
+            }
+            else if(player.equals(GraphicalUI.getPlayerName())) {
+                label.setTextFill(Color.rgb(218, 106, 45));
+                label.setFont(Font.font("Kristen ITC", 50));
+            }
             else label.setTextFill(Color.WHITE);
 
             Platform.runLater(() -> playersVBox.getChildren().add(label));

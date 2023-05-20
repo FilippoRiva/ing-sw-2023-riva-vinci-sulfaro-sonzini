@@ -7,7 +7,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
     <children>
-        <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="720.0" fitWidth="1280.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="-7.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
         </ImageView>
       <AnchorPane fx:id="startButton" disable="true" layoutX="899.0" layoutY="375.0" onMouseClicked="#onStartMouseClicked" onMouseEntered="#onStartMouseEntered" onMouseExited="#onStartMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.topAnchor="375.0">
@@ -19,7 +19,7 @@
             </ImageView>
             <Label fx:id="startLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
-                  <Font size="40.0" />
+                  <Font name="Kristen ITC" size="45.0" />
                </font>
             </Label>
          </children>
@@ -39,22 +39,22 @@
             </ScrollPane>
             <AnchorPane maxHeight="70.0" prefHeight="70.0" prefWidth="840.0" StackPane.alignment="TOP_CENTER">
                <children>
-                  <Label fx:id="lobbyNameLabel" contentDisplay="CENTER" text="lobbyName" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="lobbyNameLabel" contentDisplay="CENTER" text="Lobby name" textAlignment="CENTER" textFill="#f2ebeb" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="0.0">
                      <font>
-                        <Font size="40.0" />
+                        <Font name="Kristen ITC" size="40.0" />
                      </font>
                   </Label>
                   <Label fx:id="playersInLabel" alignment="CENTER" contentDisplay="CENTER" text="1/4" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
                      <font>
-                        <Font size="40.0" />
+                        <Font name="Kristen ITC" size="40.0" />
                      </font>
                   </Label>
-                  <Button fx:id="minusButton" alignment="CENTER" disable="true" layoutX="690.0" layoutY="15.0" maxHeight="50.0" maxWidth="50.0" minHeight="40.0" minWidth="44.0" onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="44.0" stylesheets="@../css/style.css" text="-" textAlignment="CENTER" textFill="#fcfafa" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="15.0">
+                  <Button fx:id="minusButton" alignment="CENTER" disable="true" layoutX="690.0" layoutY="15.0" maxHeight="50.0" maxWidth="50.0" minHeight="40.0" minWidth="44.0" onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="44.0" stylesheets="@../css/style.css" text="-" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="15.0">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="System Bold" size="20.0" />
                      </font>
                   </Button>
-                  <Button fx:id="plusButton" disable="true" layoutX="502.0" layoutY="14.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="+" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
+                  <Button fx:id="plusButton" alignment="CENTER" disable="true" layoutX="502.0" layoutY="14.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="+" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
                      <font>
                         <Font size="20.0" />
                      </font>
