@@ -229,21 +229,17 @@ public class Game implements GameModel, LobbyModel {
     }
 
     private boolean aligned(List<Position> positions){
-        if(positions.stream().map(Position::getX).distinct().limit(2).count()==1){
-            positions.sort(Comparator.comparingInt(Position::getY));
-            for(int i=0; i< positions.size()-1; i++){
-                if(!(positions.get(i).getY() == positions.get(i+1).getY()-1)) return false;
-            }
-            return true;
-        }else if(positions.stream().map(Position::getY).distinct().limit(2).count()==1){
-            positions.sort(Comparator.comparingInt(Position::getX));
-            for(int i=0; i< positions.size()-1; i++){
-                if(!(positions.get(i).getX() == positions.get(i+1).getX()-1)) return false;
-            }
-            return true;
-        }else{
-            return false;
-        }
+        if(positions.size()==1) return true;
+        int maxIndex = positions.size()-1;
+        positions.sort(Comparator.comparingInt(Position::getX));
+        int maxX = positions.get(maxIndex).getX();
+        int minX = positions.get(0).getX();
+        positions.sort(Comparator.comparingInt(Position::getY));
+        int maxY = positions.get(maxIndex).getY();
+        int minY = positions.get(0).getY();
+        if(maxX != minX && maxY != minY) return false; //not in a line
+        if(maxX == minX && maxY-minY+1 != positions.size()) return false; //vertical line but not consecutive
+        return !(maxY == minY && maxX-minX+1 !=positions.size()); //horizontal line but not consecutive
     }
 
     @Override
