@@ -9,30 +9,6 @@ public enum PersonalGoalDefaults{
      * The default PersonalGoals out of the "my Shelfie" box
      */
     FIRST(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0),new ItemTile(ItemTileType.EMPTY,0) },
-            new ItemTile[]{new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME , 0),new ItemTile( ItemTileType.EMPTY,0) },
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) },
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0), new ItemTile (ItemTileType.TROPHY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0), new ItemTile (ItemTileType.EMPTY ,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) },
-    },3),
-    SECOND(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },12),
-    THIRD(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0)},
-    },3),
-    FOURTH(new ItemTile[][]{
             new ItemTile[]{new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0)},
@@ -40,47 +16,23 @@ public enum PersonalGoalDefaults{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
     },1),
-    FIFTH(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },11),
-    SIXTH(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.PLANT,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },10),
-    SEVENTH(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },8),
-    EIGHTH(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    SECOND(new ItemTile[][]{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.PLANT,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },9),
-    NINTH(new ItemTile[][]{
-            new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0)},
-            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },7),
-    TENTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0)},
+    },2),
+    THIRD(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0),new ItemTile(ItemTileType.EMPTY,0) },
+            new ItemTile[]{new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME , 0),new ItemTile( ItemTileType.EMPTY,0) },
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) },
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0), new ItemTile (ItemTileType.TROPHY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0), new ItemTile (ItemTileType.EMPTY ,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) },
+    },3),
+    FOURTH(new ItemTile[][]{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
@@ -88,7 +40,7 @@ public enum PersonalGoalDefaults{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.CAT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
     },4),
-    ELEVENTH(new ItemTile[][]{
+    FIFTH(new ItemTile[][]{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
@@ -96,14 +48,62 @@ public enum PersonalGoalDefaults{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.PLANT,0)},
             new ItemTile[]{new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0) , new ItemTile(ItemTileType.EMPTY,0)},
     },5),
-    TWELFTH(new ItemTile[][]{
+    SIXTH(new ItemTile[][]{
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
-    },6);
+    },6),
+    SEVENTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    },7),
+    EIGHTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.FRAME,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    },8),
+    NINTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.BOOK,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.PLANT,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    },9),
+    TENTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.PLANT,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    },10),
+    ELEVENTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    },11),
+    TWELFTH(new ItemTile[][]{
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.TROPHY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.GAME,0)},
+            new ItemTile[]{new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
+    },12);
 
     private final ItemTile[][] goal;
     private final int id;
