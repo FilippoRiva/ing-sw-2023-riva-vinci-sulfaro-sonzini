@@ -58,7 +58,7 @@ class PersonalGoalTest {
         assertTrue(matrixEqual(personalGoal.getGoal(),PersonalGoalDefaults.TWELFTH.getGoal()));
         assertEquals(12,personalGoal.achievedPoints(PersonalGoalDefaults.TWELFTH.getGoal()));
 
-        personalGoal = new PersonalGoal(PersonalGoalDefaults.SECOND);
+        personalGoal = new PersonalGoal(PersonalGoalDefaults.TWELFTH);
         assertEquals(9,personalGoal.achievedPoints(
         new ItemTile[][]{
                 new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0)},
