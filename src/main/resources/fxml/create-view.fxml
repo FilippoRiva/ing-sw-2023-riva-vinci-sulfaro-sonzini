@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.CreateController">
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.CreateController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
         </ImageView>
       <TextField fx:id="lobbyNameField" layoutX="564.0" layoutY="348.0" prefHeight="100.0" prefWidth="600.0" promptText="Room name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="320.0">
          <font>
-            <Font size="40.0" />
+            <Font name="Kristen ITC" size="40.0" />
          </font>
       </TextField>
-      <Label layoutX="42.0" layoutY="354.0" prefHeight="100.0" prefWidth="400.0" text="Room name" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="320.0">
+      <Label layoutX="42.0" layoutY="354.0" prefHeight="100.0" prefWidth="400.0" text="Room name" textFill="#302f2f" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="320.0">
          <font>
-            <Font size="40.0" />
+            <Font name="Kristen ITC" size="45.0" />
          </font>
       </Label>
       <TextField fx:id="playerNameField" layoutX="572.0" layoutY="455.0" prefHeight="100.0" prefWidth="600.0" promptText="Player name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="460.0">
          <font>
-            <Font size="40.0" />
+            <Font name="Kristen ITC" size="40.0" />
          </font>
       </TextField>
-      <Label layoutX="50.0" layoutY="461.0" prefHeight="100.0" prefWidth="400.0" text="Player name" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="460.0">
+      <Label layoutX="50.0" layoutY="461.0" prefHeight="100.0" prefWidth="400.0" text="Player name" textFill="#302f2f" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="460.0">
          <font>
-            <Font size="40.0" />
+            <Font name="Kristen ITC" size="45.0" />
          </font>
       </Label>
       <AnchorPane onMouseClicked="#onCreateMouseClicked" onMouseEntered="#onCreateMouseEntered" onMouseExited="#onCreateMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="270.0">
@@ -40,9 +37,9 @@
                   <Image url="@../images/darkWood.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="createLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Create" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label fx:id="createLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Create" textAlignment="CENTER" textFill="#e1d7d7" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
-                  <Font size="40.0" />
+                  <Font name="Kristen ITC" size="40.0" />
                </font>
             </Label>
          </children>
@@ -53,7 +50,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="20.0" layoutY="25.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="20.0" layoutY="25.0" onMouseClicked="#onBackArrowClick" opacity="0.9" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
          <image>
             <Image url="@../images/back-arrow.jpg" />
          </image>
