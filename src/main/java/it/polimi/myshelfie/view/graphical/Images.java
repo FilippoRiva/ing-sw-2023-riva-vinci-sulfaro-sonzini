@@ -4,7 +4,6 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import javafx.scene.image.Image;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -29,7 +28,7 @@ public class Images {
         }
     }
 
-    public static Image getTile(ItemTile itemTile){
+    public static Image getTileImage(ItemTile itemTile){
         return nameToImage.get(itemTile.getType().getName()+(itemTile.getId()+1));
     }
 }

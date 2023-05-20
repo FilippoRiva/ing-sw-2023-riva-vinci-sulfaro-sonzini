@@ -104,15 +104,15 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             ((LobbyController)currentController).refreshListPlayers();
     }
     private void gameUpdate() {
-        if(currentState == InternalViewState.GAME){
-
-        }
+        if(currentState == InternalViewState.GAME)
+            ((GameController)currentController).play();
     }
     private void viewTypeUpdate() {
         switch (viewBuffer.getViewType()){
-            case LOBBY -> {
-                changeScene("lobby");
-                lobbyUpdate();
+            case LOBBY -> changeScene("lobby");
+            case GAME -> {
+                changeScene("game");
+                gameUpdate();
             }
             case WIN -> {}
         }
