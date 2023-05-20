@@ -41,7 +41,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Pane fx:id="bookshelfPane" layoutX="844.0" layoutY="93.0" prefHeight="355.0" prefWidth="335.0" />
+      <Pane fx:id="bookshelfPane" layoutX="850.0" layoutY="107.0" prefHeight="340.0" prefWidth="322.0" />
       <Label fx:id="playerBookshelfLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="819.0" layoutY="15.0" prefHeight="58.0" prefWidth="383.0" text="player's bookshelf" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="40.0" />
@@ -65,11 +65,6 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="40.0" layoutY="45.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
-         <image>
-            <Image url="@../images/back-arrow.jpg" />
-         </image>
-      </ImageView>
       <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="731.0" layoutY="20.0" onMouseClicked="#prevBookshelf" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/back-arrow.jpg" />
@@ -104,6 +99,35 @@
             <ImageView fx:id="takenTile1Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="takenTile2Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="takenTile3Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
+      <HBox fx:id="insertBox" layoutX="850.0" layoutY="456.0" prefHeight="58.0" prefWidth="324.0" spacing="17.0">
+         <children>
+            <ImageView fx:id="insertButton1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/back-arrow.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="insertButton2" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/back-arrow.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="insertButton3" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/back-arrow.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="insertButton4" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/back-arrow.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="insertButton5" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/back-arrow.jpg" />
+               </image>
+            </ImageView>
          </children>
       </HBox>
     </children>
