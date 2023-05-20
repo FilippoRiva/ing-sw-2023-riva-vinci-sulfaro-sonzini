@@ -10,12 +10,12 @@
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
         </ImageView>
-      <TextField fx:id="playerNameField" layoutX="946.0" layoutY="417.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="360.0">
+      <TextField fx:id="playerNameField" alignment="CENTER" layoutX="885.0" layoutY="366.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="24.59999999999991" AnchorPane.topAnchor="366.0">
          <font>
-            <Font size="40.0" />
+            <Font name="Kristen ITC" size="30.0" />
          </font>
       </TextField>
-      <Label alignment="CENTER" layoutX="964.0" layoutY="332.0" prefHeight="85.0" prefWidth="370.0" text="Player name" textAlignment="CENTER" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="280.0">
+      <Label alignment="CENTER" layoutX="885.0" layoutY="280.0" prefHeight="85.0" prefWidth="370.0" text="Player name" textAlignment="CENTER" AnchorPane.rightAnchor="24.59999999999991" AnchorPane.topAnchor="280.0">
          <font>
             <Font name="Kristen ITC" size="40.0" />
          </font>
@@ -49,7 +49,7 @@
             </ImageView>
             <Label fx:id="joinLabel" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" text="Join" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
-                  <Font size="40.0" />
+                  <Font name="Kristen ITC" size="32.0" />
                </font>
             </Label>
          </children>

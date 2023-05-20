@@ -30,8 +30,7 @@ public class JoinController extends ViewController implements Initializable {
     String selected = null;
 
     @FXML
-    protected void onJoinMouseEntered(MouseEvent mouseEvent) {
-        joinLabel.setTextFill(Color.color(1, 0, 0));
+    protected void onJoinMouseEntered(MouseEvent mouseEvent) {joinLabel.setTextFill(Color.rgb(229, 146, 93));
     }
     @FXML
     protected void onJoinMouseExited(MouseEvent mouseEvent) {
@@ -63,7 +62,7 @@ public class JoinController extends ViewController implements Initializable {
         List<String> lobbies = modelView.getLobbies();
         for(String lobby : lobbies){
             AnchorPane anchorPane = new AnchorPane();
-            if(lobby.equals(selected)) anchorPane.setBackground(Background.fill(Color.BLUE));
+            if(lobby.equals(selected)) anchorPane.setBackground(Background.fill(Color.rgb(218, 106, 45)));
 
             anchorPane.setOnMouseClicked(event -> {
                 selected = lobby;
@@ -88,7 +87,7 @@ public class JoinController extends ViewController implements Initializable {
     private Label generateStandardLabel(String text){
         Label label = new Label(text);
         label.setMaxWidth(837);
-        label.setFont(Font.font(30));
+        label.setFont(Font.font("Kristen ITC", 40));
         label.setTextFill(Color.WHITE);
         return label;
     }

@@ -12,20 +12,16 @@ public class HomeController extends ViewController{
     public Label joinLabel;
 
     @FXML
-    protected void onCreateMouseEntered(MouseEvent mouseEvent) {
-        createLabel.setTextFill(Color.color(1, 0, 0));
+    protected void onCreateMouseEntered(MouseEvent mouseEvent) {createLabel.setTextFill(Color.rgb(229,146,93));
     }
     @FXML
-    protected void onCreateMouseExited(MouseEvent mouseEvent) {
-        createLabel.setTextFill(Color.color(1, 1, 1));
+    protected void onCreateMouseExited(MouseEvent mouseEvent) {createLabel.setTextFill(Color.rgb(255, 255, 255));
     }
     @FXML
-    protected void onJoinMouseEntered(MouseEvent mouseEvent) {
-        joinLabel.setTextFill(Color.color(1, 0, 0));
+    protected void onJoinMouseEntered(MouseEvent mouseEvent) {joinLabel.setTextFill(Color.rgb(229, 146, 93));
     }
     @FXML
-    protected void onJoinMouseExited(MouseEvent mouseEvent) {
-        joinLabel.setTextFill(Color.color(1, 1, 1));
+    protected void onJoinMouseExited(MouseEvent mouseEvent) {joinLabel.setTextFill(Color.rgb(255, 255, 255));
     }
     @FXML
     protected void onCreateChoice(MouseEvent mouseEvent) {
