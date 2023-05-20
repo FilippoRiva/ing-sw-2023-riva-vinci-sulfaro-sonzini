@@ -3,7 +3,10 @@ package it.polimi.myshelfie.view.graphical;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewUpdate;
-import it.polimi.myshelfie.view.graphical.controllers.*;
+import it.polimi.myshelfie.view.graphical.controllers.GameController;
+import it.polimi.myshelfie.view.graphical.controllers.JoinController;
+import it.polimi.myshelfie.view.graphical.controllers.LobbyController;
+import it.polimi.myshelfie.view.graphical.controllers.ViewController;
 import it.polimi.myshelfie.view.textual.InternalViewState;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,7 +28,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     static String playerName;
 
     @Override
-    public void update(ViewUpdate evt, Object unused) {
+    public void update(ViewUpdate evt, Object object) {
         switch (evt) {
             case MODEL_UPDATE -> new Thread(this::joinUpdate).start();
             case EXCEPTION_UPDATE -> new Thread(this::exceptionUpdate).start();
@@ -57,6 +60,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     }
 
     public void startGUI(){
+        Images.initImages();
         Application.launch();
     }
 
@@ -110,7 +114,6 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
                 changeScene("lobby");
                 lobbyUpdate();
             }
-            case GAME -> changeScene("game");
             case WIN -> {}
         }
     }
