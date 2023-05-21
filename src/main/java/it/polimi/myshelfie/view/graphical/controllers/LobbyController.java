@@ -89,7 +89,7 @@ public class LobbyController extends ViewController implements Initializable {
             }
             else if(player.equals(GraphicalUI.getPlayerName())) {
                 label.setTextFill(Color.rgb(218, 106, 45));
-                label.setFont(Font.font("Kristen ITC", 50));
+                label.setFont(Font.font("Kristen ITC", 40));
             }
             else label.setTextFill(Color.WHITE);
 
