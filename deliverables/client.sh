@@ -1,1 +1,1 @@
-java --module-path jar/client/ --module ingsw.myshelfie/it.polimi.myshelfie.ClientApp -jar jar/client/ms_client_lin.jar
+java --enable-preview --module-path jar/client/ --module ingsw.myshelfie/it.polimi.myshelfie.ClientApp -jar jar/client/ms_client_lin.jar
