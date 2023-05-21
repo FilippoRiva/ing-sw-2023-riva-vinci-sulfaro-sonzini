@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
+<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
     <children>
-        <ImageView fitHeight="720.0" fitWidth="1280.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="-7.0" AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="720.0" fitWidth="1280.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
         </ImageView>
-      <AnchorPane fx:id="startButton" disable="true" layoutX="899.0" layoutY="375.0" onMouseClicked="#onStartMouseClicked" onMouseEntered="#onStartMouseEntered" onMouseExited="#onStartMouseExited" prefHeight="80.0" prefWidth="350.0" AnchorPane.topAnchor="375.0">
-         <children>
-            <ImageView fitHeight="80.0" fitWidth="350.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <image>
-                  <Image url="@../images/darkWood.jpg" />
-               </image>
-            </ImageView>
-            <Label fx:id="startLabel" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <font>
-                  <Font name="Kristen ITC" size="45.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
       <ProgressIndicator fx:id="progress" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
       <StackPane layoutX="30.0" layoutY="296.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
          <children>
@@ -39,7 +31,7 @@
             </ScrollPane>
             <AnchorPane maxHeight="70.0" prefHeight="70.0" prefWidth="840.0" StackPane.alignment="TOP_CENTER">
                <children>
-                  <Label fx:id="lobbyNameLabel" contentDisplay="CENTER" text="Lobby name" textAlignment="CENTER" textFill="#f2ebeb" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="lobbyNameLabel" contentDisplay="CENTER" text="Lobby name" textAlignment="CENTER" textFill="#f2ebeb" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="Kristen ITC" size="40.0" />
                      </font>
@@ -63,15 +55,12 @@
             </AnchorPane>
          </children>
       </StackPane>
+      <Button fx:id="startButton" disable="true" layoutX="932.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#onStartMouseClicked" prefHeight="90.0" prefWidth="288.0" styleClass="myButton" text="Start" />
       <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="50.0">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="30.0" layoutY="35.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
-         <image>
-            <Image url="@../images/back-arrow.jpg" />
-         </image>
-      </ImageView>
+      <Button layoutX="39.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClick" prefHeight="81.0" prefWidth="145.0" styleClass="arrow" />
     </children>
 </AnchorPane>

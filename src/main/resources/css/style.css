@@ -8,8 +8,40 @@
 
 .button {
     -fx-background-color: brown;
+    -fx-text-fill: white;
+
+    -fx-cursor: hand;
 }
 
 .button:hover {
     -fx-background-color: black;
+}
+
+.myButton {
+    -fx-background-image: url('../images/darkWood.jpg');
+    -fx-background-size: 630px;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+
+    -fx-text-fill: white;
+    -fx-font-family: "Kristen ITC";
+    -fx-text-alignment: center;
+    -fx-font-size: 50;
+}
+.myButton:hover {
+    -fx-text-fill: rgb(229,146,93);
+}
+
+.arrow {
+    -fx-background-image: url('../images/back-arrow.jpg');
+    -fx-background-size: 100;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
+
+.chooseColumn {
+    -fx-background-image: url('../images/back-arrow.jpg');
+    -fx-background-size: 50;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
 }

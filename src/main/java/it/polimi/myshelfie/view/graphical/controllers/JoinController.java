@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -23,19 +24,10 @@ import java.util.ResourceBundle;
 public class JoinController extends ViewController implements Initializable {
     public TextField playerNameField;
     public VBox lobbiesVBox;
-    public AnchorPane joinButton;
-    public Label joinLabel;
+    public Button joinButton;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String selected = null;
-
-    @FXML
-    protected void onJoinMouseEntered(MouseEvent mouseEvent) {joinLabel.setTextFill(Color.rgb(229, 146, 93));
-    }
-    @FXML
-    protected void onJoinMouseExited(MouseEvent mouseEvent) {
-        joinLabel.setTextFill(Color.color(1, 1, 1));
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

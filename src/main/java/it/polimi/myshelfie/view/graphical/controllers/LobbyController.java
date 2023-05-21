@@ -24,23 +24,14 @@ import java.util.ResourceBundle;
 
 public class LobbyController extends ViewController implements Initializable {
     public Label lobbyNameLabel;
-    public Label startLabel;
     public VBox playersVBox;
     public Label playersInLabel;
     public Button minusButton;
     public Button plusButton;
-    public AnchorPane startButton;
+    public Button startButton;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
-    @FXML
-    protected void onStartMouseEntered(MouseEvent mouseEvent) {
-        startLabel.setTextFill(Color.rgb(229, 146, 93));
-    }
-    @FXML
-    protected void onStartMouseExited(MouseEvent mouseEvent) {
-        startLabel.setTextFill(Color.color(1, 1, 1));
-    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lobbyNameLabel.setText(viewBuffer.getLobbyModelView().getName());

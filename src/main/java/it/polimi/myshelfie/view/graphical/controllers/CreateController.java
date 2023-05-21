@@ -15,19 +15,9 @@ import java.util.TimerTask;
 public class CreateController extends ViewController{
     public TextField lobbyNameField;
     public TextField playerNameField;
-    public Label createLabel;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
-
-    @FXML
-    protected void onCreateMouseEntered(MouseEvent mouseEvent) {
-        createLabel.setTextFill(Color.color(1, 0, 0));
-    }
-    @FXML
-    protected void onCreateMouseExited(MouseEvent mouseEvent) {
-        createLabel.setTextFill(Color.color(1, 1, 1));
-    }
     @FXML
     protected void onCreateMouseClicked(MouseEvent mouseEvent) {
         String playerName = playerNameField.getText();
