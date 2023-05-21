@@ -202,6 +202,7 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
+        if(positions.size()==0) throw new InvalidParameterException("no tiles selected");
         if(!positionsAreValid(positions)) throw new InvalidParameterException("positions are not valid");
         if(positions.size() > currentPlayer.getBookshelf().columnFreeSpace() || positions.size() > 3) throw new InvalidParameterException("player has taken more tiles than allowed");
 
