@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.image.Image?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.GameController">
+<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.GameController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/gameBackground.png" />
@@ -41,12 +42,6 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Pane fx:id="bookshelfPane" layoutX="844.0" layoutY="93.0" prefHeight="355.0" prefWidth="335.0" />
-      <Label fx:id="playerBookshelfLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="819.0" layoutY="15.0" prefHeight="58.0" prefWidth="383.0" text="player's bookshelf" AnchorPane.topAnchor="15.0">
-         <font>
-            <Font size="40.0" />
-         </font>
-      </Label>
       <ImageView fx:id="lastTokenImage" fitWidth="60.0" layoutX="450.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/tokens/1.jpg" />
@@ -55,56 +50,50 @@
       <ImageView fx:id="personalGoalImage" fitHeight="260.0" layoutX="595.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="takenToken1Image" fitWidth="60.0" layoutX="595.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="takenToken2Image" fitWidth="60.0" layoutX="707.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="commonGoal1Image" fitWidth="200.0" layoutX="810.0" layoutY="580.0" onMouseEntered="#showDescription1" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="commonGoal2Image" fitWidth="200.0" layoutX="1050.0" layoutY="580.0" onMouseEntered="#showDescription2" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="token1Image" fitWidth="70.0" layoutX="921.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="token2Image" fitWidth="70.0" layoutX="1160.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
-        <ProgressIndicator fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
-      <Label fx:id="descriptionLabel" layoutX="769.0" layoutY="518.0" prefHeight="53.0" prefWidth="482.0" text="Description" visible="false" wrapText="true">
+      <Button layoutX="758.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#prevBookshelf" prefHeight="50.0" prefWidth="79.0" styleClass="arrow" />
+      <Label fx:id="playerBookshelfLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="819.0" layoutY="15.0" prefHeight="58.0" prefWidth="383.0" text="player's bookshelf" AnchorPane.topAnchor="15.0">
          <font>
-            <Font size="20.0" />
+            <Font size="40.0" />
          </font>
       </Label>
-      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="40.0" layoutY="45.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
-         <image>
-            <Image url="@../images/back-arrow.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="731.0" layoutY="20.0" onMouseClicked="#prevBookshelf" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/back-arrow.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="1180.0" layoutY="16.0" onMouseClicked="#nextBookshelf" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/back-arrow.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="errorLabel" layoutX="200.0" layoutY="683.0" prefHeight="30.0" prefWidth="550.0" text="Label" textFill="RED" visible="false">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <AnchorPane fx:id="button" layoutX="16.0" layoutY="624.0" onMouseClicked="#onButtonMouseClicked" onMouseEntered="#onButtonMouseEntered" onMouseExited="#onButtonMouseExited" prefHeight="50.0" prefWidth="200.0" visible="false">
+      <Button layoutX="1190.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#nextBookshelf" prefHeight="50.0" prefWidth="79.0" style="-fx-rotate: 180;" styleClass="arrow" />
+      <Pane fx:id="bookshelfPane" layoutX="850.0" layoutY="107.0" prefHeight="340.0" prefWidth="322.0" />
+      <HBox fx:id="insertBox" layoutX="850.0" layoutY="456.0" prefHeight="58.0" prefWidth="324.0" spacing="17.0">
          <children>
-            <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <image>
-                  <Image url="@../images/darkWood.jpg" />
-               </image>
-            </ImageView>
-            <Label fx:id="buttonLabel" alignment="CENTER" prefHeight="50.0" prefWidth="200.0" text="Draw" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Label>
+            <Button fx:id="insertButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
+            <Button fx:id="insertButton2" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
+            <Button fx:id="insertButton3" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
+            <Button fx:id="insertButton4" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
+            <Button fx:id="insertButton5" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
          </children>
-      </AnchorPane>
-      <HBox layoutX="240.0" layoutY="573.0" spacing="10.0">
+      </HBox>
+      <Label fx:id="takenTilesLabel" layoutX="41.0" layoutY="555.0" prefHeight="150.0" prefWidth="200.0" text="Taken Tiles" textAlignment="CENTER" visible="false" wrapText="true">
+         <font>
+            <Font name="Kristen ITC" size="45.0" />
+         </font>
+      </Label>
+      <Button fx:id="button" layoutX="14.0" layoutY="601.0" mnemonicParsing="false" onMouseClicked="#onButtonMouseClicked" prefHeight="91.0" prefWidth="254.0" style="-fx-font-size: 30;" styleClass="myButton" text="Draw" visible="false" />
+      <HBox layoutX="300.0" layoutY="573.0" spacing="10.0">
          <children>
             <ImageView fx:id="takenTile1Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="takenTile2Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="takenTile3Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </HBox>
+      <Label fx:id="errorLabel" layoutX="274.0" layoutY="680.0" prefHeight="34.0" prefWidth="551.0" textFill="RED" visible="false">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="commonGoal1Image" fitWidth="200.0" layoutX="810.0" layoutY="580.0" onMouseEntered="#showDescription1" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="token1Image" fitWidth="70.0" layoutX="921.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="commonGoal2Image" fitWidth="200.0" layoutX="1050.0" layoutY="580.0" onMouseEntered="#showDescription2" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="token2Image" fitWidth="70.0" layoutX="1160.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="descriptionLabel" layoutX="769.0" layoutY="518.0" prefHeight="53.0" prefWidth="482.0" visible="false" wrapText="true">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+        <ProgressIndicator fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
     </children>
 </AnchorPane>

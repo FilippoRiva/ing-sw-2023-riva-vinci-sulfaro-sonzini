@@ -5,16 +5,14 @@ import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,23 +24,14 @@ import java.util.ResourceBundle;
 
 public class LobbyController extends ViewController implements Initializable {
     public Label lobbyNameLabel;
-    public Label startLabel;
     public VBox playersVBox;
     public Label playersInLabel;
     public Button minusButton;
     public Button plusButton;
-    public AnchorPane startButton;
+    public Button startButton;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
-    @FXML
-    protected void onStartMouseEntered(MouseEvent mouseEvent) {
-        startLabel.setTextFill(Color.rgb(229, 146, 93));
-    }
-    @FXML
-    protected void onStartMouseExited(MouseEvent mouseEvent) {
-        startLabel.setTextFill(Color.color(1, 1, 1));
-    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lobbyNameLabel.setBackground(Background.fill(Color.rgb(229, 146, 93)));
@@ -84,16 +73,26 @@ public class LobbyController extends ViewController implements Initializable {
             Label label = new Label(player);
             label.setMaxWidth(837);
             label.setFont(Font.font("Kristen ITC", 40));
+            label.setTextFill(Color.WHITE);
+            label.setPadding(new Insets(0, 0, 0, 110));
+
             if(lobbyModelView.isRoomOwner(player)) {
-                label.setTextFill(Color.WHITE);
+                ImageView image = new ImageView(Images.getImage("omino.jpg"));
+                image.setPreserveRatio(true);
+                image.setFitWidth(0);
+                image.setFitHeight(60);
+                label.setPadding(new Insets(0));
+                HBox hBox = new HBox(image, label);
+                hBox.setSpacing(20);
+                Platform.runLater(() -> playersVBox.getChildren().add(hBox));
             }
             else if(player.equals(GraphicalUI.getPlayerName())) {
                 label.setTextFill(Color.rgb(218, 106, 45));
                 label.setFont(Font.font("Kristen ITC", 40));
             }
-            else label.setTextFill(Color.WHITE);
 
-            Platform.runLater(() -> playersVBox.getChildren().add(label));
+            if(!lobbyModelView.isRoomOwner(player))
+                Platform.runLater(() -> playersVBox.getChildren().add(label));
         }
 
         int currentPlayersIn = lobbyModelView.getPlayers().size();

@@ -4,7 +4,9 @@ import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.model.Position;
-import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
+import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.BookshelfView;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
@@ -12,13 +14,14 @@ import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,15 +42,22 @@ public class GameController extends ViewController implements Initializable {
     public ImageView takenToken2Image;
     public ImageView commonGoal1Image;
     public ImageView commonGoal2Image;
+    public Label takenTilesLabel;
     public ImageView token1Image;
     public ImageView token2Image;
     public ImageView takenTile1Image;
     public ImageView takenTile2Image;
     public ImageView takenTile3Image;
     ImageView[] takenTilesImages;
+    public HBox insertBox;
+    public Button insertButton1;
+    public Button insertButton2;
+    public Button insertButton3;
+    public Button insertButton4;
+    public Button insertButton5;
+    Button[] insertButtons;
     public Label descriptionLabel;
-    public AnchorPane button;
-    public Label buttonLabel;
+    public Button button;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String playerName = GraphicalUI.getPlayerName();
@@ -57,6 +67,8 @@ public class GameController extends ViewController implements Initializable {
 
     int seeingBookshelf = 0;
     List<Position> selectedTiles;
+    List<Integer> orderedTiles;
+    int chosenColumn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -79,6 +91,7 @@ public class GameController extends ViewController implements Initializable {
         }
 
         takenTilesImages = new ImageView[]{takenTile1Image, takenTile2Image, takenTile3Image};
+        insertButtons = new Button[]{insertButton1, insertButton2, insertButton3, insertButton4, insertButton5};
         displayLivingRoom();
         initBookshelves();
     }
@@ -88,6 +101,16 @@ public class GameController extends ViewController implements Initializable {
             bookshelves[i] = new BookshelfView(pl.getName(), null);
             i++;
         }
+        for(i = 0; i<5; i++){
+            int finalI = i;
+            insertButtons[i].setOnMouseClicked(mouseEvent -> {
+                chosenColumn = finalI;
+                for(int k = 0; k<5; k++){
+                    if(k == finalI) insertButtons[k].setEffect(new Glow());
+                    else insertButtons[k].setEffect(null);
+                }
+            });
+        }
     }
 
     public void play(){
@@ -96,15 +119,16 @@ public class GameController extends ViewController implements Initializable {
         //clean takenTilesImage
         for(ImageView imageView : takenTilesImages){
             imageView.setImage(null);
+            imageView.setEffect(null);
         }
 
         if(!fullGameModelView.getCurrentPlayerName().equals(playerName)) {
             //I'm not playing
             switch (fullGameModelView.getCurrentState()){
-                case FIRST_DRAW, DRAW, LAST_DRAW -> button.setVisible(false);
+                case FIRST_DRAW, DRAW, LAST_DRAW -> takenTilesLabel.setVisible(true);
                 case ORGANIZE, LAST_ORGANIZE -> displayDraw();
                 case INSERT, LAST_INSERT -> displayOrganize();
-                case COUNTING_POINTS -> displayInsert();
+                case COUNTING_POINTS, LAST_COUNTING_POINTS -> displayInsert();
             }
         } else{
             //I'm playing
@@ -119,21 +143,31 @@ public class GameController extends ViewController implements Initializable {
                     displayOrganize();
                     insert();
                 }
-                case COUNTING_POINTS ->
-                        displayInsert();
+                case COUNTING_POINTS, LAST_COUNTING_POINTS -> {
+                    displayInsert();
+                    insertBox.setVisible(false);
+                    button.setVisible(false);
+                }
             }
         }
     }
     private void draw() {
-        Platform.runLater(() -> buttonLabel.setText("Draw"));
+        Platform.runLater(() -> button.setText("Draw"));
         button.setVisible(true);
+        takenTilesLabel.setVisible(false);
         selectedTiles = new ArrayList<>();
     }
     private void organize() {
-        Platform.runLater(() -> buttonLabel.setText("Organize"));
+        orderedTiles = new ArrayList<>();
+
+        //skip organize if you took one tiles
+        if(selectedTiles.size() == 1) viewBuffer.organizeRequest(viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles());
+        else Platform.runLater(() -> button.setText("Organize"));
     }
     private void insert() {
-        Platform.runLater(() -> buttonLabel.setText("Insert"));
+        Platform.runLater(() -> button.setText("Insert"));
+        insertBox.setVisible(true);
+        chosenColumn = -1;
     }
 
     private void displayDraw() {
@@ -159,22 +193,16 @@ public class GameController extends ViewController implements Initializable {
                     int finalI = i;
                     int finalJ = j;
                     image.setOnMouseClicked(mouseEvent -> {
-                        if(viewBuffer.getGameModelView().getCurrentState() == GameState.DRAW) {
+                        GameState currentState = viewBuffer.getGameModelView().getCurrentState();
+                        if((currentState == GameState.FIRST_DRAW || currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
+                                && viewBuffer.getGameModelView().getCurrentPlayerName().equals(playerName)) {
                             Position position = new Position(finalI, finalJ);
                             if (selectedTiles.contains(position)) {
-                                takenTilesImages[selectedTiles.indexOf(position)].setImage(null);
-                                selectedTiles.remove(position);
                                 image.setEffect(null);
-                                for(int k = 0 ; k<2; k++){
-                                    if(takenTilesImages[k].getImage() == null){
-                                        takenTilesImages[k].setImage(takenTilesImages[k+1].getImage());
-                                        takenTilesImages[k+1].setImage(null);
-                                    }
-                                }
+                                deselectTile(position);
                             } else if (selectedTiles.size() < 3) {
-                                selectedTiles.add(position);
-                                takenTilesImages[selectedTiles.size()-1].setImage(getTileImage(itemTile));
                                 image.setEffect(new Glow());
+                                selectTile(position, itemTile);
                             }
                         }
                     });
@@ -183,6 +211,41 @@ public class GameController extends ViewController implements Initializable {
                 }
             }
         }
+    }
+    private void deselectTile(Position position) {
+        takenTilesImages[selectedTiles.indexOf(position)].setImage(null);
+        takenTilesImages[selectedTiles.indexOf(position)].setOnMouseClicked(null);
+        selectedTiles.remove(position);
+
+        //scroll to left
+        for(int k = 0 ; k<2; k++){
+            if(takenTilesImages[k].getImage() == null && takenTilesImages[k+1].getImage() != null){
+                takenTilesImages[k].setImage(takenTilesImages[k+1].getImage());
+                takenTilesImages[k].setOnMouseClicked(takenTilesImages[k+1].getOnMouseClicked());
+
+                takenTilesImages[k+1].setImage(null);
+                takenTilesImages[k+1].setOnMouseClicked(null);
+            }
+        }
+    }
+    private void selectTile(Position position, ItemTile itemTile){
+        selectedTiles.add(position);
+
+        int index = selectedTiles.size()-1;
+        takenTilesImages[index].setImage(getTileImage(itemTile));
+        takenTilesImages[index].setOnMouseClicked(mouseEvent -> {
+            GameState currentState = viewBuffer.getGameModelView().getCurrentState();
+            if((currentState == GameState.ORGANIZE || currentState == GameState.LAST_ORGANIZE) &&
+                    viewBuffer.getGameModelView().getCurrentPlayerName().equals(playerName)) {
+                if (!orderedTiles.contains(index)) {
+                    takenTilesImages[index].setEffect(new Glow());
+                    orderedTiles.add(index);
+                }else if (orderedTiles.indexOf(index) == orderedTiles.size()-1) {
+                    takenTilesImages[index].setEffect(null);
+                    orderedTiles.remove((Integer) index);
+                }
+            }
+        });
     }
 
     private void displayOrganize() {
@@ -212,8 +275,8 @@ public class GameController extends ViewController implements Initializable {
                             ImageView image = new ImageView();
                             image.setImage(Images.getTileImage(itemTile));
                             image.setPreserveRatio(true);
-                            image.setFitHeight(0);
-                            image.setFitWidth(60);
+                            //image.setFitHeight(0);
+                            image.setFitWidth(50);
                             image.setEffect(new DropShadow());
 
                             //col, row
@@ -234,28 +297,42 @@ public class GameController extends ViewController implements Initializable {
             bookshelfPane.getChildren().clear();
             if(bookshelves[seeingBookshelf].getBookshelfGrid() != null)
                 bookshelfPane.getChildren().add(bookshelves[seeingBookshelf].getBookshelfGrid());
-            playerBookshelfLabel.setText(bookshelves[seeingBookshelf].getPlayerName());
+            String player = bookshelves[seeingBookshelf].getPlayerName();
+            playerBookshelfLabel.setText(player);
+            personalGoalImage.setVisible(playerName.equals(player));
+            insertBox.setVisible(playerName.equals(player));
         });
     }
     private GridPane createBookshelfGrid(){
         GridPane bookshelfGrid = new GridPane();
-        bookshelfGrid.setPrefWidth(335);
-        bookshelfGrid.setPrefHeight(355);
+        bookshelfGrid.setPrefWidth(323);
+        bookshelfGrid.setPrefHeight(342);
+        bookshelfGrid.setHgap(17);
+        bookshelfGrid.setVgap(10);
+        bookshelfGrid.setGridLinesVisible(true);
 
         for(int i = 0 ; i < 5 ; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setPrefWidth(100);
+            columnConstraints.setMaxWidth(100);
+            columnConstraints.setHgrow(Priority.NEVER);
             bookshelfGrid.getColumnConstraints().add(columnConstraints);
+        }
 
+        for(int i = 0 ; i < 6 ; i++) {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setPrefHeight(100);
+            rowConstraints.setMaxHeight(100);
+            rowConstraints.setVgrow(Priority.NEVER);
             bookshelfGrid.getRowConstraints().add(rowConstraints);
         }
-        RowConstraints rowConstraints = new RowConstraints();
-        rowConstraints.setPrefHeight(100);
-        bookshelfGrid.getRowConstraints().add(rowConstraints);
 
-        bookshelfGrid.setGridLinesVisible(true);
+
+
+        bookshelfGrid.setOnMouseClicked(mouseEvent -> {
+            Node source = (Node) mouseEvent.getSource();
+            System.out.println(GridPane.getColumnIndex(source));
+        });
 
         return bookshelfGrid;
     }
@@ -265,13 +342,12 @@ public class GameController extends ViewController implements Initializable {
         switch (viewBuffer.getGameModelView().getCurrentState()){
             case FIRST_DRAW, DRAW, LAST_DRAW ->
                     viewBuffer.drawRequest(selectedTiles.stream().map(x -> x.centered(viewBuffer.getGameModelView().getGameConfig().getLivingRoomSize())).collect(Collectors.toCollection(ArrayList::new)));
-            case ORGANIZE, LAST_ORGANIZE -> {
-                List<Integer> integers = new ArrayList<>();
-                integers.add(0);
-                viewBuffer.organizeRequest(integers.stream().map(viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles()::get).toList());
-            }
+            case ORGANIZE, LAST_ORGANIZE ->
+                    viewBuffer.organizeRequest(orderedTiles.isEmpty() ? viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles() :
+                            orderedTiles.stream().map(viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles()::get).toList());
             case INSERT, LAST_INSERT -> {
-                viewBuffer.insertRequest(3);
+                if(chosenColumn == -1) displayError("choose a column");
+                else viewBuffer.insertRequest(chosenColumn);
             }
         }
     }
@@ -290,14 +366,6 @@ public class GameController extends ViewController implements Initializable {
         descriptionLabel.setVisible(false);
     }
     @FXML
-    protected void onButtonMouseEntered(MouseEvent mouseEvent) {
-        buttonLabel.setTextFill(Color.color(1, 0, 0));
-    }
-    @FXML
-    protected void onButtonMouseExited(MouseEvent mouseEvent) {
-        buttonLabel.setTextFill(Color.color(1, 1, 1));
-    }
-    @FXML
     protected void prevBookshelf(MouseEvent mouseEvent) {
         if(seeingBookshelf==0) seeingBookshelf = numPlayers - 1;
         else seeingBookshelf--;
@@ -311,7 +379,6 @@ public class GameController extends ViewController implements Initializable {
     }
     @Override
     public void onBackArrowClick() {
-        super.onBackArrowClick();
-        viewBuffer.exitRequest();
+
     }
 }
