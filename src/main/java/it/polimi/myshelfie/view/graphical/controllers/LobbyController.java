@@ -34,6 +34,7 @@ public class LobbyController extends ViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        lobbyNameLabel.setBackground(Background.fill(Color.rgb(229, 146, 93)));
         lobbyNameLabel.setText(viewBuffer.getLobbyModelView().getName());
         createListPlayers();
     }
@@ -45,12 +46,18 @@ public class LobbyController extends ViewController implements Initializable {
 
     @FXML
     protected void onMouseMinusClicked(MouseEvent mouseEvent) {
-        if(!viewBuffer.removePlayer()) displayError("cannot remove player");
+        if(!viewBuffer.removePlayer()) {
+            displayError("cannot remove player");
+            errorLabel.setFont(Font.font("Kristen ITC", 20));
+        }
     }
 
     @FXML
     protected void onMousePlusClicked(MouseEvent mouseEvent) {
-        if(!viewBuffer.addPlayer()) displayError("cannot add player");
+        if(!viewBuffer.addPlayer()) {
+            displayError("cannot add player");
+            errorLabel.setFont(Font.font("Kristen ITC", 20));
+        }
     }
 
     public void refreshListPlayers(){
