@@ -26,7 +26,6 @@ public class CreateController extends ViewController{
 
         if (playerName.isEmpty() || lobbyName.isEmpty()) {
             displayError("compile all the fields!");
-            errorLabel.setFont(Font.font("Kristen ITC", 20));
         }else {
             viewBuffer.createRequest(lobbyName, playerName);
             GraphicalUI.setPlayerName(playerName);

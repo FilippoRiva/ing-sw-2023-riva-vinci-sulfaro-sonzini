@@ -45,3 +45,9 @@
     -fx-background-position: center;
     -fx-background-color: transparent;
 }
+
+.error {
+    -fx-text-fill: red;
+    -fx-font-family: "Kristen ITC";
+    -fx-font-size: 20;
+}

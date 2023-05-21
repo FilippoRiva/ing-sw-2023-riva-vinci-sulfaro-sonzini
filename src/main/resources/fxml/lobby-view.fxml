@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
+<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
@@ -50,7 +56,7 @@
          </children>
       </StackPane>
       <Button fx:id="startButton" disable="true" layoutX="932.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#onStartMouseClicked" prefHeight="90.0" prefWidth="288.0" styleClass="myButton" text="Start" />
-      <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="50.0">
+      <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" prefHeight="53.0" prefWidth="294.0" styleClass="error" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="165.0" AnchorPane.rightAnchor="50.0">
          <font>
             <Font size="20.0" />
          </font>

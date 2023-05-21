@@ -80,7 +80,7 @@
             <ImageView fx:id="takenTile3Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </HBox>
-      <Label fx:id="errorLabel" layoutX="274.0" layoutY="680.0" prefHeight="34.0" prefWidth="551.0" textFill="RED" visible="false">
+      <Label fx:id="errorLabel" layoutX="274.0" layoutY="671.0" prefHeight="43.0" prefWidth="551.0" styleClass="error" text="error" textFill="RED" visible="false">
          <font>
             <Font size="20.0" />
          </font>
