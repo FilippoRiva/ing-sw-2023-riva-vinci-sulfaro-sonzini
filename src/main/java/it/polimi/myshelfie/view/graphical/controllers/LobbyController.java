@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -47,7 +48,7 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected void onMouseMinusClicked(MouseEvent mouseEvent) {
         if(!viewBuffer.removePlayer()) {
-            displayError("cannot remove player");
+            displayError("cannot remove player!");
             errorLabel.setFont(Font.font("Kristen ITC", 20));
         }
     }
@@ -55,7 +56,7 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected void onMousePlusClicked(MouseEvent mouseEvent) {
         if(!viewBuffer.addPlayer()) {
-            displayError("cannot add player");
+            displayError("cannot add player!");
             errorLabel.setFont(Font.font("Kristen ITC", 20));
         }
     }

@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,7 +25,8 @@ public class CreateController extends ViewController{
         String lobbyName = lobbyNameField.getText();
 
         if (playerName.isEmpty() || lobbyName.isEmpty()) {
-            displayError("compile all the fields");
+            displayError("compile all the fields!");
+            errorLabel.setFont(Font.font("Kristen ITC", 20));
         }else {
             viewBuffer.createRequest(lobbyName, playerName);
             GraphicalUI.setPlayerName(playerName);

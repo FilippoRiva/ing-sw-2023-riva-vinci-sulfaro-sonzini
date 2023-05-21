@@ -33,14 +33,14 @@
 }
 
 .arrow {
-    -fx-background-image: url('../images/back-arrow.jpg');
+    -fx-background-image: url('../images/freccia.jpg');
     -fx-background-size: 100;
     -fx-background-position: center;
     -fx-background-color: transparent;
 }
 
 .chooseColumn {
-    -fx-background-image: url('../images/back-arrow.jpg');
+    -fx-background-image: url('../images/freccia.jpg');
     -fx-background-size: 50;
     -fx-background-position: center;
     -fx-background-color: transparent;
