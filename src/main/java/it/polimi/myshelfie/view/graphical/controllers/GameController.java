@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -64,8 +65,9 @@ public class GameController extends ViewController implements Initializable {
     int numPlayers = viewBuffer.getLobbyModelView().getGameConfig().getNumPlayers();
     CommonGoalModelView[] commonGoals = new CommonGoalModelView[viewBuffer.getLobbyModelView().getGameConfig().getNumCommonGoal()];
     BookshelfView[] bookshelves = new BookshelfView[numPlayers];
+    Image[][] takenTokens = new Image[2][numPlayers];
 
-    int seeingBookshelf = 0;
+    int seeingPlayer = 0;
     List<Position> selectedTiles;
     List<Integer> orderedTiles;
     int chosenColumn;
@@ -87,7 +89,7 @@ public class GameController extends ViewController implements Initializable {
 
         for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
             if(pl.getName().equals(playerName)) break;
-            seeingBookshelf++;
+            seeingPlayer++;
         }
 
         takenTilesImages = new ImageView[]{takenTile1Image, takenTile2Image, takenTile3Image};
@@ -99,6 +101,9 @@ public class GameController extends ViewController implements Initializable {
         int i = 0;
         for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
             bookshelves[i] = new BookshelfView(pl.getName(), null);
+            for(int j = 0 ; j<2 ; j++){
+                takenTokens[j][i] = null;
+            }
             i++;
         }
         for(i = 0; i<5; i++){
@@ -125,16 +130,20 @@ public class GameController extends ViewController implements Initializable {
         if(!fullGameModelView.getCurrentPlayerName().equals(playerName)) {
             //I'm not playing
             switch (fullGameModelView.getCurrentState()){
-                case FIRST_DRAW, DRAW, LAST_DRAW -> takenTilesLabel.setVisible(true);
+                case DRAW, LAST_DRAW -> updateTokens();
                 case ORGANIZE, LAST_ORGANIZE -> displayDraw();
                 case INSERT, LAST_INSERT -> displayOrganize();
-                case COUNTING_POINTS, LAST_COUNTING_POINTS -> displayInsert();
+                case COUNTING_POINTS, LAST_COUNTING_POINTS -> updateInsert();
             }
         } else{
             //I'm playing
             switch (fullGameModelView.getCurrentState()){
-                case FIRST_DRAW, DRAW, LAST_DRAW ->
-                        draw();
+                case DRAW, LAST_DRAW -> {
+                    updateTokens();
+                    draw();
+                }
+                case FIRST_DRAW ->
+                    draw();
                 case ORGANIZE, LAST_ORGANIZE -> {
                     displayDraw();
                     organize();
@@ -144,9 +153,10 @@ public class GameController extends ViewController implements Initializable {
                     insert();
                 }
                 case COUNTING_POINTS, LAST_COUNTING_POINTS -> {
-                    displayInsert();
+                    updateInsert();
                     insertBox.setVisible(false);
                     button.setVisible(false);
+                    takenTilesLabel.setVisible(true);
                 }
             }
         }
@@ -258,7 +268,7 @@ public class GameController extends ViewController implements Initializable {
         }
     }
 
-    private void displayInsert() {
+    private void updateInsert() {
         FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
         String currentPlayerName = fullGameModelView.getCurrentPlayerName();
 
@@ -285,7 +295,7 @@ public class GameController extends ViewController implements Initializable {
                     }
                 }
                 bookshelfView.setBookshelfGrid(newBookshelfGrid);
-                if (seeingBookshelf == k) displayBookshelf();
+                if (seeingPlayer == k) displayBookshelf();
 
                 return;
             }
@@ -295,9 +305,9 @@ public class GameController extends ViewController implements Initializable {
     private void displayBookshelf(){
         Platform.runLater(() -> {
             bookshelfPane.getChildren().clear();
-            if(bookshelves[seeingBookshelf].getBookshelfGrid() != null)
-                bookshelfPane.getChildren().add(bookshelves[seeingBookshelf].getBookshelfGrid());
-            String player = bookshelves[seeingBookshelf].getPlayerName();
+            if(bookshelves[seeingPlayer].getBookshelfGrid() != null)
+                bookshelfPane.getChildren().add(bookshelves[seeingPlayer].getBookshelfGrid());
+            String player = bookshelves[seeingPlayer].getPlayerName();
             playerBookshelfLabel.setText(player);
             personalGoalImage.setVisible(playerName.equals(player));
             insertBox.setVisible(playerName.equals(player));
@@ -337,6 +347,32 @@ public class GameController extends ViewController implements Initializable {
         return bookshelfGrid;
     }
 
+    private void updateTokens(){
+        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+        int previousPlayer = fullGameModelView.getPlayers().indexOf(fullGameModelView.getCurrentPlayer())-1;
+        if(previousPlayer == -1) previousPlayer = fullGameModelView.getPlayers().size()-1;
+
+        for(int i = 0 ; i<2; i++){
+            if(commonGoals[i].getTokens().size() != fullGameModelView.getCommonGoals().get(i).getTokens().size()) {
+                Image imageNew = getImage("tokens/"+fullGameModelView.getCommonGoals().get(i).getTokens().get(fullGameModelView.getCommonGoals().get(i).getTokens().size()-1).getValue()+".jpg");
+                Image imageTaken = getImage("tokens/"+commonGoals[i].getTokens().get(commonGoals[i].getTokens().size()-1).getValue()+".jpg");
+                takenTokens[i][previousPlayer] = imageTaken;
+                if(i==0) token1Image.setImage(imageNew);
+                else token2Image.setImage(imageNew);
+            }
+            commonGoals[i] = fullGameModelView.getCommonGoals().get(i);
+        }
+
+        if(previousPlayer == seeingPlayer) displayTokens();
+
+
+        //TODO show something good
+    }
+    private void displayTokens(){
+        takenToken1Image.setImage(takenTokens[0][seeingPlayer]);
+        takenToken2Image.setImage(takenTokens[1][seeingPlayer]);
+    }
+
     @FXML
     protected void onButtonMouseClicked(MouseEvent mouseEvent) {
         switch (viewBuffer.getGameModelView().getCurrentState()){
@@ -366,16 +402,18 @@ public class GameController extends ViewController implements Initializable {
         descriptionLabel.setVisible(false);
     }
     @FXML
-    protected void prevBookshelf(MouseEvent mouseEvent) {
-        if(seeingBookshelf==0) seeingBookshelf = numPlayers - 1;
-        else seeingBookshelf--;
+    protected void prevPlayer(MouseEvent mouseEvent) {
+        if(seeingPlayer ==0) seeingPlayer = numPlayers - 1;
+        else seeingPlayer--;
         displayBookshelf();
+        displayTokens();
     }
     @FXML
-    protected void nextBookshelf(MouseEvent mouseEvent) {
-        if(seeingBookshelf==numPlayers-1) seeingBookshelf = 0;
-        else seeingBookshelf++;
+    protected void nextPlayer(MouseEvent mouseEvent) {
+        if(seeingPlayer ==numPlayers-1) seeingPlayer = 0;
+        else seeingPlayer++;
         displayBookshelf();
+        displayTokens();
     }
     @Override
     public void onBackArrowClick() {
