@@ -162,6 +162,9 @@ public class GameController extends ViewController implements Initializable {
                 case COUNTING_POINTS, LAST_COUNTING_POINTS -> {
                     updateInsert();
                     insertBox.setVisible(false);
+                    for(Button button : insertButtons){
+                        button.setEffect(null);
+                    }
                     button.setVisible(false);
                     takenTilesLabel.setVisible(true);
                 }
@@ -190,6 +193,7 @@ public class GameController extends ViewController implements Initializable {
     private void insert() {
         Platform.runLater(() -> button.setText("Insert"));
         insertBox.setVisible(true);
+        insertBox.setVisible(playerName.equals(bookshelves[seeingPlayer].getPlayerName()));
         chosenColumn = -1;
     }
 
@@ -372,7 +376,7 @@ public class GameController extends ViewController implements Initializable {
         if(previousPlayer == seeingPlayer) displayTokens();
 
 
-        //TODO show something good
+        //TODO show something good to let all players know
     }
     private void displayTokens(){
         takenToken1Image.setImage(takenTokens[0][seeingPlayer]);

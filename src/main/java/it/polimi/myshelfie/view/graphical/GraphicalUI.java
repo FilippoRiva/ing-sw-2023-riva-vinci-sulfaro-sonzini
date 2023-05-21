@@ -24,7 +24,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     static Stage stage;
 
     static ViewController currentController;
-    static InternalViewState currentState = InternalViewState.INIT;
+    static InternalViewState currentState;
     static String playerName;
 
     @Override
@@ -39,6 +39,10 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         }
     }
 
+    public void startGUI(){
+        Images.initImages();
+        Application.launch();
+    }
     @Override
     public void start(Stage stage) throws Exception {
         GraphicalUI.stage = stage;
@@ -57,11 +61,6 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             System.exit(0);
         });
         stage.show();
-    }
-
-    public void startGUI(){
-        Images.initImages();
-        Application.launch();
     }
 
     public static void changeScene(String fxmlName) {
@@ -109,12 +108,17 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     }
     private void viewTypeUpdate() {
         switch (viewBuffer.getViewType()){
+            case INIT -> {
+                if(stage != null) changeScene("home");
+            }
             case LOBBY -> changeScene("lobby");
             case GAME -> {
                 changeScene("game");
                 gameUpdate();
             }
-            case WIN -> {}
+            case WIN -> {
+                //TODO win page
+            }
         }
     }
 }
