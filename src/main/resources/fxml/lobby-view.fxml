@@ -39,22 +39,22 @@
             </ScrollPane>
             <AnchorPane maxHeight="70.0" prefHeight="70.0" prefWidth="840.0" StackPane.alignment="TOP_CENTER">
                <children>
-                  <Label fx:id="lobbyNameLabel" contentDisplay="CENTER" text="Lobby name" textAlignment="CENTER" textFill="#f2ebeb" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="lobbyNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="7.0" prefHeight="71.0" prefWidth="492.0" text="Lobby name" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="104.0" AnchorPane.topAnchor="7.0">
+                     <font>
+                        <Font name="Kristen ITC" size="45.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="playersInLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="695.0" layoutY="11.0" text="1/4" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="91.39999999999998" AnchorPane.topAnchor="11.0">
                      <font>
                         <Font name="Kristen ITC" size="40.0" />
                      </font>
                   </Label>
-                  <Label fx:id="playersInLabel" alignment="CENTER" contentDisplay="CENTER" text="1/4" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
-                     <font>
-                        <Font name="Kristen ITC" size="40.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="minusButton" alignment="CENTER" disable="true" layoutX="690.0" layoutY="15.0" maxHeight="50.0" maxWidth="50.0" minHeight="40.0" minWidth="44.0" onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="44.0" stylesheets="@../css/style.css" text="-" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="15.0">
+                  <Button fx:id="minusButton" alignment="CENTER" disable="true" layoutX="617.0" layoutY="30.0" maxHeight="50.0" maxWidth="50.0" minHeight="40.0" minWidth="44.0" onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="44.0" stylesheets="@../css/style.css" text="-" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="179.0" AnchorPane.topAnchor="30.0">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Button>
-                  <Button fx:id="plusButton" alignment="CENTER" disable="true" layoutX="502.0" layoutY="14.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="+" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
+                  <Button fx:id="plusButton" alignment="CENTER" disable="true" layoutX="779.0" layoutY="30.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="+" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="30.0">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -68,9 +68,9 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="30.0" layoutY="35.0" onMouseClicked="#onBackArrowClick" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <ImageView fitHeight="90.0" fitWidth="105.0" layoutX="20.0" layoutY="25.0" onMouseClicked="#onBackArrowClick" opacity="0.8" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
          <image>
-            <Image url="@../images/back-arrow.jpg" />
+            <Image url="@../images/freccia.jpg" />
          </image>
       </ImageView>
     </children>

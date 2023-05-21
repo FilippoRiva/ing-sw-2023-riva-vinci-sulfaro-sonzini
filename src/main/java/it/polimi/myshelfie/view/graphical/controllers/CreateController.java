@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,11 +23,11 @@ public class CreateController extends ViewController{
 
     @FXML
     protected void onCreateMouseEntered(MouseEvent mouseEvent) {
-        createLabel.setTextFill(Color.color(1, 0, 0));
+        createLabel.setTextFill(Color.rgb(229, 146, 93));
     }
     @FXML
     protected void onCreateMouseExited(MouseEvent mouseEvent) {
-        createLabel.setTextFill(Color.color(1, 1, 1));
+        createLabel.setTextFill(Color.rgb(229, 146, 93));
     }
     @FXML
     protected void onCreateMouseClicked(MouseEvent mouseEvent) {
@@ -35,6 +36,7 @@ public class CreateController extends ViewController{
 
         if (playerName.isEmpty() || lobbyName.isEmpty()) {
             displayError("compile all the fields");
+            errorLabel.setFont(Font.font("Kristen ITC", 20));
         }else {
             viewBuffer.createRequest(lobbyName, playerName);
             GraphicalUI.setPlayerName(playerName);
