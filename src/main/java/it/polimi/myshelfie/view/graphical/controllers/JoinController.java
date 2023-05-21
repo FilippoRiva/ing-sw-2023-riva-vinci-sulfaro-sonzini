@@ -37,7 +37,7 @@ public class JoinController extends ViewController implements Initializable {
         String playerName = playerNameField.getText();
 
         if (playerName.isEmpty()) {
-            displayError("choose a name");
+            displayError("choose a name!");
             errorLabel.setFont(Font.font("Kristen ITC", 20));
         }else {
             viewBuffer.joinRequest(selected, playerName);

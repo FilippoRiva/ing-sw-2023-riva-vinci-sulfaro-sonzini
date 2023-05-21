@@ -47,7 +47,7 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected void onMouseMinusClicked(MouseEvent mouseEvent) {
         if(!viewBuffer.removePlayer()) {
-            displayError("cannot remove player");
+            displayError("cannot remove player!");
             errorLabel.setFont(Font.font("Kristen ITC", 20));
         }
     }
@@ -55,7 +55,7 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected void onMousePlusClicked(MouseEvent mouseEvent) {
         if(!viewBuffer.addPlayer()) {
-            displayError("cannot add player");
+            displayError("cannot add player!");
             errorLabel.setFont(Font.font("Kristen ITC", 20));
         }
     }
@@ -88,7 +88,7 @@ public class LobbyController extends ViewController implements Initializable {
             }
             else if(player.equals(GraphicalUI.getPlayerName())) {
                 label.setTextFill(Color.rgb(218, 106, 45));
-                label.setFont(Font.font("Kristen ITC", 50));
+                label.setFont(Font.font("Kristen ITC", 40));
             }
 
             if(!lobbyModelView.isRoomOwner(player))
