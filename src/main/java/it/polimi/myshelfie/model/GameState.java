@@ -9,7 +9,6 @@ public enum GameState implements Serializable {
     ORGANIZE,
     INSERT,
     COUNTING_POINTS,
-    REFILL,
     LAST_DRAW,
     LAST_ORGANIZE,
     LAST_INSERT,

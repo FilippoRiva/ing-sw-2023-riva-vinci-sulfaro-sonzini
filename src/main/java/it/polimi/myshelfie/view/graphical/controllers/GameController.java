@@ -66,6 +66,7 @@ public class GameController extends ViewController implements Initializable {
     CommonGoalModelView[] commonGoals = new CommonGoalModelView[viewBuffer.getLobbyModelView().getGameConfig().getNumCommonGoal()];
     BookshelfView[] bookshelves = new BookshelfView[numPlayers];
     Image[][] takenTokens = new Image[2][numPlayers];
+    int remainingTiles;
 
     int seeingPlayer = 0;
     List<Position> selectedTiles;
@@ -94,6 +95,7 @@ public class GameController extends ViewController implements Initializable {
 
         takenTilesImages = new ImageView[]{takenTile1Image, takenTile2Image, takenTile3Image};
         insertButtons = new Button[]{insertButton1, insertButton2, insertButton3, insertButton4, insertButton5};
+        remainingTiles = fullGameModelView.getRemainingTiles();
         displayLivingRoom();
         initBookshelves();
     }
@@ -130,7 +132,10 @@ public class GameController extends ViewController implements Initializable {
         if(!fullGameModelView.getCurrentPlayerName().equals(playerName)) {
             //I'm not playing
             switch (fullGameModelView.getCurrentState()){
-                case DRAW, LAST_DRAW -> updateTokens();
+                case DRAW, LAST_DRAW -> {
+                    refill(fullGameModelView);
+                    updateTokens();
+                }
                 case ORGANIZE, LAST_ORGANIZE -> displayDraw();
                 case INSERT, LAST_INSERT -> displayOrganize();
                 case COUNTING_POINTS, LAST_COUNTING_POINTS -> updateInsert();
@@ -138,12 +143,14 @@ public class GameController extends ViewController implements Initializable {
         } else{
             //I'm playing
             switch (fullGameModelView.getCurrentState()){
+                case FIRST_DRAW -> {
+                    draw();
+                }
                 case DRAW, LAST_DRAW -> {
+                    refill(fullGameModelView);
                     updateTokens();
                     draw();
                 }
-                case FIRST_DRAW ->
-                    draw();
                 case ORGANIZE, LAST_ORGANIZE -> {
                     displayDraw();
                     organize();
@@ -159,6 +166,12 @@ public class GameController extends ViewController implements Initializable {
                     takenTilesLabel.setVisible(true);
                 }
             }
+        }
+    }
+    private void refill(FullGameModelView fullGameModelView){
+        if(fullGameModelView.getRemainingTiles() != remainingTiles){
+            displayLivingRoom();
+            remainingTiles = fullGameModelView.getRemainingTiles();
         }
     }
     private void draw() {
@@ -336,13 +349,6 @@ public class GameController extends ViewController implements Initializable {
             rowConstraints.setVgrow(Priority.NEVER);
             bookshelfGrid.getRowConstraints().add(rowConstraints);
         }
-
-
-
-        bookshelfGrid.setOnMouseClicked(mouseEvent -> {
-            Node source = (Node) mouseEvent.getSource();
-            System.out.println(GridPane.getColumnIndex(source));
-        });
 
         return bookshelfGrid;
     }
