@@ -89,7 +89,7 @@
       <ImageView fx:id="token1Image" fitWidth="70.0" layoutX="921.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="commonGoal2Image" fitWidth="200.0" layoutX="1050.0" layoutY="580.0" onMouseEntered="#showDescription2" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="token2Image" fitWidth="70.0" layoutX="1160.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="descriptionLabel" layoutX="700.0" layoutY="518.0" prefHeight="60.0" prefWidth="551.0" textAlignment="CENTER" visible="false" wrapText="true">
+      <Label fx:id="descriptionLabel" layoutX="757.0" layoutY="518.0" prefHeight="60.0" prefWidth="494.0" textAlignment="CENTER" visible="false" wrapText="true">
          <font>
             <Font size="15.0" />
          </font>

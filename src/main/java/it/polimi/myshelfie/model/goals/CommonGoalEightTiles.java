@@ -6,7 +6,7 @@ import it.polimi.myshelfie.model.ItemTileType;
 import java.util.Arrays;
 
 public class CommonGoalEightTiles extends CommonGoal{
-    private final int id = 10;
+    private final int id = 8;
     /**
      *
      * @param bookshelf is a generic n x m matrix of ItemTile

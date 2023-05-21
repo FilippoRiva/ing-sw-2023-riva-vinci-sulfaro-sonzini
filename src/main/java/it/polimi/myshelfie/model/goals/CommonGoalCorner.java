@@ -4,7 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalCorner extends CommonGoal{
-    private final int id=2;
+    private final int id = 7;
     /**
      *
      * @param bookshelf is a generic n x m matrix of ItemTile
