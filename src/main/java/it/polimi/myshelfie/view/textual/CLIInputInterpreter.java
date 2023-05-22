@@ -334,7 +334,7 @@ public class CLIInputInterpreter {
     private void weirdConfig(){
         GameConfig config;
         try {
-            config = new GameConfig(2,new Dimension(5,6),5,123,9,1,0.5);
+            config = new GameConfig(6,new Dimension(3,4),5,123,9,1,1);
         } catch (InvalidParameterException e) {
             return;
         }

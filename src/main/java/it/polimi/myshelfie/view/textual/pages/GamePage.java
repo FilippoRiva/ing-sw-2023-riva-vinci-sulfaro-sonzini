@@ -70,7 +70,7 @@ public class GamePage extends ScreenPage{
         idx = 1;
         for (CommonGoalModelView c : fullGameModelView.getCommonGoals()) {
             t.printInInfoTable("   "+idx + " :",10+idx);
-            t.printTokens(c.getTokens(),10+idx,48);
+            t.printTopToken(c.getTokens(),10+idx,48);
             idx++;
         }
         int numberOfCommonGoals = fullGameModelView.getCommonGoals().size();
@@ -83,8 +83,8 @@ public class GamePage extends ScreenPage{
         } else {
             List<ItemTile> currenPlayerTakenTiles = fullGameModelView.getPlayer(fullGameModelView.getCurrentPlayerName()).getTakenTiles();
             if(currenPlayerTakenTiles.size() != 0){
-                t.printInInfoTable(fullGameModelView.getCurrentPlayerName()+" taken tiles :",14);
-                t.printTakenTiles(currenPlayerTakenTiles, 16, 43, false);
+                t.printInInfoTable(fullGameModelView.getCurrentPlayerName()+"'s taken tiles :",10+numberOfCommonGoals+3);
+                t.printTakenTiles(currenPlayerTakenTiles, 10+numberOfCommonGoals+4, 43, false);
             }
         }
         t.printInInfoTable("Remaining tiles :", 22);
