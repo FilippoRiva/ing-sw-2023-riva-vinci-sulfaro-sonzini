@@ -192,17 +192,20 @@ public class ViewBuffer extends View {
     public synchronized void setGameModelView(FullGameModelView theNewOne) {
         if(this.fullGameModelView != null) {
             this.oldGameModelView = new FullGameModelView(fullGameModelView);
-            this.fullGameModelView.diff(theNewOne);
+            FullGameModelView copy = new FullGameModelView(fullGameModelView);
+            this.fullGameModelView = theNewOne;
+            copy.diff(this.fullGameModelView);
+            this.gameDifferences = copy;
+        } else {
+            this.fullGameModelView = theNewOne;
         }
-        this.gameDifferences = this.fullGameModelView;
-        this.fullGameModelView = theNewOne;
         UINotifier.setChanged();
         UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
         //debugDiff();
     }
 
     @Override
-    public void updateDrawView(DrawModelView drawModelView) {
+    public synchronized void updateDrawView(DrawModelView drawModelView) {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
@@ -217,7 +220,7 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public void updateOrganizeView(OrganizeModelView organizeModelView) {
+    public synchronized void updateOrganizeView(OrganizeModelView organizeModelView) {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
@@ -232,7 +235,7 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public void updateInsertView(InsertModelView insertModelView) {
+    public synchronized void updateInsertView(InsertModelView insertModelView) {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
@@ -248,7 +251,7 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public void updateTurnView(EndTurnModelView endTurnModelView) {
+    public synchronized void updateTurnView(EndTurnModelView endTurnModelView) {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 

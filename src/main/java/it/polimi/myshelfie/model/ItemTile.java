@@ -30,11 +30,7 @@ public class ItemTile implements Serializable {
     public boolean equals(Object obj) {
         if(obj==null || obj.getClass()!=getClass()) return false;
         ItemTile tile;
-        try{
-            tile = (ItemTile)obj;
-        } catch (ClassCastException e){
-            return false;
-        }
+        tile = (ItemTile)obj;
         return this.type.equals(tile.getType());
     }
 }
