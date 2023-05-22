@@ -111,7 +111,10 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     private synchronized void viewTypeUpdate() {
         switch (viewBuffer.getViewType()){
             case INIT -> {
-                if(stage != null) changeScene("home");
+                if(currentState == InternalViewState.GAME && viewBuffer.getGameModelView().getCurrentState() != GameState.WIN){
+                    System.out.println("somebody crashed");
+                    changeScene("home"); //TODO display crash error
+                }else if(stage != null) changeScene("home");
             }
             case LOBBY -> changeScene("lobby");
             case GAME -> {
@@ -120,6 +123,9 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             }
             case WIN -> {
                 //TODO win page
+                for(PlayerModelView player : viewBuffer.getGameModelView().getPlayers()) {
+                    System.out.println(player.getName()+": "+player.getPoints());
+                }
             }
         }
     }
