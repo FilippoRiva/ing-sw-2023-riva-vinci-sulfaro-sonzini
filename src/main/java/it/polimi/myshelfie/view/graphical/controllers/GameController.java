@@ -350,10 +350,13 @@ public class GameController extends ViewController implements Initializable {
             bookshelfPane.getChildren().clear();
             if(bookshelves[seeingPlayer].getBookshelfGrid() != null)
                 bookshelfPane.getChildren().add(bookshelves[seeingPlayer].getBookshelfGrid());
-            String player = bookshelves[seeingPlayer].getPlayerName();
-            playerBookshelfLabel.setText(player);
-            personalGoalImage.setVisible(playerName.equals(player));
-            insertBox.setVisible(playerName.equals(player));
+            String seeingPlayerName = bookshelves[seeingPlayer].getPlayerName();
+            playerBookshelfLabel.setText(seeingPlayerName);
+            personalGoalImage.setVisible(myName.equals(seeingPlayerName));
+            insertBox.setVisible(myName.equals(seeingPlayerName) &&
+                    viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName) &&
+                    (viewBuffer.getGameModelView().getCurrentState() == GameState.INSERT ||
+                            viewBuffer.getGameModelView().getCurrentState() == GameState.LAST_INSERT));
         });
     }
     private GridPane createBookshelfGrid(){
