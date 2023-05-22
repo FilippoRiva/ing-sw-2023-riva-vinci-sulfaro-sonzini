@@ -101,11 +101,10 @@ public class FullModelTest {
             fail();
         }catch(LobbyFullException ignored){}
 
-        try {
-            finalLobby1.addPlayer("Pippo");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        try{
+            finalLobby1.setGameConfig(new GameConfig(3));
+        }catch (InvalidParameterException ignore){}
+
         try {
             finalLobby1.initialize();
         }catch(LobbyFullException ignored){
@@ -116,6 +115,8 @@ public class FullModelTest {
         }catch(LobbyFullException ignored){
             fail();
         }
+
+
         GameModel game1 = finalLobby1.getGameModel();
         GameModel game2 = finalLobby2.getGameModel();
         t1 = new Thread(() -> playGame1(game1));
@@ -154,8 +155,8 @@ public class FullModelTest {
             fail();
         }
         positions = new ArrayList<>();
-        positions.add(new Position(-1,3));
-        positions.add(new Position(-1,4));
+        positions.add(new Position(-2,2));
+        positions.add(new Position(-1,2));
         try {
             game.drawTiles(positions,currPlayer);
         } catch (InvalidParameterException ignored) {
@@ -163,8 +164,8 @@ public class FullModelTest {
         }
         game.setState(GameState.ORGANIZE);
         List<ItemTile> tiles = new ArrayList<>();
-        tiles.add(lmv.getTile(-1,3));
-        tiles.add(lmv.getTile(-1,4));
+        tiles.add(lmv.getTile(-2,2));
+        tiles.add(lmv.getTile(-1,2));
         Collections.shuffle(tiles);
         try {
             game.orderChosenTiles(tiles,currPlayer);
@@ -194,7 +195,7 @@ public class FullModelTest {
         String oldPlayer = new String(currPlayer);
         currPlayer=lmv.getCurrentPlayerName();
         positions = new ArrayList<>();
-        positions.add(new Position(0,3));
+        positions.add(new Position(-1,4));
         
         try {
             game.drawTiles(positions,oldPlayer);
@@ -208,7 +209,7 @@ public class FullModelTest {
         }
         game.setState(GameState.ORGANIZE);
         tiles = new ArrayList<>();
-        tiles.add(lmv.getTile(0,3));
+        tiles.add(lmv.getTile(-1,4));
         Collections.shuffle(tiles);
         try {
             game.orderChosenTiles(tiles,currPlayer);
