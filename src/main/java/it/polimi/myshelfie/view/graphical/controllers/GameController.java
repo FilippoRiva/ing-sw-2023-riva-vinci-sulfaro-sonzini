@@ -391,8 +391,10 @@ public class GameController extends ViewController implements Initializable {
         for(int i = 0 ; i<2; i++){
             List<Token> oldTokens = commonGoals[i].getTokens();
             if(oldTokens.size() > fullGameModelView.getCommonGoals().get(i).getTokens().size()) {
-                Image imageNew = null;
+                Image imageNew;
                 if(oldTokens.size()>1) imageNew = getImage("tokens/"+oldTokens.get(oldTokens.size()-2).getValue()+".jpg");
+                else imageNew = null;
+
                 Image imageTaken = getImage("tokens/"+oldTokens.get(oldTokens.size()-1).getValue()+".jpg");
                 takenTokens[i][previousPlayer] = imageTaken;
                 int finalI = i;
