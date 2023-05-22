@@ -8,13 +8,15 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class Images {
-    private static final HashMap<String, Image> nameToImage = new HashMap<>();
+    private static final HashMap<String, Image> tilesNameToImage = new HashMap<>();
+    public static final Image backPersonalGoal = getImage("personalGoals/back.jpg");
+    public static final Image emptyToken = getImage("tokens/scoring.jpg");
 
     static void initImages(){
         for(ItemTileType itemTileType : ItemTileType.values()){
             if(itemTileType == ItemTileType.EMPTY) return;
             for(int i = 1 ; i < 4 ; i++){
-                nameToImage.put(itemTileType.getName()+i,
+                tilesNameToImage.put(itemTileType.getName()+i,
                         getImage("itemTiles/" + itemTileType.getName() + i + ".png"));
             }
         }
@@ -29,6 +31,6 @@ public class Images {
     }
 
     public static Image getTileImage(ItemTile itemTile){
-        return nameToImage.get(itemTile.getType().getName()+(itemTile.getId()+1));
+        return tilesNameToImage.get(itemTile.getType().getName()+(itemTile.getId()+1));
     }
 }

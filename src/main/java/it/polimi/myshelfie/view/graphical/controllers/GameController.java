@@ -40,6 +40,7 @@ public class GameController extends ViewController implements Initializable {
     protected ImageView lastTokenImage;
     @FXML
     protected ImageView personalGoalImage;
+    private Image myPersonalGoal;
     @FXML
     protected ImageView takenToken1Image;
     @FXML
@@ -100,7 +101,8 @@ public class GameController extends ViewController implements Initializable {
         commonGoals[0] = fullGameModelView.getCommonGoals().get(0);
         commonGoals[1] = fullGameModelView.getCommonGoals().get(1);
 
-        personalGoalImage.setImage(getImage("personalGoals/Personal_Goals"+idPersonalGoal+".png"));
+        myPersonalGoal = getImage("personalGoals/Personal_Goals"+idPersonalGoal+".png");
+        personalGoalImage.setImage(myPersonalGoal);
         commonGoal1Image.setImage(getImage("commonGoals/"+(commonGoals[0].getId()+1)+".jpg"));
         commonGoal2Image.setImage(getImage("commonGoals/"+(commonGoals[1].getId()+1)+".jpg"));
         token1Image.setImage(getImage("tokens/"+commonGoals[0].getTokens().get(commonGoals[0].getTokens().size()-1).getValue()+".jpg"));
@@ -116,14 +118,14 @@ public class GameController extends ViewController implements Initializable {
         insertButtons = new Button[]{insertButton1, insertButton2, insertButton3, insertButton4, insertButton5};
         remainingTiles = fullGameModelView.getRemainingTiles();
         displayLivingRoom();
-        initBookshelves();
+        initPlayers();
     }
-    private void initBookshelves(){
+    private void initPlayers(){
         int i = 0;
         for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
             bookshelves[i] = new BookshelfView(pl.getName(), null);
             for(int j = 0 ; j<2 ; j++){
-                takenTokens[j][i] = null;
+                takenTokens[j][i] = Images.emptyToken;
             }
             i++;
         }
@@ -324,9 +326,9 @@ public class GameController extends ViewController implements Initializable {
                         if (itemTile != null && itemTile.getType() != ItemTileType.EMPTY) {
                             ImageView image = new ImageView();
                             image.setImage(Images.getTileImage(itemTile));
-                            image.setPreserveRatio(true);
-                            //image.setFitHeight(0);
-                            image.setFitWidth(50);
+                            //image.setPreserveRatio(true);
+                            image.setFitHeight(48.6);
+                            image.setFitWidth(51);
                             image.setEffect(new DropShadow());
 
                             //col, row
@@ -349,7 +351,8 @@ public class GameController extends ViewController implements Initializable {
                 bookshelfPane.getChildren().add(bookshelves[seeingPlayer].getBookshelfGrid());
             String seeingPlayerName = bookshelves[seeingPlayer].getPlayerName();
             playerBookshelfLabel.setText(seeingPlayerName);
-            personalGoalImage.setVisible(myName.equals(seeingPlayerName));
+            if(myName.equals(seeingPlayerName)) personalGoalImage.setImage(myPersonalGoal);
+            else personalGoalImage.setImage(Images.backPersonalGoal);
             insertBox.setVisible(myName.equals(seeingPlayerName) &&
                     viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName) &&
                     (viewBuffer.getGameModelView().getCurrentState() == GameState.INSERT ||
@@ -360,9 +363,15 @@ public class GameController extends ViewController implements Initializable {
         GridPane bookshelfGrid = new GridPane();
         bookshelfGrid.setPrefWidth(323);
         bookshelfGrid.setPrefHeight(342);
+        bookshelfGrid.setMaxWidth(323);
+        bookshelfGrid.setMaxHeight(342);
+        bookshelfGrid.setMinWidth(323);
+        bookshelfGrid.setMinHeight(342);
         bookshelfGrid.setHgap(17);
         bookshelfGrid.setVgap(10);
-        bookshelfGrid.setGridLinesVisible(true);
+        bookshelfGrid.setLayoutX(0);
+        bookshelfGrid.setLayoutY(0);
+        //bookshelfGrid.setGridLinesVisible(true);
 
         for(int i = 0 ; i < 5 ; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();

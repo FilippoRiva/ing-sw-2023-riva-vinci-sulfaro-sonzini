@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -48,8 +47,14 @@
          </image>
       </ImageView>
       <ImageView fx:id="personalGoalImage" fitHeight="260.0" layoutX="595.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="takenToken1Image" fitWidth="60.0" layoutX="595.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="takenToken2Image" fitWidth="60.0" layoutX="707.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="takenToken1Image" fitWidth="60.0" layoutX="595.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/tokens/scoring.jpg" />
+         </image></ImageView>
+      <ImageView fx:id="takenToken2Image" fitWidth="60.0" layoutX="707.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/tokens/scoring.jpg" />
+         </image></ImageView>
       <Button layoutX="758.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#prevPlayer" prefHeight="50.0" prefWidth="79.0" styleClass="arrow" />
       <Label fx:id="playerBookshelfLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="819.0" layoutY="15.0" prefHeight="58.0" prefWidth="383.0" text="player's bookshelf" AnchorPane.topAnchor="15.0">
          <font>
@@ -57,8 +62,8 @@
          </font>
       </Label>
       <Button layoutX="1190.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#nextPlayer" prefHeight="50.0" prefWidth="79.0" style="-fx-rotate: 180;" styleClass="arrow" />
-      <Pane fx:id="bookshelfPane" layoutX="850.0" layoutY="107.0" prefHeight="340.0" prefWidth="322.0" />
-      <HBox fx:id="insertBox" layoutX="850.0" layoutY="456.0" prefHeight="58.0" prefWidth="324.0" spacing="17.0">
+      <AnchorPane fx:id="bookshelfPane" layoutX="850.0" layoutY="105.0" maxHeight="342.0" maxWidth="323.0" minHeight="342.0" minWidth="323.0" prefHeight="342.0" prefWidth="323.0" />
+      <HBox fx:id="insertBox" layoutX="850.0" layoutY="456.0" prefHeight="58.0" prefWidth="324.0" spacing="17.0" visible="false">
          <children>
             <Button fx:id="insertButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
             <Button fx:id="insertButton2" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
