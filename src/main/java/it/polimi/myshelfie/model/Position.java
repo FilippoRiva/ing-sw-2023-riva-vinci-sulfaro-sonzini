@@ -39,11 +39,7 @@ public class Position implements Serializable{
     public boolean equals(Object obj) {
         if(obj==null || obj.getClass()!=getClass()) return false;
         Position p;
-        try {
-            p = (Position) obj;
-        }catch (Exception e){
-            return false;
-        }
+        p = (Position) obj;
         return p.getX() == x && p.getY() == y;
     }
 
