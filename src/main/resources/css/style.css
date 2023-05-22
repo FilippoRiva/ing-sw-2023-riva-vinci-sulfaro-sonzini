@@ -6,9 +6,14 @@
     -fx-background-color: transparent;
 }
 
+.label {
+    -fx-font-family: "Kristen ITC";
+}
+
 .button {
     -fx-background-color: brown;
     -fx-text-fill: white;
+    -fx-font-family: "Kristen ITC";
 
     -fx-cursor: hand;
 }
@@ -24,7 +29,6 @@
     -fx-background-color: transparent;
 
     -fx-text-fill: white;
-    -fx-font-family: "Kristen ITC";
     -fx-text-alignment: center;
     -fx-font-size: 50;
 }
@@ -48,6 +52,5 @@
 
 .error {
     -fx-text-fill: red;
-    -fx-font-family: "Kristen ITC";
     -fx-font-size: 20;
 }
