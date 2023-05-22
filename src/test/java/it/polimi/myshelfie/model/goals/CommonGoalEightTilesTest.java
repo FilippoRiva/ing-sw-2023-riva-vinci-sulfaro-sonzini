@@ -10,7 +10,7 @@ class CommonGoalEightTilesTest {
     @Test
     void isVerified(){
         CommonGoalEightTiles eightTilesGoal = new CommonGoalEightTiles();
-
+        assertNotNull(eightTilesGoal.getDescription());
         ItemTile[][] bookshelf = {
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  },
                 {new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.EMPTY,0)},

@@ -11,6 +11,7 @@ class CommonGoalCornerTest {
     @Test
     void isVerified() {
         CommonGoalCorner cornerGoal = new CommonGoalCorner();
+        assertNotNull(cornerGoal.getDescription());
         ItemTile[][] bookshelf = {
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  },
                 {new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0)},

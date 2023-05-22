@@ -114,11 +114,8 @@ public class CommonGoalDefaultsFactory {
             case 10 -> {
                 return new CommonGoalDiagonal();
             }
-            case 11 -> {
-                return new CommonGoalStairs();
-            }
             default -> {
-                return null;
+                return new CommonGoalStairs();
             }
         }
     }

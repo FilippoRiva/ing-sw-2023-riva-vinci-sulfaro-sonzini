@@ -37,5 +37,4 @@ public class Observable<Event extends Enum<Event>, Representation>{
     public synchronized void deleteObservers() { obs.removeAllElements();}
     public synchronized void setChanged() { changed = true;}
     public synchronized void clearChanged() { changed = false;}
-    public synchronized boolean hasChanged() { return changed;}
 }

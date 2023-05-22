@@ -21,18 +21,7 @@ public class ModelView implements Serializable {
             this.currentSizeMap.put(lobby,model.getLobbyCurrentSize(lobby));
         }
     }
-    public ModelView(ModelView modelView){
-        this.lobbies = new ArrayList<>(modelView.lobbies);
-        this.maxSizeMap = new HashMap<>();
-        this.currentSizeMap = new HashMap<>();
-        for(String lobby : lobbies){
-            this.maxSizeMap.put(lobby,modelView.getMaxSize(lobby));
-            this.currentSizeMap.put(lobby,modelView.getCurrentSize(lobby));
-        }
-    }
-
     /**
-     *
      * @return the list with the lobby names.
      */
     public List<String> getLobbies() {

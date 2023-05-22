@@ -92,18 +92,18 @@ public class PlayerModelView implements Serializable {
      * @return the list of the tiles taken from the player.
      */
     public List<ItemTile> getTakenTiles() {
-        return takenTiles;
+        return new ArrayList<>(takenTiles);
     }
 
-    public void setPoints(int points) {
+    protected void setPoints(int points) {
         this.points = points;
     }
 
-    public void setTakenTiles(List<ItemTile> takenTiles) {
+    protected void setTakenTiles(List<ItemTile> takenTiles) {
         this.takenTiles = takenTiles;
     }
 
-    public void setTokens(List<Token> tokens) {
+    protected void setTokens(List<Token> tokens) {
         this.tokens = tokens;
     }
 

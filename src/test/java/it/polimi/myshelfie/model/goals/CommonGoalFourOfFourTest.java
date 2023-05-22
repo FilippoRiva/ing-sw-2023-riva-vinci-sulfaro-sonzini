@@ -10,6 +10,7 @@ class CommonGoalFourOfFourTest {
     @Test
     void isVerified(){
         CommonGoalFourOfFour fourOfFourGoal = new CommonGoalFourOfFour();
+        assertNotNull(fourOfFourGoal.getDescription());
 
         ItemTile[][] bookshelf = {
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },

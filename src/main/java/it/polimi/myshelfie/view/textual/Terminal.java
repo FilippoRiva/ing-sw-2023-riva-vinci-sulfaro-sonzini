@@ -214,13 +214,31 @@ public class Terminal {
         moveToInput();
     }
 
-    public void printTokens(List<Token> tokens,int line, int column){
+    public void printTopToken(List<Token> tokens, int line, int column){
         positionCursor(line,column);
-        print(" │ ");
-        for (Token tok : tokens) {
-            print(tok.getValue() + " │ ");
+        if(tokens.size()==0) {
+            print("none");
+            moveToInput();
+            return;
         }
+        Token token = tokens.get(tokens.size()-1);
+        print(" │ "+token.getValue()+" │ ");
         print("\n");
+        moveToInput();
+    }
+
+    public void printAllTokens(List<Token> tokens,int line, int column){
+        positionCursor(line,column);
+        if(tokens.size()==0) {
+            cursorLeft(2);
+            print("none");
+            moveToInput();
+            return;
+        }
+        for(Token tok : tokens){
+            print(" │ "+tok.getValue());
+        }
+        print(" │ \n");
         moveToInput();
     }
 
@@ -232,6 +250,7 @@ public class Terminal {
             if (i < 0) print(" " + i + " ");
             if (i >= 0) print("  " + i + " ");
         }
+        println("");
         positionCursor(2,3);
         print("┌");
         printFirstLine(size);

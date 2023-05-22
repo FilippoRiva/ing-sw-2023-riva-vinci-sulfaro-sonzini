@@ -37,14 +37,4 @@ public class PlayerChat extends Observable<ChatEvent, PlayerChatModelView> {
     public ArrayList<Message> getMessages() {
         return messages;
     }
-
-    /**
-     *
-     * @return the last message received by the player. If the player has never received any message it returns
-     * an Empty Chat Message.
-     */
-    public Message getLastMessage(){
-        if(messages.size()==0) return new Message(Messages.fromNobody,Messages.toEveryOne,Messages.emptyChat);
-        return messages.get(messages.size()-1);
-    }
 }

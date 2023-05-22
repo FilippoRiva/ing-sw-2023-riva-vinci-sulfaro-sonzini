@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersonalGoalDefaultsTest {
+public class PersonalGoalDefaultsTest {
 
     @Test
     void getGoal() {
@@ -109,12 +109,16 @@ class PersonalGoalDefaultsTest {
                 })));
     }
 
-    private boolean matrixEqual(ItemTile[][]A, ItemTile[][] B){
+    public static boolean matrixEqual(ItemTile[][]A, ItemTile[][] B){
         if(A.length!=B.length) return false;
         if(A[0].length!=B[0].length) return false;
         for(int y = 0; y<A.length; y++){
             for(int x = 0; x<A[0].length; x++){
-                if(A[y][x].getType()!=B[y][x].getType()) return false;
+                if(A[y][x]==null || B[y][x]==null){
+                    if(A[y][x]!=B[y][x]) return false;
+                } else {
+                    if(A[y][x].getType()!=B[y][x].getType()) return false;
+                }
             }
         }
         return true;

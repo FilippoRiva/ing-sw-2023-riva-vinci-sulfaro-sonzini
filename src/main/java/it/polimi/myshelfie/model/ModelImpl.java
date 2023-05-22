@@ -25,7 +25,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
             ex.scheduleAtFixedRate(()->{
                 setChanged();
                 notifyObservers(new ModelView(this));
-            },5,10, TimeUnit.SECONDS);
+            },0,10, TimeUnit.SECONDS);
         }).start();
     }
 
@@ -83,7 +83,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
 
     @Override
     public synchronized ClientExceptionsNotifier getNewClientExceptionNotifier() {
-        return new ClientsExceptionsNotifierImpl();
+        return new ClientExceptionsNotifierImpl();
     }
 
     public int getLobbyCurrentSize(String lobby) {

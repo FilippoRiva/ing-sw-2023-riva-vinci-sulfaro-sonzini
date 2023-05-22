@@ -37,6 +37,7 @@ public class Position implements Serializable{
 
     @Override
     public boolean equals(Object obj) {
+        if(obj==null || obj.getClass()!=getClass()) return false;
         Position p;
         try {
             p = (Position) obj;
