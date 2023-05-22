@@ -4,8 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CommonGoalThreeColumnsTest {
 
@@ -13,6 +12,7 @@ public class CommonGoalThreeColumnsTest {
     @Test
     void isVerified(){
         CommonGoalThreeColumns threeColumnsGoal = new CommonGoalThreeColumns();
+        assertNotNull(threeColumnsGoal.getDescription());
         ItemTile[][] bookshelf = {
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0)  },
                 {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0)},

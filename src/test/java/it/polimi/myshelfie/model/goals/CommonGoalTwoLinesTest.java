@@ -4,8 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CommonGoalTwoLinesTest {
 
@@ -14,6 +13,7 @@ public class CommonGoalTwoLinesTest {
     @Test
     void isVerified(){
         CommonGoalTwoLines twoLinesGoal = new CommonGoalTwoLines();
+        assertNotNull(twoLinesGoal.getDescription());
         ItemTile[][] bookshelf = {
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.GAME,0)},
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.GAME,0)},

@@ -4,13 +4,13 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommonGoalTwoSquaresTest {
     @Test
     void isVerified(){
         CommonGoalTwoSquares twoSquaresGoal = new CommonGoalTwoSquares();
+        assertNotNull(twoSquaresGoal.getDescription());
 
         ItemTile[][] bookshelf = {
                 {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
