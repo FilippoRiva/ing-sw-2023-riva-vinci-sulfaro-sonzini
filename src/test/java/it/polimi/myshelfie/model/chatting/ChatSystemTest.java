@@ -1,10 +1,14 @@
 package it.polimi.myshelfie.model.chatting;
 
 import it.polimi.myshelfie.model.Player;
+import it.polimi.myshelfie.model.events.ChatEvent;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+import it.polimi.myshelfie.utils.Observer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +33,51 @@ class ChatSystemTest {
         assertTrue(cs.getPlayerChats().containsKey("Luca"));
         assertTrue(cs.getPlayerChats().containsKey("Andrea"));
     }
+
+    @Test
+    void chatObserverTest(){
+        final PlayerChatModelView[] views = new PlayerChatModelView[2];
+        final ChatEvent[] events = new ChatEvent[2];
+        Observer<ChatEvent,PlayerChatModelView> obs1 = new Observer<ChatEvent, PlayerChatModelView>() {
+            @Override
+            public void update(ChatEvent evt, PlayerChatModelView chatModelView) {
+                views[0] = chatModelView;
+                events[0] = evt;
+            }
+        };
+        cs.addChatObserver("Luca",obs1);
+        Observer<ChatEvent,PlayerChatModelView> obs2 = new Observer<ChatEvent, PlayerChatModelView>() {
+            @Override
+            public void update(ChatEvent evt, PlayerChatModelView chatModelView) {
+                views[1] = chatModelView;
+                events[1] = evt;
+            }
+        };
+        cs.addChatObserver("Pippo",obs2);
+        cs.addMessage(new Message("Luca","Pippo","ciao"));
+        assertNotNull(views[0]);
+        assertNotNull(views[0].getLastMessage());
+        assertEquals(views[0].getLastMessage(), views[1].getLastMessage());
+        assertEquals(events[0],events[1]);
+        cs.addMessage(new Message("Pippo","Luca","ciao anche a te"));
+        assertNotNull(views[0]);
+        assertNotNull(views[0].getLastMessage());
+        assertEquals(views[0].getLastMessage(),views[1].getLastMessage());
+        assertEquals(events[0],events[1]);
+        views[0] = null;
+        views[1] = null;
+        events[0] = null;
+        events[1] = null;
+        cs.removeChatObserver("Luca",obs1);
+        cs.removeChatObserver("Pippo",obs2);
+        cs.addMessage(new Message("Pippo","Luca","ciao"));
+        assertNull(views[0]);
+        assertNull(views[1]);
+        assertNull(events[0]);
+        assertNull(events[1]);
+        Messages messages = new Messages();
+    }
+
     @Test
     void addMessage() {
         Message msg;
@@ -58,7 +107,7 @@ class ChatSystemTest {
         assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 1);
         assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 0);
         //receiver doesn't exists
-        msg=new Message(p1.getName(), "Nessuno", "msg1");
+        msg=new Message(p1.getName(),Messages.fromNobody, "msg1");
         cs.addMessage(msg);
         assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 1);
         assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 1);
@@ -90,6 +139,8 @@ class ChatSystemTest {
         assertEquals(cs.getPlayerChats().get(p1.getName()).getMessages().size(), 2);
         assertEquals(cs.getPlayerChats().get(p2.getName()).getMessages().size(), 2);
         assertEquals(cs.getPlayerChats().get(p3.getName()).getMessages().size(), 1);
+        List<Message> messages = cs.getMessages();
+        assertEquals(2, messages.size());
     }
 
     @Test
@@ -101,6 +152,5 @@ class ChatSystemTest {
         assertEquals(view1.getMessages().size(), cs.getPlayerChats().get(p1.getName()).getMessages().size());
         cs.addMessage(new Message(p1.getName(), p2.getName(), "msg1"));
         assertEquals(view1.getLastMessage().getMessage(), "msg1");
-
     }
 }

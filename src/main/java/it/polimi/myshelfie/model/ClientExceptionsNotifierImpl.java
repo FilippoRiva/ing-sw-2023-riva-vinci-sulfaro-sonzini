@@ -9,7 +9,7 @@ import it.polimi.myshelfie.utils.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientsExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierView> implements ClientExceptionsNotifier {
+public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierView> implements ClientExceptionsNotifier {
     List<Exception> exceptionList = new ArrayList<>();
     @Override
     public void notifyException(Exception exception) {

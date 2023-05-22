@@ -1,6 +1,7 @@
 package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.GameConfig;
+import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.model.exceptions.FullColumnException;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
@@ -8,6 +9,7 @@ import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.utils.Observer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,8 +33,9 @@ public class FullModelTest {
     public void fullModelTest() throws InterruptedException {
         LobbyModel lobby1 = null;
         LobbyModel lobby2 = null;
+        Observer<ModelEvent,ModelView> obs1 = (evt, modelView) -> setModelView1(model.getModelView());
         try{
-            model.addModelObserver((evt,x)-> setModelView1(model.getModelView()));
+            model.addModelObserver(obs1);
             lobby1 = model.addLobby("Lobby1");
 
         }catch (Exception e){
@@ -125,9 +128,7 @@ public class FullModelTest {
         t2.start();
         t1.join();
         t2.join();
-
-
-
+        model.removeModelObserver(obs1);
     }
 
 
@@ -564,6 +565,8 @@ public class FullModelTest {
         try {
             game.insertTiles(p,4);
         } catch (InvalidParameterException | FullColumnException e) {fail();}
+        game.checkCommonGoal(p);
+        game.refillLivingRoom();
         game.setState(GameState.COUNTING_POINTS);
         game.setState(GameState.DRAW);
     }

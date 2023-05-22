@@ -47,10 +47,6 @@ public class CommonGoalModelView implements Serializable {
         return description;
     }
 
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
-
     public void diff(CommonGoalModelView theNewOne){
         this.tokens.removeAll(theNewOne.tokens);
     }
