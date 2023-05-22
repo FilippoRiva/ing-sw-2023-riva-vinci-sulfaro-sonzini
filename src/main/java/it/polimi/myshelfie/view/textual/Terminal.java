@@ -250,6 +250,7 @@ public class Terminal {
             if (i < 0) print(" " + i + " ");
             if (i >= 0) print("  " + i + " ");
         }
+        println("");
         positionCursor(2,3);
         print("┌");
         printFirstLine(size);

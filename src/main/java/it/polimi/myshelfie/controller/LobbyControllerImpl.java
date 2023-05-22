@@ -74,6 +74,10 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         if(lobbyModel.isLobbyEmpty()){
             controllerImpl.deleteLobby(lobbyModel.getLobbyName());
         }
+        try {
+            clientsMap.get(playerName).send(new NetworkMessage(ViewType.INIT));
+        } catch (RemoteException ignored) {
+        }
     }
 
     @Override

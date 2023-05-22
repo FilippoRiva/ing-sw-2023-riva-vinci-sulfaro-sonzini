@@ -266,6 +266,13 @@ public class ViewBuffer extends View {
     @Override
     public synchronized void setView(ViewType viewType) {
         this.viewType = viewType;
+        if(viewType==ViewType.INIT) {
+            fullGameModelView = null;
+            gameDifferences = null;
+            oldGameModelView = null;
+            lobbyModelView = null;
+            playerChatModelView = null;
+        }
         UINotifier.setChanged();
         UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);
     }
