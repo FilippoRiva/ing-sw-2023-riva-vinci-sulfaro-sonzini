@@ -82,10 +82,7 @@ public class FullGameModelView implements Serializable, GameModelView {
      * @return the player model view requested.
      */
     public PlayerModelView getPlayer(String username){
-        for(PlayerModelView p : players){
-            if(p.getName().equals(username)) return p;
-        }
-        return null;
+        return players.stream().filter(x->x.getName().equals(username)).findFirst().orElse(null);
     }
 
     /**
@@ -104,10 +101,7 @@ public class FullGameModelView implements Serializable, GameModelView {
         return currentPlayer;
     }
     public PlayerModelView getCurrentPlayer(){
-        for(PlayerModelView p : players){
-            if(p.getName().equals(currentPlayer)) return p;
-        }
-        return null;
+        return players.stream().filter(x->x.getName().equals(currentPlayer)).findFirst().orElse(null);
     }
 
     /**
@@ -170,23 +164,23 @@ public class FullGameModelView implements Serializable, GameModelView {
         return livingRoom[x+offset][offset-y];
     }
 
-    public void setCurrentPlayer(String currentPlayer) {
+    protected void setCurrentPlayer(String currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
-    public void setCurrentState(GameState currentState) {
+    protected void setCurrentState(GameState currentState) {
         this.currentState = currentState;
     }
 
-    public void setCommonGoals(List<CommonGoalModelView> commonGoals) {
+    protected void setCommonGoals(List<CommonGoalModelView> commonGoals) {
         this.commonGoals = commonGoals;
     }
 
-    public void setLivingRoom(ItemTile[][] livingRoom) {
+    protected void setLivingRoom(ItemTile[][] livingRoom) {
         this.livingRoom = livingRoom;
     }
 
-    public void setRemainingTiles(int remainingTiles) {
+    protected void setRemainingTiles(int remainingTiles) {
         this.remainingTiles = remainingTiles;
     }
 
@@ -220,5 +214,34 @@ public class FullGameModelView implements Serializable, GameModelView {
         if(this.remainingTiles == theNewOne.remainingTiles) this.remainingTiles = -1;
         else this.remainingTiles = theNewOne.remainingTiles;
         this.gameConfig = null;
+    }
+
+    public void applyChanges(DrawModelView drawModelView){
+        this.setCurrentState(drawModelView.getCurrentState());
+        this.setLivingRoom(drawModelView.getLivingRoom());
+        this.getCurrentPlayer().setTakenTiles(drawModelView.getTakenTiles());
+    }
+
+    public void applyChanges(OrganizeModelView organizeModelView){
+        this.setCurrentState(organizeModelView.getCurrentState());
+        this.getCurrentPlayer().setTakenTiles(organizeModelView.getOrderedTiles());
+    }
+
+    public void applyChanges(InsertModelView insertModelView){
+        this.getPlayer(insertModelView.getCurrentPlayer()).setBookshelf(insertModelView.getBookshelf());
+        this.getPlayer(insertModelView.getCurrentPlayer()).setTakenTiles(new ArrayList<>());
+        if(this.getCurrentState()!= GameState.DRAW) {
+            this.setCurrentState(insertModelView.getCurrentState());
+        }
+    }
+
+    public void applyChanges(EndTurnModelView endTurnModelView){
+        this.setCurrentState(endTurnModelView.getCurrentState());
+        this.getPlayer(endTurnModelView.getLastPlayer()).setPoints(endTurnModelView.getPoints());
+        this.getPlayer(endTurnModelView.getLastPlayer()).setTokens(endTurnModelView.getPlayerTokens());
+        this.setRemainingTiles(endTurnModelView.getRemainingTiles());
+        this.setLivingRoom(endTurnModelView.getLivingRoom());
+        this.setCommonGoals(endTurnModelView.getCommonGoals());
+        this.setCurrentPlayer(endTurnModelView.getCurrentPlayer());
     }
 }

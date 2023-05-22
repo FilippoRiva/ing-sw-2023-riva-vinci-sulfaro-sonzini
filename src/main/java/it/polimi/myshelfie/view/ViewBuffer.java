@@ -206,9 +206,7 @@ public class ViewBuffer extends View {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
-        fullGameModelView.setCurrentState(drawModelView.getCurrentState());
-        fullGameModelView.setLivingRoom(drawModelView.getLivingRoom());
-        fullGameModelView.getCurrentPlayer().setTakenTiles(drawModelView.getTakenTiles());
+        fullGameModelView.applyChanges(drawModelView);
 
         oldModelView.diff(this.fullGameModelView);
         this.gameDifferences= oldModelView;
@@ -223,8 +221,7 @@ public class ViewBuffer extends View {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
-        fullGameModelView.setCurrentState(organizeModelView.getCurrentState());
-        fullGameModelView.getCurrentPlayer().setTakenTiles(organizeModelView.getOrderedTiles());
+        fullGameModelView.applyChanges(organizeModelView);
 
         oldModelView.diff(this.fullGameModelView);
         this.gameDifferences= oldModelView;
@@ -239,11 +236,7 @@ public class ViewBuffer extends View {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
-        fullGameModelView.getPlayer(insertModelView.getCurrentPlayer()).setBookshelf(insertModelView.getBookshelf());
-        fullGameModelView.getPlayer(insertModelView.getCurrentPlayer()).setTakenTiles(new ArrayList<>());
-        if(fullGameModelView.getCurrentState()!= GameState.DRAW) {
-            fullGameModelView.setCurrentState(insertModelView.getCurrentState());
-        }
+        fullGameModelView.applyChanges(insertModelView);
 
         oldModelView.diff(this.fullGameModelView);
         this.gameDifferences= oldModelView;
@@ -259,13 +252,7 @@ public class ViewBuffer extends View {
         this.oldGameModelView = new FullGameModelView(fullGameModelView);
         FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
 
-        fullGameModelView.setCurrentState(endTurnModelView.getCurrentState());
-        fullGameModelView.getPlayer(endTurnModelView.getLastPlayer()).setPoints(endTurnModelView.getPoints());
-        fullGameModelView.getPlayer(endTurnModelView.getLastPlayer()).setTokens(endTurnModelView.getPlayerTokens());
-        fullGameModelView.setRemainingTiles(endTurnModelView.getRemainingTiles());
-        fullGameModelView.setLivingRoom(endTurnModelView.getLivingRoom());
-        fullGameModelView.setCommonGoals(endTurnModelView.getCommonGoals());
-        fullGameModelView.setCurrentPlayer(endTurnModelView.getCurrentPlayer());
+        fullGameModelView.applyChanges(endTurnModelView);
 
         oldModelView.diff(this.fullGameModelView);
         this.gameDifferences= oldModelView;
