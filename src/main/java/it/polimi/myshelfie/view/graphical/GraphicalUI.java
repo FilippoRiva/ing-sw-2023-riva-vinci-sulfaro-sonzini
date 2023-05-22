@@ -1,5 +1,7 @@
 package it.polimi.myshelfie.view.graphical;
 
+import it.polimi.myshelfie.model.GameState;
+import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewUpdate;
@@ -25,7 +27,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
 
     static ViewController currentController;
     static InternalViewState currentState;
-    static String playerName;
+    static String myName;
 
     @Override
     public void update(ViewUpdate evt, Object object) {
@@ -85,28 +87,28 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         }
     }
 
-    public static void setPlayerName(String playerName) {
-        GraphicalUI.playerName = playerName;
+    public static void setMyName(String myName) {
+        GraphicalUI.myName = myName;
     }
-    public static String getPlayerName() {
-        return playerName;
+    public static String getMyName() {
+        return myName;
     }
 
-    private void joinUpdate() {
+    private synchronized void joinUpdate() {
         if(currentState == InternalViewState.JOIN) ((JoinController)currentController).refreshListLobbies();
     }
-    private void exceptionUpdate() {
+    private synchronized void exceptionUpdate() {
         currentController.displayError(viewBuffer.getClientExceptionsNotifierView().getLastException().getMessage());
     }
-    private void lobbyUpdate() {
+    private synchronized void lobbyUpdate() {
         if(currentState == InternalViewState.LOBBY && viewBuffer.getLobbyModelView()!=null)
-            Platform.runLater(() -> ((LobbyController)currentController).refreshListPlayers());
+            ((LobbyController)currentController).refreshListPlayers();
     }
-    private void gameUpdate() {
+    private synchronized void gameUpdate() {
         if(currentState == InternalViewState.GAME)
             ((GameController)currentController).play();
     }
-    private void viewTypeUpdate() {
+    private synchronized void viewTypeUpdate() {
         switch (viewBuffer.getViewType()){
             case INIT -> {
                 if(stage != null) changeScene("home");

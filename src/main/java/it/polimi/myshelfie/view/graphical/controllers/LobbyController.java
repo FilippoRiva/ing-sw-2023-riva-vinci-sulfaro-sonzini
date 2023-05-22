@@ -23,12 +23,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class LobbyController extends ViewController implements Initializable {
-    public Label lobbyNameLabel;
-    public VBox playersVBox;
-    public Label playersInLabel;
-    public Button minusButton;
-    public Button plusButton;
-    public Button startButton;
+    @FXML
+    protected Label lobbyNameLabel;
+    @FXML
+    protected VBox playersVBox;
+    @FXML
+    protected Label playersInLabel;
+    @FXML
+    protected Button minusButton;
+    @FXML
+    protected Button plusButton;
+    @FXML
+    protected Button startButton;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
@@ -46,23 +52,22 @@ public class LobbyController extends ViewController implements Initializable {
 
     @FXML
     protected void onMouseMinusClicked(MouseEvent mouseEvent) {
-        if(!viewBuffer.removePlayer()) {
+        if(!viewBuffer.removePlayer())
             displayError("cannot remove player!");
-            errorLabel.setFont(Font.font("Kristen ITC", 20));
-        }
     }
 
     @FXML
     protected void onMousePlusClicked(MouseEvent mouseEvent) {
-        if(!viewBuffer.addPlayer()) {
+        if(!viewBuffer.addPlayer())
             displayError("cannot add player!");
-            errorLabel.setFont(Font.font("Kristen ITC", 20));
-        }
     }
 
     public void refreshListPlayers(){
-        Platform.runLater(() -> playersVBox.getChildren().clear());
-        createListPlayers();
+        Platform.runLater(() -> {
+            playersVBox.getChildren().clear();
+            createListPlayers();
+        });
+
     }
 
     private void createListPlayers(){
@@ -84,20 +89,20 @@ public class LobbyController extends ViewController implements Initializable {
                 label.setPadding(new Insets(0));
                 HBox hBox = new HBox(image, label);
                 hBox.setSpacing(20);
-                Platform.runLater(() -> playersVBox.getChildren().add(hBox));
+                playersVBox.getChildren().add(hBox);
             }
-            else if(player.equals(GraphicalUI.getPlayerName())) {
+            else if(player.equals(GraphicalUI.getMyName())) {
                 label.setTextFill(Color.rgb(218, 106, 45));
                 label.setFont(Font.font("Kristen ITC", 40));
             }
 
             if(!lobbyModelView.isRoomOwner(player))
-                Platform.runLater(() -> playersVBox.getChildren().add(label));
+                playersVBox.getChildren().add(label);
         }
 
         int currentPlayersIn = lobbyModelView.getPlayers().size();
         int maxNumPlayers = lobbyModelView.getGameConfig().getNumPlayers();
-        if(lobbyModelView.isRoomOwner(GraphicalUI.getPlayerName())){
+        if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())){
             minusButton.setDisable(false);
             plusButton.setDisable(false);
             startButton.setDisable(currentPlayersIn != maxNumPlayers);
@@ -106,7 +111,7 @@ public class LobbyController extends ViewController implements Initializable {
             plusButton.setDisable(true);
             startButton.setDisable(true);
         }
-        Platform.runLater(() -> playersInLabel.setText(currentPlayersIn + "/" + maxNumPlayers));
+        playersInLabel.setText(currentPlayersIn + "/" + maxNumPlayers);
     }
 
     @Override

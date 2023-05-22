@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class JoinController extends ViewController implements Initializable {
-    public TextField playerNameField;
-    public VBox lobbiesVBox;
-    public Button joinButton;
+    @FXML
+    protected TextField playerNameField;
+    @FXML
+    protected VBox lobbiesVBox;
+    @FXML
+    protected Button joinButton;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String selected = null;
@@ -33,21 +36,25 @@ public class JoinController extends ViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         createListLobbies();
     }
-    public void onJoinMouseClicked(MouseEvent mouseEvent) {
+    @FXML
+    protected void onJoinMouseClicked(MouseEvent mouseEvent) {
         String playerName = playerNameField.getText();
 
         if (playerName.isEmpty()) {
             displayError("choose a name!");
         }else {
             viewBuffer.joinRequest(selected, playerName);
-            GraphicalUI.setPlayerName(playerName);
+            GraphicalUI.setMyName(playerName);
             startLoading();
         }
     }
 
     public void refreshListLobbies(){
-        Platform.runLater(() -> lobbiesVBox.getChildren().clear());
-        createListLobbies();
+        Platform.runLater(() -> {
+            lobbiesVBox.getChildren().clear();
+            createListLobbies();
+        });
+
     }
     private void createListLobbies(){
         ModelView modelView = viewBuffer.getModelView();
@@ -58,7 +65,7 @@ public class JoinController extends ViewController implements Initializable {
 
             anchorPane.setOnMouseClicked(event -> {
                 selected = lobby;
-                joinButton.setDisable(false);
+                Platform.runLater(() -> joinButton.setDisable(false));
                 refreshListLobbies();
             });
 
@@ -73,7 +80,7 @@ public class JoinController extends ViewController implements Initializable {
             anchorPane.getChildren().add(label);
             AnchorPane.setRightAnchor(label, 20D);
 
-            Platform.runLater(() -> lobbiesVBox.getChildren().add(anchorPane));
+            lobbiesVBox.getChildren().add(anchorPane);
         }
     }
     private Label generateStandardLabel(String text){

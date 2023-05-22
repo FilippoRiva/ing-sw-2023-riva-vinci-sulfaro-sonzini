@@ -14,7 +14,6 @@ import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -34,36 +33,59 @@ import static it.polimi.myshelfie.view.graphical.Images.getImage;
 import static it.polimi.myshelfie.view.graphical.Images.getTileImage;
 
 public class GameController extends ViewController implements Initializable {
-    public GridPane livingRoomGrid;
-    public Pane bookshelfPane;
-    public Label playerBookshelfLabel;
-    public ImageView lastTokenImage;
-    public ImageView personalGoalImage;
-    public ImageView takenToken1Image;
-    public ImageView takenToken2Image;
-    public ImageView commonGoal1Image;
-    public ImageView commonGoal2Image;
-    public Label takenTilesLabel;
-    public ImageView token1Image;
-    public ImageView token2Image;
-    public ImageView takenTile1Image;
-    public ImageView takenTile2Image;
-    public ImageView takenTile3Image;
+    @FXML
+    protected GridPane livingRoomGrid;
+    @FXML
+    protected Pane bookshelfPane;
+    @FXML
+    protected Label playerBookshelfLabel;
+    @FXML
+    protected ImageView lastTokenImage;
+    @FXML
+    protected ImageView personalGoalImage;
+    @FXML
+    protected ImageView takenToken1Image;
+    @FXML
+    protected ImageView takenToken2Image;
+    @FXML
+    protected ImageView commonGoal1Image;
+    @FXML
+    protected ImageView commonGoal2Image;
+    @FXML
+    protected Label takenTilesLabel;
+    @FXML
+    protected ImageView token1Image;
+    @FXML
+    protected ImageView token2Image;
+    @FXML
+    protected ImageView takenTile1Image;
+    @FXML
+    protected ImageView takenTile2Image;
+    @FXML
+    protected ImageView takenTile3Image;
     ImageView[] takenTilesImages;
-    public HBox insertBox;
-    public Button insertButton1;
-    public Button insertButton2;
-    public Button insertButton3;
-    public Button insertButton4;
-    public Button insertButton5;
+    @FXML
+    protected HBox insertBox;
+    @FXML
+    protected Button insertButton1;
+    @FXML
+    protected Button insertButton2;
+    @FXML
+    protected Button insertButton3;
+    @FXML
+    protected Button insertButton4;
+    @FXML
+    protected Button insertButton5;
     Button[] insertButtons;
-    public Label descriptionLabel;
-    public Button button;
+    @FXML
+    protected Label descriptionLabel;
+    @FXML
+    protected Button button;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
-    String playerName = GraphicalUI.getPlayerName();
+    String myName = GraphicalUI.getMyName();
     int numPlayers = viewBuffer.getLobbyModelView().getGameConfig().getNumPlayers();
-    CommonGoalModelView[] commonGoals = new CommonGoalModelView[viewBuffer.getLobbyModelView().getGameConfig().getNumCommonGoal()];
+    CommonGoalModelView[] commonGoals = new CommonGoalModelView[2];
     BookshelfView[] bookshelves = new BookshelfView[numPlayers];
     Image[][] takenTokens = new Image[2][numPlayers];
     int remainingTiles;
@@ -77,7 +99,7 @@ public class GameController extends ViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
 
-        int idPersonalGoal = fullGameModelView.getPlayer(playerName).getPersonalGoals().get(0).getId();
+        int idPersonalGoal = fullGameModelView.getPlayer(myName).getPersonalGoals().get(0).getId();
         commonGoals[0] = fullGameModelView.getCommonGoals().get(0);
         commonGoals[1] = fullGameModelView.getCommonGoals().get(1);
 
@@ -86,10 +108,10 @@ public class GameController extends ViewController implements Initializable {
         commonGoal2Image.setImage(getImage("commonGoals/"+(commonGoals[1].getId()+1)+".jpg"));
         token1Image.setImage(getImage("tokens/"+commonGoals[0].getTokens().get(commonGoals[0].getTokens().size()-1).getValue()+".jpg"));
         token2Image.setImage(getImage("tokens/"+commonGoals[1].getTokens().get(commonGoals[1].getTokens().size()-1).getValue()+".jpg"));
-        playerBookshelfLabel.setText(playerName);
+        playerBookshelfLabel.setText(myName);
 
         for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
-            if(pl.getName().equals(playerName)) break;
+            if(pl.getName().equals(myName)) break;
             seeingPlayer++;
         }
 
@@ -113,8 +135,11 @@ public class GameController extends ViewController implements Initializable {
             insertButtons[i].setOnMouseClicked(mouseEvent -> {
                 chosenColumn = finalI;
                 for(int k = 0; k<5; k++){
-                    if(k == finalI) insertButtons[k].setEffect(new Glow());
-                    else insertButtons[k].setEffect(null);
+                    int finalK = k;
+                    Platform.runLater(() -> {
+                        if (finalK == finalI) insertButtons[finalK].setEffect(new Glow());
+                        else insertButtons[finalK].setEffect(null);
+                    });
                 }
             });
         }
@@ -124,49 +149,43 @@ public class GameController extends ViewController implements Initializable {
         FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
 
         //clean takenTilesImage
-        for(ImageView imageView : takenTilesImages){
-            imageView.setImage(null);
-            imageView.setEffect(null);
-        }
-
-        if(!fullGameModelView.getCurrentPlayerName().equals(playerName)) {
-            //I'm not playing
-            switch (fullGameModelView.getCurrentState()){
-                case DRAW, LAST_DRAW -> {
-                    refill(fullGameModelView);
-                    updateTokens();
-                }
-                case ORGANIZE, LAST_ORGANIZE -> displayDraw();
-                case INSERT, LAST_INSERT -> displayOrganize();
-                case COUNTING_POINTS, LAST_COUNTING_POINTS -> updateInsert();
+        Platform.runLater(() -> {
+            for (ImageView imageView : takenTilesImages) {
+                imageView.setImage(null);
+                imageView.setEffect(null);
             }
-        } else{
-            //I'm playing
-            switch (fullGameModelView.getCurrentState()){
-                case FIRST_DRAW -> {
-                    draw();
-                }
-                case DRAW, LAST_DRAW -> {
-                    refill(fullGameModelView);
-                    updateTokens();
-                    draw();
-                }
-                case ORGANIZE, LAST_ORGANIZE -> {
-                    displayDraw();
-                    organize();
-                }
-                case INSERT, LAST_INSERT -> {
-                    displayOrganize();
-                    insert();
-                }
-                case COUNTING_POINTS, LAST_COUNTING_POINTS -> {
-                    updateInsert();
-                    insertBox.setVisible(false);
-                    for(Button button : insertButtons){
-                        button.setEffect(null);
-                    }
-                    button.setVisible(false);
-                    takenTilesLabel.setVisible(true);
+        });
+
+        boolean playing = fullGameModelView.getCurrentPlayerName().equals(myName);
+
+        switch (fullGameModelView.getCurrentState()){
+            case FIRST_DRAW -> {
+                if(playing) draw();
+            }
+            case DRAW, LAST_DRAW -> {
+                refill(fullGameModelView);
+                updateTokens();
+                if(playing) draw();
+            }
+            case ORGANIZE, LAST_ORGANIZE -> {
+                displayDraw();
+                if(playing) organize();
+            }
+            case INSERT, LAST_INSERT -> {
+                displayOrganize();
+                if(playing) insert();
+            }
+            case COUNTING_POINTS, LAST_COUNTING_POINTS -> {
+                updateInsert();
+                if(playing) {
+                    Platform.runLater(() -> {
+                        insertBox.setVisible(false);
+                        for (Button button : insertButtons) {
+                            button.setEffect(null);
+                        }
+                        button.setVisible(false);
+                        takenTilesLabel.setVisible(true);
+                    });
                 }
             }
         }
@@ -178,9 +197,12 @@ public class GameController extends ViewController implements Initializable {
         }
     }
     private void draw() {
-        Platform.runLater(() -> button.setText("Draw"));
-        button.setVisible(true);
-        takenTilesLabel.setVisible(false);
+        Platform.runLater(() -> {
+            button.setText("Draw");
+            button.setVisible(true);
+            takenTilesLabel.setVisible(false);
+        });
+
         selectedTiles = new ArrayList<>();
     }
     private void organize() {
@@ -191,9 +213,11 @@ public class GameController extends ViewController implements Initializable {
         else Platform.runLater(() -> button.setText("Organize"));
     }
     private void insert() {
-        Platform.runLater(() -> button.setText("Insert"));
-        insertBox.setVisible(true);
-        insertBox.setVisible(playerName.equals(bookshelves[seeingPlayer].getPlayerName()));
+        Platform.runLater(() -> {
+            button.setText("Insert");
+            insertBox.setVisible(myName.equals(bookshelves[seeingPlayer].getPlayerName()));
+        });
+
         chosenColumn = -1;
     }
 
@@ -222,13 +246,13 @@ public class GameController extends ViewController implements Initializable {
                     image.setOnMouseClicked(mouseEvent -> {
                         GameState currentState = viewBuffer.getGameModelView().getCurrentState();
                         if((currentState == GameState.FIRST_DRAW || currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
-                                && viewBuffer.getGameModelView().getCurrentPlayerName().equals(playerName)) {
+                                && viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName)) {
                             Position position = new Position(finalI, finalJ);
                             if (selectedTiles.contains(position)) {
-                                image.setEffect(null);
+                                Platform.runLater(() -> image.setEffect(new DropShadow()));
                                 deselectTile(position);
                             } else if (selectedTiles.size() < 3) {
-                                image.setEffect(new Glow());
+                                Platform.runLater(() -> image.setEffect(new Glow()));
                                 selectTile(position, itemTile);
                             }
                         }
@@ -247,10 +271,11 @@ public class GameController extends ViewController implements Initializable {
         //scroll to left
         for(int k = 0 ; k<2; k++){
             if(takenTilesImages[k].getImage() == null && takenTilesImages[k+1].getImage() != null){
-                takenTilesImages[k].setImage(takenTilesImages[k+1].getImage());
+                int finalK = k;
+                Platform.runLater(() -> takenTilesImages[finalK].setImage(takenTilesImages[finalK +1].getImage()));
                 takenTilesImages[k].setOnMouseClicked(takenTilesImages[k+1].getOnMouseClicked());
 
-                takenTilesImages[k+1].setImage(null);
+                Platform.runLater(() -> takenTilesImages[finalK+1].setImage(null));
                 takenTilesImages[k+1].setOnMouseClicked(null);
             }
         }
@@ -263,12 +288,12 @@ public class GameController extends ViewController implements Initializable {
         takenTilesImages[index].setOnMouseClicked(mouseEvent -> {
             GameState currentState = viewBuffer.getGameModelView().getCurrentState();
             if((currentState == GameState.ORGANIZE || currentState == GameState.LAST_ORGANIZE) &&
-                    viewBuffer.getGameModelView().getCurrentPlayerName().equals(playerName)) {
+                    viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName)) {
                 if (!orderedTiles.contains(index)) {
-                    takenTilesImages[index].setEffect(new Glow());
+                    Platform.runLater(() -> takenTilesImages[index].setEffect(new Glow()));
                     orderedTiles.add(index);
                 }else if (orderedTiles.indexOf(index) == orderedTiles.size()-1) {
-                    takenTilesImages[index].setEffect(null);
+                    Platform.runLater(() -> takenTilesImages[index].setEffect(null));
                     orderedTiles.remove((Integer) index);
                 }
             }
@@ -281,7 +306,8 @@ public class GameController extends ViewController implements Initializable {
     private void displayTakenTiles() {
         List<ItemTile> takenTiles = viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles();
         for(int i = 0 ; i < takenTiles.size(); i++){
-            takenTilesImages[i].setImage(getTileImage(takenTiles.get(i)));
+            int finalI = i;
+            Platform.runLater(() -> takenTilesImages[finalI].setImage(getTileImage(takenTiles.get(finalI))));
         }
     }
 
@@ -367,8 +393,11 @@ public class GameController extends ViewController implements Initializable {
                 Image imageNew = getImage("tokens/"+fullGameModelView.getCommonGoals().get(i).getTokens().get(fullGameModelView.getCommonGoals().get(i).getTokens().size()-1).getValue()+".jpg");
                 Image imageTaken = getImage("tokens/"+commonGoals[i].getTokens().get(commonGoals[i].getTokens().size()-1).getValue()+".jpg");
                 takenTokens[i][previousPlayer] = imageTaken;
-                if(i==0) token1Image.setImage(imageNew);
-                else token2Image.setImage(imageNew);
+                int finalI = i;
+                Platform.runLater(() -> {
+                    if (finalI == 0) token1Image.setImage(imageNew);
+                    else token2Image.setImage(imageNew);
+                });
             }
             commonGoals[i] = fullGameModelView.getCommonGoals().get(i);
         }
@@ -379,15 +408,19 @@ public class GameController extends ViewController implements Initializable {
         //TODO show something good to let all players know
     }
     private void displayTokens(){
-        takenToken1Image.setImage(takenTokens[0][seeingPlayer]);
-        takenToken2Image.setImage(takenTokens[1][seeingPlayer]);
+        Platform.runLater(() -> {
+            takenToken1Image.setImage(takenTokens[0][seeingPlayer]);
+            takenToken2Image.setImage(takenTokens[1][seeingPlayer]);
+        });
     }
 
     @FXML
     protected void onButtonMouseClicked(MouseEvent mouseEvent) {
         switch (viewBuffer.getGameModelView().getCurrentState()){
-            case FIRST_DRAW, DRAW, LAST_DRAW ->
-                    viewBuffer.drawRequest(selectedTiles.stream().map(x -> x.centered(viewBuffer.getGameModelView().getGameConfig().getLivingRoomSize())).collect(Collectors.toCollection(ArrayList::new)));
+            case FIRST_DRAW, DRAW, LAST_DRAW -> {
+                if(selectedTiles.size() == 0) displayError("select at least one tile");
+                else viewBuffer.drawRequest(selectedTiles.stream().map(x -> x.centered(viewBuffer.getGameModelView().getGameConfig().getLivingRoomSize())).collect(Collectors.toCollection(ArrayList::new)));
+            }
             case ORGANIZE, LAST_ORGANIZE ->
                     viewBuffer.organizeRequest(orderedTiles.isEmpty() ? viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles() :
                             orderedTiles.stream().map(viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles()::get).toList());
@@ -399,17 +432,22 @@ public class GameController extends ViewController implements Initializable {
     }
     @FXML
     protected void showDescription1(MouseEvent mouseEvent) {
-        Platform.runLater(() -> descriptionLabel.setText(commonGoals[0].getDescription()));
-        descriptionLabel.setVisible(true);
+        Platform.runLater(() -> {
+            descriptionLabel.setText(commonGoals[0].getDescription());
+            descriptionLabel.setVisible(true);
+        });
+
     }
     @FXML
     protected void showDescription2(MouseEvent mouseEvent) {
-        Platform.runLater(() -> descriptionLabel.setText(commonGoals[1].getDescription()));
-        descriptionLabel.setVisible(true);
+        Platform.runLater(() -> {
+            descriptionLabel.setText(commonGoals[1].getDescription());
+            descriptionLabel.setVisible(true);
+        });
     }
     @FXML
     protected void hideDescription(MouseEvent mouseEvent) {
-        descriptionLabel.setVisible(false);
+        Platform.runLater(() -> descriptionLabel.setVisible(false));
     }
     @FXML
     protected void prevPlayer(MouseEvent mouseEvent) {

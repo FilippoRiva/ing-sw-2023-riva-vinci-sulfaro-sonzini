@@ -2,20 +2,15 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class CreateController extends ViewController{
-    public TextField lobbyNameField;
-    public TextField playerNameField;
+    @FXML
+    protected TextField lobbyNameField;
+    @FXML
+    protected TextField playerNameField;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
@@ -28,7 +23,7 @@ public class CreateController extends ViewController{
             displayError("compile all the fields!");
         }else {
             viewBuffer.createRequest(lobbyName, playerName);
-            GraphicalUI.setPlayerName(playerName);
+            GraphicalUI.setMyName(playerName);
             startLoading();
         }
     }

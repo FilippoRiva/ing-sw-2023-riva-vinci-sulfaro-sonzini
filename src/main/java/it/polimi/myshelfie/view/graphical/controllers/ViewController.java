@@ -18,17 +18,20 @@ public abstract class ViewController {
     public void displayError(String errorMessage){
         stopLoading();
         if(errorLabel != null){
-            Platform.runLater(() -> errorLabel.setText(errorMessage));
-            errorLabel.setVisible(true);
-            timer(() -> errorLabel.setVisible(false), 3000);
+            Platform.runLater(() -> {
+                errorLabel.setText(errorMessage);
+                errorLabel.setVisible(true);
+
+            });
+            timer(() -> Platform.runLater(() -> errorLabel.setVisible(false)), 3000);
         }
 
     }
     public void startLoading(){
-        progress.setVisible(true);
+        Platform.runLater(() -> progress.setVisible(true));
     }
     public void stopLoading(){
-        progress.setVisible(false);
+        Platform.runLater(() -> progress.setVisible(false));
     }
 
     @FXML
