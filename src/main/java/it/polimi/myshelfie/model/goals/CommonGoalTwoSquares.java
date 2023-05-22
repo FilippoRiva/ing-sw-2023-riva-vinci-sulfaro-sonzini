@@ -30,7 +30,7 @@ public class CommonGoalTwoSquares extends CommonGoal{
                         take[i+1][j+1]=true;
                     }
                 }
-                if(Arrays.stream(counter).anyMatch(num -> num == 2)) return true;
+                if(Arrays.stream(counter).anyMatch(num -> num >= 2)) return true;
             }
         }
         return false;
