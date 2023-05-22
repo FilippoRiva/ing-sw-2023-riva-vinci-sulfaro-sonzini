@@ -51,7 +51,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         changeScene("home");
 
         stage.setTitle("My Shelfie");
-        stage.setResizable(false);
+        stage.setResizable(true);
 
         URL iconUrl = getClass().getResource("/images/Icon.png");
         assert iconUrl != null;

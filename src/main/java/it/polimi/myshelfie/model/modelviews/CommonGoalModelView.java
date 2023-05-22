@@ -4,6 +4,7 @@ import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommonGoalModelView implements Serializable {
@@ -11,9 +12,15 @@ public class CommonGoalModelView implements Serializable {
     private final int id;
     private final String description;
     public CommonGoalModelView(CommonGoal commonGoal){
-            this.tokens = commonGoal.getTokens();
-            this.id = commonGoal.getId();
-            this.description = commonGoal.getDescription();
+        this.tokens = commonGoal.getTokens();
+        this.id = commonGoal.getId();
+        this.description = commonGoal.getDescription();
+    }
+
+    public CommonGoalModelView(CommonGoalModelView toCopy){
+        this.tokens = new ArrayList<>(toCopy.tokens);
+        this.id = toCopy.id;
+        this.description = toCopy.description;
     }
 
     /**
@@ -42,5 +49,9 @@ public class CommonGoalModelView implements Serializable {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public void diff(CommonGoalModelView theNewOne){
+        this.tokens.removeAll(theNewOne.tokens);
     }
 }

@@ -1,15 +1,14 @@
 package it.polimi.myshelfie.model.modelviews;
 
 import it.polimi.myshelfie.GameConfig;
-import it.polimi.myshelfie.model.Game;
-import it.polimi.myshelfie.model.GameState;
-import it.polimi.myshelfie.model.ItemTile;
-import it.polimi.myshelfie.model.Player;
+import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class FullGameModelView implements Serializable, GameModelView {
     private final List<PlayerModelView> players;
@@ -18,8 +17,9 @@ public class FullGameModelView implements Serializable, GameModelView {
     private List<CommonGoalModelView> commonGoals;
     private ItemTile[][] livingRoom;
     private int remainingTiles;
-    private final GameConfig gameConfig;
+    private GameConfig gameConfig;
     private final String roomName;
+
     public FullGameModelView(Game game){
         List<Player> actualPlayers = game.getPlayers();
         players = new ArrayList<>();
@@ -37,6 +37,26 @@ public class FullGameModelView implements Serializable, GameModelView {
         this.remainingTiles = game.getBagSize();
         this.gameConfig = game.getGameConfig();
         this.roomName = game.getName();
+    }
+
+    public FullGameModelView(FullGameModelView toCopy){
+        this.players = new ArrayList<>();
+        for(PlayerModelView p : toCopy.getPlayers()){
+            this.players.add(new PlayerModelView(p));
+        }
+        this.currentPlayer = toCopy.currentPlayer;
+        this.currentState = toCopy.currentState;
+        this.commonGoals = new ArrayList<>();
+        for(CommonGoalModelView c : toCopy.getCommonGoals()){
+            this.commonGoals.add(new CommonGoalModelView(c));
+        }
+        this.livingRoom = new ItemTile[toCopy.livingRoom.length][toCopy.livingRoom[0].length];
+        for(int i = 0; i < toCopy.livingRoom.length; i++){
+            System.arraycopy(toCopy.livingRoom[i], 0, this.livingRoom[i], 0, toCopy.livingRoom[0].length);
+        }
+        this.remainingTiles = toCopy.remainingTiles;
+        this.gameConfig = toCopy.gameConfig;
+        this.roomName = toCopy.roomName;
     }
 
     /**
@@ -168,5 +188,37 @@ public class FullGameModelView implements Serializable, GameModelView {
 
     public void setRemainingTiles(int remainingTiles) {
         this.remainingTiles = remainingTiles;
+    }
+
+    public void diff(FullGameModelView theNewOne){
+        for(PlayerModelView p : theNewOne.players){
+            Optional<PlayerModelView> player = this.players.stream().filter(x->x.getName().equals(p.getName())).findFirst();
+            player.ifPresent((x)->x.diff(p));
+        }
+        if(this.currentPlayer.equals(theNewOne.currentPlayer)) this.currentPlayer = null;
+        else this.currentPlayer = theNewOne.currentPlayer;
+        if(this.currentState.equals(theNewOne.currentState)) this.currentState = null;
+        else this.currentState =  theNewOne.currentState;
+        for(CommonGoalModelView c : theNewOne.commonGoals){
+            Optional<CommonGoalModelView> commonGoal = this.commonGoals.stream().filter(x->x.getId()==c.getId()).findFirst();
+            commonGoal.ifPresent((x)->x.diff(c));
+        }
+        if(theNewOne.livingRoom.length!=this.livingRoom.length ||
+            theNewOne.livingRoom[0].length!=this.livingRoom[0].length) this.livingRoom = null;
+        else {
+            for(int i = 0; i < livingRoom.length; i++){
+                for(int j = 0; j<livingRoom[0].length; j++){
+                    if(theNewOne.livingRoom[i][j]!=null){
+                        this.livingRoom[i][j] = theNewOne.livingRoom[i][j].equals(this.livingRoom[i][j]) ?
+                                null : theNewOne.livingRoom[i][j];
+                    } else {
+                        this.livingRoom[i][j]=null;
+                    }
+                }
+            }
+        }
+        if(this.remainingTiles == theNewOne.remainingTiles) this.remainingTiles = -1;
+        else this.remainingTiles = theNewOne.remainingTiles;
+        this.gameConfig = null;
     }
 }

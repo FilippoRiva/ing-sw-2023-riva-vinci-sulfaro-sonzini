@@ -1,17 +1,20 @@
 package it.polimi.myshelfie.model.modelviews;
 
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.model.Player;
 import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class PlayerModelView implements Serializable {
-    final private String name;
-    final private List<PersonalGoalModelView> personalGoals;
+    private final String name;
+    private final List<PersonalGoalModelView> personalGoals;
     private int points;
     private List<ItemTile> takenTiles;
     private List<Token> tokens;
@@ -27,6 +30,21 @@ public class PlayerModelView implements Serializable {
         this.tokens = player.getObtainedTokens();
         this.bookshelf = player.getBookshelf().getBookshelfItems();
         this.takenTiles = player.getTakenTiles();
+    }
+
+    public PlayerModelView(PlayerModelView toCopy){
+        this.name = toCopy.name;
+        this.personalGoals = new ArrayList<>();
+        for(PersonalGoalModelView p : toCopy.personalGoals){
+            this.personalGoals.add(new PersonalGoalModelView(p));
+        }
+        this.points = toCopy.points;
+        this.takenTiles = new ArrayList<>(toCopy.getTakenTiles());
+        this.tokens = new ArrayList<>(toCopy.tokens);
+        this.bookshelf = new ItemTile[toCopy.bookshelf.length][toCopy.bookshelf[0].length];
+        for(int i = 0; i < toCopy.bookshelf.length; i++){
+            System.arraycopy(toCopy.bookshelf[i], 0, this.bookshelf[i], 0, toCopy.bookshelf[0].length);
+        }
     }
 
     /**
@@ -91,6 +109,27 @@ public class PlayerModelView implements Serializable {
 
     public void setBookshelf(ItemTile[][] bookshelf) {
         this.bookshelf = bookshelf;
+    }
+
+    public void diff(PlayerModelView p) {
+        if(this.points==p.points) this.points = -1;
+        else this.points = p.points;
+        ArrayList<ItemTile> tempTiles = new ArrayList<>(p.takenTiles);
+        tempTiles.removeAll(this.takenTiles);
+        this.takenTiles = tempTiles;
+        ArrayList<Token> tempTokens = new ArrayList<>(p.tokens);
+        tempTokens.removeAll(this.tokens);
+        this.tokens = tempTokens;
+        if(p.bookshelf.length!=this.bookshelf.length ||
+        p.bookshelf[0].length!=this.bookshelf[0].length) this.bookshelf=null;
+        else {
+            for(int i = 0; i < bookshelf.length; i++){
+                for(int j = 0; j < bookshelf[0].length; j++){
+                    this.bookshelf[i][j] = this.bookshelf[i][j].getType()==p.bookshelf[i][j].getType() ?
+                            null : p.bookshelf[i][j];
+                }
+            }
+        }
     }
 }
 

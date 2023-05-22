@@ -1,9 +1,6 @@
 package it.polimi.myshelfie.view.graphical.controllers;
 
-import it.polimi.myshelfie.model.GameState;
-import it.polimi.myshelfie.model.ItemTile;
-import it.polimi.myshelfie.model.ItemTileType;
-import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
@@ -392,9 +389,11 @@ public class GameController extends ViewController implements Initializable {
         if(previousPlayer == -1) previousPlayer = fullGameModelView.getPlayers().size()-1;
 
         for(int i = 0 ; i<2; i++){
-            if(commonGoals[i].getTokens().size() != fullGameModelView.getCommonGoals().get(i).getTokens().size()) {
-                Image imageNew = getImage("tokens/"+fullGameModelView.getCommonGoals().get(i).getTokens().get(fullGameModelView.getCommonGoals().get(i).getTokens().size()-1).getValue()+".jpg");
-                Image imageTaken = getImage("tokens/"+commonGoals[i].getTokens().get(commonGoals[i].getTokens().size()-1).getValue()+".jpg");
+            List<Token> oldTokens = commonGoals[i].getTokens();
+            if(oldTokens.size() > fullGameModelView.getCommonGoals().get(i).getTokens().size()) {
+                Image imageNew = null;
+                if(oldTokens.size()>1) imageNew = getImage("tokens/"+oldTokens.get(oldTokens.size()-2).getValue()+".jpg");
+                Image imageTaken = getImage("tokens/"+oldTokens.get(oldTokens.size()-1).getValue()+".jpg");
                 takenTokens[i][previousPlayer] = imageTaken;
                 int finalI = i;
                 Platform.runLater(() -> {
