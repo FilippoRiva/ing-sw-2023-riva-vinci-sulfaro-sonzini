@@ -50,7 +50,7 @@ public class GameController extends ViewController implements Initializable {
     @FXML
     protected ImageView commonGoal2Image;
     @FXML
-    protected Label takenTilesLabel;
+    protected Label playingLabel;
     @FXML
     protected ImageView token1Image;
     @FXML
@@ -108,6 +108,7 @@ public class GameController extends ViewController implements Initializable {
         token1Image.setImage(getImage("tokens/"+commonGoals[0].getTokens().get(commonGoals[0].getTokens().size()-1).getValue()+".jpg"));
         token2Image.setImage(getImage("tokens/"+commonGoals[1].getTokens().get(commonGoals[1].getTokens().size()-1).getValue()+".jpg"));
         playerBookshelfLabel.setText(myName);
+        playingLabel.setText("Playing " + fullGameModelView.getCurrentPlayerName());
 
         for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
             if(pl.getName().equals(myName)) break;
@@ -144,7 +145,7 @@ public class GameController extends ViewController implements Initializable {
         }
     }
 
-    public void play(){
+    public synchronized void play(){
         FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
 
         //clean takenTilesImage
@@ -157,14 +158,14 @@ public class GameController extends ViewController implements Initializable {
 
         boolean playing = fullGameModelView.getCurrentPlayerName().equals(myName);
 
+        //TODO when start last round display something
         switch (fullGameModelView.getCurrentState()){
-            case FIRST_DRAW -> {
-                if(playing) draw();
-            }
             case DRAW, LAST_DRAW -> {
-                refill(fullGameModelView);
+                checkRefill(fullGameModelView);
                 updateTokens();
-                if(playing) draw();
+                if(playing) {
+                    draw();
+                } else Platform.runLater(() -> playingLabel.setText("Playing " + fullGameModelView.getCurrentPlayerName()));
             }
             case ORGANIZE, LAST_ORGANIZE -> {
                 displayDraw();
@@ -183,13 +184,13 @@ public class GameController extends ViewController implements Initializable {
                             button.setEffect(null);
                         }
                         button.setVisible(false);
-                        takenTilesLabel.setVisible(true);
+                        playingLabel.setVisible(true);
                     });
                 }
             }
         }
     }
-    private void refill(FullGameModelView fullGameModelView){
+    private void checkRefill(FullGameModelView fullGameModelView){
         if(fullGameModelView.getRemainingTiles() != remainingTiles){
             displayLivingRoom();
             remainingTiles = fullGameModelView.getRemainingTiles();
@@ -199,7 +200,7 @@ public class GameController extends ViewController implements Initializable {
         Platform.runLater(() -> {
             button.setText("Draw");
             button.setVisible(true);
-            takenTilesLabel.setVisible(false);
+            playingLabel.setVisible(false);
         });
 
         selectedTiles = new ArrayList<>();
@@ -244,7 +245,7 @@ public class GameController extends ViewController implements Initializable {
                     int finalJ = j;
                     image.setOnMouseClicked(mouseEvent -> {
                         GameState currentState = viewBuffer.getGameModelView().getCurrentState();
-                        if((currentState == GameState.FIRST_DRAW || currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
+                        if((currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
                                 && viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName)) {
                             Position position = new Position(finalI, finalJ);
                             if (selectedTiles.contains(position)) {
@@ -283,7 +284,7 @@ public class GameController extends ViewController implements Initializable {
         selectedTiles.add(position);
 
         int index = selectedTiles.size()-1;
-        takenTilesImages[index].setImage(getTileImage(itemTile));
+        Platform.runLater(() -> takenTilesImages[index].setImage(getTileImage(itemTile)));
         takenTilesImages[index].setOnMouseClicked(mouseEvent -> {
             GameState currentState = viewBuffer.getGameModelView().getCurrentState();
             if((currentState == GameState.ORGANIZE || currentState == GameState.LAST_ORGANIZE) &&
@@ -337,14 +338,14 @@ public class GameController extends ViewController implements Initializable {
                     }
                 }
                 bookshelfView.setBookshelfGrid(newBookshelfGrid);
-                if (seeingPlayer == k) displayBookshelf();
+                if (seeingPlayer == k) displayPlayerInfo();
 
                 return;
             }
             k++;
         }
     }
-    private void displayBookshelf(){
+    private void displayPlayerInfo(){
         Platform.runLater(() -> {
             bookshelfPane.getChildren().clear();
             if(bookshelves[seeingPlayer].getBookshelfGrid() != null)
@@ -430,7 +431,7 @@ public class GameController extends ViewController implements Initializable {
     @FXML
     protected void onButtonMouseClicked(MouseEvent mouseEvent) {
         switch (viewBuffer.getGameModelView().getCurrentState()){
-            case FIRST_DRAW, DRAW, LAST_DRAW -> {
+            case DRAW, LAST_DRAW -> {
                 if(selectedTiles.size() == 0) displayError("select at least one tile");
                 else viewBuffer.drawRequest(selectedTiles.stream().map(x -> x.centered(viewBuffer.getGameModelView().getGameConfig().getLivingRoomSize())).collect(Collectors.toCollection(ArrayList::new)));
             }
@@ -466,14 +467,14 @@ public class GameController extends ViewController implements Initializable {
     protected void prevPlayer(MouseEvent mouseEvent) {
         if(seeingPlayer ==0) seeingPlayer = numPlayers - 1;
         else seeingPlayer--;
-        displayBookshelf();
+        displayPlayerInfo();
         displayTokens();
     }
     @FXML
     protected void nextPlayer(MouseEvent mouseEvent) {
         if(seeingPlayer ==numPlayers-1) seeingPlayer = 0;
         else seeingPlayer++;
-        displayBookshelf();
+        displayPlayerInfo();
         displayTokens();
     }
     @Override

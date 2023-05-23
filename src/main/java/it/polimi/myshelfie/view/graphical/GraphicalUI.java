@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class GraphicalUI extends Application implements Observer<ViewUpdate, Object> {
-    private static final double SCALE = (double) 2/3;
+    private static final double SCALE = (double) 2/3; //HD 720p
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     static Stage stage;
 
@@ -95,7 +95,8 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     }
 
     private synchronized void joinUpdate() {
-        if(currentState == InternalViewState.JOIN) ((JoinController)currentController).refreshListLobbies();
+        if(currentState == InternalViewState.JOIN)
+            ((JoinController)currentController).refreshListLobbies();
     }
     private synchronized void exceptionUpdate() {
         currentController.displayError(viewBuffer.getClientExceptionsNotifierView().getLastException().getMessage());

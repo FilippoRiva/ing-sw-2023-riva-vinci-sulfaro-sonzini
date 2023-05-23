@@ -50,11 +50,8 @@ public class JoinController extends ViewController implements Initializable {
     }
 
     public void refreshListLobbies(){
-        Platform.runLater(() -> {
-            lobbiesVBox.getChildren().clear();
-            createListLobbies();
-        });
-
+        Platform.runLater(() -> lobbiesVBox.getChildren().clear());
+        createListLobbies();
     }
     private void createListLobbies(){
         ModelView modelView = viewBuffer.getModelView();
@@ -80,7 +77,7 @@ public class JoinController extends ViewController implements Initializable {
             anchorPane.getChildren().add(label);
             AnchorPane.setRightAnchor(label, 20D);
 
-            lobbiesVBox.getChildren().add(anchorPane);
+            Platform.runLater(() -> lobbiesVBox.getChildren().add(anchorPane));
         }
     }
     private Label generateStandardLabel(String text){

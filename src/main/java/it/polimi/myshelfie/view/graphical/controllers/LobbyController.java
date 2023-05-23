@@ -64,11 +64,8 @@ public class LobbyController extends ViewController implements Initializable {
     }
 
     public void refreshListPlayers(){
-        Platform.runLater(() -> {
-            playersVBox.getChildren().clear();
-            createListPlayers();
-        });
-
+        Platform.runLater(() -> playersVBox.getChildren().clear());
+        createListPlayers();
     }
 
     private void createListPlayers(){
@@ -83,14 +80,14 @@ public class LobbyController extends ViewController implements Initializable {
             label.setPadding(new Insets(0, 0, 0, 110));
 
             if(lobbyModelView.isRoomOwner(player)) {
-                ImageView image = new ImageView(Images.getImage("omino.jpg"));
+                ImageView image = new ImageView(Images.getImage("crown.png"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(0);
                 image.setFitHeight(60);
                 label.setPadding(new Insets(0));
                 HBox hBox = new HBox(image, label);
                 hBox.setSpacing(20);
-                playersVBox.getChildren().add(hBox);
+                Platform.runLater(() -> playersVBox.getChildren().add(hBox));
             }
             else if(player.equals(GraphicalUI.getMyName())) {
                 label.setTextFill(Color.rgb(218, 106, 45));
@@ -98,21 +95,25 @@ public class LobbyController extends ViewController implements Initializable {
             }
 
             if(!lobbyModelView.isRoomOwner(player))
-                playersVBox.getChildren().add(label);
+                Platform.runLater(() -> playersVBox.getChildren().add(label));
         }
 
         int currentPlayersIn = lobbyModelView.getPlayers().size();
         int maxNumPlayers = lobbyModelView.getGameConfig().getNumPlayers();
         if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())){
-            minusButton.setDisable(false);
-            plusButton.setDisable(false);
-            startButton.setDisable(currentPlayersIn != maxNumPlayers);
+            Platform.runLater(() -> {
+                minusButton.setDisable(false);
+                plusButton.setDisable(false);
+                startButton.setDisable(currentPlayersIn != maxNumPlayers);
+            });
         }else{
-            minusButton.setDisable(true);
-            plusButton.setDisable(true);
-            startButton.setDisable(true);
+            Platform.runLater(() -> {
+                minusButton.setDisable(true);
+                plusButton.setDisable(true);
+                startButton.setDisable(true);
+            });
         }
-        playersInLabel.setText(currentPlayersIn + "/" + maxNumPlayers);
+        Platform.runLater(() -> playersInLabel.setText(currentPlayersIn + "/" + maxNumPlayers));
     }
 
     @Override
