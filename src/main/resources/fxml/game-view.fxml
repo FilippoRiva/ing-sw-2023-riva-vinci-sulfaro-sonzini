@@ -72,7 +72,7 @@
             <Button fx:id="insertButton5" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
          </children>
       </HBox>
-      <Label fx:id="takenTilesLabel" layoutX="41.0" layoutY="555.0" prefHeight="150.0" prefWidth="200.0" text="Taken Tiles" textAlignment="CENTER" wrapText="true">
+      <Label fx:id="playingLabel" layoutX="41.0" layoutY="555.0" prefHeight="150.0" prefWidth="200.0" text="Playing" textAlignment="CENTER" wrapText="true">
          <font>
             <Font name="Kristen ITC" size="45.0" />
          </font>
