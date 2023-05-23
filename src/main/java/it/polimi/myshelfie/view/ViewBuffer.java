@@ -25,10 +25,13 @@ public class ViewBuffer extends View {
     FullGameModelView fullGameModelView;
     FullGameModelView gameDifferences;
     FullGameModelView oldGameModelView;
+    final Object sync;
     ViewType viewType;
     public ViewBuffer(){
         this.UINotifier = new Observable<>();
+        this.sync = new Object();
     }
+
     public synchronized void sendMessage(NetworkMessage networkMessage){
         if(networkMessage == null) return;
         setChanged();
@@ -161,123 +164,218 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public synchronized void setModelView(ModelView modelView) {
-        this.modelView = modelView;
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE, null);
-    }
-
-    @Override
-    public synchronized void setExceptionView(ClientExceptionsNotifierView exceptionView) {
-        this.clientExceptionsNotifierView = exceptionView;
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
-    }
-
-    @Override
-    public synchronized void setChatView(PlayerChatModelView chatView) {
-        this.playerChatModelView = chatView;
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE, null);
-    }
-
-    @Override
-    public synchronized void setLobbyModelView(LobbyModelView lobbyModelView) {
-        this.lobbyModelView = lobbyModelView;
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE, null);
-    }
-
-    @Override
-    public synchronized void setGameModelView(FullGameModelView theNewOne) {
-        if(this.fullGameModelView != null) {
-            this.oldGameModelView = new FullGameModelView(fullGameModelView);
-            FullGameModelView copy = new FullGameModelView(fullGameModelView);
-            this.fullGameModelView = theNewOne;
-            copy.diff(this.fullGameModelView);
-            this.gameDifferences = copy;
-        } else {
-            this.fullGameModelView = theNewOne;
+    public void setModelView(ModelView modelView) {
+        synchronized (sync) {
+            this.modelView = modelView;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE, null);
+            sync.notifyAll();
         }
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
-        //debugDiff();
     }
 
     @Override
-    public synchronized void updateDrawView(DrawModelView drawModelView) {
-        this.oldGameModelView = new FullGameModelView(fullGameModelView);
-        FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
-
-        fullGameModelView.applyChanges(drawModelView);
-
-        oldModelView.diff(this.fullGameModelView);
-        this.gameDifferences= oldModelView;
-
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
-        //debugDiff();
-    }
-
-    @Override
-    public synchronized void updateOrganizeView(OrganizeModelView organizeModelView) {
-        this.oldGameModelView = new FullGameModelView(fullGameModelView);
-        FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
-
-        fullGameModelView.applyChanges(organizeModelView);
-
-        oldModelView.diff(this.fullGameModelView);
-        this.gameDifferences= oldModelView;
-
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
-        //debugDiff();
-    }
-
-    @Override
-    public synchronized void updateInsertView(InsertModelView insertModelView) {
-        this.oldGameModelView = new FullGameModelView(fullGameModelView);
-        FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
-
-        fullGameModelView.applyChanges(insertModelView);
-
-        oldModelView.diff(this.fullGameModelView);
-        this.gameDifferences= oldModelView;
-
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
-
-        //debugDiff();
-    }
-
-    @Override
-    public synchronized void updateTurnView(EndTurnModelView endTurnModelView) {
-        this.oldGameModelView = new FullGameModelView(fullGameModelView);
-        FullGameModelView oldModelView = new FullGameModelView(fullGameModelView);
-
-        fullGameModelView.applyChanges(endTurnModelView);
-
-        oldModelView.diff(this.fullGameModelView);
-        this.gameDifferences= oldModelView;
-
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
-
-        //debugDiff();
-    }
-
-    @Override
-    public synchronized void setView(ViewType viewType) {
-        this.viewType = viewType;
-        if(viewType==ViewType.INIT) {
-            fullGameModelView = null;
-            gameDifferences = null;
-            oldGameModelView = null;
-            lobbyModelView = null;
-            playerChatModelView = null;
+    public void setExceptionView(ClientExceptionsNotifierView exceptionView) {
+        synchronized (sync){
+            this.clientExceptionsNotifierView = exceptionView;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
+            sync.notifyAll();
         }
-        UINotifier.setChanged();
-        UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);
+    }
+
+    @Override
+    public void setChatView(PlayerChatModelView chatView) {
+        synchronized (sync){
+            this.playerChatModelView = chatView;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void setLobbyModelView(LobbyModelView lobbyModelView) {
+        synchronized (sync){
+            this.lobbyModelView = lobbyModelView;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void setGameModelView(FullGameModelView theNewOne) {
+        synchronized (sync) {
+            if (this.fullGameModelView != null) {
+                this.oldGameModelView = new FullGameModelView(fullGameModelView);
+                FullGameModelView copy = new FullGameModelView(fullGameModelView);
+                this.fullGameModelView = theNewOne;
+                copy.diff(this.fullGameModelView);
+                this.gameDifferences = copy;
+            } else {
+                this.fullGameModelView = theNewOne;
+            }
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void updateDrawView(DrawModelView drawModelView) {
+        synchronized (sync){
+            GameState currentState = fullGameModelView.getCurrentState();
+            while(currentState != GameState.DRAW && currentState != GameState.LAST_DRAW){
+                try {
+                    sync.wait();
+                } catch (InterruptedException ignored) {
+                }
+                currentState = fullGameModelView.getCurrentState();
+            }
+            this.oldGameModelView = fullGameModelView;
+            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);
+            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);
+
+            updateCopy.applyChanges(drawModelView);
+
+            fullGameModelView = updateCopy;
+            diffCopy.diff(this.fullGameModelView);
+            this.gameDifferences= diffCopy;
+
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void updateOrganizeView(OrganizeModelView changes) {
+        synchronized (sync){
+            GameState currentState = fullGameModelView.getCurrentState();
+            while(currentState != GameState.ORGANIZE && currentState != GameState.LAST_ORGANIZE){
+                try {
+                    sync.wait();
+                } catch (InterruptedException ignored) {
+                }
+                currentState = fullGameModelView.getCurrentState();
+            }
+            this.oldGameModelView = fullGameModelView;
+            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);
+            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);
+
+            updateCopy.applyChanges(changes);
+
+            fullGameModelView = updateCopy;
+            diffCopy.diff(this.fullGameModelView);
+            this.gameDifferences= diffCopy;
+
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void updateInsertView(InsertModelView changes) {
+        synchronized (sync) {
+            GameState currentState = fullGameModelView.getCurrentState();
+            while(currentState != GameState.INSERT && currentState != GameState.LAST_INSERT){
+                try {
+                    sync.wait();
+                } catch (InterruptedException ignored) {
+                }
+                currentState = fullGameModelView.getCurrentState();
+            }
+            this.oldGameModelView = fullGameModelView;
+            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);
+            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);
+
+            updateCopy.applyChanges(changes);
+
+            fullGameModelView = updateCopy;
+            diffCopy.diff(this.fullGameModelView);
+            this.gameDifferences = diffCopy;
+
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void updateTurnView(EndTurnModelView endTurnModelView) {
+        synchronized (sync){
+            GameState currentState = fullGameModelView.getCurrentState();
+            while(currentState != GameState.COUNTING_POINTS && currentState != GameState.LAST_COUNTING_POINTS){
+                try {
+                    sync.wait();
+                } catch (InterruptedException ignored) {
+                }
+                currentState = fullGameModelView.getCurrentState();
+            }
+            this.oldGameModelView = fullGameModelView;
+            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);
+            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);
+
+            updateCopy.applyChanges(endTurnModelView);
+
+            fullGameModelView = updateCopy;
+            diffCopy.diff(this.fullGameModelView);
+            this.gameDifferences = diffCopy;
+
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
+    @Override
+    public void setView(ViewType viewType) {
+        synchronized (sync) {
+            switch (viewType) {
+                case INIT -> {
+                    while (modelView == null) { //waits until modelView != null
+                        try {
+                            sync.wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                    fullGameModelView = null;
+                    gameDifferences = null;
+                    oldGameModelView = null;
+                    lobbyModelView = null;
+                    playerChatModelView = null;
+                }
+                case LOBBY -> {
+                    while (lobbyModelView == null) { //waits until lobbyModelView != null
+                        try {
+                            sync.wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+                case GAME -> {
+                    while (fullGameModelView == null) { //waits until fullGameModelView != null
+                        try {
+                            sync.wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+                case WIN -> {
+                    while (fullGameModelView == null || fullGameModelView.getCurrentState() != GameState.WIN) {
+                        try {
+                            sync.wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+            }
+            this.viewType = viewType;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);
+            sync.notifyAll();
+        }
     }
 
     public synchronized void addUI(Observer<ViewUpdate, Object> o) {

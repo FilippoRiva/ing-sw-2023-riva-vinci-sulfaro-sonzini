@@ -30,14 +30,14 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     static String myName;
 
     @Override
-    public void update(ViewUpdate evt, Object object) {
+    public synchronized void update(ViewUpdate evt, Object object) {
         switch (evt) {
-            case MODEL_UPDATE -> new Thread(this::joinUpdate).start();
-            case EXCEPTION_UPDATE -> new Thread(this::exceptionUpdate).start();
+            case MODEL_UPDATE -> joinUpdate();
+            case EXCEPTION_UPDATE -> exceptionUpdate();
             case CHAT_UPDATE -> {}
-            case LOBBY_UPDATE -> new Thread(this::lobbyUpdate).start();
-            case GAME_UPDATE -> new Thread(this::gameUpdate).start();
-            case VIEW_TYPE_UPDATE -> new Thread(this::viewTypeUpdate).start();
+            case LOBBY_UPDATE -> lobbyUpdate();
+            case GAME_UPDATE -> gameUpdate();
+            case VIEW_TYPE_UPDATE -> viewTypeUpdate();
         }
     }
 
