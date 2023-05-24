@@ -1,37 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
+<?import javafx.scene.layout.*?>
 <AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.JoinController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
         </ImageView>
-      <Label alignment="CENTER" layoutX="885.0" layoutY="280.0" prefHeight="85.0" prefWidth="370.0" text="Player name" textAlignment="CENTER" AnchorPane.rightAnchor="24.59999999999991" AnchorPane.topAnchor="280.0">
-         <font>
-            <Font name="Kristen ITC" size="40.0" />
-         </font>
-      </Label>
-      <TextField fx:id="playerNameField" alignment="CENTER" layoutX="885.0" layoutY="366.0" prefHeight="85.0" prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="24.59999999999991" AnchorPane.topAnchor="366.0">
-         <font>
-            <Font name="Kristen ITC" size="30.0" />
-         </font>
-      </TextField>
-      <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1032.0" layoutY="308.0" prefHeight="32.0" prefWidth="229.0" styleClass="error" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="140.0">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
+        <Label alignment="CENTER" layoutX="885.0" layoutY="280.0" prefHeight="85.0" prefWidth="370.0" text="Player name"
+               textAlignment="CENTER" AnchorPane.rightAnchor="24.59999999999991" AnchorPane.topAnchor="280.0"/>
+        <TextField fx:id="playerNameField" alignment="CENTER" layoutX="885.0" layoutY="366.0" prefHeight="85.0"
+                   prefWidth="370.0" promptText="Player name" AnchorPane.rightAnchor="24.59999999999991"
+                   AnchorPane.topAnchor="366.0"/>
+        <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1032.0" layoutY="308.0" prefHeight="32.0"
+               prefWidth="229.0" styleClass="error" text="error" textFill="RED" visible="false"
+               AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="140.0"/>
       <Button fx:id="joinButton" disable="true" layoutX="949.0" layoutY="482.0" mnemonicParsing="false" onMouseClicked="#onJoinMouseClicked" prefHeight="65.0" prefWidth="242.0" style="-fx-font-size: 30;" styleClass="myButton" text="Join" />
       <StackPane layoutX="20.0" layoutY="286.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
          <children>

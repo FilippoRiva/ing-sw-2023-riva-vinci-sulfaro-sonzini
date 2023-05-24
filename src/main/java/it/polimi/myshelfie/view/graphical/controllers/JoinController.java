@@ -15,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.List;
@@ -83,7 +82,6 @@ public class JoinController extends ViewController implements Initializable {
     private Label generateStandardLabel(String text){
         Label label = new Label(text);
         label.setMaxWidth(837);
-        label.setFont(Font.font("Kristen ITC", 40));
         label.setTextFill(Color.WHITE);
         return label;
     }

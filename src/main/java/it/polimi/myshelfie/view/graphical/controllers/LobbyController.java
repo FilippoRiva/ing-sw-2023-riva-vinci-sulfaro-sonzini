@@ -75,9 +75,8 @@ public class LobbyController extends ViewController implements Initializable {
         for(String player : playersIn){
             Label label = new Label(player);
             label.setMaxWidth(837);
-            label.setFont(Font.font("Kristen ITC", 40));
             label.setTextFill(Color.WHITE);
-            label.setPadding(new Insets(0, 0, 0, 110));
+            label.setPadding(new Insets(0, 0, 0, 80));
 
             if(lobbyModelView.isRoomOwner(player)) {
                 ImageView image = new ImageView(Images.getImage("crown.png"));
@@ -91,7 +90,6 @@ public class LobbyController extends ViewController implements Initializable {
             }
             else if(player.equals(GraphicalUI.getMyName())) {
                 label.setTextFill(Color.rgb(218, 106, 45));
-                label.setFont(Font.font("Kristen ITC", 40));
             }
 
             if(!lobbyModelView.isRoomOwner(player))
