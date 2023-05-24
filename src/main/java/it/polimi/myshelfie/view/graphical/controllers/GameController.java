@@ -42,38 +42,20 @@ public class GameController extends ViewController implements Initializable {
     protected ImageView personalGoalImage;
     private Image myPersonalGoal;
     @FXML
-    protected ImageView takenToken1Image;
+    protected ImageView takenToken1Image, takenToken2Image;
     @FXML
-    protected ImageView takenToken2Image;
-    @FXML
-    protected ImageView commonGoal1Image;
-    @FXML
-    protected ImageView commonGoal2Image;
+    protected ImageView commonGoal1Image, commonGoal2Image;
     @FXML
     protected Label playingLabel;
     @FXML
-    protected ImageView token1Image;
+    protected ImageView token1Image, token2Image;
     @FXML
-    protected ImageView token2Image;
-    @FXML
-    protected ImageView takenTile1Image;
-    @FXML
-    protected ImageView takenTile2Image;
-    @FXML
-    protected ImageView takenTile3Image;
+    protected ImageView takenTile1Image, takenTile2Image, takenTile3Image;
     ImageView[] takenTilesImages;
     @FXML
     protected HBox insertBox;
     @FXML
-    protected Button insertButton1;
-    @FXML
-    protected Button insertButton2;
-    @FXML
-    protected Button insertButton3;
-    @FXML
-    protected Button insertButton4;
-    @FXML
-    protected Button insertButton5;
+    protected Button insertButton1, insertButton2, insertButton3, insertButton4, insertButton5;
     Button[] insertButtons;
     @FXML
     protected Label descriptionLabel;

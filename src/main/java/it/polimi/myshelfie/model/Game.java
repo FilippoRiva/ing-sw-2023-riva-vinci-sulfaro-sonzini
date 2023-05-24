@@ -232,15 +232,24 @@ public class Game implements GameModel, LobbyModel {
     private boolean aligned(List<Position> positions){
         if(positions.size()==1) return true;
         int maxIndex = positions.size()-1;
-        positions.sort(Comparator.comparingInt(Position::getX));
-        int maxX = positions.get(maxIndex).getX();
-        int minX = positions.get(0).getX();
-        positions.sort(Comparator.comparingInt(Position::getY));
-        int maxY = positions.get(maxIndex).getY();
-        int minY = positions.get(0).getY();
+
+        //Should not affect the initial order for GUI
+        List<Position> sortedPositions = new ArrayList<>();
+        for(Position p : positions){
+            sortedPositions.add(new Position(p));
+        }
+
+        sortedPositions.sort(Comparator.comparingInt(Position::getX));
+        int maxX = sortedPositions.get(maxIndex).getX();
+        int minX = sortedPositions.get(0).getX();
+
+        sortedPositions.sort(Comparator.comparingInt(Position::getY));
+        int maxY = sortedPositions.get(maxIndex).getY();
+        int minY = sortedPositions.get(0).getY();
+
         if(maxX != minX && maxY != minY) return false; //not in a line
-        if(maxX == minX && maxY-minY+1 != positions.size()) return false; //vertical line but not consecutive
-        return !(maxY == minY && maxX-minX+1 !=positions.size()); //horizontal line but not consecutive
+        if(maxX == minX && maxY-minY+1 != sortedPositions.size()) return false; //vertical line but not consecutive
+        return !(maxY == minY && maxX-minX+1 !=sortedPositions.size()); //horizontal line but not consecutive
     }
 
     @Override

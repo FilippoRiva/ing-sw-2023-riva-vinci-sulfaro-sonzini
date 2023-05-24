@@ -14,6 +14,11 @@ public class Position implements Serializable{
         this.y = y;
     }
 
+    public Position(Position p){
+        this.x = p.getX();
+        this.y = p.getY();
+    }
+
     /**
      * Returns the x coordinate of the tile's position.
      * @return the x coordinate.

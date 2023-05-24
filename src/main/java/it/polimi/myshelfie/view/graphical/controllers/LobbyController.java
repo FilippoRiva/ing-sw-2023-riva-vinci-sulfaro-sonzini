@@ -116,7 +116,7 @@ public class LobbyController extends ViewController implements Initializable {
 
     @Override
     public void onBackArrowClick() {
-        super.onBackArrowClick();
         viewBuffer.exitRequest();
+        super.onBackArrowClick();
     }
 }

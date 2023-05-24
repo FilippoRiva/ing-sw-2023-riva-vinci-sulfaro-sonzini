@@ -149,7 +149,7 @@ public class EndGameController extends ViewController implements Initializable {
     }
     @FXML
     protected void onBackArrowClick(){
-        super.onBackArrowClick();
         viewBuffer.exitRequest();
+        super.onBackArrowClick();
     }
 }

@@ -117,13 +117,11 @@ public class GameControllerImpl implements GameController, ChatController{
                         } catch (RemoteException ignored) {}
                     }
                 }
-            }
-
-        else {
+            } else {
                 gameModel.getGameModelView().getPlayer(playerName).getTokens().add(Token.ENDGAME);
                 gameModel.refillLivingRoom();
                 gameModel.nextTurn();
-                 gameModel.setState(GameState.LAST_DRAW);
+                gameModel.setState(GameState.LAST_DRAW);
             }
         } else {
             gameModel.refillLivingRoom();
