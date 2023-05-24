@@ -110,8 +110,8 @@ public class EndGameController extends ViewController implements Initializable {
 
         ColumnConstraints columnConstraints = new ColumnConstraints();
         //columnConstraints.setPercentWidth((double) (724) /numPlayers);
+        columnConstraints.setPrefWidth((double) (683 - 200) /numPlayers);
         columnConstraints.setHalignment(HPos.CENTER);
-        columnConstraints.setHgrow(Priority.NEVER);
         detailsGrid.getColumnConstraints().add(columnConstraints);
         detailsGrid.addColumn(position+1, nameLabel, firstToken, common, temp, temp2, tot);
         /*
