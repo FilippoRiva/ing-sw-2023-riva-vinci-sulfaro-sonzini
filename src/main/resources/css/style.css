@@ -28,7 +28,7 @@
     -fx-text-fill: white;
     -fx-font-family: "Kristen ITC";
     -fx-font-size: 20;
-    -fx-font-smoothing-type: bold;
+    -fx-font-weight: bold;
 
     -fx-cursor: hand;
 }
@@ -63,7 +63,8 @@
     -fx-background-color: transparent;
 }
 
-.error {
-    -fx-text-fill: red;
-    -fx-font-size: 20;
+.thEndGame {
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
 }

@@ -51,7 +51,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         changeScene("home");
 
         stage.setTitle("My Shelfie");
-        stage.setResizable(true);
+        stage.setResizable(false);
 
         URL iconUrl = getClass().getResource("/images/Icon.png");
         assert iconUrl != null;
@@ -78,13 +78,15 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         Platform.runLater(() -> stage.setScene(scene));
 
 
-        switch (fxmlName){
-            case "home" -> currentState = InternalViewState.INIT;
-            case "create" -> currentState = InternalViewState.CREATE;
-            case "join" -> currentState = InternalViewState.JOIN;
-            case "lobby" -> currentState = InternalViewState.LOBBY;
-            case "game" -> currentState = InternalViewState.GAME;
-        }
+        currentState = switch (fxmlName){
+            case "home" -> InternalViewState.INIT;
+            case "create" -> InternalViewState.CREATE;
+            case "join" -> InternalViewState.JOIN;
+            case "lobby" -> InternalViewState.LOBBY;
+            case "game" -> InternalViewState.GAME;
+            case "endGame" -> InternalViewState.WIN;
+            default -> throw new IllegalStateException("Unexpected value: " + fxmlName);
+        };
     }
 
     public static void setMyName(String myName) {
@@ -122,12 +124,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
                 changeScene("game");
                 gameUpdate();
             }
-            case WIN -> {
-                //TODO win page
-                for(PlayerModelView player : viewBuffer.getGameModelView().getPlayers()) {
-                    System.out.println(player.getName()+": "+player.getPoints());
-                }
-            }
+            case WIN -> changeScene("endGame");
         }
     }
 }
