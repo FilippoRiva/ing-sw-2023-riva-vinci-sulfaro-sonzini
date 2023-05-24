@@ -5,6 +5,7 @@ import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.events.ChatEvent;
 import it.polimi.myshelfie.model.events.GameEvent;
@@ -94,22 +95,8 @@ public class GameControllerImpl implements GameController, ChatController{
             exceptionsNotifiersMap.get(playerName).notifyException(e);
             return;
         }
-        if(gameModel.isBookshelfFull(playerName) || gameModel.getState() == GameState.LAST_COUNTING_POINTS){
-            if(gameModel.isLastPlayer(playerName)){
-                gameModel.calculateWinResults();
-                gameModel.setState(GameState.WIN);
-                for(Client c : clientsMap.values()){
-                    try {
-                        c.send(new NetworkMessage(ViewType.WIN));
-                    } catch (RemoteException ignored) {
-                    }
-                }
-            } else {
-                endTurn(playerName);
-            }
-        } else {
-            endTurn(playerName);
-        }
+        endTurn(playerName);
+
     }
 
     /**
@@ -119,10 +106,40 @@ public class GameControllerImpl implements GameController, ChatController{
      */
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
-        gameModel.refillLivingRoom();
-        gameModel.nextTurn();
-        if(gameModel.getState()==GameState.COUNTING_POINTS) gameModel.setState(GameState.DRAW);
-        else gameModel.setState(GameState.LAST_DRAW);
+        if(gameModel.isBookshelfFull(playerName)) {
+            if (gameModel.getState() == GameState.LAST_COUNTING_POINTS) {
+                if (gameModel.isLastPlayer(playerName)) {
+                    gameModel.calculateWinResults();
+                    gameModel.setState(GameState.WIN);
+                    for (Client c : clientsMap.values()) {
+                        try {
+                            c.send(new NetworkMessage(ViewType.WIN));
+                        } catch (RemoteException ignored) {}
+                    }
+                }
+            }
+
+        else {
+                gameModel.getGameModelView().getPlayer(playerName).getTokens().add(Token.ENDGAME);
+                gameModel.refillLivingRoom();
+                gameModel.nextTurn();
+                 gameModel.setState(GameState.LAST_DRAW);
+            }
+        } else {
+            gameModel.refillLivingRoom();
+            gameModel.nextTurn();
+            if(gameModel.getState()==GameState.COUNTING_POINTS) gameModel.setState(GameState.DRAW);
+            else if (gameModel.isLastPlayer(playerName)) {
+                gameModel.calculateWinResults();
+                gameModel.setState(GameState.WIN);
+                for (Client c : clientsMap.values()) {
+                    try {
+                        c.send(new NetworkMessage(ViewType.WIN));
+                    } catch (RemoteException ignored) {}
+                }
+            }
+            else gameModel.setState(GameState.LAST_DRAW);
+        }
     }
 
     @Override
