@@ -124,7 +124,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             case GAME -> {
                 changeScene("game");
                 gameUpdate();
-                if(viewBuffer.getLobbyModelView().getName().equals("test")){
+                if(viewBuffer.getLobbyModelView().getName().equals("test") && myName.startsWith("test")){
                     AutoPlayer a = new AutoPlayer(viewBuffer,null);
                     a.postGameStart(myName);
                 }

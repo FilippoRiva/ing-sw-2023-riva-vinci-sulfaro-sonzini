@@ -34,12 +34,12 @@ public class AutoPlayer implements Observer<ViewUpdate, Object> {
         this.numPlayers = numPlayers;
         ModelView modelView = viewBuffer.getModelView();
         if(!modelView.getLobbies().contains("test")){
-            username="bot"+System.currentTimeMillis();
+            username="bot"+String.valueOf(System.currentTimeMillis()).substring(8);
             viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CREATE_REQUEST,username,"test"));
             UI.setMyUsername(username);
             owner = true;
         } else {
-            username = "bot"+System.currentTimeMillis();
+            username = "bot"+String.valueOf(System.currentTimeMillis()).substring(8);
             UI.setMyUsername(username);
             viewBuffer.sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST, username, "test"));
             owner = false;
