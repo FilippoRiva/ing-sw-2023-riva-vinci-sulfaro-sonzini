@@ -1,8 +1,6 @@
 package it.polimi.myshelfie.view.graphical;
 
-import it.polimi.myshelfie.model.Bookshelf;
-import it.polimi.myshelfie.model.Player;
-import it.polimi.myshelfie.model.Token;
+import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.graphical.controllers.ViewController;
 import javafx.application.Platform;
@@ -64,38 +62,58 @@ public class EndGameControllerTest extends ViewController implements Initializab
         pippo.addObtainedToken(Token.EIGHT_SECOND);
         pippo.addObtainedToken(Token.SIX_FIRST);
         pippo.addObtainedToken(Token.ENDGAME);
-        pippo.addPoints(44);
         pippo.setPersonalGoals(new ArrayList<>());
         pippo.setBookshelf(new Bookshelf(new Dimension()));
         pippo.setTakenTiles(new ArrayList<>());
-        players.add(new PlayerModelView(pippo));
+        PlayerModelView p = new PlayerModelView(pippo);
+        ArrayList<EarnedPoint> earnedPoints = new ArrayList<>();
+        earnedPoints.add(new EarnedPoint(PointType.ADJACENT, 12));
+        earnedPoints.add(new EarnedPoint(PointType.PERSONAL, 6));
+        earnedPoints.add(new EarnedPoint(PointType.COMMON, 8));
+        earnedPoints.add(new EarnedPoint(PointType.COMMON, 6));
+        earnedPoints.add(new EarnedPoint(PointType.COMMON, 1));
+        p.setEarnedPoints(earnedPoints);
+        players.add(p);
 
         Player pluto = new Player("Plutoplutopluto");
 //        pluto.addObtainedToken(Token.TWO_SECOND);
 //        pluto.addObtainedToken(Token.FOUR_FIRST);
-        pluto.addPoints(0);
         pluto.setPersonalGoals(new ArrayList<>());
         pluto.setBookshelf(new Bookshelf(new Dimension()));
         pluto.setTakenTiles(new ArrayList<>());
-        players.add(new PlayerModelView(pluto));
+        p = new PlayerModelView(pluto);
+        earnedPoints = new ArrayList<>();
+        earnedPoints.add(new EarnedPoint(PointType.ADJACENT, 12));
+        earnedPoints.add(new EarnedPoint(PointType.PERSONAL, 6));
+        p.setEarnedPoints(earnedPoints);
+        players.add(p);
 
         Player minnie = new Player("MinnieMinnieMinnie");
 //        minnie.addObtainedToken(Token.TWO_SECOND);
 //        minnie.addObtainedToken(Token.FOUR_FIRST);
-        minnie.addPoints(2);
         minnie.setPersonalGoals(new ArrayList<>());
         minnie.setBookshelf(new Bookshelf(new Dimension()));
         minnie.setTakenTiles(new ArrayList<>());
-        players.add(new PlayerModelView(minnie));
+        p = new PlayerModelView(minnie);
+        earnedPoints = new ArrayList<>();
+        earnedPoints.add(new EarnedPoint(PointType.ADJACENT, 0));
+        earnedPoints.add(new EarnedPoint(PointType.PERSONAL, 14));
+        p.setEarnedPoints(earnedPoints);
+        players.add(p);
 
         Player paperino = new Player("P");
         paperino.addObtainedToken(Token.TWO_SECOND);
 //        paperino.addObtainedToken(Token.FOUR_FIRST);
-        paperino.addPoints(3);
         paperino.setPersonalGoals(new ArrayList<>());
         paperino.setBookshelf(new Bookshelf(new Dimension()));
         paperino.setTakenTiles(new ArrayList<>());
-        players.add(new PlayerModelView(paperino));
+        p = new PlayerModelView(paperino);
+        earnedPoints = new ArrayList<>();
+        earnedPoints.add(new EarnedPoint(PointType.ADJACENT, 23));
+        earnedPoints.add(new EarnedPoint(PointType.PERSONAL, 6));
+        earnedPoints.add(new EarnedPoint(PointType.COMMON, 2));
+        p.setEarnedPoints(earnedPoints);
+        players.add(p);
 
         players = players.stream().sorted((x,y)->{
             if(x.getPoints()==y.getPoints()) return 0;
@@ -126,6 +144,7 @@ public class EndGameControllerTest extends ViewController implements Initializab
 
     private void addColumnDetail(PlayerModelView player, int position){
         List<Token> takenTokens = player.getTokens();
+        List<EarnedPoint> earnedPoints= player.getEarnedPoints();
         List<Integer> tokenRomanNumeral = takenTokens.stream().map(Token::getRomanNumeral).toList();
 
         Label nameLabel = new Label(player.getName());
@@ -139,8 +158,8 @@ public class EndGameControllerTest extends ViewController implements Initializab
         common.setStyle("-fx-font-size: 13");
 
         //TODO takes points for personal goal and adjacent tiles
-        Label temp = createLabel(0);
-        Label temp2 = createLabel(0);
+        Label personal = createLabel(earnedPoints.stream().filter(x->x.getType()==PointType.PERSONAL).mapToInt(EarnedPoint::getValue).sum());
+        Label adjacent = createLabel(earnedPoints.stream().filter(x->x.getType()==PointType.ADJACENT).toList().get(0).getValue());
 
         Label tot = createLabel(player.getPoints());
         tot.setStyle("-fx-font-weight: bold; -fx-font-family: 'Baskerville Old Face'; -fx-font-size: 22");
@@ -151,7 +170,7 @@ public class EndGameControllerTest extends ViewController implements Initializab
         columnConstraints.setHalignment(HPos.CENTER);
         //columnConstraints.setHgrow(Priority.NEVER);
         detailsGrid.getColumnConstraints().add(columnConstraints);
-        detailsGrid.addColumn(position+1, nameLabel, firstToken, common, temp, temp2, tot);
+        detailsGrid.addColumn(position+1, nameLabel, firstToken, common, personal, adjacent, tot);
         /*
         End token:		1pt
         Common goal 1:	8pt
