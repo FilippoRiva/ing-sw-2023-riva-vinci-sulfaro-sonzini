@@ -169,6 +169,14 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    public void addEndToken(String playerName){
+        for(Player p: players){
+            if(p.getName().equals(playerName)){
+                p.addObtainedToken(Token.ENDGAME);
+            }
+        }
+    }
+
     @Override
     public void setState(GameState state) {
         if(state==GameState.FIRST_DRAW) {
@@ -314,7 +322,6 @@ public class Game implements GameModel, LobbyModel {
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 p.addObtainedToken(token);
-                p.addPoints(token.getValue());
                 return;
             }
         }

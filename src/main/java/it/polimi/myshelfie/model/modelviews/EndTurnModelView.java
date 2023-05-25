@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EndTurnModelView implements Serializable, GameModelView {
     private final String lastPlayer;
-    private final int points;
+    private final ArrayList<EarnedPoint> earnedPoints;
     private final List<Token> playerTokens;
     private final List<CommonGoalModelView> commonGoals;
     private final ItemTile[][] livingRoom;
@@ -21,7 +21,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
 
     public EndTurnModelView(Game game) {
         this.lastPlayer = game.getLastPlayer();
-        this.points = game.getPlayer(lastPlayer).getPoints();
+        this.earnedPoints=game.getPlayer(lastPlayer).getEarnedPoints();
         this.playerTokens = game.getPlayer(lastPlayer).getObtainedTokens();
         List<CommonGoal> actualCommonGoals = game.getCommonGoals();
         this.commonGoals = new ArrayList<>();
@@ -37,7 +37,9 @@ public class EndTurnModelView implements Serializable, GameModelView {
 
     public String getLastPlayer() { return lastPlayer; }
 
-    public int getPoints() { return points; }
+    public ArrayList<EarnedPoint> getEarnedPoints(){
+        return earnedPoints;
+    }
 
     public List<Token> getPlayerTokens() { return playerTokens; }
 

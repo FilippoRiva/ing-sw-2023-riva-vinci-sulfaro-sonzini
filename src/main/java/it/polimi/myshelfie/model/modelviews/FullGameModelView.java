@@ -237,7 +237,7 @@ public class FullGameModelView implements Serializable, GameModelView {
 
     public void applyChanges(EndTurnModelView endTurnModelView){
         this.setCurrentState(endTurnModelView.getCurrentState());
-        this.getPlayer(endTurnModelView.getLastPlayer()).setPoints(endTurnModelView.getPoints());
+        this.getPlayer(endTurnModelView.getLastPlayer()).setEarnedPoints(endTurnModelView.getEarnedPoints());
         this.getPlayer(endTurnModelView.getLastPlayer()).setTokens(endTurnModelView.getPlayerTokens());
         this.setRemainingTiles(endTurnModelView.getRemainingTiles());
         this.setLivingRoom(endTurnModelView.getLivingRoom());

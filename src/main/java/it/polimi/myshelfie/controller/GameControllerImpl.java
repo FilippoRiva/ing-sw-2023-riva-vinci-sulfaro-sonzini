@@ -109,37 +109,39 @@ public class GameControllerImpl implements GameController, ChatController{
         if(gameModel.isBookshelfFull(playerName)) {
             if (gameModel.getState() == GameState.LAST_COUNTING_POINTS) {
                 if (gameModel.isLastPlayer(playerName)) {
-                    gameModel.calculateWinResults();
-                    gameModel.setState(GameState.WIN);
-                    for (Client c : clientsMap.values()) {
-                        try {
-                            c.send(new NetworkMessage(ViewType.WIN));
-                        } catch (RemoteException ignored) {}
-                    }
+                    endGame();
                 }
-            } else {
-                gameModel.getGameModelView().getPlayer(playerName).getTokens().add(Token.ENDGAME);
+            }
+
+        else {
+                gameModel.addEndToken(playerName);
                 gameModel.refillLivingRoom();
                 gameModel.nextTurn();
-                gameModel.setState(GameState.LAST_DRAW);
+                if(gameModel.isLastPlayer(playerName)){
+                    endGame();
+                }
+                 gameModel.setState(GameState.LAST_DRAW);
             }
         } else {
             gameModel.refillLivingRoom();
             gameModel.nextTurn();
             if(gameModel.getState()==GameState.COUNTING_POINTS) gameModel.setState(GameState.DRAW);
             else if (gameModel.isLastPlayer(playerName)) {
-                gameModel.calculateWinResults();
-                gameModel.setState(GameState.WIN);
-                for (Client c : clientsMap.values()) {
-                    try {
-                        c.send(new NetworkMessage(ViewType.WIN));
-                    } catch (RemoteException ignored) {}
-                }
+                endGame();
             }
             else gameModel.setState(GameState.LAST_DRAW);
         }
     }
 
+    private void endGame() {
+        gameModel.calculateWinResults();
+        gameModel.setState(GameState.WIN);
+        for (Client c : clientsMap.values()) {
+            try {
+                c.send(new NetworkMessage(ViewType.WIN));
+            } catch (RemoteException ignored) {}
+        }
+    }
     @Override
     public synchronized void addGameObserver(String playerName, Observer<GameEvent, GameModelView>networkGameObserver) {
         gameModel.addGameObserver(networkGameObserver);

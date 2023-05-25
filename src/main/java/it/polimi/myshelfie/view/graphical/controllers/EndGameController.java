@@ -1,5 +1,7 @@
 package it.polimi.myshelfie.view.graphical.controllers;
 
+import it.polimi.myshelfie.model.EarnedPoint;
+import it.polimi.myshelfie.model.PointType;
 import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
@@ -87,7 +89,9 @@ public class EndGameController extends ViewController implements Initializable {
 
     private void addColumnDetail(PlayerModelView player, int position){
         List<Token> takenTokens = player.getTokens();
+        List<EarnedPoint> earnedPoints= player.getEarnedPoints();
         List<Integer> tokenRomanNumeral = takenTokens.stream().map(Token::getRomanNumeral).toList();
+
 
         Label nameLabel = new Label(player.getName());
         //TODO style for the nameLabel
@@ -100,9 +104,8 @@ public class EndGameController extends ViewController implements Initializable {
         Label common = new Label(common1 + " + " + common2);
         common.setStyle("-fx-font-size: 13");
 
-        //TODO takes points for personal goal and adjacent tiles
-        Label temp = createLabel(0);
-        Label temp2 = createLabel(0);
+        Label personal = createLabel(earnedPoints.stream().filter(x->x.getType()==PointType.PERSONAL).mapToInt(EarnedPoint::getValue).sum());
+        Label adjacent = createLabel(earnedPoints.stream().filter(x->x.getType()==PointType.ADJACENT).toList().get(0).getValue());
 
         Label tot = createLabel(player.getPoints());
         //TODO make class and give to all tests
@@ -113,7 +116,7 @@ public class EndGameController extends ViewController implements Initializable {
         columnConstraints.setPrefWidth((double) (683 - 200) /numPlayers);
         columnConstraints.setHalignment(HPos.CENTER);
         detailsGrid.getColumnConstraints().add(columnConstraints);
-        detailsGrid.addColumn(position+1, nameLabel, firstToken, common, temp, temp2, tot);
+        detailsGrid.addColumn(position+1, nameLabel, firstToken, common, personal, adjacent, tot);
         /*
         End token:		1pt
         Common goal 1:	8pt

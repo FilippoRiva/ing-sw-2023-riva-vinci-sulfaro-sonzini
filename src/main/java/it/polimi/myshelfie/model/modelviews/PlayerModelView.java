@@ -1,21 +1,19 @@
 package it.polimi.myshelfie.model.modelviews;
 
+import it.polimi.myshelfie.model.EarnedPoint;
 import it.polimi.myshelfie.model.ItemTile;
-import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.model.Player;
 import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class PlayerModelView implements Serializable {
     private final String name;
     private final List<PersonalGoalModelView> personalGoals;
-    private int points;
+    private ArrayList<EarnedPoint> earnedPoints;
     private List<ItemTile> takenTiles;
     private List<Token> tokens;
     private ItemTile[][] bookshelf;
@@ -26,7 +24,7 @@ public class PlayerModelView implements Serializable {
         for(PersonalGoal p : goals){
             this.personalGoals.add(new PersonalGoalModelView(p));
         }
-        this.points = player.getPoints();
+        this.earnedPoints=player.getEarnedPoints();
         this.tokens = player.getObtainedTokens();
         this.bookshelf = player.getBookshelf().getBookshelfItems();
         this.takenTiles = player.getTakenTiles();
@@ -38,7 +36,7 @@ public class PlayerModelView implements Serializable {
         for(PersonalGoalModelView p : toCopy.personalGoals){
             this.personalGoals.add(new PersonalGoalModelView(p));
         }
-        this.points = toCopy.points;
+        this.earnedPoints=toCopy.earnedPoints;
         this.takenTiles = new ArrayList<>(toCopy.getTakenTiles());
         this.tokens = new ArrayList<>(toCopy.tokens);
         this.bookshelf = new ItemTile[toCopy.bookshelf.length][toCopy.bookshelf[0].length];
@@ -68,7 +66,11 @@ public class PlayerModelView implements Serializable {
      * @return the player's points.
      */
     public int getPoints() {
-        return points;
+        return earnedPoints.stream().mapToInt(EarnedPoint::getValue).sum();
+    }
+
+    public ArrayList<EarnedPoint> getEarnedPoints(){
+        return earnedPoints;
     }
 
     /**
@@ -95,9 +97,6 @@ public class PlayerModelView implements Serializable {
         return new ArrayList<>(takenTiles);
     }
 
-    protected void setPoints(int points) {
-        this.points = points;
-    }
 
     protected void setTakenTiles(List<ItemTile> takenTiles) {
         this.takenTiles = takenTiles;
@@ -111,9 +110,11 @@ public class PlayerModelView implements Serializable {
         this.bookshelf = bookshelf;
     }
 
+    public void setEarnedPoints(ArrayList<EarnedPoint> e){this.earnedPoints=e;}
+
     public void diff(PlayerModelView p) {
-        if(this.points==p.points) this.points = -1;
-        else this.points = p.points;
+        if(this.getPoints()==p.getPoints()) this.earnedPoints = new ArrayList<>();
+        else this.earnedPoints = p.earnedPoints;
         ArrayList<ItemTile> tempTiles = new ArrayList<>(p.takenTiles);
         tempTiles.removeAll(this.takenTiles);
         this.takenTiles = tempTiles;

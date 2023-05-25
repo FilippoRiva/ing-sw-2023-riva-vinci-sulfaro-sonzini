@@ -74,6 +74,8 @@ public interface GameModel {
      */
     void calculateWinResults();
 
+    void addEndToken(String playerName);
+
     boolean isBookshelfFull(String playerName);
 
     boolean isLastPlayer(String playerName);

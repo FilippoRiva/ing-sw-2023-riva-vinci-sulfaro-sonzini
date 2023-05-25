@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Player {
     private final String name;
-    private int points;
+    private ArrayList<EarnedPoint> earnedPoints;
     private final ArrayList<Token> obtainedTokens;
     private List<PersonalGoal> personalGoals;
     private Bookshelf bookshelf;
@@ -15,7 +15,7 @@ public class Player {
 
     public Player(String name){
         this.name = name;
-        this.points = 0;
+        this.earnedPoints = new ArrayList<>();
         this.obtainedTokens = new ArrayList<>();
         this. takenTiles = new ArrayList<>();
     }
@@ -43,23 +43,20 @@ public class Player {
     public void addObtainedToken(Token token){
         if(token == null) return;
         obtainedTokens.add(token);
+        addEarnedPoints(new EarnedPoint(PointType.COMMON, token.getValue()));
     }
 
-    /**
-     * @return the player's points.
-     */
-    public int getPoints() {
-        return points;
+    public void addEarnedPoints(EarnedPoint p){
+        earnedPoints.add(p);
     }
 
-    /**
-     * Adds the obtained points of the player in that turn to the points he already has.
-     * @param points are the points obtained in that turn from the player.
-     */
-    public void addPoints(int points) {
-        this.points += points;
+    public ArrayList<EarnedPoint> getEarnedPoints() {
+        return earnedPoints;
     }
 
+    public int getPoints(){
+        return earnedPoints.stream().mapToInt(EarnedPoint::getValue).sum();
+    }
     /**
      * @return the player name.
      */
@@ -96,6 +93,11 @@ public class Player {
         this.takenTiles = takenTiles;
     }
 
+    public void calculatePoints(){
+        for(PersonalGoal p: personalGoals)
+            earnedPoints.add(new EarnedPoint(PointType.PERSONAL, p.achievedPoints(bookshelf.getBookshelfItems())));
+        earnedPoints.add(new EarnedPoint(PointType.ADJACENT, bookshelf.achievedAdjacentTiles()));
+    }
 
     /**
      * @return the tiles taken from the board.
@@ -104,14 +106,6 @@ public class Player {
         return new ArrayList<>(takenTiles);
     }
 
-    /**
-     * Calculate the points obtained by the player at the end of his turn.
-     */
-    public void calculatePoints() {
-        for(PersonalGoal personalGoal : personalGoals){
-            points += personalGoal.achievedPoints(bookshelf.getBookshelfItems()) + bookshelf.achievedAdjacentTiles();
-        }
-    }
 
     public void clearTakenTiles() {
         this.takenTiles = new ArrayList<>();

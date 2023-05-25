@@ -203,7 +203,7 @@ class ModelViewTest {
 
         assertNotNull(endTurnModelViews[0]);
         EndTurnModelView e = endTurnModelViews[0];
-        assertEquals(0,e.getPoints());
+        assertEquals(0,e.getEarnedPoints());
         assertEquals(currentPlayer,e.getLastPlayer());
         assertEquals(players.get(1),e.getCurrentPlayer());
         assertEquals(103,e.getRemainingTiles());

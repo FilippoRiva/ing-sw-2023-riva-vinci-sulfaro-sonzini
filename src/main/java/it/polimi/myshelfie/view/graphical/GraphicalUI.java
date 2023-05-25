@@ -129,7 +129,8 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
                     a.postGameStart(myName);
                 }
             }
-            case WIN -> changeScene("endGame");
+                case WIN -> changeScene("endGame");
+            }
         }
-    }
 }
+
