@@ -10,6 +10,7 @@ import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.NetworkMessage;
+import it.polimi.myshelfie.view.AutoPlayer;
 import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewType;
@@ -60,7 +61,7 @@ public class CLIInputInterpreter {
                 if(input.startsWith("autoplay")){
                    AutoPlayer autoPlayer = new AutoPlayer(viewBuffer,UI);
                     try {
-                        autoPlayer.start(Integer.parseInt(input.replace(" ","").substring(8)));
+                        autoPlayer.preGameStart(Integer.parseInt(input.replace(" ","").substring(8)));
                     } catch (InvalidParameterException e) {
                         UI.wrongInput("Unable to start autoplay mode");
                     } catch (NumberFormatException e){

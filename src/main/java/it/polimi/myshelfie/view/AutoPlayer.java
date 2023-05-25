@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.textual;
+package it.polimi.myshelfie.view;
 
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.ItemTile;
@@ -11,9 +11,7 @@ import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observer;
-import it.polimi.myshelfie.view.ViewBuffer;
-import it.polimi.myshelfie.view.ViewType;
-import it.polimi.myshelfie.view.ViewUpdate;
+import it.polimi.myshelfie.view.textual.TextualUI;
 
 import java.util.*;
 
@@ -32,7 +30,7 @@ public class AutoPlayer implements Observer<ViewUpdate, Object> {
         viewBuffer.addUI(this);
     }
 
-    public synchronized void start(int numPlayers) throws InvalidParameterException {
+    public synchronized void preGameStart(int numPlayers) throws InvalidParameterException {
         this.numPlayers = numPlayers;
         ModelView modelView = viewBuffer.getModelView();
         if(!modelView.getLobbies().contains("test")){
@@ -46,6 +44,10 @@ public class AutoPlayer implements Observer<ViewUpdate, Object> {
             viewBuffer.sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST, username, "test"));
             owner = false;
         }
+    }
+
+    public synchronized void postGameStart(String username){
+        this.username = username;
     }
 
 

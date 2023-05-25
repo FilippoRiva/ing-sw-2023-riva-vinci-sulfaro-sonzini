@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view.graphical;
 import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.view.AutoPlayer;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.controllers.GameController;
@@ -123,6 +124,10 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             case GAME -> {
                 changeScene("game");
                 gameUpdate();
+                if(viewBuffer.getLobbyModelView().getName().equals("test")){
+                    AutoPlayer a = new AutoPlayer(viewBuffer,null);
+                    a.postGameStart(myName);
+                }
             }
             case WIN -> changeScene("endGame");
         }
