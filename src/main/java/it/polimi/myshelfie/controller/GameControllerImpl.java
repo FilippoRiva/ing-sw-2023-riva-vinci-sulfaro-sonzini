@@ -106,30 +106,27 @@ public class GameControllerImpl implements GameController, ChatController{
      */
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
-        if(gameModel.isBookshelfFull(playerName)) {
-            if (gameModel.getState() == GameState.LAST_COUNTING_POINTS) {
+        gameModel.nextTurn();
+        gameModel.refillLivingRoom();
+
+        //we are last round yet
+        if(gameModel.getState() == GameState.LAST_COUNTING_POINTS){
+            if(gameModel.isLastPlayer(playerName)) {
+                endGame();
+                return;
+            }
+            gameModel.setState(GameState.LAST_DRAW);
+        }else {
+            if(gameModel.isBookshelfFull(playerName)) {
+                gameModel.addEndToken(playerName);
                 if (gameModel.isLastPlayer(playerName)) {
                     endGame();
+                    return;
                 }
+                gameModel.setState(GameState.LAST_DRAW);
+            } else {
+                gameModel.setState(GameState.DRAW);
             }
-
-        else {
-                gameModel.addEndToken(playerName);
-                gameModel.refillLivingRoom();
-                gameModel.nextTurn();
-                if(gameModel.isLastPlayer(playerName)){
-                    endGame();
-                }
-                 gameModel.setState(GameState.LAST_DRAW);
-            }
-        } else {
-            gameModel.refillLivingRoom();
-            gameModel.nextTurn();
-            if(gameModel.getState()==GameState.COUNTING_POINTS) gameModel.setState(GameState.DRAW);
-            else if (gameModel.isLastPlayer(playerName)) {
-                endGame();
-            }
-            else gameModel.setState(GameState.LAST_DRAW);
         }
     }
 
