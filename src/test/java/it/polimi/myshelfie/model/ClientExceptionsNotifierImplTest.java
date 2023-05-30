@@ -16,12 +16,9 @@ class ClientExceptionsNotifierImplTest {
         final ExceptionEvent[] event = new ExceptionEvent[1];
         ClientExceptionsNotifier interfaceCen = new ModelImpl().getNewClientExceptionNotifier();
         ClientExceptionsNotifierImpl cen = (ClientExceptionsNotifierImpl) interfaceCen;
-        Observer<ExceptionEvent, ClientExceptionsNotifierView> obs = new Observer<ExceptionEvent, ClientExceptionsNotifierView>() {
-            @Override
-            public void update(ExceptionEvent evt, ClientExceptionsNotifierView clientExceptionsNotifierView) {
-                view[0] = clientExceptionsNotifierView;
-                event[0] = evt;
-            }
+        Observer<ExceptionEvent, ClientExceptionsNotifierView> obs = (evt, clientExceptionsNotifierView) -> {
+            view[0] = clientExceptionsNotifierView;
+            event[0] = evt;
         };
         Exception e = new DisconnectionException("Gigi");
         cen.addExceptionsObserver(obs);

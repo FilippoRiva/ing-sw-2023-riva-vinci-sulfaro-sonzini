@@ -146,7 +146,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public void exitGame(String disconnectedPlayerName) {
+    public synchronized void exitGame(String disconnectedPlayerName) {
         clientsMap.remove(disconnectedPlayerName);
         //notifying non disconnected clients
         for(String player : clientsMap.keySet()){
@@ -176,7 +176,7 @@ public class GameControllerImpl implements GameController, ChatController{
      * @param notifiersMap the list of the exceptions notifiers.
      * @param chatObserverMap the list of the chat observers.
      */
-    public void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
+    protected void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
                      Map<String, ClientExceptionsNotifier> notifiersMap,
                      Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap){
         this.clientsMap = clientsMap;

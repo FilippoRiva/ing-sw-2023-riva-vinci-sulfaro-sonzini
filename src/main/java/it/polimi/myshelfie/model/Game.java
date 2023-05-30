@@ -45,7 +45,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void setGameConfig(GameConfig gameConfig) throws InvalidParameterException{
+    public synchronized void setGameConfig(GameConfig gameConfig) throws InvalidParameterException{
         //if(isLobbyFull()) throw new Exception("lobby is full");
         if(gameConfig.getNumPlayers()< players.size()) throw new InvalidParameterException("too few players");
         this.gameConfig = gameConfig;
@@ -54,7 +54,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
+    public synchronized void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
         if(isLobbyFull()) throw new LobbyFullException(true);
         if(!isPlayerNameValid(playerName)) throw new InvalidParameterException("Player name is not valid");
         if(players.size()==0) roomOwner = playerName;
@@ -69,7 +69,7 @@ public class Game implements GameModel, LobbyModel {
      * Returns true when the number of the players that wants to play is grater than the param NumPlayers set in the game config.
      * @return true or false.
      */
-    public boolean isLobbyFull() {
+    private boolean isLobbyFull() {
         return players.size() == gameConfig.getNumPlayers();
     }
 
@@ -78,7 +78,7 @@ public class Game implements GameModel, LobbyModel {
      * @param playerName is the username the player choose to play with.
      * @return true or false.
      */
-    public boolean isPlayerNameValid(String playerName) {
+    private boolean isPlayerNameValid(String playerName) {
         //TODO define rules for available characters in playerName
         for(Player p : players){
             if(p.getName().equals(playerName)){
@@ -89,7 +89,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void removePlayer(String playerName) throws InvalidParameterException{
+    public synchronized void removePlayer(String playerName) throws InvalidParameterException{
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 players.remove(p);
@@ -109,7 +109,7 @@ public class Game implements GameModel, LobbyModel {
 
 
     @Override
-    public void initialize() throws LobbyFullException{
+    public synchronized void initialize() throws LobbyFullException{
         if(!isLobbyFull()) throw new LobbyFullException(false);
         Collections.shuffle(players);
         currentPlayer = players.get(0);
@@ -150,7 +150,7 @@ public class Game implements GameModel, LobbyModel {
 
 
     @Override
-    public void nextTurn() {
+    public synchronized void nextTurn() {
         int currentTurn;
 
         for(Player p : players){
@@ -163,12 +163,13 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void calculateWinResults() {
+    public synchronized void calculateWinResults() {
         for(Player player : players) {
             player.calculatePoints();
         }
     }
 
+    @Override
     public void addEndToken(String playerName){
         for(Player p: players){
             if(p.getName().equals(playerName)){
@@ -178,7 +179,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void setState(GameState state) {
+    public synchronized void setState(GameState state) {
         if(state==GameState.FIRST_DRAW) {
             this.currentState = GameState.DRAW;
             gameObservable.setChanged();
@@ -208,7 +209,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
+    public synchronized void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
         if(positions.size()==0) throw new InvalidParameterException("no tiles selected");
         if(!positionsAreValid(positions)) throw new InvalidParameterException("positions are not valid");
@@ -261,7 +262,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
+    public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
         if(orderedTiles.size()==0) { //keeping the order
             return;
@@ -277,7 +278,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
+    public synchronized void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
         if(column < 0 || column > gameConfig.getBookshelfDimension().width-1) throw new InvalidParameterException("column not available");
 
@@ -297,7 +298,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void checkCommonGoal(String playerName) {
+    public synchronized void checkCommonGoal(String playerName) {
         for(CommonGoal cm : commonGoals){
             for(Player p : players){
                 if(p.getName().equals(playerName)){
@@ -328,7 +329,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void refillLivingRoom(){
+    public synchronized void refillLivingRoom(){
         livingRoom.refill();
     }
     @Override
@@ -342,7 +343,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void setRoomOwner(String owner) {
+    public synchronized void setRoomOwner(String owner) {
         this.roomOwner = owner;
     }
 
@@ -352,8 +353,6 @@ public class Game implements GameModel, LobbyModel {
     public String getRoomOwner(){
         return roomOwner;
     }
-
-    //for test:
 
     /**
      * @return the name of the player playing in that turn.
@@ -385,7 +384,7 @@ public class Game implements GameModel, LobbyModel {
      * @return true of false.
      */
     @Override
-    public boolean isBookshelfFull(String playerName){
+    public synchronized boolean isBookshelfFull(String playerName){
         return this.getPlayer(playerName).getBookshelf().isFull();
     }
 
@@ -394,7 +393,8 @@ public class Game implements GameModel, LobbyModel {
      * @param playerName is the name of the player that has to be controlled.
      * @return true or false.
      */
-    public boolean isLastPlayer(String playerName){
+    @Override
+    public synchronized boolean isLastPlayer(String playerName){
         return players.get(players.size() - 1).getName().equals(playerName);
     }
 
@@ -403,14 +403,14 @@ public class Game implements GameModel, LobbyModel {
         return lobbyName;
     }
     @Override
-    public void addGameObserver(Observer<GameEvent, GameModelView> obs) {
+    public synchronized void addGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.addObserver(obs);
         gameObservable.setChanged();
         gameObservable.notifyObservers(new FullGameModelView(this));
     }
 
     @Override
-    public void removeGameObserver(Observer<GameEvent, GameModelView> obs) {
+    public synchronized void removeGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.deleteObserver(obs);
     }
 
@@ -420,14 +420,14 @@ public class Game implements GameModel, LobbyModel {
     }
 
     @Override
-    public void addLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
+    public synchronized void addLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.addObserver(obs);
         lobbyObservable.setChanged();
         lobbyObservable.notifyObservers(new LobbyModelView(this));
     }
 
     @Override
-    public void removeLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
+    public synchronized void removeLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.deleteObserver(obs);
     }
 
@@ -448,7 +448,7 @@ public class Game implements GameModel, LobbyModel {
      * Returns the number of the players of the game in a specific moment.
      * @return the size of the list of players.
      */
-    public int getCurrentSize() {
+    protected int getCurrentSize() {
         return players.size();
     }
 
@@ -513,16 +513,6 @@ public class Game implements GameModel, LobbyModel {
      */
     public String getName() {
         return lobbyName;
-    }
-
-    /**
-     * Initialize the name of the game.
-     * @param name is the name that has to be assigned to the game.
-     */
-    public void setName(String name) {
-        if(this.lobbyName == null) {
-            this.lobbyName = name;
-        }
     }
 
     @Override

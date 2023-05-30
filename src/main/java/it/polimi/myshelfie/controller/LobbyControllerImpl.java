@@ -143,7 +143,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
      * Returns the lobby model associated to that lobby.
      * @return a lobby model.
      */
-    public LobbyModel getLobbyModel(){
+    protected LobbyModel getLobbyModel(){
         return lobbyModel;
     }
 
@@ -156,7 +156,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
      * @throws InvalidParameterException if one of the parameter passed is not valid.
      * @throws LobbyFullException if the lobby is full.
      */
-    public void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {
+    protected void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {
         lobbyModel.addPlayer(playerName);
         clientsMap.put(playerName,client);
         connectionHandlersMap.put(playerName,connectionHandler);

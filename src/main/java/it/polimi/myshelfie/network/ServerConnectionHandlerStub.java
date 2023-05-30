@@ -73,6 +73,7 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
+    @Override
     public void close() throws RemoteException {
         try {
             socket.close();

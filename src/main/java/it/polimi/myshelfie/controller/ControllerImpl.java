@@ -130,7 +130,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void quit(Client client) {
+    public synchronized void quit(Client client) {
         clientExceptionsNotifiers.remove(client);
     }
 
@@ -149,7 +149,7 @@ public class ControllerImpl implements Controller {
      * Removes a lobby from the lobby list.
      * @param lobbyName is the name of the lobby that must be deleted.
      */
-    public void deleteLobby(String lobbyName){
+    protected void deleteLobby(String lobbyName){
         if(!lobbiesControllers.containsKey(lobbyName)) return;
         lobbiesControllers.remove(lobbyName);
         try {
@@ -164,7 +164,7 @@ public class ControllerImpl implements Controller {
      * @param lobbyName is the lobby/game whose controller I want.
      * @return the associated game controller.
      */
-    public GameControllerImpl getGameController(String lobbyName){
+    protected GameControllerImpl getGameController(String lobbyName){
         return gamesControllers.get(lobbyName);
     }
 
@@ -172,7 +172,7 @@ public class ControllerImpl implements Controller {
      * Removes a game from the game list.
      * @param gameName is the name of the game that must be deleted.
      */
-    public void deleteGame(String gameName) {
+    protected void deleteGame(String gameName) {
         gamesControllers.remove(gameName);
     }
 }

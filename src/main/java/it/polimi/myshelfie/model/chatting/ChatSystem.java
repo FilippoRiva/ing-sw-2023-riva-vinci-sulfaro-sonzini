@@ -39,7 +39,7 @@ public class ChatSystem implements ChatModel {
      *                PlayerChats. If this message is to be sent to a non-existing player it will be discarded.
      */
     @Override
-    public void addMessage(Message message) {
+    public synchronized void addMessage(Message message) {
         //ignoring empty messages or messages without sender
         if(message.getSender().equals(Messages.fromNobody) || message.getMessage().equals(Messages.emptyMessage)) return;
         //to everyone
@@ -60,7 +60,7 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
-    public void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
+    public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
         PlayerChat pc = playerChats.get(playerName);
         if(pc==null) return;
         pc.addObserver(obs);
@@ -69,7 +69,7 @@ public class ChatSystem implements ChatModel {
     }
 
     @Override
-    public void removeChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
+    public synchronized void removeChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
         PlayerChat pc = playerChats.get(playerName);
         if(pc == null) return;
         pc.deleteObserver(obs);

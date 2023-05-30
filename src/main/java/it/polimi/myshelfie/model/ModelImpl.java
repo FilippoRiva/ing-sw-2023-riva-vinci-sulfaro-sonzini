@@ -35,7 +35,8 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
      * @return the lobby model associated to this specific lobby.
      * @throws LobbyExistenceException if the name of the lobby you want to add already exists.
      */
-    public LobbyModel addLobby(String lobbyName) throws LobbyExistenceException {
+    @Override
+    public synchronized LobbyModel addLobby(String lobbyName) throws LobbyExistenceException {
         if(lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(true, lobbyName);
 
         Game lobbyModel = new Game(lobbyName);
@@ -50,7 +51,8 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
      * @param lobbyName is the name of the lobby you want to remove.
      * @throws LobbyExistenceException if the name of the lobby you want to remove does not exist.
      */
-    public void removeLobby(String lobbyName) throws LobbyExistenceException {
+    @Override
+    public synchronized void removeLobby(String lobbyName) throws LobbyExistenceException {
         if(!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(false, lobbyName);
         lobbiesModel.remove(lobbyName);
         setChanged();
@@ -58,19 +60,19 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
     }
 
     @Override
-    public void addModelObserver(Observer<ModelEvent, ModelView> obs) {
+    public synchronized void addModelObserver(Observer<ModelEvent, ModelView> obs) {
         addObserver(obs);
         setChanged();
         notifyObservers(new ModelView(this));
     }
 
     @Override
-    public void removeModelObserver(Observer<ModelEvent, ModelView> obs) {
+    public synchronized void removeModelObserver(Observer<ModelEvent, ModelView> obs) {
         deleteObserver(obs);
     }
 
     @Override
-    public ModelView getModelView() {
+    public synchronized ModelView getModelView() {
         return new ModelView(this);
     }
 

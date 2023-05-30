@@ -24,7 +24,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
     }
 
     @Override
-    public void send(NetworkMessage networkMessage){
+    public synchronized void send(NetworkMessage networkMessage){
         networkMessage.clientExecute(view);
     }
 

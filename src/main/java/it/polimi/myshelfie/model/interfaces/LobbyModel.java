@@ -92,6 +92,4 @@ public interface LobbyModel {
     boolean isRoomOwner(String username);
 
     boolean hasStarted();
-
-    boolean isLobbyFull();
 }

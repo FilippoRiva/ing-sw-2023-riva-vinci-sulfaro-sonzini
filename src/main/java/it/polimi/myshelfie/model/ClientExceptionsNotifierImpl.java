@@ -12,21 +12,21 @@ import java.util.List;
 public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierView> implements ClientExceptionsNotifier {
     List<Exception> exceptionList = new ArrayList<>();
     @Override
-    public void notifyException(Exception exception) {
+    public synchronized void notifyException(Exception exception) {
         exceptionList.add(exception);
         setChanged();
         notifyObservers(ExceptionEvent.NEW_EXCEPTION, new ClientExceptionsNotifierView(this));
     }
 
     @Override
-    public void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
+    public synchronized void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
         addObserver(obs);
         setChanged();
         notifyObservers(new ClientExceptionsNotifierView(this));
     }
 
     @Override
-    public void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
+    public synchronized void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
         deleteObserver(obs);
     }
 
@@ -39,7 +39,7 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
      *
      * @return the last exception notified.
      */
-    public Exception getLastException() {
+    public synchronized Exception getLastException() {
         if(exceptionList.size()==0) return null;
         return exceptionList.get(exceptionList.size()-1);
     }
