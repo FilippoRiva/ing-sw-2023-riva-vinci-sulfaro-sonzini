@@ -10,7 +10,6 @@ import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -408,24 +407,6 @@ public class ViewBuffer extends View {
 
     public synchronized ViewType getViewType() {
         return viewType;
-    }
-
-    public synchronized void debugDiff(){
-        if(this.gameDifferences==null) return;
-        boolean changedPlayer = isCurrentPlayerDiff();
-        String newPlayer = getCurrentPlayerDiff();
-        String lastPlayer = getLastPlayer();
-        boolean changedState = isCurrentStateDiff();
-        GameState newState = getCurrentStateDiff();
-        boolean remainingTilesChanged = isRemainingTilesDiff();
-        int newRemainingTiles = getRemainingTilesDiff();
-        HashMap<Position,ItemTile> livingRoomDiff = getLivingRoomDiff();
-        List<CommonGoalModelView> commonGoalDiff = getCommonGoalDiff();
-        int lastPlayerPointDiff = getLastPlayerPointsDiff();
-        List<Token> lastPlayerTokenDiff = getLastPlayerTokenDiff();
-        List<ItemTile> lastPlayerTakenTileDiff = getLastPlayerTakenTilesDiff();
-        boolean hasInserted = hasLastPlayerInsertedTiles();
-        int lastColumnUsed = getLastPlayerInsertedColumnPosition();
     }
 
     /**

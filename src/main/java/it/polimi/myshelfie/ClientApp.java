@@ -8,61 +8,108 @@ import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.textual.CLIInputReader;
 import it.polimi.myshelfie.view.textual.TextualUI;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ClientApp {
-    static String host = "localhost";
+    static String serverIP = "localhost";
     static int registryPort = 1099;
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
-        int networkChoice;
-        int viewChoice;
-        try{
-            System.out.println("Choose between socket(1) and RMI(2):");
-            networkChoice = scanner.nextInt();
-            System.out.println("Choose between CLI(1) and Graphical UI(2)");
-            viewChoice = scanner.nextInt();
-        } catch (InputMismatchException e){
-            System.err.println("Invalid Option");
-            return;
+        int networkChoice = -1;
+        int viewChoice = -1;
+
+        while(networkChoice == -1){
+            System.out.println("--------------------------------------------------------");
+            System.out.print("> Choose between socket(1) and RMI(2) : ");
+            try{
+                networkChoice = Integer.parseInt(scanner.nextLine());
+                if(!(networkChoice== 1 || networkChoice == 2)){
+                    networkChoice = -1;
+                }
+            } catch (NumberFormatException ignored){
+            }
+            if(networkChoice == -1){
+                System.out.println("   !! Not a valid choice");
+            }
         }
-        if(networkChoice > 2 || networkChoice < 1 || viewChoice >2 || viewChoice < 1) {
-            System.err.println("Invalid Option");
-            return;
+
+        while(viewChoice == -1){
+            System.out.println("--------------------------------------------------------");
+            System.out.print("> Choose between CLI(1) and Graphical UI(2) : ");
+            try{
+                viewChoice = Integer.parseInt(scanner.nextLine());
+                if(!(viewChoice == 1 || viewChoice == 2)){
+                    viewChoice = -1;
+                }
+            } catch (NumberFormatException ignored){
+            }
+            if(viewChoice == -1){
+                System.out.println("   !! Not a valid choice");
+            }
         }
+
         ViewBuffer viewBuffer = ViewBuffer.getInstance();
+
+        boolean connected = false;
+        while(!connected){
+            System.out.println("--------------------------------------------------------");
+            System.out.print("> Input server IP or press enter to connect to localhost : ");
+            String ip = scanner.nextLine();
+            try {
+                if(!ip.equals("") && !InetAddress.getByName(ip).isReachable(500)){
+                    System.out.println("   !! Not a valid hostname");
+                } else {
+                    if(!ip.equals("")) serverIP = ip;
+                    if(networkChoice == 1) startSocketConnection(viewBuffer);
+                    else startRMIConnection(viewBuffer);
+                    connected = true;
+                }
+            } catch (IOException e) {
+                System.out.println("   !! Unable to connect to "+serverIP);
+            }
+        }
+
         List<String> inputParameters = new ArrayList<>();
         Observer<ViewUpdate, Object> view;
         if(viewChoice == 1) view = new TextualUI(viewBuffer,inputParameters);
         else view = new GraphicalUI();
-
         viewBuffer.addUI(view);
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            if(networkChoice == 1) startSocketConnection(viewBuffer);
-            else startRMIConnection(viewBuffer);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        if(viewChoice==1) new Thread(()->new CLIInputReader(in, (TextualUI) view,viewBuffer,inputParameters)).start();
+        if(viewChoice==1) new Thread(()->new CLIInputReader((TextualUI) view,viewBuffer,inputParameters)).start();
         else {
             ((GraphicalUI)view).startGUI();
         }
     }
 
     private static void startRMIConnection(ViewBuffer viewBuffer) throws RemoteException {
+        String clientIP = "";
+        try {
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+            for(NetworkInterface net : Collections.list(netInterfaces)){
+                if(net.isUp() && !net.isLoopback()) {
+                    for(InetAddress addr : Collections.list(net.getInetAddresses())){
+                        if(!addr.getHostAddress().contains(":")){ //only IPv4
+                            clientIP = addr.getHostAddress();
+                            break;
+                        }
+                    }
+                }
+            }
+            if(clientIP.equals("")) clientIP = "localhost";
+        } catch (SocketException e) {
+            throw new RuntimeException("Unable to get Network Interfaces");
+        }
+        System.out.println("RMI started over : "+clientIP);
+        System.setProperty("java.rmi.server.hostname",clientIP); //the property is still called server
         Registry registry;
-        registry = LocateRegistry.getRegistry(host,registryPort);
+        registry = LocateRegistry.getRegistry(serverIP,registryPort);
         Server server;
         try {
             server = (Server) registry.lookup("server");
@@ -73,7 +120,7 @@ public class ClientApp {
     }
 
     private static void startSocketConnection(ViewBuffer viewBuffer) throws RemoteException {
-        ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(host, 54321);
+        ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(serverIP, 54321);
         ClientImpl client = new ClientImpl(viewBuffer);
         client.handshake(serverStub);
         new Thread(() -> {
