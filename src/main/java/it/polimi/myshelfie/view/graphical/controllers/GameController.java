@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -390,9 +391,10 @@ public class GameController extends ViewController implements Initializable {
                 Image imageTaken = getImage("tokens/"+oldTokens.get(oldTokens.size()-1).getValue()+".jpg");
                 takenTokens[i][previousPlayer] = imageTaken;
                 int finalI = i;
+                Image finalImageNew = imageNew;
                 Platform.runLater(() -> {
-                    if (finalI == 0) token1Image.setImage(imageNew);
-                    else token2Image.setImage(imageNew);
+                    if (finalI == 0) token1Image.setImage(finalImageNew);
+                    else token2Image.setImage(finalImageNew);
                 });
             }
             commonGoals[i] = fullGameModelView.getCommonGoals().get(i);
@@ -430,6 +432,7 @@ public class GameController extends ViewController implements Initializable {
     protected void showDescription1(MouseEvent mouseEvent) {
         Platform.runLater(() -> {
             descriptionLabel.setText(commonGoals[0].getDescription());
+            descriptionLabel.setFont(Font.font("Kristen ITC", 20));
             descriptionLabel.setVisible(true);
         });
 
@@ -438,6 +441,7 @@ public class GameController extends ViewController implements Initializable {
     protected void showDescription2(MouseEvent mouseEvent) {
         Platform.runLater(() -> {
             descriptionLabel.setText(commonGoals[1].getDescription());
+            descriptionLabel.setFont(Font.font("Kristen ITC", 20));
             descriptionLabel.setVisible(true);
         });
     }

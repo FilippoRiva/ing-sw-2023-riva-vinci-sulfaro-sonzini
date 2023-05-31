@@ -4,11 +4,14 @@ import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,12 +21,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class LobbyController extends ViewController implements Initializable {
+    @FXML
+    protected ChoiceBox receiverChoice;
+    @FXML
+    protected AnchorPane chatPane;
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -37,15 +45,21 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected Button startButton;
 
+    @FXML
+    protected ImageView chatIcon;
+
+    @FXML
+    protected ImageView exit;
+
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lobbyNameLabel.setBackground(Background.fill(Color.rgb(229, 146, 93)));
         lobbyNameLabel.setText(viewBuffer.getLobbyModelView().getName());
+
         createListPlayers();
     }
-
     @FXML
     protected void onStartMouseClicked(MouseEvent mouseEvent) {
         viewBuffer.startRequest();
@@ -118,5 +132,28 @@ public class LobbyController extends ViewController implements Initializable {
     public void onBackArrowClick() {
         viewBuffer.exitRequest();
         super.onBackArrowClick();
+    }
+
+    @FXML
+    protected void setChatVisible(){
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
+        translateTransition.setByX(+415);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+
+        fadeTransition.play();
+        translateTransition.play();
+    }
+    @FXML
+    protected void SetChatInvisible() {
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
+        translateTransition.setByX(-415);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+
+        fadeTransition.play();
+        translateTransition.play();
     }
 }

@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
@@ -24,31 +32,47 @@
             </ScrollPane>
             <AnchorPane maxHeight="70.0" prefHeight="70.0" prefWidth="840.0" StackPane.alignment="TOP_CENTER">
                <children>
-                   <Label fx:id="lobbyNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="138.0"
-                          layoutY="14.0" prefHeight="64.0" prefWidth="449.0" style="-fx-font-size: 35;"
-                          text="Lobby name" textAlignment="CENTER" textFill="#f2ebeb" AnchorPane.leftAnchor="138.0"
-                          AnchorPane.topAnchor="14.0"/>
-                   <Label fx:id="playersInLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="692.0"
-                          layoutY="7.0" style="-fx-font-size: 35;" text="1/4" textAlignment="CENTER" textFill="WHITE"
-                          AnchorPane.rightAnchor="94.39999999999998" AnchorPane.topAnchor="7.0"/>
-                   <Button fx:id="minusButton" alignment="CENTER" disable="true" layoutX="617.0" layoutY="26.0"
-                           maxHeight="50.0" maxWidth="50.0" minHeight="40.0" minWidth="44.0"
-                           onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="44.0"
-                           stylesheets="@../css/style.css" text="-" textAlignment="CENTER" textFill="WHITE"
-                           AnchorPane.rightAnchor="179.0" AnchorPane.topAnchor="26.0"/>
-                   <Button fx:id="plusButton" alignment="CENTER" disable="true" layoutX="777.0" layoutY="26.0"
-                           maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0"
-                           onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0"
-                           stylesheets="@../css/style.css" text="+" textAlignment="CENTER" textFill="WHITE"
-                           wrapText="true" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="26.0"/>
+                   <Label fx:id="lobbyNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="138.0" layoutY="14.0" prefHeight="64.0" prefWidth="449.0" style="-fx-font-size: 35;" text="Lobby name" textAlignment="CENTER" textFill="#f2ebeb" AnchorPane.leftAnchor="138.0" AnchorPane.topAnchor="14.0" />
+                   <Label fx:id="playersInLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="692.0" layoutY="7.0" style="-fx-font-size: 35;" text="1/4" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="94.39999999999998" AnchorPane.topAnchor="7.0" />
+                   <Button fx:id="minusButton" alignment="CENTER" disable="true" layoutX="617.0" layoutY="26.0" maxHeight="50.0" maxWidth="50.0" minHeight="40.0" minWidth="44.0" onMouseClicked="#onMouseMinusClicked" prefHeight="40.0" prefWidth="44.0" stylesheets="@../css/style.css" text="-" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="179.0" AnchorPane.topAnchor="26.0" />
+                   <Button fx:id="plusButton" alignment="CENTER" disable="true" layoutX="777.0" layoutY="26.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" onMouseClicked="#onMousePlusClicked" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/style.css" text="+" textAlignment="CENTER" textFill="WHITE" wrapText="true" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="26.0" />
                </children>
             </AnchorPane>
          </children>
       </StackPane>
       <Button fx:id="startButton" disable="true" layoutX="932.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#onStartMouseClicked" prefHeight="90.0" prefWidth="288.0" styleClass="myButton" text="Start" />
-        <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" prefHeight="53.0"
-               prefWidth="294.0" styleClass="error" text="error" textFill="RED" visible="false"
-               AnchorPane.bottomAnchor="165.0" AnchorPane.rightAnchor="50.0"/>
+        <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" prefHeight="53.0" prefWidth="294.0" styleClass="error" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="165.0" AnchorPane.rightAnchor="50.0" />
       <Button layoutX="39.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClick" prefHeight="77.0" prefWidth="81.0" styleClass="arrow" />
+      <ImageView fx:id="chatIcon" fitHeight="78.0" fitWidth="82.0" layoutX="46.0" layoutY="154.0" onMouseClicked="#setChatVisible" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/chat_icon.jpg" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="chatPane" prefHeight="720.0" prefWidth="415.0" style="-fx-background-color: white;">
+         <children>
+            <AnchorPane prefHeight="56.0" prefWidth="415.0" style="-fx-background-color: red;" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ImageView fx:id="exit" fitHeight="56.0" fitWidth="52.0" onMouseClicked="#SetChatInvisible" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <image>
+                        <Image url="@../images/arrow.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" prefHeight="64.0" prefWidth="415.0" text="CHAT" />
+               </children>
+            </AnchorPane>
+            <ScrollPane layoutY="69.0" prefHeight="596.0" prefWidth="415.0" AnchorPane.topAnchor="69.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="720.0" prefWidth="399.0" />
+              </content>
+            </ScrollPane>
+            <AnchorPane prefHeight="56.0" prefWidth="415.0" style="-fx-background-color: red;" AnchorPane.bottomAnchor="0.0">
+               <children>
+                  <ChoiceBox fx:id="receiverChoice" maxHeight="10.0" minHeight="20.0" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: black;" AnchorPane.topAnchor="20.0" />
+                  <TextArea layoutX="101.0" layoutY="24.0" prefHeight="56.0" prefWidth="257.0" AnchorPane.topAnchor="0.0" />
+                  <Button layoutX="349.0" layoutY="8.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="38.0" text="&gt;" AnchorPane.rightAnchor="5.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>
