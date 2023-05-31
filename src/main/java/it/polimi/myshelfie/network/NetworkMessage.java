@@ -150,7 +150,7 @@ public class NetworkMessage implements Serializable {
     public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierView exceptionsNotifierView){
         this.messageType = MessageType.EXCEPTION_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)-> new Thread(()->view.setExceptionView(exceptionsNotifierView)).start());
+        this.clientFunction = ((view)-> new Thread(()->view.setExceptionView(exceptionsNotifierView,evt)).start());
     }
     public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView){
         this.messageType = MessageType.CHAT_MESSAGE;

@@ -37,7 +37,7 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
     public void update(ViewUpdate evt, Object unused) {
         switch (evt) {
             case MODEL_UPDATE -> new Thread(this::initUpdate).start();
-            case EXCEPTION_UPDATE -> new Thread(this::printException).start();
+            case EXCEPTION_UPDATE -> new Thread(()->printException(false)).start();
             case CHAT_UPDATE -> new Thread(this::chatUpdate).start();
             case LOBBY_UPDATE -> new Thread(this::lobbyUpdate).start();
             case GAME_UPDATE -> new Thread(this::gameUpdate).start();
@@ -91,12 +91,18 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
                 internalViewState = InternalViewState.WIN;
                 currentPage = new WinPage(t,viewBuffer,inputParameters);
             }
+            case DISCONNECTION -> {
+                printException(true);
+                viewBuffer.setView(ViewType.INIT);
+            }
         }
         currentPage.render();
     }
 
-    public synchronized void printException() {
-        ClientExceptionsNotifierView exceptionsView = viewBuffer.getClientExceptionsNotifierView();
+    public synchronized void printException(boolean disconnection) {
+        ClientExceptionsNotifierView exceptionsView;
+        if(disconnection) exceptionsView = viewBuffer.getDisconnectedClientExceptionsNotifierView();
+        else exceptionsView = viewBuffer.getClientExceptionsNotifierView();
         if (exceptionsView == null) return;
         t.clearError();
         t.printError(exceptionsView.getLastException().getMessage());

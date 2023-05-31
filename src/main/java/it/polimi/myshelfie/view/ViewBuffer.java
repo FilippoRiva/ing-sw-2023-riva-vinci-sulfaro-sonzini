@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -19,6 +20,7 @@ public class ViewBuffer extends View {
     private static ViewBuffer viewBuffer;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
+    ClientExceptionsNotifierView disconnectedClientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
     LobbyModelView lobbyModelView;
     FullGameModelView fullGameModelView;
@@ -173,11 +175,14 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public void setExceptionView(ClientExceptionsNotifierView exceptionView) {
+    public void setExceptionView(ClientExceptionsNotifierView exceptionView, ExceptionEvent evt) {
         synchronized (sync){
-            this.clientExceptionsNotifierView = exceptionView;
-            UINotifier.setChanged();
-            UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
+            if(evt == ExceptionEvent.NEW_EXCEPTION) {
+                this.clientExceptionsNotifierView = exceptionView;
+                UINotifier.setChanged();
+                UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
+            }
+            else this.disconnectedClientExceptionsNotifierView = exceptionView;
             sync.notifyAll();
         }
     }
@@ -344,6 +349,7 @@ public class ViewBuffer extends View {
                     oldGameModelView = null;
                     lobbyModelView = null;
                     playerChatModelView = null;
+                    disconnectedClientExceptionsNotifierView = null;
                 }
                 case LOBBY -> {
                     while (lobbyModelView == null) { //waits until lobbyModelView != null
@@ -363,6 +369,14 @@ public class ViewBuffer extends View {
                 }
                 case WIN -> {
                     while (fullGameModelView == null || fullGameModelView.getCurrentState() != GameState.WIN) {
+                        try {
+                            sync.wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+                case DISCONNECTION -> {
+                    while(disconnectedClientExceptionsNotifierView == null){
                         try {
                             sync.wait();
                         } catch (InterruptedException ignored) {
@@ -391,6 +405,10 @@ public class ViewBuffer extends View {
 
     public synchronized ClientExceptionsNotifierView getClientExceptionsNotifierView() {
         return clientExceptionsNotifierView;
+    }
+
+    public synchronized ClientExceptionsNotifierView getDisconnectedClientExceptionsNotifierView(){
+        return disconnectedClientExceptionsNotifierView;
     }
 
     public synchronized PlayerChatModelView getPlayerChatModelView() {

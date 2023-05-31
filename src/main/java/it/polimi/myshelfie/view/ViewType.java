@@ -4,5 +4,6 @@ public enum ViewType {
     INIT,
     LOBBY,
     GAME,
-    WIN
+    WIN,
+    DISCONNECTION
 }
