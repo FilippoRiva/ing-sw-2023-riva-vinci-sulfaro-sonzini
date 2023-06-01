@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
+<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.LobbyController">
     <children>
         <ImageView fitHeight="720.0" fitWidth="1280.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Image url="@../images/background.png" />
@@ -43,27 +43,19 @@
       <Button fx:id="startButton" disable="true" layoutX="932.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#onStartMouseClicked" prefHeight="90.0" prefWidth="288.0" styleClass="myButton" text="Start" />
         <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="1042.0" layoutY="318.0" prefHeight="53.0" prefWidth="294.0" styleClass="error" text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="165.0" AnchorPane.rightAnchor="50.0" />
       <Button layoutX="39.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClick" prefHeight="77.0" prefWidth="81.0" styleClass="arrow" />
-      <ImageView fx:id="chatIcon" fitHeight="78.0" fitWidth="82.0" layoutX="46.0" layoutY="154.0" onMouseClicked="#setChatVisible" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/chat_icon.jpg" />
-         </image>
-      </ImageView>
+      <Button layoutX="39.0" layoutY="155.0" mnemonicParsing="false" onMouseClicked="#setChatVisible" prefHeight="77.0" prefWidth="81.0" styleClass="chat" />
       <Label fx:id="notificationDot" alignment="CENTER" layoutX="104.0" layoutY="141.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: red; -fx-background-radius: 100; -fx-font-size: 30;" text="0" textAlignment="CENTER" visible="false" />
       <AnchorPane fx:id="chatPane" layoutX="-415.0" prefHeight="720.0" prefWidth="415.0" style="-fx-background-color: white;">
          <children>
             <AnchorPane prefHeight="56.0" prefWidth="415.0" style="-fx-background-color: red;" AnchorPane.topAnchor="0.0">
                <children>
                   <Label alignment="CENTER" prefHeight="64.0" prefWidth="415.0" text="CHAT" />
-                  <ImageView fitHeight="56.0" fitWidth="52.0" onMouseClicked="#SetChatInvisible" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <image>
-                        <Image url="@../images/arrow.jpg" />
-                     </image>
-                  </ImageView>
+                  <Button layoutX="333.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#setChatInvisible" prefHeight="56.0" prefWidth="60.0" styleClass="arrow" />
                </children>
             </AnchorPane>
-            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutY="69.0" maxHeight="596.0" maxWidth="415.0" minHeight="596.0" minWidth="415.0" prefHeight="596.0" prefWidth="415.0" vbarPolicy="NEVER" AnchorPane.topAnchor="69.0">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutY="69.0" maxHeight="596.0" maxWidth="415.0" minHeight="584.0" minWidth="415.0" prefHeight="584.0" prefWidth="415.0" vbarPolicy="NEVER" AnchorPane.topAnchor="69.0">
                <content>
-                  <VBox fx:id="messagesVBox" fillWidth="false" minWidth="415.0" prefHeight="582.0" prefWidth="415.0" spacing="5.0" style="-fx-background-color: white;" />
+                  <VBox fx:id="messagesVBox" fillWidth="false" maxWidth="415.0" minWidth="415.0" prefHeight="0.0" prefWidth="415.0" spacing="5.0" style="-fx-background-color: white;" />
                </content>
             </ScrollPane>
             <AnchorPane prefHeight="56.0" prefWidth="415.0" style="-fx-background-color: red;" AnchorPane.bottomAnchor="0.0">

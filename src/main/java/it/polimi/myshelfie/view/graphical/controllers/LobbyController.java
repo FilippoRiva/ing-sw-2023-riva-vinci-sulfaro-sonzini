@@ -12,24 +12,22 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
-import java.time.Clock;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -39,7 +37,7 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected TextArea messageText;
     @FXML
-    protected ChoiceBox receiverChoice;
+    protected ChoiceBox<String> receiverChoice;
     @FXML
     protected AnchorPane chatPane;
     @FXML
@@ -59,9 +57,6 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected Button startButton;
 
-    @FXML
-    protected ImageView chatIcon;
-
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     boolean chatIsOpen = false;
     int notificationCont = 0;
@@ -71,6 +66,7 @@ public class LobbyController extends ViewController implements Initializable {
         lobbyNameLabel.setBackground(Background.fill(Color.rgb(229, 146, 93)));
         lobbyNameLabel.setText(viewBuffer.getLobbyModelView().getName());
 
+        messagesVBox.heightProperty().addListener(observable -> scrollPane.setVvalue(1D));
         updateChoiceBox();
         createListPlayers();
     }
@@ -149,36 +145,36 @@ public class LobbyController extends ViewController implements Initializable {
             notificationCont++;
             Platform.runLater(() -> notificationDot.setText(String.valueOf(notificationCont)));
         }
+
         Message message = viewBuffer.getPlayerChatModelView().getLastMessage();
 
         //create default messagePane
         AnchorPane messagePane = new AnchorPane();
         messagePane.setMaxWidth(415);
         messagePane.setMinWidth(415);
-        messagePane.setMinHeight(72);
 
         //create default textLabel
         Label userLabel = new Label(message.getSender());
-        userLabel.setStyle("-fx-font-size: 13;");
+        userLabel.setStyle("-fx-font-size: 13; -fx-text-fill: white; -fx-label-padding: 0 0 0 10");
         Label textLabel = new Label(message.getMessage());
-        textLabel.setStyle("-fx-font-size: 20;");
-        Label timeLabel = new Label("è ora");
-        timeLabel.setStyle("-fx-font-size: 10");
+        textLabel.setStyle("-fx-font-size: 20; -fx-label-padding: 0 0 0 10; -fx-wrap-text: true");
+        //textLabel.setWrapText(true);
+        Label timeLabel = new Label(message.getTimeHHmm());
+        timeLabel.setStyle("-fx-font-size: 10; -fx-label-padding: 0 0 0 10");
 
         VBox singleMessageVBox = new VBox();
         singleMessageVBox.setMaxWidth(415*0.8);
         singleMessageVBox.setMinWidth(415*0.3);
-        singleMessageVBox.setStyle("-fx-background-color: red");
-        textLabel.setPadding(new Insets(10));
-        textLabel.setWrapText(true);
 
         if(message.getSender().equals(GraphicalUI.getMyName())){
-            AnchorPane.setRightAnchor(singleMessageVBox,0D);                 //set messagePane to the right
+            singleMessageVBox.setStyle("-fx-background-color: red; -fx-background-radius: 20 0 20 20");
+            AnchorPane.setRightAnchor(singleMessageVBox,5D);                 //set messagePane to the right
             userLabel.setAlignment(Pos.TOP_LEFT);
             textLabel.setAlignment(Pos.TOP_LEFT);
             timeLabel.setAlignment(Pos.TOP_LEFT);
         } else {
-            AnchorPane.setLeftAnchor(singleMessageVBox,0D);                //set messagePane to the left
+            singleMessageVBox.setStyle("-fx-background-color: red; -fx-background-radius: 0 20 20 20");
+            AnchorPane.setLeftAnchor(singleMessageVBox,5D);                //set messagePane to the left
         }
 
         if(!message.getReceiver().equals(Messages.toEveryOne)) {
@@ -189,9 +185,9 @@ public class LobbyController extends ViewController implements Initializable {
             }
         }
 
-        Platform.runLater(()->{
-            singleMessageVBox.getChildren().addAll(userLabel,textLabel,timeLabel);
-            messagePane.getChildren().add(singleMessageVBox);
+        singleMessageVBox.getChildren().addAll(userLabel,textLabel,timeLabel);
+        messagePane.getChildren().add(singleMessageVBox);
+        Platform.runLater(()-> {
             messagesVBox.getChildren().add(messagePane);
         });
     }
@@ -216,9 +212,11 @@ public class LobbyController extends ViewController implements Initializable {
 
         fadeTransition.play();
         translateTransition.play();
+
+        Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
     @FXML
-    protected void SetChatInvisible() {
+    protected void setChatInvisible() {
         chatIsOpen = false;
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
         translateTransition.setByX(-415);
@@ -232,8 +230,8 @@ public class LobbyController extends ViewController implements Initializable {
     @FXML
     protected void sendMessage() {
         String receiver;
-        if(receiverChoice.getValue().toString().equals("Everyone")) receiver = Messages.toEveryOne;
-        else receiver = receiverChoice.getValue().toString();
+        if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
+        else receiver = receiverChoice.getValue();
 
         Message message = new Message(GraphicalUI.getMyName(), receiver, messageText.getText());
         Platform.runLater(() -> messageText.clear());
@@ -245,7 +243,7 @@ public class LobbyController extends ViewController implements Initializable {
         players.remove(GraphicalUI.getMyName());
         players.add("Everyone");
 
-        ObservableList obList = FXCollections.observableList(players);
+        ObservableList<String> obList = FXCollections.observableList(players);
         Platform.runLater(() -> {
             receiverChoice.setItems(obList);
             receiverChoice.setValue("Everyone");

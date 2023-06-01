@@ -74,6 +74,13 @@
     -fx-background-color: transparent;
 }
 
+.chat {
+    -fx-background-image: url('../images/chat_icon.jpg');
+    -fx-background-size: 100;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
+
 .chooseColumn {
     -fx-background-image: url('../images/arrow.jpg');
     -fx-background-size: 50;
