@@ -8,16 +8,36 @@ import it.polimi.myshelfie.network.ServerConnectionHandlerImpl;
 import it.polimi.myshelfie.network.ServerImpl;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.Collections;
+import java.util.Enumeration;
 
 
 public class ServerApp {
     public static void main (String[] args){
-        System.out.println("Server starting up");
+        String serverIP = "";
+        try {
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+            for(NetworkInterface net : Collections.list(netInterfaces)){
+                if(net.isUp() && !net.isLoopback()) {
+                    for(InetAddress addr : Collections.list(net.getInetAddresses())){
+                        if(!addr.getHostAddress().contains(":")){ //only IPv4
+                            serverIP = addr.getHostAddress();
+                            break;
+                        }
+                    }
+                }
+            }
+            if(serverIP.equals("")) serverIP = "localhost";
+        } catch (SocketException e) {
+            throw new RuntimeException("Unable to get Network Interfaces");
+        }
+        System.out.println("Server starting up over : "+serverIP);
+        System.setProperty("java.rmi.server.hostname",serverIP);
         ControllerImpl controller = new ControllerImpl();
         ModelImpl model = new ModelImpl();
         controller.setModel(model);

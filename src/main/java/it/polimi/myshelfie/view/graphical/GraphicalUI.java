@@ -35,7 +35,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         switch (evt) {
             case MODEL_UPDATE -> joinUpdate();
             case EXCEPTION_UPDATE -> exceptionUpdate();
-            case CHAT_UPDATE -> {}
+            case CHAT_UPDATE -> chatUpdate();
             case LOBBY_UPDATE -> lobbyUpdate();
             case GAME_UPDATE -> gameUpdate();
             case VIEW_TYPE_UPDATE -> viewTypeUpdate();
@@ -104,6 +104,12 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     private synchronized void exceptionUpdate() {
         currentController.displayError(viewBuffer.getClientExceptionsNotifierView().getLastException().getMessage());
     }
+    private synchronized void chatUpdate() {
+        if(currentState == InternalViewState.LOBBY)
+            ((LobbyController)currentController).addChatMessage();
+        else
+            ((GameController)currentController).addChatMessage();
+    }
     private synchronized void lobbyUpdate() {
         if(currentState == InternalViewState.LOBBY && viewBuffer.getLobbyModelView()!=null)
             ((LobbyController)currentController).refreshListPlayers();
@@ -113,24 +119,25 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             ((GameController)currentController).play();
     }
     private synchronized void viewTypeUpdate() {
-        switch (viewBuffer.getViewType()){
+        switch (viewBuffer.getViewType()) {
             case INIT -> {
-                if(currentState == InternalViewState.GAME && viewBuffer.getGameModelView().getCurrentState() != GameState.WIN){
-                    System.out.println("somebody crashed");
-                    changeScene("home"); //TODO display crash error
-                }else if(stage != null) changeScene("home");
+                if (stage != null) changeScene("home");
             }
             case LOBBY -> changeScene("lobby");
             case GAME -> {
                 changeScene("game");
                 gameUpdate();
-                if(viewBuffer.getLobbyModelView().getName().equals("test") && myName.startsWith("test")){
-                    AutoPlayer a = new AutoPlayer(viewBuffer,null);
+                if (viewBuffer.getLobbyModelView().getName().equals("test") && myName.startsWith("test")) {
+                    AutoPlayer a = new AutoPlayer(viewBuffer, null);
                     a.postGameStart(myName);
                 }
             }
-                case WIN -> changeScene("endGame");
+            case WIN -> changeScene("endGame");
+            case DISCONNECTION -> {
+                ((GameController) currentController).displayCrashError(
+                        viewBuffer.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
+                System.out.println(viewBuffer.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
             }
         }
+    }
 }
-

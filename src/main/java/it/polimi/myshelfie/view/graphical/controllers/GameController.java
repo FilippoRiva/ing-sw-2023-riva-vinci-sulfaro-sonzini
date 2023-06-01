@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.graphical.BookshelfView;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
@@ -19,6 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,6 +65,13 @@ public class GameController extends ViewController implements Initializable {
     protected Label descriptionLabel;
     @FXML
     protected Button button;
+
+    @FXML
+            protected Button crashButton;
+    @FXML protected Label crashLabel;
+
+    @FXML
+            protected Pane crashPane;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String myName = GraphicalUI.getMyName();
@@ -390,9 +401,10 @@ public class GameController extends ViewController implements Initializable {
                 Image imageTaken = getImage("tokens/"+oldTokens.get(oldTokens.size()-1).getValue()+".jpg");
                 takenTokens[i][previousPlayer] = imageTaken;
                 int finalI = i;
+                Image finalImageNew = imageNew;
                 Platform.runLater(() -> {
-                    if (finalI == 0) token1Image.setImage(imageNew);
-                    else token2Image.setImage(imageNew);
+                    if (finalI == 0) token1Image.setImage(finalImageNew);
+                    else token2Image.setImage(finalImageNew);
                 });
             }
             commonGoals[i] = fullGameModelView.getCommonGoals().get(i);
@@ -410,6 +422,19 @@ public class GameController extends ViewController implements Initializable {
         });
     }
 
+    public void displayCrashError(String message){
+        crashPane.setVisible(true);
+        crashLabel.setText(message);
+        crashLabel.setTextFill(Color.RED);
+        crashLabel.setBackground(Background.fill(Color.BLACK));
+        crashLabel.setVisible(true);
+    }
+
+    @FXML
+    protected void onCrashButtonMouseClicked(MouseEvent event){
+        viewBuffer.setView(ViewType.INIT);
+    }
+
     @FXML
     protected void onButtonMouseClicked(MouseEvent mouseEvent) {
         switch (viewBuffer.getGameModelView().getCurrentState()){
@@ -424,12 +449,14 @@ public class GameController extends ViewController implements Initializable {
                 if(chosenColumn == -1) displayError("choose a column");
                 else viewBuffer.insertRequest(chosenColumn);
             }
+
         }
     }
     @FXML
     protected void showDescription1(MouseEvent mouseEvent) {
         Platform.runLater(() -> {
             descriptionLabel.setText(commonGoals[0].getDescription());
+            descriptionLabel.setFont(Font.font("Kristen ITC", 20));
             descriptionLabel.setVisible(true);
         });
 
@@ -438,6 +465,7 @@ public class GameController extends ViewController implements Initializable {
     protected void showDescription2(MouseEvent mouseEvent) {
         Platform.runLater(() -> {
             descriptionLabel.setText(commonGoals[1].getDescription());
+            descriptionLabel.setFont(Font.font("Kristen ITC", 20));
             descriptionLabel.setVisible(true);
         });
     }
@@ -462,5 +490,8 @@ public class GameController extends ViewController implements Initializable {
     @Override
     public void onBackArrowClick() {
 
+    }
+
+    public void addChatMessage() {
     }
 }

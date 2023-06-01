@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: it.polimi.myshelfie.ClientApp
-Class-Path: javafx-base-19.0.2.jar javafx-base-19.0.2-linux.jar javafx-controls-19.0.2.jar javafx-controls-19.0.2-linux.jar javafx-fxml-19.0.2.jar javafx-fxml-19.0.2-linux.jar javafx-graphics-19.0.2.jar javafx-graphics-19.0.2-linux.jar

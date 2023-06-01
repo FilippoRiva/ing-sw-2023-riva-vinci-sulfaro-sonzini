@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model;
 
+import it.polimi.myshelfie.model.exceptions.DisconnectionException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
 import it.polimi.myshelfie.model.events.ExceptionEvent;
@@ -11,6 +12,13 @@ import java.util.List;
 
 public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierView> implements ClientExceptionsNotifier {
     List<Exception> exceptionList = new ArrayList<>();
+
+    @Override
+    public void notifyException(DisconnectionException exception){
+        exceptionList.add(exception);
+        setChanged();
+        notifyObservers(ExceptionEvent.DISCONNECTION_EXCEPTION, new ClientExceptionsNotifierView(this));
+    }
     @Override
     public synchronized void notifyException(Exception exception) {
         exceptionList.add(exception);
