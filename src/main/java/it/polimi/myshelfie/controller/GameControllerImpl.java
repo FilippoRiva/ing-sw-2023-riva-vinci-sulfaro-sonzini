@@ -152,8 +152,8 @@ public class GameControllerImpl implements GameController, ChatController{
         for(String player : clientsMap.keySet()){
             new Thread(()->{
                 try {
-                    clientsMap.get(player).send(new NetworkMessage(ViewType.INIT));
                     exceptionsNotifiersMap.get(player).notifyException(new DisconnectionException(disconnectedPlayerName));
+                    clientsMap.get(player).send(new NetworkMessage(ViewType.DISCONNECTION));
                 } catch (RemoteException ignored) {
                 }
             }).start();

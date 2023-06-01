@@ -9,6 +9,24 @@
     -fx-progress-color: yellow;
 }
 
+.pane{
+    -fx-background-color: white;
+    -fx-opacity: 1;
+}
+
+.crash-button{
+    -fx-background-color: grey;
+    -fx-text-fill: black;
+    -fx-font-family: "Kristen ITC";
+    -fx-font-size: 20;
+    -fx-font-weight :bold;
+}
+
+.crash-label{
+    -fx-font-family: "Arial";
+    -fx-text-fill: red;
+}
+
 .label {
     -fx-font-family: "Kristen ITC";
     -fx-font-size: 40;

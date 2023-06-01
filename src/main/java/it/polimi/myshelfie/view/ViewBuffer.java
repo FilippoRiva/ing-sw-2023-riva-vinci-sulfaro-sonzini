@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.chatting.Message;
+import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -10,7 +11,6 @@ import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class ViewBuffer extends View {
     private static ViewBuffer viewBuffer;
     ModelView modelView;
     ClientExceptionsNotifierView clientExceptionsNotifierView;
+    ClientExceptionsNotifierView disconnectedClientExceptionsNotifierView;
     PlayerChatModelView playerChatModelView;
     LobbyModelView lobbyModelView;
     FullGameModelView fullGameModelView;
@@ -174,11 +175,14 @@ public class ViewBuffer extends View {
     }
 
     @Override
-    public void setExceptionView(ClientExceptionsNotifierView exceptionView) {
+    public void setExceptionView(ClientExceptionsNotifierView exceptionView, ExceptionEvent evt) {
         synchronized (sync){
-            this.clientExceptionsNotifierView = exceptionView;
-            UINotifier.setChanged();
-            UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
+            if(evt == ExceptionEvent.NEW_EXCEPTION) {
+                this.clientExceptionsNotifierView = exceptionView;
+                UINotifier.setChanged();
+                UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
+            }
+            else this.disconnectedClientExceptionsNotifierView = exceptionView;
             sync.notifyAll();
         }
     }
@@ -345,6 +349,7 @@ public class ViewBuffer extends View {
                     oldGameModelView = null;
                     lobbyModelView = null;
                     playerChatModelView = null;
+                    disconnectedClientExceptionsNotifierView = null;
                 }
                 case LOBBY -> {
                     while (lobbyModelView == null) { //waits until lobbyModelView != null
@@ -364,6 +369,14 @@ public class ViewBuffer extends View {
                 }
                 case WIN -> {
                     while (fullGameModelView == null || fullGameModelView.getCurrentState() != GameState.WIN) {
+                        try {
+                            sync.wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+                case DISCONNECTION -> {
+                    while(disconnectedClientExceptionsNotifierView == null){
                         try {
                             sync.wait();
                         } catch (InterruptedException ignored) {
@@ -394,6 +407,10 @@ public class ViewBuffer extends View {
         return clientExceptionsNotifierView;
     }
 
+    public synchronized ClientExceptionsNotifierView getDisconnectedClientExceptionsNotifierView(){
+        return disconnectedClientExceptionsNotifierView;
+    }
+
     public synchronized PlayerChatModelView getPlayerChatModelView() {
         return playerChatModelView;
     }
@@ -408,24 +425,6 @@ public class ViewBuffer extends View {
 
     public synchronized ViewType getViewType() {
         return viewType;
-    }
-
-    public synchronized void debugDiff(){
-        if(this.gameDifferences==null) return;
-        boolean changedPlayer = isCurrentPlayerDiff();
-        String newPlayer = getCurrentPlayerDiff();
-        String lastPlayer = getLastPlayer();
-        boolean changedState = isCurrentStateDiff();
-        GameState newState = getCurrentStateDiff();
-        boolean remainingTilesChanged = isRemainingTilesDiff();
-        int newRemainingTiles = getRemainingTilesDiff();
-        HashMap<Position,ItemTile> livingRoomDiff = getLivingRoomDiff();
-        List<CommonGoalModelView> commonGoalDiff = getCommonGoalDiff();
-        int lastPlayerPointDiff = getLastPlayerPointsDiff();
-        List<Token> lastPlayerTokenDiff = getLastPlayerTokenDiff();
-        List<ItemTile> lastPlayerTakenTileDiff = getLastPlayerTakenTilesDiff();
-        boolean hasInserted = hasLastPlayerInsertedTiles();
-        int lastColumnUsed = getLastPlayerInsertedColumnPosition();
     }
 
     /**

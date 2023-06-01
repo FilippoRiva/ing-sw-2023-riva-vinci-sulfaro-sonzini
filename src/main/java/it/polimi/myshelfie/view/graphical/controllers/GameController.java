@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.graphical.BookshelfView;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
@@ -19,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import java.net.URL;
@@ -62,6 +65,13 @@ public class GameController extends ViewController implements Initializable {
     protected Label descriptionLabel;
     @FXML
     protected Button button;
+
+    @FXML
+            protected Button crashButton;
+    @FXML protected Label crashLabel;
+
+    @FXML
+            protected Pane crashPane;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String myName = GraphicalUI.getMyName();
@@ -412,6 +422,19 @@ public class GameController extends ViewController implements Initializable {
         });
     }
 
+    public void displayCrashError(String message){
+        crashPane.setVisible(true);
+        crashLabel.setText(message);
+        crashLabel.setTextFill(Color.RED);
+        crashLabel.setBackground(Background.fill(Color.BLACK));
+        crashLabel.setVisible(true);
+    }
+
+    @FXML
+    protected void onCrashButtonMouseClicked(MouseEvent event){
+        viewBuffer.setView(ViewType.INIT);
+    }
+
     @FXML
     protected void onButtonMouseClicked(MouseEvent mouseEvent) {
         switch (viewBuffer.getGameModelView().getCurrentState()){
@@ -426,6 +449,7 @@ public class GameController extends ViewController implements Initializable {
                 if(chosenColumn == -1) displayError("choose a column");
                 else viewBuffer.insertRequest(chosenColumn);
             }
+
         }
     }
     @FXML

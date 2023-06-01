@@ -1,1 +1,1 @@
-java --enable-preview -jar jar/server/ms_server.jar
+java -jar jar/server/ms_server.jar

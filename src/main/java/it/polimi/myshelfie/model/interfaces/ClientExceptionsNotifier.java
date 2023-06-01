@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.model.interfaces;
 
+import it.polimi.myshelfie.model.exceptions.DisconnectionException;
 import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
 import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.utils.Observer;
@@ -10,6 +11,8 @@ public interface ClientExceptionsNotifier {
      * @param exception is the new exception.
      */
     void notifyException(Exception exception);
+
+    void notifyException(DisconnectionException exception);
 
     /**
      * Add an exception observer.
