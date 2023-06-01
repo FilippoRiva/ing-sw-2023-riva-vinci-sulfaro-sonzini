@@ -11,7 +11,6 @@ import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -21,7 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import java.net.URL;
@@ -33,7 +31,7 @@ import java.util.stream.Collectors;
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 import static it.polimi.myshelfie.view.graphical.Images.getTileImage;
 
-public class GameController extends ViewController implements Initializable {
+public class GameController extends ChatController {
     @FXML
     protected GridPane livingRoomGrid;
     @FXML
@@ -67,11 +65,11 @@ public class GameController extends ViewController implements Initializable {
     protected Button button;
 
     @FXML
-            protected Button crashButton;
-    @FXML protected Label crashLabel;
-
+    protected Button crashButton;
     @FXML
-            protected Pane crashPane;
+    protected Label crashLabel;
+    @FXML
+    protected Pane crashPane;
 
     ViewBuffer viewBuffer = ViewBuffer.getInstance();
     String myName = GraphicalUI.getMyName();
@@ -88,6 +86,8 @@ public class GameController extends ViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        super.initialize(url, resourceBundle);
+
         FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
 
         int idPersonalGoal = fullGameModelView.getPlayer(myName).getPersonalGoals().get(0).getId();
@@ -423,11 +423,13 @@ public class GameController extends ViewController implements Initializable {
     }
 
     public void displayCrashError(String message){
-        crashPane.setVisible(true);
-        crashLabel.setText(message);
-        crashLabel.setTextFill(Color.RED);
-        crashLabel.setBackground(Background.fill(Color.BLACK));
-        crashLabel.setVisible(true);
+        Platform.runLater(() -> {
+            crashPane.setVisible(true);
+            crashLabel.setText(message);
+            crashLabel.setTextFill(Color.RED);
+            crashLabel.setBackground(Background.fill(Color.BLACK));
+            crashLabel.setVisible(true);
+        });
     }
 
     @FXML
@@ -490,8 +492,5 @@ public class GameController extends ViewController implements Initializable {
     @Override
     public void onBackArrowClick() {
 
-    }
-
-    public void addChatMessage() {
     }
 }

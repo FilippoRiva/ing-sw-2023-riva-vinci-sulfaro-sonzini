@@ -1,15 +1,10 @@
 package it.polimi.myshelfie.view.graphical;
 
-import it.polimi.myshelfie.model.GameState;
-import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.AutoPlayer;
 import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.ViewUpdate;
-import it.polimi.myshelfie.view.graphical.controllers.GameController;
-import it.polimi.myshelfie.view.graphical.controllers.JoinController;
-import it.polimi.myshelfie.view.graphical.controllers.LobbyController;
-import it.polimi.myshelfie.view.graphical.controllers.ViewController;
+import it.polimi.myshelfie.view.graphical.controllers.*;
 import it.polimi.myshelfie.view.textual.InternalViewState;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -105,10 +100,8 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         currentController.displayError(viewBuffer.getClientExceptionsNotifierView().getLastException().getMessage());
     }
     private synchronized void chatUpdate() {
-        if(currentState == InternalViewState.LOBBY)
-            ((LobbyController)currentController).addChatMessage();
-        else
-            ((GameController)currentController).addChatMessage();
+        if(currentState == InternalViewState.LOBBY || currentState == InternalViewState.GAME)
+            ((ChatController)currentController).addChatMessage();
     }
     private synchronized void lobbyUpdate() {
         if(currentState == InternalViewState.LOBBY && viewBuffer.getLobbyModelView()!=null)
