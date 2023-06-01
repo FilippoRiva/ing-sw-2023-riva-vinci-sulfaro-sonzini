@@ -68,3 +68,7 @@
     -fx-font-size: 15;
     -fx-font-weight: bold;
 }
+
+.choice-box > .label {
+    -fx-font-size: 10;
+}

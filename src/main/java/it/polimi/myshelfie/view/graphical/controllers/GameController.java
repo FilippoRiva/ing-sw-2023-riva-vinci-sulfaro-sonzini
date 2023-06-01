@@ -467,4 +467,7 @@ public class GameController extends ViewController implements Initializable {
     public void onBackArrowClick() {
 
     }
+
+    public void addChatMessage() {
+    }
 }
