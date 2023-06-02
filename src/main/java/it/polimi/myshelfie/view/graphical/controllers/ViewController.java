@@ -3,17 +3,28 @@ package it.polimi.myshelfie.view.graphical.controllers;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public abstract class ViewController {
+public abstract class ViewController implements Initializable {
     @FXML
     protected ProgressIndicator progress;
     @FXML
     protected Label errorLabel;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+
+    public abstract void setKeyListeners(Scene scene);
 
     public void displayError(String errorMessage){
         stopLoading();

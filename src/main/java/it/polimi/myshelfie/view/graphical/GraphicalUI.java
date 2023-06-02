@@ -71,6 +71,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         }
 
         currentController = fxmlLoader.getController();
+        currentController.setKeyListeners(scene);
         Platform.runLater(() -> stage.setScene(scene));
 
 
@@ -127,9 +128,9 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             }
             case WIN -> changeScene("endGame");
             case DISCONNECTION -> {
-                ((GameController) currentController).displayCrashError(
+                if(currentState == InternalViewState.GAME)
+                    ((GameController) currentController).displayCrashError(
                         viewBuffer.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
-                System.out.println(viewBuffer.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
             }
         }
     }

@@ -9,20 +9,19 @@ import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewBuffer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.text.Font;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class EndGameController extends ViewController implements Initializable {
+public class EndGameController extends ViewController {
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -76,6 +75,16 @@ public class EndGameController extends ViewController implements Initializable {
             addRowScoreboard(player, i);
             addColumnDetail(player, i);
         }
+    }
+
+    @Override
+    public void setKeyListeners(Scene scene) {
+        scene.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case ESCAPE -> onBackArrowClick();
+                case ENTER -> changeViewDetail();
+            }
+        });
     }
 
     private void addRowScoreboard(PlayerModelView player, int position){
@@ -137,7 +146,7 @@ public class EndGameController extends ViewController implements Initializable {
     }
 
     @FXML
-    protected void changeViewDetail(MouseEvent mouseEvent) {
+    protected void changeViewDetail() {
         Platform.runLater(() -> {
             if (!detailsGrid.isVisible()) {
                 detailsGrid.setVisible(true);

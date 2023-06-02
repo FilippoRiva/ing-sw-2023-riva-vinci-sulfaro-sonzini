@@ -5,12 +5,11 @@ import it.polimi.myshelfie.view.ViewBuffer;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
@@ -20,7 +19,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class JoinController extends ViewController implements Initializable {
+public class JoinController extends ViewController {
     @FXML
     protected TextField playerNameField;
     @FXML
@@ -35,8 +34,19 @@ public class JoinController extends ViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         createListLobbies();
     }
+
+    @Override
+    public void setKeyListeners(Scene scene) {
+        scene.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case ESCAPE -> onBackArrowClick();
+                case ENTER -> onJoinMouseClicked();
+            }
+        });
+    }
+
     @FXML
-    protected void onJoinMouseClicked(MouseEvent mouseEvent) {
+    protected void onJoinMouseClicked() {
         String playerName = playerNameField.getText();
 
         if (playerName.isEmpty()) {

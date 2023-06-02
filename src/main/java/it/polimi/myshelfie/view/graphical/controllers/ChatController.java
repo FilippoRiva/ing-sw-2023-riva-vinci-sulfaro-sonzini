@@ -12,10 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -25,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ChatController extends ViewController implements Initializable {
+public abstract class ChatController extends ViewController implements Initializable {
     @FXML
     protected Label notificationDot;
     @FXML
-    protected TextArea messageText;
+    protected TextField messageText;
     @FXML
     protected ChoiceBox<String> receiverChoice;
     @FXML
@@ -49,6 +47,8 @@ public class ChatController extends ViewController implements Initializable {
         updateChoiceBox();
     }
 
+    public abstract void setKeyListeners(Scene scene);
+
     @FXML
     protected void setChatVisible() {
         chatIsOpen = true;
@@ -64,7 +64,12 @@ public class ChatController extends ViewController implements Initializable {
         fadeTransition.play();
         translateTransition.play();
 
-        Platform.runLater(() -> chatScroll.setVvalue(1.0));
+        messageText.requestFocus();
+
+        Platform.runLater(() -> {
+            messageText.clear();
+            chatScroll.setVvalue(1.0);
+        });
     }
     @FXML
     protected void setChatInvisible() {

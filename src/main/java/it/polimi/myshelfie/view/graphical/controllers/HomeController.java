@@ -2,12 +2,9 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
+import javafx.scene.Scene;
 
-public class HomeController extends ViewController{
+public class HomeController extends ViewController {
     @FXML
     protected void onCreateChoice() {
         GraphicalUI.changeScene("create");
@@ -17,5 +14,20 @@ public class HomeController extends ViewController{
     protected void onJoinChoice() {
         GraphicalUI.changeScene("join");
         progress.setVisible(true);
+    }
+
+    @Override
+    public void setKeyListeners(Scene scene) {
+        scene.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case C -> onCreateChoice();
+                case J -> onJoinChoice();
+            }
+        });
+    }
+
+    @Override
+    protected void onBackArrowClick() {
+
     }
 }

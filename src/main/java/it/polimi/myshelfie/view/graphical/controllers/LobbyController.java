@@ -7,10 +7,10 @@ import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -39,24 +39,55 @@ public class LobbyController extends ChatController {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         super.initialize(url, resourceBundle);
+
         lobbyNameLabel.setBackground(Background.fill(Color.rgb(229, 146, 93)));
         lobbyNameLabel.setText(viewBuffer.getLobbyModelView().getName());
 
         createListPlayers();
     }
+
+    @Override
+    public void setKeyListeners(Scene scene) {
+        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+        scene.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case ESCAPE -> {
+                    if(chatIsOpen) setChatInvisible();
+                    else onBackArrowClick();
+                }
+                case ENTER -> {
+                    if(chatIsOpen) sendMessage();
+                    else if (lobbyModelView.isRoomOwner(GraphicalUI.getMyName()) &&
+                            lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
+                        onStartMouseClicked();
+                }
+                case PLUS -> {
+                    if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())) onMousePlusClicked();
+                }
+                case MINUS -> {
+                    if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())) onMouseMinusClicked();
+                }
+                case C -> {
+                    if(chatIsOpen) setChatInvisible();
+                    else setChatVisible();
+                }
+            }
+        });
+    }
+
     @FXML
-    protected void onStartMouseClicked(MouseEvent mouseEvent) {
+    protected void onStartMouseClicked() {
         viewBuffer.startRequest();
     }
 
     @FXML
-    protected void onMouseMinusClicked(MouseEvent mouseEvent) {
+    protected void onMouseMinusClicked() {
         if(!viewBuffer.removePlayer())
             displayError("cannot remove player!");
     }
 
     @FXML
-    protected void onMousePlusClicked(MouseEvent mouseEvent) {
+    protected void onMousePlusClicked() {
         if(!viewBuffer.addPlayer())
             displayError("cannot add player!");
     }

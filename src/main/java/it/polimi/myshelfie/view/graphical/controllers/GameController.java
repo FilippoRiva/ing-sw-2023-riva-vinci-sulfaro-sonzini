@@ -11,6 +11,7 @@ import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -114,6 +115,25 @@ public class GameController extends ChatController {
         displayLivingRoom();
         initPlayers();
     }
+
+    @Override
+    public void setKeyListeners(Scene scene) {
+        scene.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case ESCAPE -> {
+                    if(chatIsOpen) setChatInvisible();
+                }
+                case ENTER -> {
+                    if(chatIsOpen) sendMessage();
+                }
+                case C -> {
+                    if(chatIsOpen) setChatInvisible();
+                    else setChatVisible();
+                }
+            }
+        });
+    }
+
     private void initPlayers(){
         int i = 0;
         for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){

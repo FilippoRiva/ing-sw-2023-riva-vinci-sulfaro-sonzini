@@ -8,14 +8,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
 
 import java.awt.*;
 import java.net.URL;
@@ -133,6 +131,10 @@ public class EndGameControllerTest extends ViewController implements Initializab
         }
     }
 
+    @Override
+    public void setKeyListeners(Scene scene) {
+
+    }
     private void addRowScoreboard(PlayerModelView player, int position){
         Label nameLabel = new Label((position+1)+". "+player.getName());
         nameLabel.setStyle("-fx-font-size: 25");
