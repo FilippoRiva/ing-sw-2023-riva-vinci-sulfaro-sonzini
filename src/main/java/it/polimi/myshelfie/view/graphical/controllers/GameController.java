@@ -4,13 +4,13 @@ import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.graphical.BookshelfView;
-import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,7 +18,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 import static it.polimi.myshelfie.view.graphical.Images.getTileImage;
 
-public class GameController extends ChatController {
+public class GameController implements Initializable {
     @FXML
     protected GridPane livingRoomGrid;
     @FXML
@@ -64,7 +63,6 @@ public class GameController extends ChatController {
     protected Label descriptionLabel;
     @FXML
     protected Button button;
-
     @FXML
     protected Button crashButton;
     @FXML
@@ -72,9 +70,9 @@ public class GameController extends ChatController {
     @FXML
     protected Pane crashPane;
 
-    ViewBuffer viewBuffer = ViewBuffer.getInstance();
-    String myName = GraphicalUI.getMyName();
-    int numPlayers = viewBuffer.getLobbyModelView().getGameConfig().getNumPlayers();
+    ViewManager viewManager = ViewManager.getInstance();
+    String myName = ViewManager.getUsername();
+    int numPlayers; //from viewBuffer
     CommonGoalModelView[] commonGoals = new CommonGoalModelView[2];
     BookshelfView[] bookshelves = new BookshelfView[numPlayers];
     Image[][] takenTokens = new Image[2][numPlayers];
@@ -84,12 +82,16 @@ public class GameController extends ChatController {
     List<Position> selectedTiles;
     List<Integer> orderedTiles;
     int chosenColumn;
+    boolean chatIsOpen = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        super.initialize(url, resourceBundle);
+        System.out.println("initializing game controller");
+        System.out.println("initialized");
+    }
 
-        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+    public void gameStart() {
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
 
         int idPersonalGoal = fullGameModelView.getPlayer(myName).getPersonalGoals().get(0).getId();
         commonGoals[0] = fullGameModelView.getCommonGoals().get(0);
@@ -104,7 +106,7 @@ public class GameController extends ChatController {
         playerBookshelfLabel.setText(myName);
         playingLabel.setText("Playing " + fullGameModelView.getCurrentPlayerName());
 
-        for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
+        for(PlayerModelView pl : viewManager.getGameModelView().getPlayers()){
             if(pl.getName().equals(myName)) break;
             seeingPlayer++;
         }
@@ -116,10 +118,10 @@ public class GameController extends ChatController {
         initPlayers();
     }
 
-    @Override
     public void setKeyListeners(Scene scene) {
         scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()){
+                /*
                 case ESCAPE -> {
                     if(chatIsOpen) setChatInvisible();
                 }
@@ -130,13 +132,29 @@ public class GameController extends ChatController {
                     if(chatIsOpen) setChatInvisible();
                     else setChatVisible();
                 }
+                 */
             }
         });
     }
 
+    @FXML
+    public void setChatVisible(){
+
+    }
+
+    @FXML
+    public void setChatInvisible(){
+
+    }
+
+    @FXML
+    public void sendMessage(){
+
+    }
+
     private void initPlayers(){
         int i = 0;
-        for(PlayerModelView pl : viewBuffer.getGameModelView().getPlayers()){
+        for(PlayerModelView pl : viewManager.getGameModelView().getPlayers()){
             bookshelves[i] = new BookshelfView(pl.getName(), null);
             for(int j = 0 ; j<2 ; j++){
                 takenTokens[j][i] = Images.emptyToken;
@@ -159,7 +177,7 @@ public class GameController extends ChatController {
     }
 
     public synchronized void play(){
-        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
 
         //clean takenTilesImage
         Platform.runLater(() -> {
@@ -222,7 +240,7 @@ public class GameController extends ChatController {
         orderedTiles = new ArrayList<>();
 
         //skip organize if you took one tiles
-        if(selectedTiles.size() == 1) viewBuffer.organizeRequest(viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles());
+        if(selectedTiles.size() == 1) viewManager.organizeRequest(viewManager.getGameModelView().getCurrentPlayer().getTakenTiles());
         else Platform.runLater(() -> button.setText("Organize"));
     }
     private void insert() {
@@ -241,7 +259,7 @@ public class GameController extends ChatController {
     private void displayLivingRoom() {
         Platform.runLater(() -> livingRoomGrid.getChildren().clear());
 
-        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
         ItemTile[][] livingRoom = fullGameModelView.getLivingRoom();
         for(int i = 0 ; i < livingRoom.length ; i++){
             for(int j = 0 ; j < livingRoom.length ; j++){
@@ -257,9 +275,9 @@ public class GameController extends ChatController {
                     int finalI = i;
                     int finalJ = j;
                     image.setOnMouseClicked(mouseEvent -> {
-                        GameState currentState = viewBuffer.getGameModelView().getCurrentState();
+                        GameState currentState = viewManager.getGameModelView().getCurrentState();
                         if((currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
-                                && viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName)) {
+                                && viewManager.getGameModelView().getCurrentPlayerName().equals(myName)) {
                             Position position = new Position(finalI, finalJ);
                             if (selectedTiles.contains(position)) {
                                 Platform.runLater(() -> image.setEffect(new DropShadow()));
@@ -299,9 +317,9 @@ public class GameController extends ChatController {
         int index = selectedTiles.size()-1;
         Platform.runLater(() -> takenTilesImages[index].setImage(getTileImage(itemTile)));
         takenTilesImages[index].setOnMouseClicked(mouseEvent -> {
-            GameState currentState = viewBuffer.getGameModelView().getCurrentState();
+            GameState currentState = viewManager.getGameModelView().getCurrentState();
             if((currentState == GameState.ORGANIZE || currentState == GameState.LAST_ORGANIZE) &&
-                    viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName)) {
+                    viewManager.getGameModelView().getCurrentPlayerName().equals(myName)) {
                 if (!orderedTiles.contains(index)) {
                     Platform.runLater(() -> takenTilesImages[index].setEffect(new Glow()));
                     orderedTiles.add(index);
@@ -317,7 +335,7 @@ public class GameController extends ChatController {
         displayTakenTiles();
     }
     private void displayTakenTiles() {
-        List<ItemTile> takenTiles = viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles();
+        List<ItemTile> takenTiles = viewManager.getGameModelView().getCurrentPlayer().getTakenTiles();
         for(int i = 0 ; i < takenTiles.size(); i++){
             int finalI = i;
             Platform.runLater(() -> takenTilesImages[finalI].setImage(getTileImage(takenTiles.get(finalI))));
@@ -325,7 +343,7 @@ public class GameController extends ChatController {
     }
 
     private void updateInsert() {
-        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
         String currentPlayerName = fullGameModelView.getCurrentPlayerName();
 
         int k = 0;
@@ -368,9 +386,9 @@ public class GameController extends ChatController {
             if(myName.equals(seeingPlayerName)) personalGoalImage.setImage(myPersonalGoal);
             else personalGoalImage.setImage(Images.backPersonalGoal);
             insertBox.setVisible(myName.equals(seeingPlayerName) &&
-                    viewBuffer.getGameModelView().getCurrentPlayerName().equals(myName) &&
-                    (viewBuffer.getGameModelView().getCurrentState() == GameState.INSERT ||
-                            viewBuffer.getGameModelView().getCurrentState() == GameState.LAST_INSERT));
+                    viewManager.getGameModelView().getCurrentPlayerName().equals(myName) &&
+                    (viewManager.getGameModelView().getCurrentState() == GameState.INSERT ||
+                            viewManager.getGameModelView().getCurrentState() == GameState.LAST_INSERT));
         });
     }
     private GridPane createBookshelfGrid(){
@@ -407,7 +425,7 @@ public class GameController extends ChatController {
     }
 
     private void updateTokens(){
-        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
         int previousPlayer = fullGameModelView.getPlayers().indexOf(fullGameModelView.getCurrentPlayer())-1;
         if(previousPlayer == -1) previousPlayer = fullGameModelView.getPlayers().size()-1;
 
@@ -453,29 +471,29 @@ public class GameController extends ChatController {
     }
 
     @FXML
-    protected void onCrashButtonMouseClicked(MouseEvent event){
-        viewBuffer.setView(ViewType.INIT);
+    protected void onCrashButtonMouseClicked(){
+        viewManager.setView(ViewType.INIT);
     }
 
     @FXML
-    protected void onButtonMouseClicked(MouseEvent mouseEvent) {
-        switch (viewBuffer.getGameModelView().getCurrentState()){
+    protected void onButtonMouseClicked() {
+        switch (viewManager.getGameModelView().getCurrentState()){
             case DRAW, LAST_DRAW -> {
-                if(selectedTiles.size() == 0) displayError("select at least one tile");
-                else viewBuffer.drawRequest(selectedTiles.stream().map(x -> x.centered(viewBuffer.getGameModelView().getGameConfig().getLivingRoomSize())).collect(Collectors.toCollection(ArrayList::new)));
+                if(selectedTiles.size() == 0) {}//displayError("select at least one tile");
+                else viewManager.drawRequest(selectedTiles.stream().map(x -> x.centered(viewManager.getGameModelView().getGameConfig().getLivingRoomSize())).collect(Collectors.toCollection(ArrayList::new)));
             }
             case ORGANIZE, LAST_ORGANIZE ->
-                    viewBuffer.organizeRequest(orderedTiles.isEmpty() ? viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles() :
-                            orderedTiles.stream().map(viewBuffer.getGameModelView().getCurrentPlayer().getTakenTiles()::get).toList());
+                    viewManager.organizeRequest(orderedTiles.isEmpty() ? viewManager.getGameModelView().getCurrentPlayer().getTakenTiles() :
+                            orderedTiles.stream().map(viewManager.getGameModelView().getCurrentPlayer().getTakenTiles()::get).toList());
             case INSERT, LAST_INSERT -> {
-                if(chosenColumn == -1) displayError("choose a column");
-                else viewBuffer.insertRequest(chosenColumn);
+                if(chosenColumn == -1) {} //displayError("choose a column");
+                else viewManager.insertRequest(chosenColumn);
             }
 
         }
     }
     @FXML
-    protected void showDescription1(MouseEvent mouseEvent) {
+    protected void showDescription1() {
         Platform.runLater(() -> {
             descriptionLabel.setText(commonGoals[0].getDescription());
             descriptionLabel.setFont(Font.font("Kristen ITC", 20));
@@ -484,7 +502,7 @@ public class GameController extends ChatController {
 
     }
     @FXML
-    protected void showDescription2(MouseEvent mouseEvent) {
+    protected void showDescription2() {
         Platform.runLater(() -> {
             descriptionLabel.setText(commonGoals[1].getDescription());
             descriptionLabel.setFont(Font.font("Kristen ITC", 20));
@@ -492,25 +510,21 @@ public class GameController extends ChatController {
         });
     }
     @FXML
-    protected void hideDescription(MouseEvent mouseEvent) {
+    protected void hideDescription() {
         Platform.runLater(() -> descriptionLabel.setVisible(false));
     }
     @FXML
-    protected void prevPlayer(MouseEvent mouseEvent) {
+    protected void prevPlayer() {
         if(seeingPlayer ==0) seeingPlayer = numPlayers - 1;
         else seeingPlayer--;
         displayPlayerInfo();
         displayTokens();
     }
     @FXML
-    protected void nextPlayer(MouseEvent mouseEvent) {
+    protected void nextPlayer() {
         if(seeingPlayer ==numPlayers-1) seeingPlayer = 0;
         else seeingPlayer++;
         displayPlayerInfo();
         displayTokens();
-    }
-    @Override
-    public void onBackArrowClick() {
-
     }
 }

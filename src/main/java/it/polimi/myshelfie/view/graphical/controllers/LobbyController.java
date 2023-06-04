@@ -1,26 +1,46 @@
 package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.InternalViewState;
+import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.Animations;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
+import javafx.beans.binding.DoubleBinding;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
+import javafx.scene.layout.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
-public class LobbyController extends ChatController {
+public class LobbyController {
+    @FXML
+    protected ChoiceBox<Label> receiverChoice;
+    @FXML
+    protected VBox chatVBox;
+    @FXML
+    protected HBox chatTitle;
+    @FXML
+    protected ScrollPane chatScroll;
+    @FXML
+    protected HBox chatLowHBox;
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -33,120 +53,183 @@ public class LobbyController extends ChatController {
     protected Button plusButton;
     @FXML
     protected Button startButton;
+    @FXML
+    protected ImageView clearBackground;
+    @FXML
+    protected ImageView scrollImage;
 
-    ViewBuffer viewBuffer = ViewBuffer.getInstance();
+    boolean chatIsOpen = false;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        super.initialize(url, resourceBundle);
-
-        lobbyNameLabel.setBackground(Background.fill(Color.rgb(229, 146, 93)));
-        lobbyNameLabel.setText(viewBuffer.getLobbyModelView().getName());
-
-        createListPlayers();
-    }
-
-    @Override
-    public void setKeyListeners(Scene scene) {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+    public void setKeyListeners() {
+        Scene scene = GraphicalUI.stage.getScene();
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         scene.setOnKeyPressed(keyEvent -> {
+            System.out.println(keyEvent.getText());
             switch (keyEvent.getCode()){
-                case ESCAPE -> {
-                    if(chatIsOpen) setChatInvisible();
-                    else onBackArrowClick();
-                }
+                /*
                 case ENTER -> {
                     if(chatIsOpen) sendMessage();
-                    else if (lobbyModelView.isRoomOwner(GraphicalUI.getMyName()) &&
+                    else if (lobbyModelView.isRoomOwner(ViewManager.getUsername()) &&
                             lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
                         onStartMouseClicked();
-                }
-                case PLUS -> {
-                    if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())) onMousePlusClicked();
-                }
-                case MINUS -> {
-                    if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())) onMouseMinusClicked();
                 }
                 case C -> {
                     if(chatIsOpen) setChatInvisible();
                     else setChatVisible();
+                }
+                 */
+                case ESCAPE -> {
+                    //if(chatIsOpen) setChatInvisible();
+                    ViewManager.getInstance().exitRequest();
+                    GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+                }
+                case PLUS -> {
+                    if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMousePlusClicked();
+                }
+                case MINUS -> {
+                    if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMouseMinusClicked();
                 }
             }
         });
     }
 
     @FXML
+    protected Label errorLabel;
+    private final ViewManager viewManager = ViewManager.getInstance();
+    private PreGameController preGameController;
+
+    public void initialize(ImageView homeBanner,PreGameController preGameController){
+        Stage stage = GraphicalUI.stage;
+        DoubleBinding maxHeight = stage.heightProperty().divide(3).multiply(2);
+
+        //CustomBindings.bindSize(mainHBox,stage.widthProperty(),maxHeight);
+        CustomBindings.bindSize(chatVBox,stage.widthProperty().divide(4),maxHeight);
+        CustomBindings.bindSize(chatScroll, chatVBox.maxWidthProperty(),null);
+        //CustomBindings.bindSize(rightVBox,stage.widthProperty().divide(3).multiply(2),maxHeight);
+        CustomBindings.bindSize(scrollImage,stage.widthProperty().divide(3).multiply(2),maxHeight.divide(1.5));
+        CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
+        //Platform.runLater(()->mainHBox.getChildren().remove(leftVBox));
+        this.preGameController = preGameController;
+    }
+
+    public void refresh(){
+        Platform.runLater(()-> lobbyNameLabel.setText(viewManager.getLobbyModelView().getName()));
+        updateListPlayers();
+    }
+    @FXML
     protected void onStartMouseClicked() {
-        viewBuffer.startRequest();
+        viewManager.startRequest();
     }
 
     @FXML
     protected void onMouseMinusClicked() {
-        if(!viewBuffer.removePlayer())
-            displayError("cannot remove player!");
+        if(!viewManager.removePlayer()) {
+            Animations.buttonError(minusButton).play();
+        }
     }
 
     @FXML
     protected void onMousePlusClicked() {
-        if(!viewBuffer.addPlayer())
-            displayError("cannot add player!");
-    }
-
-    public void refreshListPlayers(){
-        Platform.runLater(() -> playersVBox.getChildren().clear());
-        updateChoiceBox();
-        createListPlayers();
-    }
-
-    private void createListPlayers(){
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
-        List<String> playersIn = lobbyModelView.getPlayers();
-
-        for(String player : playersIn){
-            Label label = new Label(player);
-            label.setMaxWidth(837);
-            label.setTextFill(Color.WHITE);
-            label.setPadding(new Insets(0, 0, 0, 80));
-
-            if(lobbyModelView.isRoomOwner(player)) {
-                ImageView image = new ImageView(Images.getImage("crown.png"));
-                image.setPreserveRatio(true);
-                image.setFitWidth(0);
-                image.setFitHeight(60);
-                label.setPadding(new Insets(0));
-                HBox hBox = new HBox(image, label);
-                hBox.setSpacing(20);
-                Platform.runLater(() -> playersVBox.getChildren().add(hBox));
-            }
-            else if(player.equals(GraphicalUI.getMyName())) {
-                label.setTextFill(Color.rgb(218, 106, 45));
-            }
-
-            if(!lobbyModelView.isRoomOwner(player))
-                Platform.runLater(() -> playersVBox.getChildren().add(label));
+        if(!viewManager.addPlayer()) {
+            Animations.buttonError(plusButton).play();
         }
-
-        int currentPlayersIn = lobbyModelView.getPlayers().size();
-        int maxNumPlayers = lobbyModelView.getGameConfig().getNumPlayers();
-        if(lobbyModelView.isRoomOwner(GraphicalUI.getMyName())){
-            Platform.runLater(() -> {
-                minusButton.setDisable(false);
-                plusButton.setDisable(false);
-                startButton.setDisable(currentPlayersIn != maxNumPlayers);
-            });
-        }else{
-            Platform.runLater(() -> {
-                minusButton.setDisable(true);
-                plusButton.setDisable(true);
-                startButton.setDisable(true);
-            });
-        }
-        Platform.runLater(() -> playersInLabel.setText(currentPlayersIn + "/" + maxNumPlayers));
     }
 
-    @Override
-    public void onBackArrowClick() {
-        viewBuffer.exitRequest();
-        super.onBackArrowClick();
+    public void updateListPlayers(){
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
+        //generates the nodes to add;
+        Task<List<Node>> task = new Task<>() {
+            @Override
+            protected List<Node> call() {
+                List<Node> playersNodes = new ArrayList<>();
+                List<String> playersIn = lobbyModelView.getPlayers();
+
+                for(String player : playersIn){
+                    Label label = new Label(player);
+                    label.setTextFill(Color.WHITE);
+                    label.setTextAlignment(TextAlignment.LEFT);
+
+                    if(lobbyModelView.isRoomOwner(player)) {
+                        ImageView image = new ImageView(Images.getImage("crown.png"));
+                        image.setPreserveRatio(true);
+                        image.setFitWidth(30);
+                        image.setFitHeight(30);
+                        HBox hBox = new HBox(image, label);
+                        hBox.setSpacing(10);
+                        hBox.setAlignment(Pos.CENTER);
+                        HBox.setHgrow(label, Priority.ALWAYS);
+                        playersNodes.add(hBox);
+                    }
+                    else if(player.equals(ViewManager.getUsername())) {
+                        label.setTextFill(Color.rgb(218, 106, 45));
+                    }
+
+                    if(!lobbyModelView.isRoomOwner(player))
+                        playersNodes.add(label);
+                }
+                return playersNodes;
+            }
+        };
+
+        task.setOnSucceeded((event)->{
+            int currentPlayersIn = lobbyModelView.getPlayers().size();
+            int maxNumPlayers = lobbyModelView.getGameConfig().getNumPlayers();
+            List<Node> playersNodes;
+            try {
+                playersNodes = task.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            //clears the nodes and adds the new ones
+            List<Node> finalPlayersNodes = playersNodes;
+            Platform.runLater(() -> {
+                playersVBox.getChildren().clear();
+                playersVBox.getChildren().addAll(finalPlayersNodes);
+                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())){
+                    minusButton.setDisable(false);
+                    plusButton.setDisable(false);
+                    startButton.setDisable(currentPlayersIn != maxNumPlayers);
+                }else{
+                    minusButton.setDisable(true);
+                    plusButton.setDisable(true);
+                    startButton.setDisable(true);
+                }
+                playersInLabel.setText(currentPlayersIn + "/" + maxNumPlayers);
+            });
+        });
+
+        new Thread(task).start();
     }
+
+    public void reset() {
+        Platform.runLater(()->{
+            lobbyNameLabel.setText("lobby");
+            playersVBox.getChildren().clear();
+        });
+    }
+
+    /*
+    @FXML
+    protected void setChatVisible(){
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
+        translateTransition.setByX(+415);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+
+        fadeTransition.play();
+        translateTransition.play();
+    }
+    @FXML
+    protected void SetChatInvisible() {
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
+        translateTransition.setByX(-415);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+
+        fadeTransition.play();
+        translateTransition.play();
+    }
+     */
 }

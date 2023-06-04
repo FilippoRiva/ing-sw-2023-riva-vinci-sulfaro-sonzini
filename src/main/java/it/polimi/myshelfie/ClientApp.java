@@ -2,7 +2,7 @@ package it.polimi.myshelfie;
 
 import it.polimi.myshelfie.network.*;
 import it.polimi.myshelfie.utils.Observer;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.textual.CLIInputReader;
@@ -56,7 +56,7 @@ public class ClientApp {
             }
         }
 
-        ViewBuffer viewBuffer = ViewBuffer.getInstance();
+        ViewManager viewManager = ViewManager.getInstance();
 
         boolean connected = false;
         while(!connected){
@@ -68,8 +68,8 @@ public class ClientApp {
                     System.out.println("   !! Not a valid hostname");
                 } else {
                     if(!ip.equals("")) serverIP = ip;
-                    if(networkChoice == 1) startSocketConnection(viewBuffer);
-                    else startRMIConnection(viewBuffer);
+                    if(networkChoice == 1) startSocketConnection(viewManager);
+                    else startRMIConnection(viewManager);
                     connected = true;
                 }
             } catch (IOException e) {
@@ -79,16 +79,16 @@ public class ClientApp {
 
         List<String> inputParameters = new ArrayList<>();
         Observer<ViewUpdate, Object> view;
-        if(viewChoice == 1) view = new TextualUI(viewBuffer,inputParameters);
+        if(viewChoice == 1) view = new TextualUI(viewManager,inputParameters);
         else view = new GraphicalUI();
-        viewBuffer.addUI(view);
-        if(viewChoice==1) new Thread(()->new CLIInputReader((TextualUI) view,viewBuffer,inputParameters)).start();
+        viewManager.addUI(view);
+        if(viewChoice==1) new Thread(()->new CLIInputReader((TextualUI) view, viewManager,inputParameters)).start();
         else {
             ((GraphicalUI)view).startGUI();
         }
     }
 
-    private static void startRMIConnection(ViewBuffer viewBuffer) throws RemoteException {
+    private static void startRMIConnection(ViewManager viewManager) throws RemoteException {
         String clientIP = "";
         try {
             Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -116,12 +116,12 @@ public class ClientApp {
         } catch (NotBoundException e) {
             throw new RemoteException("", e);
         }
-        server.connect(new ClientImpl(viewBuffer));
+        server.connect(new ClientImpl(viewManager));
     }
 
-    private static void startSocketConnection(ViewBuffer viewBuffer) throws RemoteException {
+    private static void startSocketConnection(ViewManager viewManager) throws RemoteException {
         ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(serverIP, 54321);
-        ClientImpl client = new ClientImpl(viewBuffer);
+        ClientImpl client = new ClientImpl(viewManager);
         client.handshake(serverStub);
         new Thread(() -> {
             while(true) {

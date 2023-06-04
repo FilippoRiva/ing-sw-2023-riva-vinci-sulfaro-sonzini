@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.CreateController">
-    <children>
-        <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Image url="@../images/background.png" />
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.CreateController">
+   <children>
+        <ImageView fx:id="backgroundClear" cache="true" cacheHint="SPEED" pickOnBounds="true">
+            <Image url="@../images/lightWood.jpg" />
         </ImageView>
-        <Label layoutX="42.0" layoutY="354.0" prefHeight="100.0" prefWidth="400.0" text="Room name" textFill="#302f2f"
-               AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="320.0"/>
-        <TextField fx:id="lobbyNameField" layoutX="564.0" layoutY="348.0" prefHeight="100.0" prefWidth="600.0"
-                   promptText="Room name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="320.0"/>
-        <Label layoutX="50.0" layoutY="461.0" prefHeight="100.0" prefWidth="400.0" text="Player name" textFill="#302f2f"
-               AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="460.0"/>
-        <TextField fx:id="playerNameField" layoutX="572.0" layoutY="455.0" prefHeight="100.0" prefWidth="600.0"
-                   promptText="Player name" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="460.0"/>
-        <Label fx:id="errorLabel" layoutX="18.0" layoutY="637.0" prefHeight="46.0" prefWidth="372.0" styleClass="error"
-               text="error" textFill="RED" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="20.0"/>
-      <Button layoutX="474.0" layoutY="591.0" mnemonicParsing="false" onMouseClicked="#onCreateMouseClicked" prefHeight="90.0" prefWidth="297.0" styleClass="myButton" text="Create">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                    <Label prefHeight="90.0" prefWidth="400.0" text="Room name" textFill="#302f2f" />
+                    <TextField fx:id="lobbyNameField" prefHeight="90.0" prefWidth="600.0" promptText="Room name" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                    <Label prefHeight="90.0" prefWidth="400.0" text="Player name" textFill="#302f2f" />
+                    <TextField fx:id="playerNameField" prefHeight="90.0" prefWidth="600.0" promptText="Player name" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                    <Label fx:id="createErrorLabel" prefHeight="90.0" prefWidth="300.0" styleClass="error" text="error" textFill="RED" visible="false" />
+                  <Button fx:id="createButton" maxHeight="70.0" maxWidth="300.0" minHeight="90.0" minWidth="300.0" mnemonicParsing="false" onMouseClicked="#onCreateMouseClicked" prefHeight="70.0" prefWidth="300.0" styleClass="myButton" text="Create">
       </Button>
-      <Button layoutX="49.0" layoutY="48.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClick" prefHeight="77.0" prefWidth="86.0" styleClass="arrow" />
-      <ProgressIndicator fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
-    </children>
-</AnchorPane>
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>

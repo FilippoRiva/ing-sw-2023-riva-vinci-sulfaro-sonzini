@@ -94,6 +94,15 @@
     -fx-font-weight: bold;
 }
 
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane *.split-pane-divider {
+    -fx-padding: 0 1 0 1;
+    -fx-background-color: transparent;
+}
+
 .choice-box > .label {
     -fx-font-size: 10;
 }

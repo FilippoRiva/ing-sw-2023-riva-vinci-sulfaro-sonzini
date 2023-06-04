@@ -2,8 +2,7 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.chatting.Messages;
-import it.polimi.myshelfie.view.ViewBuffer;
-import it.polimi.myshelfie.view.graphical.GraphicalUI;
+import it.polimi.myshelfie.view.ViewManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public abstract class ChatController extends ViewController implements Initializable {
+public abstract class ChatController implements Initializable {
     @FXML
     protected Label notificationDot;
     @FXML
@@ -37,7 +36,7 @@ public abstract class ChatController extends ViewController implements Initializ
     @FXML
     protected VBox messagesVBox;
 
-    ViewBuffer viewBuffer = ViewBuffer.getInstance();
+    ViewManager viewBuffer = ViewManager.getInstance();
     boolean chatIsOpen = false;
     int notificationCont = 0;
 
@@ -89,14 +88,14 @@ public abstract class ChatController extends ViewController implements Initializ
         if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
         else receiver = receiverChoice.getValue();
 
-        Message message = new Message(GraphicalUI.getMyName(), receiver, messageText.getText());
+        Message message = new Message(ViewManager.getUsername(), receiver, messageText.getText());
         Platform.runLater(() -> messageText.clear());
         viewBuffer.sendChatMessage(message);
     }
 
     protected void updateChoiceBox() {
         List<String> players = new ArrayList<>(viewBuffer.getLobbyModelView().getPlayers());
-        players.remove(GraphicalUI.getMyName());
+        players.remove(ViewManager.getUsername());
         players.add("Everyone");
 
         ObservableList<String> obList = FXCollections.observableList(players);
@@ -133,7 +132,7 @@ public abstract class ChatController extends ViewController implements Initializ
         singleMessageVBox.setMaxWidth(415*0.8);
         singleMessageVBox.setMinWidth(415*0.3);
 
-        if(message.getSender().equals(GraphicalUI.getMyName())){
+        if(message.getSender().equals(ViewManager.getUsername())){
             singleMessageVBox.setStyle("-fx-background-color: red; -fx-background-radius: 20 0 20 20");
             AnchorPane.setRightAnchor(singleMessageVBox,5D);                 //set messagePane to the right
             userLabel.setAlignment(Pos.TOP_LEFT);
@@ -145,7 +144,7 @@ public abstract class ChatController extends ViewController implements Initializ
         }
 
         if(!message.getReceiver().equals(Messages.toEveryOne)) {
-            if(message.getSender().equals(GraphicalUI.getMyName())){
+            if(message.getSender().equals(ViewManager.getUsername())){
                 userLabel.setText("Private to : "+message.getReceiver());
             } else {
                 userLabel.setText("Private from : "+message.getSender());

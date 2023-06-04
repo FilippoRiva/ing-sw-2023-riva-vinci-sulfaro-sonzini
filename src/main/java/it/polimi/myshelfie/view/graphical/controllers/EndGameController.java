@@ -6,9 +6,12 @@ import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.InternalViewState;
+import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,7 +24,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class EndGameController extends ViewController {
+public class EndGameController implements Initializable {
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -45,13 +48,13 @@ public class EndGameController extends ViewController {
     @FXML
     protected Button detailsButton;
 
-    ViewBuffer viewBuffer = ViewBuffer.getInstance();
+    ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
-        FullGameModelView fullGameModelView = viewBuffer.getGameModelView();
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
         playersPodium = new Label[]{player1, player2, player3};
         pointsPodium = new Label[]{points1, points2, points3};
 
@@ -77,7 +80,6 @@ public class EndGameController extends ViewController {
         }
     }
 
-    @Override
     public void setKeyListeners(Scene scene) {
         scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()){
@@ -161,7 +163,7 @@ public class EndGameController extends ViewController {
     }
     @FXML
     protected void onBackArrowClick(){
-        viewBuffer.exitRequest();
-        super.onBackArrowClick();
+        viewManager.exitRequest();
+        GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
     }
 }

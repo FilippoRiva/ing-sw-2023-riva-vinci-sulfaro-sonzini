@@ -1,38 +1,42 @@
 package it.polimi.myshelfie.view.graphical;
 
 import it.polimi.myshelfie.utils.Observer;
-import it.polimi.myshelfie.view.AutoPlayer;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.controllers.*;
-import it.polimi.myshelfie.view.textual.InternalViewState;
+import it.polimi.myshelfie.view.InternalViewState;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class GraphicalUI extends Application implements Observer<ViewUpdate, Object> {
-    private static final double SCALE = (double) 2/3; //HD 720p
-    ViewBuffer viewBuffer = ViewBuffer.getInstance();
-    static Stage stage;
-
-    static ViewController currentController;
-    static InternalViewState currentState;
-    static String myName;
+    ViewManager viewManager = ViewManager.getInstance();
+    public static Stage stage;
+    public static MainViewController mainViewController;
 
     @Override
     public synchronized void update(ViewUpdate evt, Object object) {
+        if(mainViewController==null) return;
         switch (evt) {
-            case MODEL_UPDATE -> joinUpdate();
-            case EXCEPTION_UPDATE -> exceptionUpdate();
-            case CHAT_UPDATE -> chatUpdate();
-            case LOBBY_UPDATE -> lobbyUpdate();
-            case GAME_UPDATE -> gameUpdate();
+            case MODEL_UPDATE -> mainViewController.joinUpdate();
+            case EXCEPTION_UPDATE -> mainViewController.exceptionUpdate();
+            case CHAT_UPDATE -> {}
+            case LOBBY_UPDATE -> mainViewController.lobbyUpdate();
+            case GAME_UPDATE -> mainViewController.gameUpdate();
             case VIEW_TYPE_UPDATE -> viewTypeUpdate();
         }
     }
@@ -44,94 +48,83 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
     @Override
     public void start(Stage stage) throws Exception {
         GraphicalUI.stage = stage;
-        changeScene("home");
-
+        //stage config
         stage.setTitle("My Shelfie");
-        stage.setResizable(false);
-
+        stage.setResizable(true);
+        stage.setMaximized(true);
+        stage.setFullScreenExitHint("");
+        stage.setMinHeight((double) 1080 /2);
+        stage.setMinWidth((double) 1920 /2);
+        //loading icon
         URL iconUrl = getClass().getResource("/images/Icon.png");
         assert iconUrl != null;
         Image icon = new Image(iconUrl.openStream());
         stage.getIcons().add(icon);
-
+        //close action
         stage.setOnCloseRequest(event -> {
             Platform.exit();
             System.exit(0);
         });
+        //setting loading page
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/lightWood.jpg")));
+        ImageView loadingImage = new ImageView(image);
+        ProgressBar progressBar = new ProgressBar(0);
+        StackPane loadingPane = new StackPane(loadingImage,progressBar);
+        loadingPane.setAlignment(Pos.CENTER);
+        StackPane root = new StackPane();
+        root.getChildren().add(loadingPane);
+        Scene scene = new Scene(root);
+        loadingImage.setPreserveRatio(false);
+        loadingImage.fitHeightProperty().bind(scene.heightProperty());
+        loadingImage.fitWidthProperty().bind(scene.widthProperty());
+        stage.setScene(scene);
+
+        //showing stage
         stage.show();
-    }
 
-    public static void changeScene(String fxmlName) {
-        FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/"+fxmlName+"-view.fxml"));
-        Scene scene;
-        try {
-            scene = new Scene(fxmlLoader.load(), 1920 * SCALE, 1080 * SCALE); //(1280, 720)
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        currentController = fxmlLoader.getController();
-        currentController.setKeyListeners(scene);
-        Platform.runLater(() -> stage.setScene(scene));
-
-
-        currentState = switch (fxmlName){
-            case "home" -> InternalViewState.INIT;
-            case "create" -> InternalViewState.CREATE;
-            case "join" -> InternalViewState.JOIN;
-            case "lobby" -> InternalViewState.LOBBY;
-            case "game" -> InternalViewState.GAME;
-            case "endGame" -> InternalViewState.WIN;
-            default -> throw new IllegalStateException("Unexpected value: " + fxmlName);
-        };
-    }
-
-    public static void setMyName(String myName) {
-        GraphicalUI.myName = myName;
-    }
-    public static String getMyName() {
-        return myName;
-    }
-
-    private synchronized void joinUpdate() {
-        if(currentState == InternalViewState.JOIN)
-            ((JoinController)currentController).refreshListLobbies();
-    }
-    private synchronized void exceptionUpdate() {
-        currentController.displayError(viewBuffer.getClientExceptionsNotifierView().getLastException().getMessage());
-    }
-    private synchronized void chatUpdate() {
-        if(currentState == InternalViewState.LOBBY || currentState == InternalViewState.GAME)
-            ((ChatController)currentController).addChatMessage();
-    }
-    private synchronized void lobbyUpdate() {
-        if(currentState == InternalViewState.LOBBY && viewBuffer.getLobbyModelView()!=null)
-            ((LobbyController)currentController).refreshListPlayers();
-    }
-    private synchronized void gameUpdate() {
-        if(currentState == InternalViewState.GAME)
-            ((GameController)currentController).play();
-    }
-    private synchronized void viewTypeUpdate() {
-        switch (viewBuffer.getViewType()) {
-            case INIT -> {
-                if (stage != null) changeScene("home");
-            }
-            case LOBBY -> changeScene("lobby");
-            case GAME -> {
-                changeScene("game");
-                gameUpdate();
-                if (viewBuffer.getLobbyModelView().getName().equals("test") && myName.startsWith("test")) {
-                    AutoPlayer a = new AutoPlayer(viewBuffer, null);
-                    a.postGameStart(myName);
+        //loading fxml
+        Task<AnchorPane> task = new Task<>(){
+            @Override
+            protected AnchorPane call() {
+                AnchorPane pane;
+                FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/main-view.fxml"));
+                updateProgress(2,10);
+                try {
+                    updateProgress(3,10);
+                    pane = fxmlLoader.load();
+                    updateProgress(6,10);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
+                mainViewController = fxmlLoader.getController();
+                updateProgress(10,10);
+                return pane;
             }
-            case WIN -> changeScene("endGame");
-            case DISCONNECTION -> {
-                if(currentState == InternalViewState.GAME)
-                    ((GameController) currentController).displayCrashError(
-                        viewBuffer.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
+        };
+        task.setOnSucceeded((event)->{
+            AnchorPane pane;
+            try {
+                pane = task.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
             }
+            Platform.runLater(()->{
+                root.getChildren().addAll(pane.getChildren());
+                root.getChildren().remove(loadingPane);
+            });
+        });
+        progressBar.progressProperty().bind(task.progressProperty());
+        new Thread(task).start();
+    }
+
+    private synchronized void viewTypeUpdate() {
+        switch (viewManager.getViewType()) {
+            case INIT -> mainViewController.changeView(InternalViewState.INIT);
+            case LOBBY -> mainViewController.changeView(InternalViewState.LOBBY);
+            case GAME -> mainViewController.changeView(InternalViewState.GAME);
+            case WIN -> mainViewController.changeView(InternalViewState.WIN);
+            case DISCONNECTION -> mainViewController.changeView(InternalViewState.DISCONNECTION);
         }
     }
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.MainViewController">
+   <children>
+      <fx:include fx:id="preGame" source="pre-game-view.fxml" AnchorPane.topAnchor="0.0" />
+      <fx:include fx:id="game" source="game-view.fxml" />
+   </children>
+</AnchorPane>

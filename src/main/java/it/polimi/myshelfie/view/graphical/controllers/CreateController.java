@@ -1,27 +1,36 @@
 package it.polimi.myshelfie.view.graphical.controllers;
 
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.InternalViewState;
+import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.Animations;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 
-public class CreateController extends ViewController{
+public class CreateController {
     @FXML
     protected TextField lobbyNameField;
     @FXML
     protected TextField playerNameField;
+    @FXML
+    protected ImageView backgroundClear;
+    @FXML
+    protected Button createButton;
+    @FXML
+    protected Label createErrorLabel;
+    PreGameController preGameController;
+    ViewManager viewManager = ViewManager.getInstance();
 
-    ViewBuffer viewBuffer = ViewBuffer.getInstance();
-
-    @Override
-    public void setKeyListeners(Scene scene) {
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()){
-                case ESCAPE -> onBackArrowClick();
-                case ENTER -> onCreateMouseClicked();
-            }
-        });
+    public void initialize(ImageView banner,PreGameController preGameController){
+        CustomBindings.bindLowerPreGamePane(backgroundClear,banner);
+        Animations.applyButtonAnimation(createButton);
+        this.preGameController = preGameController;
     }
 
     @FXML
@@ -29,12 +38,30 @@ public class CreateController extends ViewController{
         String playerName = playerNameField.getText();
         String lobbyName = lobbyNameField.getText();
 
-        if (playerName.isEmpty() || lobbyName.isEmpty()) {
-            displayError("compile all the fields!");
-        }else {
-            viewBuffer.createRequest(lobbyName, playerName);
-            GraphicalUI.setMyName(playerName);
-            startLoading();
+        if (lobbyName.isEmpty()) {
+            Animations.emptyFieldError(lobbyNameField).play();
+        } else if (playerName.isEmpty()) {
+            Animations.emptyFieldError(playerNameField).play();
+        } else {
+            viewManager.createRequest(lobbyName, playerName);
+            ViewManager.setUsername(playerName);
         }
+    }
+
+    public void setKeyListeners() {
+        Scene scene = GraphicalUI.stage.getScene();
+        scene.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+                case ENTER -> this.onCreateMouseClicked();
+            }
+        });
+    }
+
+    public void reset() {
+        Platform.runLater(()->{
+            lobbyNameField.clear();
+            playerNameField.clear();
+        });
     }
 }

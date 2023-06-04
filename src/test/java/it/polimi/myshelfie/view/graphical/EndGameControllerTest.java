@@ -2,7 +2,6 @@ package it.polimi.myshelfie.view.graphical;
 
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
-import it.polimi.myshelfie.view.graphical.controllers.ViewController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class EndGameControllerTest extends ViewController implements Initializable {
+public class EndGameControllerTest implements Initializable {
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -131,10 +130,6 @@ public class EndGameControllerTest extends ViewController implements Initializab
         }
     }
 
-    @Override
-    public void setKeyListeners(Scene scene) {
-
-    }
     private void addRowScoreboard(PlayerModelView player, int position){
         Label nameLabel = new Label((position+1)+". "+player.getName());
         nameLabel.setStyle("-fx-font-size: 25");
