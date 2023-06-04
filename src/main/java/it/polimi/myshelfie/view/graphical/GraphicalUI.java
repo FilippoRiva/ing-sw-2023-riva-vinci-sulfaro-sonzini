@@ -34,7 +34,7 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         switch (evt) {
             case MODEL_UPDATE -> mainViewController.joinUpdate();
             case EXCEPTION_UPDATE -> mainViewController.exceptionUpdate();
-            case CHAT_UPDATE -> {}
+            case CHAT_UPDATE -> mainViewController.chatUpdate();
             case LOBBY_UPDATE -> mainViewController.lobbyUpdate();
             case GAME_UPDATE -> mainViewController.gameUpdate();
             case VIEW_TYPE_UPDATE -> viewTypeUpdate();

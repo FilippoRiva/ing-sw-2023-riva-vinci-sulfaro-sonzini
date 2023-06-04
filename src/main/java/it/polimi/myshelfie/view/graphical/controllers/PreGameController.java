@@ -5,6 +5,7 @@ import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
+import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -37,6 +38,10 @@ public class PreGameController implements Initializable {
     @FXML
     protected ProgressIndicator progress;
     @FXML
+    protected Button chatButton;
+    @FXML
+    protected Label notificationDot;
+    @FXML
     HomeController homeController;
     @FXML
     JoinController joinController;
@@ -61,6 +66,7 @@ public class PreGameController implements Initializable {
         lobbyController.initialize(banner,this);
 
         Animations.applyButtonAnimation(backButton);
+        Animations.applyButtonAnimation(chatButton);
 
         changePage(InternalViewState.INIT);
     }
@@ -77,14 +83,16 @@ public class PreGameController implements Initializable {
         switch (page){
             case INIT -> {
                 if(this.page == InternalViewState.CREATE){
-                    slideDown(create);
-                    slideUp(backButton);
+                    hidePane(create);
+                    hideButton(backButton);
                 } else if (this.page ==InternalViewState.JOIN) {
-                    slideDown(join);
-                    slideUp(backButton);
+                    hidePane(join);
+                    hideButton(backButton);
                 } else if (this.page ==InternalViewState.LOBBY) {
-                    slideDown(lobby,lastSlideUp);
-                    slideUp(backButton);
+                    dualHidePane(lobby,lastSlideUp);
+                    hideButton(backButton);
+                    hideButton(chatButton);
+                    hideLabel(notificationDot);
                 } else {
                     create.setVisible(false);
                     create.setMouseTransparent(true);
@@ -92,26 +100,35 @@ public class PreGameController implements Initializable {
                     join.setMouseTransparent(true);
                     lobby.setVisible(false);
                     lobby.setMouseTransparent(true);
+                    lobbyController.chat.setVisible(false);
+                    lobbyController.chat.setMouseTransparent(true);
                     backButton.setVisible(false);
+                    backButton.setMouseTransparent(true);
+                    chatButton.setVisible(false);
+                    chatButton.setMouseTransparent(true);
+                    notificationDot.setVisible(true);
+                    notificationDot.setOpacity(0);
                 }
                 homeController.setKeyListeners();
             }
             case JOIN -> {
                 joinController.updateListLobbies();
-                slideUp(join);
+                showPane(join);
                 lastSlideUp = join;
-                slideDown(backButton);
+                showButton(backButton);
                 joinController.setKeyListeners();
             }
             case CREATE -> {
-                slideUp(create);
+                showPane(create);
                 lastSlideUp = create;
-                slideDown(backButton);
+                showButton(backButton);
                 createController.setKeyListeners();
             }
             case LOBBY -> {
                 lobbyController.refresh();
-                slideUp(lobby);
+                showPane(lobby);
+                showButton(chatButton);
+                moveLabel(notificationDot);
                 backButton.setVisible(true);
                 lobbyController.setKeyListeners();
             }
@@ -119,7 +136,7 @@ public class PreGameController implements Initializable {
         this.page = page;
     }
 
-    private void slideDown(StackPane pane,StackPane secondPane){
+    private void dualHidePane(StackPane pane, StackPane secondPane){
         TranslateTransition tt = Animations.getSlideDownTransition(pane);
         TranslateTransition tt2 = Animations.getSlideDownTransition(secondPane);
         tt.setOnFinished((finish)->{
@@ -133,7 +150,7 @@ public class PreGameController implements Initializable {
         });
         tt.play();
     }
-    private void slideDown(StackPane pane){
+    private void hidePane(StackPane pane){
         pane.setTranslateY(pane.getHeight());
         TranslateTransition tt = Animations.getSlideDownTransition(pane);
         tt.setOnFinished((finish)->{
@@ -142,7 +159,7 @@ public class PreGameController implements Initializable {
         });
         tt.play();
     }
-    private void slideUp(StackPane pane){
+    private void showPane(StackPane pane){
         pane.setTranslateY(pane.getHeight());
         pane.setVisible(true);
         pane.setMouseTransparent(false);
@@ -150,22 +167,16 @@ public class PreGameController implements Initializable {
         tt.play();
     }
 
-    private void slideDown(Button button){
-        button.setTranslateY(-button.getLayoutY()-button.getHeight());
-        button.setVisible(true);
+    private void showButton(Button button){
         button.setMouseTransparent(false);
-        TranslateTransition tt = Animations.getSlideDownTransition(button);
-        tt.play();
+        Animations.slideRegionFromTop(button,true).play();
     }
-
-    private void slideUp(Button button){
-        TranslateTransition tt = Animations.getSlideUpTransition(button);
-        tt.play();
-        tt.setOnFinished((finish)->{
-            button.setVisible(false);
-            button.setMouseTransparent(true);
-        });
+    private void hideButton(Button button){
+        button.setMouseTransparent(true);
+        Animations.slideRegionToTop(button).play();
     }
+    private void moveLabel(Label label){Animations.slideRegionFromTop(label,false).play();}
+    private void hideLabel(Label label){Animations.slideRegionToTop(label).play();}
 
     @FXML
     public void onBackArrowClicked() {
@@ -180,7 +191,6 @@ public class PreGameController implements Initializable {
         switch (page){
             case JOIN -> errorLabel = joinController.joinErrorLabel;
             case CREATE -> errorLabel = createController.createErrorLabel;
-            case LOBBY -> errorLabel = lobbyController.errorLabel;
             default -> {
                 return;
             }
@@ -197,5 +207,36 @@ public class PreGameController implements Initializable {
         joinController.reset();
         createController.reset();
         lobbyController.reset();
+        Platform.runLater(()->{
+            notificationDot.setOpacity(0);
+            notificationDot.setText("0");
+        });
+    }
+
+    public void toggleChatVisible() {
+        if(lobbyController.chatController.isChatVisible()){
+            lobbyController.chat.setMouseTransparent(true);
+            hidePane(lobbyController.chat);
+            lobbyController.chatController.setChatVisible(false);
+            return;
+        }
+        lobbyController.chat.setMouseTransparent(false);
+        showPane(lobbyController.chat);
+        lobbyController.chatController.setChatVisible(true);
+        //reset notificationCounter
+        if(notificationDot.getText().equals("0")) return;
+        Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));
+        a.setOnFinished((evt)->Platform.runLater(()->notificationDot.setText("0")));
+        a.play();
+    }
+
+    public void notifyNewMessage() {
+        if(lobbyController.chatController.isChatVisible()) return;
+        int prev = Integer.parseInt(notificationDot.getText());
+        if(prev==0) {
+            Animations.popFadeIn(notificationDot).play();
+        }
+        int newValue = prev+1;
+        Platform.runLater(()->notificationDot.setText(String.valueOf(newValue)));
     }
 }

@@ -15,9 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.layout.HBox;
@@ -31,16 +29,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LobbyController {
-    @FXML
-    protected ChoiceBox<Label> receiverChoice;
-    @FXML
-    protected VBox chatVBox;
-    @FXML
-    protected HBox chatTitle;
-    @FXML
-    protected ScrollPane chatScroll;
-    @FXML
-    protected HBox chatLowHBox;
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -57,31 +45,46 @@ public class LobbyController {
     protected ImageView clearBackground;
     @FXML
     protected ImageView scrollImage;
+    @FXML
+    protected StackPane chat;
+    @FXML
+    protected ChatController chatController;
+    private final ViewManager viewManager = ViewManager.getInstance();
+    private PreGameController preGameController;
 
-    boolean chatIsOpen = false;
+    public void initialize(ImageView homeBanner,PreGameController preGameController){
+        Stage stage = GraphicalUI.stage;
+        DoubleBinding maxHeight = stage.heightProperty().divide(3).multiply(2);
+
+        CustomBindings.bindSize(scrollImage,stage.widthProperty().divide(3).multiply(2),maxHeight.divide(1.5));
+        CustomBindings.bindSize(chat,stage.widthProperty().divide(3),maxHeight.divide(2));
+        chat.setTranslateX(-60);
+
+        CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
+
+        this.preGameController = preGameController;
+    }
 
     public void setKeyListeners() {
         Scene scene = GraphicalUI.stage.getScene();
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         scene.setOnKeyPressed(keyEvent -> {
-            System.out.println(keyEvent.getText());
             switch (keyEvent.getCode()){
-                /*
                 case ENTER -> {
-                    if(chatIsOpen) sendMessage();
+                    if(chatController.isChatVisible()) chatController.sendMessage();
                     else if (lobbyModelView.isRoomOwner(ViewManager.getUsername()) &&
                             lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
                         onStartMouseClicked();
                 }
                 case C -> {
-                    if(chatIsOpen) setChatInvisible();
-                    else setChatVisible();
+                    if(!chatController.isChatVisible()) preGameController.toggleChatVisible();
                 }
-                 */
                 case ESCAPE -> {
-                    //if(chatIsOpen) setChatInvisible();
-                    ViewManager.getInstance().exitRequest();
-                    GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+                    if(chatController.isChatVisible()) preGameController.toggleChatVisible();
+                    else {
+                        ViewManager.getInstance().exitRequest();
+                        GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+                    }
                 }
                 case PLUS -> {
                     if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMousePlusClicked();
@@ -91,25 +94,6 @@ public class LobbyController {
                 }
             }
         });
-    }
-
-    @FXML
-    protected Label errorLabel;
-    private final ViewManager viewManager = ViewManager.getInstance();
-    private PreGameController preGameController;
-
-    public void initialize(ImageView homeBanner,PreGameController preGameController){
-        Stage stage = GraphicalUI.stage;
-        DoubleBinding maxHeight = stage.heightProperty().divide(3).multiply(2);
-
-        //CustomBindings.bindSize(mainHBox,stage.widthProperty(),maxHeight);
-        CustomBindings.bindSize(chatVBox,stage.widthProperty().divide(4),maxHeight);
-        CustomBindings.bindSize(chatScroll, chatVBox.maxWidthProperty(),null);
-        //CustomBindings.bindSize(rightVBox,stage.widthProperty().divide(3).multiply(2),maxHeight);
-        CustomBindings.bindSize(scrollImage,stage.widthProperty().divide(3).multiply(2),maxHeight.divide(1.5));
-        CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
-        //Platform.runLater(()->mainHBox.getChildren().remove(leftVBox));
-        this.preGameController = preGameController;
     }
 
     public void refresh(){
@@ -199,6 +183,7 @@ public class LobbyController {
         });
 
         new Thread(task).start();
+        chatController.updateChoiceBox();
     }
 
     public void reset() {
@@ -206,6 +191,7 @@ public class LobbyController {
             lobbyNameLabel.setText("lobby");
             playersVBox.getChildren().clear();
         });
+        chatController.reset();
     }
 
     /*

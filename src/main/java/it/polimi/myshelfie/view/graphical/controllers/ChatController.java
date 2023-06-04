@@ -3,84 +3,62 @@ package it.polimi.myshelfie.view.graphical.controllers;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.view.ViewManager;
-import javafx.animation.FadeTransition;
-import javafx.animation.TranslateTransition;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
+import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public abstract class ChatController implements Initializable {
-    @FXML
-    protected Label notificationDot;
+public class ChatController implements Initializable {
     @FXML
     protected TextField messageText;
     @FXML
     protected ChoiceBox<String> receiverChoice;
     @FXML
-    protected AnchorPane chatPane;
-    @FXML
     protected ScrollPane chatScroll;
     @FXML
     protected VBox messagesVBox;
-
+    @FXML
+    protected ImageView backgroundImage;
+    @FXML
+    protected ImageView messagesBackgroundImage;
+    @FXML
+    protected StackPane chat;
     ViewManager viewBuffer = ViewManager.getInstance();
     boolean chatIsOpen = false;
-    int notificationCont = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        CustomBindings.bindSize(chatScroll, GraphicalUI.stage.widthProperty().divide(3).subtract(20),null);
+        CustomBindings.bindSize(messagesVBox,chatScroll.minWidthProperty().subtract(20),null);
+        CustomBindings.bindSize(backgroundImage,chat.minWidthProperty(),chat.minHeightProperty());
+        CustomBindings.bindSize(messagesBackgroundImage,chatScroll.minWidthProperty(),chat.minHeightProperty().subtract(180));
         messagesVBox.heightProperty().addListener(observable -> chatScroll.setVvalue(1D));
-        updateChoiceBox();
+        receiverChoice.setValue("Everyone");
     }
 
-    public abstract void setKeyListeners(Scene scene);
-
     @FXML
-    protected void setChatVisible() {
-        chatIsOpen = true;
-        notificationDot.setVisible(false);
-        notificationCont = 0;
-
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
-        translateTransition.setByX(+415);
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-
-        fadeTransition.play();
-        translateTransition.play();
-
-        messageText.requestFocus();
-
-        Platform.runLater(() -> {
-            messageText.clear();
-            chatScroll.setVvalue(1.0);
-        });
-    }
-    @FXML
-    protected void setChatInvisible() {
-        chatIsOpen = false;
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
-        translateTransition.setByX(-415);
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
-
-        fadeTransition.play();
-        translateTransition.play();
+    protected void setChatVisible(boolean value) {
+        if(value){
+            chatIsOpen = true;
+            messageText.requestFocus();
+            Platform.runLater(() -> {
+                messageText.clear();
+                chatScroll.setVvalue(1.0);
+            });
+        } else {
+            chatIsOpen = false;
+        }
     }
     @FXML
     protected void sendMessage() {
@@ -106,41 +84,35 @@ public abstract class ChatController implements Initializable {
     }
 
     public void addChatMessage() {
-        if(!chatIsOpen){
-            if(notificationCont == 0) notificationDot.setVisible(true);
-            notificationCont++;
-            Platform.runLater(() -> notificationDot.setText(String.valueOf(notificationCont)));
-        }
-
         Message message = viewBuffer.getPlayerChatModelView().getLastMessage();
 
         //create default messagePane
-        AnchorPane messagePane = new AnchorPane();
-        messagePane.setMaxWidth(415);
-        messagePane.setMinWidth(415);
+        HBox messageBox = new HBox();
+        Region emptySpace = new Region();
+        HBox.setHgrow(emptySpace, Priority.ALWAYS);
+        VBox singleMessageVBox = new VBox();
+        CustomBindings.bindSize(messageBox,chatScroll.minWidthProperty().subtract(20),null);
+
+        singleMessageVBox.maxWidthProperty().bind(chatScroll.maxWidthProperty().divide(3).multiply(2));
+        singleMessageVBox.minWidthProperty().bind(chatScroll.maxWidthProperty().divide(3));
+        singleMessageVBox.prefWidthProperty().bind(singleMessageVBox.minWidthProperty());
+
+        if(message.getSender().equals(ViewManager.getUsername())){
+            messageBox.getChildren().addAll(emptySpace,singleMessageVBox);
+        } else messageBox.getChildren().addAll(singleMessageVBox,emptySpace);
 
         //create default textLabel
         Label userLabel = new Label(message.getSender());
-        userLabel.setStyle("-fx-font-size: 13; -fx-text-fill: white; -fx-label-padding: 0 0 0 10");
+        userLabel.setStyle("-fx-font-size: 13; -fx-text-fill: DarkGoldenRod; -fx-label-padding: 0 0 0 10");
         Label textLabel = new Label(message.getMessage());
         textLabel.setStyle("-fx-font-size: 20; -fx-label-padding: 0 0 0 10; -fx-wrap-text: true");
-        //textLabel.setWrapText(true);
         Label timeLabel = new Label(message.getTimeHHmm());
         timeLabel.setStyle("-fx-font-size: 10; -fx-label-padding: 0 0 0 10");
 
-        VBox singleMessageVBox = new VBox();
-        singleMessageVBox.setMaxWidth(415*0.8);
-        singleMessageVBox.setMinWidth(415*0.3);
-
         if(message.getSender().equals(ViewManager.getUsername())){
-            singleMessageVBox.setStyle("-fx-background-color: red; -fx-background-radius: 20 0 20 20");
-            AnchorPane.setRightAnchor(singleMessageVBox,5D);                 //set messagePane to the right
-            userLabel.setAlignment(Pos.TOP_LEFT);
-            textLabel.setAlignment(Pos.TOP_LEFT);
-            timeLabel.setAlignment(Pos.TOP_LEFT);
+            singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20");
         } else {
-            singleMessageVBox.setStyle("-fx-background-color: red; -fx-background-radius: 0 20 20 20");
-            AnchorPane.setLeftAnchor(singleMessageVBox,5D);                //set messagePane to the left
+            singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 0 20 20 20");
         }
 
         if(!message.getReceiver().equals(Messages.toEveryOne)) {
@@ -152,9 +124,16 @@ public abstract class ChatController implements Initializable {
         }
 
         singleMessageVBox.getChildren().addAll(userLabel,textLabel,timeLabel);
-        messagePane.getChildren().add(singleMessageVBox);
         Platform.runLater(()-> {
-            messagesVBox.getChildren().add(messagePane);
+            messagesVBox.getChildren().add(messageBox);
         });
+    }
+
+    public boolean isChatVisible() {
+        return chatIsOpen;
+    }
+
+    public void reset() {
+        Platform.runLater(()->messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));
     }
 }

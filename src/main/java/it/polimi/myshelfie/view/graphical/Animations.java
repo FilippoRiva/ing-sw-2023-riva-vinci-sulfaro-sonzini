@@ -4,6 +4,7 @@ package it.polimi.myshelfie.view.graphical;
 import javafx.animation.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -54,19 +55,19 @@ public class Animations {
         return tt;
     }
 
-    public static TranslateTransition getSlideDownTransition(Button button){
+    public static TranslateTransition getSlideDownTransition(Region region){
         TranslateTransition tt = new TranslateTransition(Duration.millis(200));
-        tt.setFromY(-button.getLayoutY()-button.getHeight());
+        tt.setFromY(-region.getLayoutY()-region.getHeight());
         tt.setToY(0);
-        tt.setNode(button);
+        tt.setNode(region);
         return tt;
     }
 
-    public static TranslateTransition getSlideUpTransition(Button button){
+    public static TranslateTransition getSlideUpTransition(Region region){
         TranslateTransition tt = new TranslateTransition(Duration.millis(200));
         tt.setFromY(0);
-        tt.setToY(-button.getLayoutY()-button.getHeight());
-        tt.setNode(button);
+        tt.setToY(-region.getLayoutY()-region.getHeight());
+        tt.setNode(region);
         return tt;
     }
 
@@ -109,5 +110,51 @@ public class Animations {
         st.setCycleCount(2);
         st.setAutoReverse(true);
         return st;
+    }
+
+    public static TranslateTransition slideRegionFromTop(Region region, boolean forceVisible){
+        region.setTranslateY(-region.getLayoutY()-region.getHeight());
+        if(forceVisible){
+            region.setVisible(true);
+            region.setMouseTransparent(false);
+        }
+        TranslateTransition tt = Animations.getSlideDownTransition(region);
+        return tt;
+    }
+
+    public static TranslateTransition slideRegionToTop(Region region){
+        TranslateTransition tt = Animations.getSlideUpTransition(region);
+        tt.play();
+        tt.setOnFinished((finish)->{
+            region.setVisible(false);
+            region.setMouseTransparent(true);
+        });
+        return tt;
+    }
+
+    public static Animation fadeIn(Region region) {
+        FadeTransition ft = new FadeTransition(Duration.millis(100),region);
+        ft.setByValue(1);
+        return ft;
+    }
+
+    public static Animation pop(Region region){
+        ScaleTransition pop = new ScaleTransition(Duration.millis(100),region);
+        pop.setFromX(0);
+        pop.setFromY(0);
+        pop.setByX(1);
+        pop.setByY(1);
+        return pop;
+    }
+
+    public static Animation popFadeIn(Region region){
+        Animation fade = fadeIn(region);
+        Animation pop = pop(region);
+        return new ParallelTransition(fade,pop);
+    }
+
+    public static Animation reverse(Animation animation){
+        animation.setRate(-1);
+        return animation;
     }
 }

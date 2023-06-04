@@ -37,17 +37,16 @@ public class EndGameController implements Initializable {
     protected Label player2;
     @FXML
     protected Label player3;
-    Label[] playersPodium;
     @FXML
     protected Label points1;
     @FXML
     protected Label points2;
     @FXML
     protected Label points3;
-    Label[] pointsPodium;
     @FXML
     protected Button detailsButton;
-
+    Label[] pointsPodium;
+    Label[] playersPodium;
     ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
@@ -55,29 +54,6 @@ public class EndGameController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         FullGameModelView fullGameModelView = viewManager.getGameModelView();
-        playersPodium = new Label[]{player1, player2, player3};
-        pointsPodium = new Label[]{points1, points2, points3};
-
-        lobbyNameLabel.setText(lobbyModelView.getName());
-
-        //order players for taken points
-        List<PlayerModelView> players = fullGameModelView.getPlayers().stream().sorted((x,y)->{
-            if(x.getPoints()==y.getPoints()) return 0;
-            else return x.getPoints()>=y.getPoints() ? -1:1 ;
-        }).toList();
-
-        numPlayers = players.size();
-
-        for (int i = 0; i < numPlayers; i++) {
-            if(i < 3) {
-                PlayerModelView player = players.get(i);
-                playersPodium[i].setText(player.getName());
-                pointsPodium[i].setText(String.valueOf(player.getPoints()));
-            }
-            PlayerModelView player = players.get(i);
-            addRowScoreboard(player, i);
-            addColumnDetail(player, i);
-        }
     }
 
     public void setKeyListeners(Scene scene) {
@@ -95,7 +71,7 @@ public class EndGameController implements Initializable {
         Label pointsLabel = new Label(String.valueOf(player.getPoints()));
         pointsLabel.setStyle("-fx-font-size: 25");
 
-        scoreboardGrid.addRow(position, nameLabel, pointsLabel);
+        Platform.runLater(()->scoreboardGrid.addRow(position, nameLabel, pointsLabel));
     }
 
     private void addColumnDetail(PlayerModelView player, int position){
@@ -127,7 +103,7 @@ public class EndGameController implements Initializable {
         columnConstraints.setPrefWidth((double) (683 - 200) /numPlayers);
         columnConstraints.setHalignment(HPos.CENTER);
         detailsGrid.getColumnConstraints().add(columnConstraints);
-        detailsGrid.addColumn(position+1, nameLabel, firstToken, common, personal, adjacent, tot);
+        Platform.runLater(()->detailsGrid.addColumn(position+1, nameLabel, firstToken, common, personal, adjacent, tot));
         /*
         End token:		1pt
         Common goal 1:	8pt
@@ -165,5 +141,36 @@ public class EndGameController implements Initializable {
     protected void onBackArrowClick(){
         viewManager.exitRequest();
         GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+    }
+
+    public void update() {
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
+        FullGameModelView fullGameModelView = viewManager.getGameModelView();
+        playersPodium = new Label[]{player1, player2, player3};
+        pointsPodium = new Label[]{points1, points2, points3};
+
+        //order players for taken points
+        List<PlayerModelView> players = fullGameModelView.getPlayers().stream().sorted((x,y)->{
+            if(x.getPoints()==y.getPoints()) return 0;
+            else return x.getPoints()>=y.getPoints() ? -1:1 ;
+        }).toList();
+
+        numPlayers = players.size();
+
+        for (int i = 0; i < numPlayers; i++) {
+            if(i < 3) {
+                PlayerModelView player = players.get(i);
+                int finalI = i;
+                Platform.runLater(()->{
+                    playersPodium[finalI].setText(player.getName());
+                    pointsPodium[finalI].setText(String.valueOf(player.getPoints()));
+                });
+            }
+            PlayerModelView player = players.get(i);
+            addRowScoreboard(player, i);
+            addColumnDetail(player, i);
+        }
+
+        Platform.runLater(()->lobbyNameLabel.setText(lobbyModelView.getName()));
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.view.graphical.controllers;
 
+import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
@@ -10,7 +11,6 @@ import it.polimi.myshelfie.view.graphical.BookshelfView;
 import it.polimi.myshelfie.view.graphical.Images;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,16 +22,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 import static it.polimi.myshelfie.view.graphical.Images.getTileImage;
 
-public class GameController implements Initializable {
+public class GameController {
     @FXML
     protected GridPane livingRoomGrid;
     @FXML
@@ -69,29 +67,40 @@ public class GameController implements Initializable {
     protected Label crashLabel;
     @FXML
     protected Pane crashPane;
+    @FXML
+    protected AnchorPane endGame;
+    @FXML
+    protected EndGameController endGameController;
 
     ViewManager viewManager = ViewManager.getInstance();
-    String myName = ViewManager.getUsername();
-    int numPlayers; //from viewBuffer
-    CommonGoalModelView[] commonGoals = new CommonGoalModelView[2];
-    BookshelfView[] bookshelves = new BookshelfView[numPlayers];
-    Image[][] takenTokens = new Image[2][numPlayers];
+    String myName;
+    int numPlayers;
+    CommonGoalModelView[] commonGoals;
+    BookshelfView[] bookshelves;
+    Image[][] takenTokens;
     int remainingTiles;
 
     int seeingPlayer = 0;
-    List<Position> selectedTiles;
+    List<Position> selectedTiles = new ArrayList<>();
     List<Integer> orderedTiles;
     int chosenColumn;
-    boolean chatIsOpen = false;
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("initializing game controller");
-        System.out.println("initialized");
-    }
 
     public void gameStart() {
+        endGame.setVisible(false);
+        endGame.setMouseTransparent(true);
         FullGameModelView fullGameModelView = viewManager.getGameModelView();
+        myName = ViewManager.getUsername();
+        //setting auto player
+        if(fullGameModelView.getRoomName().equals("test") && myName.startsWith("bot")){
+            ViewManager.getInstance().startAutoPlayer();
+        }
+
+        //
+        GameConfig config = fullGameModelView.getGameConfig();
+        commonGoals = new CommonGoalModelView[config.getNumCommonGoal()];
+        numPlayers = config.getNumPlayers();
+        bookshelves = new BookshelfView[numPlayers];
+        takenTokens = new Image[2][numPlayers];
 
         int idPersonalGoal = fullGameModelView.getPlayer(myName).getPersonalGoals().get(0).getId();
         commonGoals[0] = fullGameModelView.getCommonGoals().get(0);
@@ -103,8 +112,6 @@ public class GameController implements Initializable {
         commonGoal2Image.setImage(getImage("commonGoals/"+(commonGoals[1].getId()+1)+".jpg"));
         token1Image.setImage(getImage("tokens/"+commonGoals[0].getTokens().get(commonGoals[0].getTokens().size()-1).getValue()+".jpg"));
         token2Image.setImage(getImage("tokens/"+commonGoals[1].getTokens().get(commonGoals[1].getTokens().size()-1).getValue()+".jpg"));
-        playerBookshelfLabel.setText(myName);
-        playingLabel.setText("Playing " + fullGameModelView.getCurrentPlayerName());
 
         for(PlayerModelView pl : viewManager.getGameModelView().getPlayers()){
             if(pl.getName().equals(myName)) break;
@@ -114,8 +121,14 @@ public class GameController implements Initializable {
         takenTilesImages = new ImageView[]{takenTile1Image, takenTile2Image, takenTile3Image};
         insertButtons = new Button[]{insertButton1, insertButton2, insertButton3, insertButton4, insertButton5};
         remainingTiles = fullGameModelView.getRemainingTiles();
+
+        Platform.runLater(()->{
+            playerBookshelfLabel.setText(myName);
+            playingLabel.setText("Playing " + fullGameModelView.getCurrentPlayerName());
+        });
         displayLivingRoom();
         initPlayers();
+        play();
     }
 
     public void setKeyListeners(Scene scene) {
@@ -189,7 +202,7 @@ public class GameController implements Initializable {
 
         boolean playing = fullGameModelView.getCurrentPlayerName().equals(myName);
 
-        //TODO when start last round display something
+        //TODO when last round starts display something
         switch (fullGameModelView.getCurrentState()){
             case DRAW, LAST_DRAW -> {
                 checkRefill(fullGameModelView);
@@ -526,5 +539,15 @@ public class GameController implements Initializable {
         else seeingPlayer++;
         displayPlayerInfo();
         displayTokens();
+    }
+
+    public void updateChat() {
+        //TODO
+    }
+
+    public void win() {
+        endGameController.update();
+        endGame.setVisible(true);
+        endGame.setMouseTransparent(false);
     }
 }
