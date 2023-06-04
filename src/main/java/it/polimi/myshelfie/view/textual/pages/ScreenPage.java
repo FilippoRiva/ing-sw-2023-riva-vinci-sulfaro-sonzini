@@ -1,17 +1,17 @@
 package it.polimi.myshelfie.view.textual.pages;
 
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
 public abstract class ScreenPage {
-    Terminal t;
-    ViewBuffer viewBuffer;
-    List<String> inputParameters;
-    public ScreenPage(Terminal t, ViewBuffer viewBuffer, List<String> inputParameters){
+    final protected Terminal t;
+    final protected ViewManager viewManager;
+    final protected List<String> inputParameters;
+    public ScreenPage(Terminal t, ViewManager viewManager, List<String> inputParameters){
         this.t = t;
-        this.viewBuffer = viewBuffer;
+        this.viewManager = viewManager;
         this.inputParameters = inputParameters;
     }
     public abstract void render();

@@ -1,9 +1,9 @@
 package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.utils.Observer;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.InternalViewState;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.textual.pages.*;
@@ -11,20 +11,18 @@ import it.polimi.myshelfie.view.textual.pages.*;
 import java.util.List;
 
 public class TextualUI implements Observer<ViewUpdate, Object> {
-    ViewBuffer viewBuffer;
-    Terminal t;
-    String myUsername;
-    String currentLibraryOwner;
-    ScreenPage currentPage;
-    List<String> inputParameters;
+    private final ViewManager viewManager;
+    private final Terminal t;
+    private String currentLibraryOwner;
+    private ScreenPage currentPage;
+    private final List<String> inputParameters;
+    private InternalViewState internalViewState;
 
-    InternalViewState internalViewState;
-
-    public TextualUI(ViewBuffer viewBuffer, List<String> inputParameters) {
-        this.viewBuffer = viewBuffer;
+    public TextualUI(ViewManager viewManager, List<String> inputParameters) {
+        this.viewManager = viewManager;
         this.inputParameters = inputParameters;
         this.t = new Terminal();
-        this.currentPage = new InitPage(t,viewBuffer,inputParameters);
+        this.currentPage = new InitPage(t, viewManager,inputParameters);
     }
 
     /**
@@ -46,54 +44,54 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
     }
 
     private synchronized void gameUpdate() {
-        if(viewBuffer.getViewType()==ViewType.GAME && !(internalViewState == InternalViewState.CHAT ||
+        if(viewManager.getViewType()==ViewType.GAME && !(internalViewState == InternalViewState.CHAT ||
                 internalViewState == InternalViewState.HELP)){
             currentPage.render();
         }
     }
 
     private synchronized void lobbyUpdate() {
-        if(viewBuffer.getViewType()==ViewType.LOBBY){
+        if(viewManager.getViewType()==ViewType.LOBBY){
             currentPage.render();
         }
     }
 
     private synchronized void chatUpdate() {
-        if((viewBuffer.getViewType()==ViewType.LOBBY || viewBuffer.getViewType()==ViewType.GAME)
+        if((viewManager.getViewType()==ViewType.LOBBY || viewManager.getViewType()==ViewType.GAME)
                 && internalViewState == InternalViewState.CHAT){
             currentPage.render();
         }
     }
 
     private synchronized void initUpdate() {
-        if(viewBuffer.getViewType()==ViewType.INIT && internalViewState != InternalViewState.CREATE){
+        if(viewManager.getViewType()==ViewType.INIT && internalViewState != InternalViewState.CREATE){
             currentPage.render();
         }
     }
 
     private synchronized void updateViewType() {
-        ViewType viewType = viewBuffer.getViewType();
+        ViewType viewType = viewManager.getViewType();
         switch (viewType) {
             case INIT -> {
                 internalViewState = InternalViewState.INIT;
-                currentPage = new InitPage(t, viewBuffer,inputParameters);
+                currentPage = new InitPage(t, viewManager,inputParameters);
             }
             case LOBBY -> {
                 internalViewState = InternalViewState.LOBBY;
-                currentPage = new LobbyPage(t, viewBuffer,inputParameters,myUsername);
+                currentPage = new LobbyPage(t, viewManager,inputParameters, ViewManager.getUsername());
             }
             case GAME -> {
                 internalViewState = InternalViewState.GAME;
-                currentLibraryOwner = myUsername;
-                currentPage = new GamePage(t,viewBuffer,inputParameters,myUsername,currentLibraryOwner);
+                currentLibraryOwner = ViewManager.getUsername();
+                currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.getUsername(),currentLibraryOwner);
             }
             case WIN -> {
                 internalViewState = InternalViewState.WIN;
-                currentPage = new WinPage(t,viewBuffer,inputParameters);
+                currentPage = new WinPage(t, viewManager,inputParameters);
             }
             case DISCONNECTION -> {
                 printException(true);
-                viewBuffer.setView(ViewType.INIT);
+                viewManager.setView(ViewType.INIT);
             }
         }
         currentPage.render();
@@ -101,8 +99,8 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
 
     public synchronized void printException(boolean disconnection) {
         ClientExceptionsNotifierView exceptionsView;
-        if(disconnection) exceptionsView = viewBuffer.getDisconnectedClientExceptionsNotifierView();
-        else exceptionsView = viewBuffer.getClientExceptionsNotifierView();
+        if(disconnection) exceptionsView = viewManager.getDisconnectedClientExceptionsNotifierView();
+        else exceptionsView = viewManager.getClientExceptionsNotifierView();
         if (exceptionsView == null) return;
         t.clearError();
         t.printError(exceptionsView.getLastException().getMessage());
@@ -116,27 +114,23 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
         t.printError(message);
     }
 
-    public synchronized void setMyUsername(String myUsername) {
-        this.myUsername = myUsername;
-    }
-
     public synchronized void showNextLibrary() {
-        FullGameModelView gmv = viewBuffer.getGameModelView();
+        FullGameModelView gmv = viewManager.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
         int index = players.indexOf(currentLibraryOwner);
         if(index == players.size()-1) currentLibraryOwner = players.get(0);
         else currentLibraryOwner = players.get(index+1);
-        currentPage = new GamePage(t,viewBuffer,inputParameters,myUsername,currentLibraryOwner);
+        currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.getUsername(),currentLibraryOwner);
         currentPage.render();
     }
 
     public synchronized void showPrevLibrary() {
-        FullGameModelView gmv = viewBuffer.getGameModelView();
+        FullGameModelView gmv = viewManager.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
         int index = players.indexOf(currentLibraryOwner);
         if(index == 0) currentLibraryOwner = players.get(players.size()-1);
         else currentLibraryOwner = players.get(index-1);
-        currentPage = new GamePage(t,viewBuffer,inputParameters,myUsername,currentLibraryOwner);
+        currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.getUsername(),currentLibraryOwner);
         currentPage.render();
     }
 
@@ -147,15 +141,15 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
     public synchronized void setInternalViewState(InternalViewState internalViewState) {
         this.internalViewState = internalViewState;
         switch (internalViewState){
-            case INIT -> currentPage = new InitPage(t,viewBuffer,inputParameters);
-            case JOIN -> currentPage = new JoinPage(t,viewBuffer,inputParameters);
-            case CREATE -> currentPage = new CreatePage(t,viewBuffer,inputParameters);
-            case LOBBY -> currentPage = new LobbyPage(t,viewBuffer,inputParameters,myUsername);
-            case GAME -> currentPage = new GamePage(t,viewBuffer,inputParameters,myUsername,currentLibraryOwner);
-            case GOALS -> currentPage = new GoalPage(t,viewBuffer,inputParameters);
-            case CHAT -> currentPage = new ChatPage(t,viewBuffer,inputParameters,myUsername);
-            case HELP -> currentPage = new HelpPage(t,viewBuffer,inputParameters);
-            case WIN -> currentPage = new WinPage(t,viewBuffer,inputParameters);
+            case INIT -> currentPage = new InitPage(t, viewManager,inputParameters);
+            case JOIN -> currentPage = new JoinPage(t, viewManager,inputParameters);
+            case CREATE -> currentPage = new CreatePage(t, viewManager,inputParameters);
+            case LOBBY -> currentPage = new LobbyPage(t, viewManager,inputParameters, ViewManager.username);
+            case GAME -> currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.username,currentLibraryOwner);
+            case GOALS -> currentPage = new GoalPage(t, viewManager,inputParameters);
+            case CHAT -> currentPage = new ChatPage(t, viewManager,inputParameters, ViewManager.username);
+            case HELP -> currentPage = new HelpPage(t, viewManager,inputParameters);
+            case WIN -> currentPage = new WinPage(t, viewManager,inputParameters);
         }
         currentPage.render();
     }

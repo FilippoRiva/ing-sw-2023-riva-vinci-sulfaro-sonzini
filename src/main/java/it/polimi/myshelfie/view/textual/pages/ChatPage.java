@@ -4,7 +4,7 @@ import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.Terminal;
@@ -12,12 +12,12 @@ import it.polimi.myshelfie.view.textual.Terminal;
 import java.util.List;
 
 public class ChatPage extends ScreenPage{
-    String[] colors = {
+    private final String[] colors = {
             ANSI.PINK_FG,ANSI.BLUE_FG,ANSI.GREEN_FG,ANSI.LIGHTBLUE_FG, ANSI.YELLOW_FG,ANSI.RED_FG
     };
-    String username;
-    public ChatPage(Terminal t, ViewBuffer viewBuffer, List<String> inputParameters, String username) {
-        super(t, viewBuffer, inputParameters);
+    private final String username;
+    public ChatPage(Terminal t, ViewManager viewManager, List<String> inputParameters, String username) {
+        super(t, viewManager, inputParameters);
         this.username = username;
     }
 
@@ -25,8 +25,8 @@ public class ChatPage extends ScreenPage{
     public void render() {
         t.clearScreen();
         t.centerPrint("CHAT",2);
-        LobbyModelView lobby = viewBuffer.getLobbyModelView();
-        PlayerChatModelView chat = viewBuffer.getPlayerChatModelView();
+        LobbyModelView lobby = viewManager.getLobbyModelView();
+        PlayerChatModelView chat = viewManager.getPlayerChatModelView();
         int line = 4;
         if(lobby == null || chat == null || chat.getMessages().size()==0) {
             t.centerPrint("no messages ", 4);
@@ -65,8 +65,8 @@ public class ChatPage extends ScreenPage{
                 idx++;
             }
         }
-        if(viewBuffer.getViewType() == ViewType.GAME) t.printAction("help, game, goals");
-        if(viewBuffer.getViewType() == ViewType.LOBBY) t.printAction("help, lobby");
+        if(viewManager.getViewType() == ViewType.GAME) t.printAction("help, game, goals");
+        if(viewManager.getViewType() == ViewType.LOBBY) t.printAction("help, lobby");
         printBorder();
     }
 }

@@ -15,37 +15,56 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class ViewBuffer extends View {
-    Observable<ViewUpdate, Object> UINotifier;
-    private static ViewBuffer viewBuffer;
-    ModelView modelView;
-    ClientExceptionsNotifierView clientExceptionsNotifierView;
-    ClientExceptionsNotifierView disconnectedClientExceptionsNotifierView;
-    PlayerChatModelView playerChatModelView;
-    LobbyModelView lobbyModelView;
-    FullGameModelView fullGameModelView;
-    FullGameModelView gameDifferences;
-    FullGameModelView oldGameModelView;
-    final Object sync;
-    ViewType viewType;
-    public ViewBuffer(){
+public class ViewManager extends View {
+    private final Observable<ViewUpdate, Object> UINotifier;
+    private static ViewManager viewManager;
+    private ModelView modelView;
+    private ClientExceptionsNotifierView clientExceptionsNotifierView;
+    private ClientExceptionsNotifierView disconnectedClientExceptionsNotifierView;
+    private PlayerChatModelView playerChatModelView;
+    private LobbyModelView lobbyModelView;
+    private FullGameModelView fullGameModelView;
+    private FullGameModelView gameDifferences;
+    private FullGameModelView oldGameModelView;
+    private final Object sync;
+    private ViewType viewType;
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String username) {
+        ViewManager.username = username;
+    }
+
+    public static String username;
+    public ViewManager(){
         this.UINotifier = new Observable<>();
         this.sync = new Object();
     }
 
-    public synchronized void sendMessage(NetworkMessage networkMessage){
+    public static ViewManager getInstance(){
+        if(viewManager ==null){
+            ViewManager.viewManager = new ViewManager();
+        }
+        return viewManager;
+    }
+
+    private synchronized void sendMessage(NetworkMessage networkMessage){
         if(networkMessage == null) return;
         setChanged();
         notifyObservers((ViewEvent) networkMessage.getEvent(), networkMessage);
     }
 
-    public static ViewBuffer getInstance(){
-        if(viewBuffer==null){
-            ViewBuffer.viewBuffer = new ViewBuffer();
+    public void configRequest(GameConfig config){
+        synchronized (this) {
+            try {
+                viewManager.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return viewBuffer;
     }
-
     public void joinRequest(String lobby, String playerName){
         synchronized (this) {
             try {
@@ -125,7 +144,7 @@ public class ViewBuffer extends View {
     }
 
     public boolean removePlayer() {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
         if(currentSize==2) return false;
         GameConfig config;
@@ -145,7 +164,7 @@ public class ViewBuffer extends View {
     }
 
     public boolean addPlayer() {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
         if(currentSize==4) return false;
         GameConfig config;
@@ -557,5 +576,24 @@ public class ViewBuffer extends View {
             }
         }
         return -1;
+    }
+
+    public void startAutoPlayer(int roomSize) {
+        AutoPlayer a = new AutoPlayer(viewManager, null);
+        try {
+            a.preGameStart(roomSize);
+        } catch (InvalidParameterException ignored) {
+        }
+    }
+    public void startAutoPlayer(){
+        AutoPlayer a = new AutoPlayer(viewManager, null);
+        if(fullGameModelView!=null){
+            a.postGameStart(username);
+        } else {
+            try {
+                a.preGameStart(2);
+            } catch (InvalidParameterException ignored) {
+            }
+        }
     }
 }

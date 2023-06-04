@@ -9,10 +9,9 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.view.AutoPlayer;
-import it.polimi.myshelfie.view.events.ViewEvent;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.InternalViewState;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.awt.*;
@@ -21,22 +20,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CLIInputInterpreter {
-    TextualUI UI;
-    final ViewBuffer viewBuffer;
-    final List<String> inputParameters;
+    private final TextualUI UI;
+    private final ViewManager viewManager;
+    private final List<String> inputParameters;
 
     /**
      * creates a CLIInputInterpreter that given an input string it interprets it, updates the view, and tells the viewBuffer
      * to notify its observers.
      * how a string is interpreted depends on how the UI and the ViewBuffer are set
      * @param UI the UI this interpreter should look at to interpret user input
-     * @param viewBuffer the ViewBuffer this interpreter should use to interpret user input and notify new ViewEvents
+     * @param viewManager the ViewBuffer this interpreter should use to interpret user input and notify new ViewEvents
      *                   like JOIN_REQUEST, CREATE_REQUEST, CONFIG_REQUEST, ... setting the appropriate parameters of
      *                   the ViewBuffer
      */
-    public CLIInputInterpreter(TextualUI UI, ViewBuffer viewBuffer, List<String> inputParameters){
+    public CLIInputInterpreter(TextualUI UI, ViewManager viewManager, List<String> inputParameters){
         this.UI = UI;
-        this.viewBuffer = viewBuffer;
+        this.viewManager = viewManager;
         this.inputParameters = inputParameters;
     }
     public void interpret(String input){
@@ -52,23 +51,25 @@ public class CLIInputInterpreter {
         ModelView modelView;
         LobbyModelView lobbyModelView;
         synchronized (this){
-            vtCopy = viewBuffer.getViewType();
-            modelView= viewBuffer.getModelView();
-            lobbyModelView = viewBuffer.getLobbyModelView();
+            vtCopy = viewManager.getViewType();
+            modelView= viewManager.getModelView();
+            lobbyModelView = viewManager.getLobbyModelView();
         }
         switch (vtCopy){
             case INIT -> {
                 if(input.startsWith("autoplay")){
-                   AutoPlayer autoPlayer = new AutoPlayer(viewBuffer,UI);
                     try {
-                        autoPlayer.preGameStart(Integer.parseInt(input.replace(" ","").substring(8)));
-                    } catch (InvalidParameterException e) {
-                        UI.wrongInput("Unable to start autoplay mode");
+                        String numbers = input.replace(" ","").substring(8);
+                        if(numbers.length()!=0){
+                            viewManager.startAutoPlayer(Integer.parseInt(numbers));
+                        } else {
+                            viewManager.startAutoPlayer();
+                        }
                     } catch (NumberFormatException e){
-                        UI.wrongInput("Please enter room size");
+                        UI.wrongInput("Room size not available");
                     }
                 } else
-                if(UI.getInternalViewState()==InternalViewState.CREATE){
+                if(UI.getInternalViewState()== InternalViewState.CREATE){
                     interpretCreate(input);
                 } else if(UI.getInternalViewState()==InternalViewState.JOIN){
                     interpretJoin(input, modelView);
@@ -97,27 +98,29 @@ public class CLIInputInterpreter {
                         case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
                         case "lobby" -> UI.setInternalViewState(InternalViewState.LOBBY);
                         case "+" -> {
-                            if (!viewBuffer.addPlayer()) {
+                            if (!viewManager.addPlayer()) {
                                 UI.wrongInput();
                             }
                         }
                         case "-" -> {
-                            if (!viewBuffer.removePlayer()) {
+                            if (!viewManager.removePlayer()) {
                                 UI.wrongInput();
                             }
                         }
                         case "?" -> weirdConfig();
                         case "s" -> {
-                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) viewBuffer.startRequest();
+                            if (lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers()) viewManager.startRequest();
                             else UI.wrongInput();
                         }
-                        case "exit" -> viewBuffer.exitRequest();
+                        case "exit" -> viewManager.exitRequest();
                         default -> UI.wrongInput();
                     }
                 }
             }
             case GAME -> {
-                if (UI.getInternalViewState()==InternalViewState.HELP) {
+                if(input.startsWith("autoplay")){
+                    viewManager.startAutoPlayer();
+                } else if (UI.getInternalViewState()==InternalViewState.HELP) {
                     switch (input) {
                         case "game" -> UI.setInternalViewState(InternalViewState.GAME);
                         case "goals" -> UI.setInternalViewState(InternalViewState.GOALS);
@@ -161,7 +164,7 @@ public class CLIInputInterpreter {
             case WIN -> {
                 if(input.equals("exit")){
                     UI.setInternalViewState(InternalViewState.INIT);
-                    viewBuffer.exitRequest();
+                    viewManager.exitRequest();
                 } else {
                     UI.wrongInput("pls stop playing this game");
                 }
@@ -178,7 +181,7 @@ public class CLIInputInterpreter {
             UI.wrongInput();
             return;
         }
-        if(viewBuffer.getModelView().getLobbies().size()==0) {
+        if(viewManager.getModelView().getLobbies().size()==0) {
             if(in == 1){
                 inputParameters.clear();
                 UI.setInternalViewState(InternalViewState.CREATE);
@@ -224,8 +227,8 @@ public class CLIInputInterpreter {
         } else if(inputParameters.size()==1){
             inputParameters.add(input);
             UI.setInternalViewState(InternalViewState.JOIN);
-            viewBuffer.joinRequest(inputParameters.get(0),inputParameters.get(1));
-            UI.setMyUsername(input);
+            viewManager.joinRequest(inputParameters.get(0),inputParameters.get(1));
+            ViewManager.setUsername(input);
             inputParameters.clear();
         }
     }
@@ -242,8 +245,8 @@ public class CLIInputInterpreter {
         } else if(inputParameters.size()==1){
             inputParameters.add(input);
             UI.setInternalViewState(InternalViewState.CREATE);
-            viewBuffer.createRequest(inputParameters.get(0),inputParameters.get(1));
-            UI.setMyUsername(input);
+            viewManager.createRequest(inputParameters.get(0),inputParameters.get(1));
+            ViewManager.setUsername(input);
         }
     }
 
@@ -262,16 +265,16 @@ public class CLIInputInterpreter {
             Position position = new Position(coordinates.get(i*2),coordinates.get(i*2+1));
             positions.add(position);
         }
-        viewBuffer.drawRequest(positions);
+        viewManager.drawRequest(positions);
     }
 
     private void interpretOrder(String input) {
         if(input.equals("")){
-            viewBuffer.organizeRequest(new ArrayList<>());
+            viewManager.organizeRequest(new ArrayList<>());
             return;
         }
-        FullGameModelView gmv = viewBuffer.getGameModelView();
-        List<ItemTile> takenTiles = gmv.getPlayer(UI.myUsername).getTakenTiles();
+        FullGameModelView gmv = viewManager.getGameModelView();
+        List<ItemTile> takenTiles = gmv.getPlayer(ViewManager.username).getTakenTiles();
         input = input.substring(1);
         input = input.replace(" ","");
         if (input.length()!=takenTiles.size()){
@@ -295,7 +298,7 @@ public class CLIInputInterpreter {
             UI.wrongInput("please insert valid numbers");
             return;
         }
-        viewBuffer.organizeRequest(choices.stream().map(takenTiles::get).toList());
+        viewManager.organizeRequest(choices.stream().map(takenTiles::get).toList());
     }
 
     private void interpretInsert(String input) {
@@ -309,13 +312,13 @@ public class CLIInputInterpreter {
             UI.wrongInput("insert a valid column");
             return;
         }
-        viewBuffer.insertRequest(column);
+        viewManager.insertRequest(column);
     }
 
     private void interpretMessage(String input){
         if(!input.startsWith("/")){
-            Message message = new Message(UI.myUsername, Messages.toEveryOne,input);
-            viewBuffer.sendChatMessage(message);
+            Message message = new Message(ViewManager.username, Messages.toEveryOne,input);
+            viewManager.sendChatMessage(message);
             return;
         }
         input = input.substring(1);
@@ -324,12 +327,12 @@ public class CLIInputInterpreter {
             return;
         }
         String user = input.substring(0,input.indexOf(" "));
-        if(!viewBuffer.getLobbyModelView().getPlayers().contains(user)){
+        if(!viewManager.getLobbyModelView().getPlayers().contains(user)){
             UI.wrongInput("insert a valid username");
         }
         String msg = input.substring(user.length()+1);
-        Message message = new Message(UI.myUsername, user, msg);
-        viewBuffer.sendChatMessage(message);
+        Message message = new Message(ViewManager.username, user, msg);
+        viewManager.sendChatMessage(message);
     }
 
     private void weirdConfig(){
@@ -339,13 +342,7 @@ public class CLIInputInterpreter {
         } catch (InvalidParameterException e) {
             return;
         }
-        synchronized (viewBuffer) {
-            try {
-                viewBuffer.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        viewManager.configRequest(config);
         UI.wrongInput(ANSI.PINK_FG+"weird config set"+ANSI.PINK_FG);
     }
 }

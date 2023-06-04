@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.view.textual;
 
-public class ANSI {
+public abstract class ANSI {
     public static String RESET = "\033[0m";
     public static String RED_FG = "\033[31m";
     public static String GREEN_FG = "\033[32m";

@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.view.textual.pages;
 
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.Terminal;
@@ -9,9 +9,9 @@ import java.util.List;
 
 public class HelpPage extends ScreenPage{
 
-    String color = ANSI.PINK_FG;
-    public HelpPage(Terminal t, ViewBuffer viewBuffer, List<String> inputParameters) {
-        super(t, viewBuffer, inputParameters);
+    private final String color = ANSI.PINK_FG;
+    public HelpPage(Terminal t, ViewManager viewManager, List<String> inputParameters) {
+        super(t, viewManager, inputParameters);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class HelpPage extends ScreenPage{
         t.printDivider(line++);
         t.print(color+"Utils"+ANSI.RESET, line++, 1);
         t.print("r : refreshes the UI",line,3);
-        if(viewBuffer.getViewType()!= ViewType.LOBBY) t.printAction("game, chat, goals");
+        if(viewManager.getViewType()!= ViewType.LOBBY) t.printAction("game, chat, goals");
         else t.printAction("lobby,chat");
         printBorder();
     }

@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.textual;
+package it.polimi.myshelfie.view;
 
 public enum InternalViewState {
     INIT,
@@ -9,5 +9,6 @@ public enum InternalViewState {
     CHAT,
     GOALS,
     HELP,
+    DISCONNECTION,
     WIN
 }

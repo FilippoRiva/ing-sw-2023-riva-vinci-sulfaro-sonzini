@@ -1,22 +1,22 @@
 package it.polimi.myshelfie.view.textual.pages;
 
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
 public class LobbyPage extends ScreenPage{
-    String username;
-    public LobbyPage(Terminal t, ViewBuffer viewBuffer, List<String> inputParameters, String username) {
-        super(t, viewBuffer, inputParameters);
+    private final String username;
+    public LobbyPage(Terminal t, ViewManager viewManager, List<String> inputParameters, String username) {
+        super(t, viewManager, inputParameters);
         this.username = username;
     }
 
     @Override
     public void render() {
-        LobbyModelView lobbyModelView = viewBuffer.getLobbyModelView();
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         if(lobbyModelView == null) return;
         t.clearScreen();
         t.centerPrint(lobbyModelView.getName()+" " +
@@ -30,7 +30,7 @@ public class LobbyPage extends ScreenPage{
             else t.centerPrint(idx + ". " + player,4+idx);
             idx++;
         }
-        if(viewBuffer.getLobbyModelView().isRoomOwner(username))t.printAction("help, chat, exit, +, -, s");
+        if(viewManager.getLobbyModelView().isRoomOwner(username))t.printAction("help, chat, exit, +, -, s");
         else t.printAction("help, chat, exit");
         printBorder();
     }

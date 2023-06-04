@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.util.List;
 
 public class Terminal {
-    PrintStream out;
+    private final PrintStream out;
     public boolean ANSI_ON;
     public final int WIDTH = 63;
     public final int SCREEN_HEIGHT = 33;
@@ -21,7 +21,7 @@ public class Terminal {
     public final int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
     public final int EXCEPTION_LINE= ACTION_LINE+1;
     public final int INFO_POS = 43;
-    public final String titleColor = ANSI.PINK_FG;
+    private final String titleColor = ANSI.PINK_FG;
     public final String[] title =
             {       titleColor+"  __  __          _____ _          _  __ _      \n"+ANSI.RESET,
                     titleColor+" |  \\/  |        / ____| |        | |/ _(_)     \n"+ANSI.RESET,

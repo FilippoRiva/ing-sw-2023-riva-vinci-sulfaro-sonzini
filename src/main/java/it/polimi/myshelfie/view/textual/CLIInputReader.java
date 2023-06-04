@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.view.textual;
 
-import it.polimi.myshelfie.view.ViewBuffer;
+import it.polimi.myshelfie.view.ViewManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,25 +8,31 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 public class CLIInputReader {
-    boolean on;
-    BufferedReader in;
-    CLIInputInterpreter interpreter;
-    public CLIInputReader(TextualUI textualUI, ViewBuffer viewBuffer, List<String> inputParameters) {
+    private boolean on;
+    private final BufferedReader in;
+    private final CLIInputInterpreter interpreter;
+    public CLIInputReader(TextualUI textualUI, ViewManager viewManager, List<String> inputParameters) {
         this.in = new BufferedReader(new InputStreamReader(System.in));
-        this.interpreter = new CLIInputInterpreter(textualUI,viewBuffer,inputParameters);
+        this.interpreter = new CLIInputInterpreter(textualUI, viewManager,inputParameters);
         this.on = true;
         read();
     }
 
     private void read(){
         while(on){
-            String input;
-            try {
-                input = in.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            synchronized (this){
+                String input;
+                try {
+                    input = in.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                interpreter.interpret(input);
             }
-            interpreter.interpret(input);
         }
+    }
+
+    public synchronized void stop(){
+        this.on = false;
     }
 }
