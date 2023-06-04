@@ -8,11 +8,11 @@ import it.polimi.myshelfie.network.ServerConnectionHandlerImpl;
 import it.polimi.myshelfie.network.ServerImpl;
 
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.net.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -83,6 +83,8 @@ public class ServerApp {
                         while (true) {
                             clientSkeleton.receive(serverConnectionHandler);
                         }
+                    } catch (InvalidClassException ignored){
+                        System.err.println("Receiving unknown messages from client.");
                     } catch (IOException e) {
                         System.err.println("Cannot receive from client. Closing connection...");
                     } finally {

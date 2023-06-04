@@ -9,6 +9,7 @@ import it.polimi.myshelfie.view.textual.CLIInputReader;
 import it.polimi.myshelfie.view.textual.TextualUI;
 
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -135,6 +136,8 @@ public class ClientApp {
                         System.err.println("Cannot close connection with server. Halting...");
                     }
                     System.exit(1);
+                } catch (InvalidClassException ignored){
+                    //receiving different class versions
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
