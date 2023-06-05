@@ -51,6 +51,8 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
         //stage config
         stage.setTitle("My Shelfie");
         stage.setResizable(true);
+        stage.setX(0);
+        stage.setY(0);
         stage.setMaximized(true);
         stage.setFullScreenExitHint("");
         stage.setMinHeight((double) 1080 /2);
