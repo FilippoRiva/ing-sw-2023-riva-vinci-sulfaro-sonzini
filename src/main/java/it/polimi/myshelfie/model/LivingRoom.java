@@ -110,7 +110,7 @@ public class LivingRoom {
                     fillArea(-1,4,1,1);
                     fillArea(1,-4,1,1);
                 }
-                case default ->{
+                default ->{
                     fillArea(-2,2,5,5);
 
                     fillArea(-4,0,2,2);
