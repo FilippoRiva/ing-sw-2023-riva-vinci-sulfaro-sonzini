@@ -9,15 +9,15 @@ import java.util.HashMap;
 
 public class Images {
     private static final HashMap<String, Image> tilesNameToImage = new HashMap<>();
-    public static final Image backPersonalGoal = getImage("personalGoals/back.jpg");
-    public static final Image emptyToken = getImage("tokens/scoring.jpg");
+    public static final Image backPersonalGoal = getImage("game/personalGoals/back.jpg");
+    public static final Image emptyToken = getImage("game/tokens/scoring.jpg");
 
     static void initImages(){
         for(ItemTileType itemTileType : ItemTileType.values()){
             if(itemTileType == ItemTileType.EMPTY) return;
             for(int i = 1 ; i < 4 ; i++){
                 tilesNameToImage.put(itemTileType.getName()+i,
-                        getImage("itemTiles/" + itemTileType.getName() + i + ".png"));
+                        getImage("game/itemTiles/" + itemTileType.getName() + i + ".png"));
             }
         }
     }

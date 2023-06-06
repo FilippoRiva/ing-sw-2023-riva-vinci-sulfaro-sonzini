@@ -105,12 +105,12 @@ public class GameController {
         commonGoals[0] = fullGameModelView.getCommonGoals().get(0);
         commonGoals[1] = fullGameModelView.getCommonGoals().get(1);
 
-        myPersonalGoal = getImage("personalGoals/Personal_Goals"+idPersonalGoal+".png");
+        myPersonalGoal = getImage("game/personalGoals/Personal_Goals"+idPersonalGoal+".png");
         personalGoalImage.setImage(myPersonalGoal);
-        commonGoal1Image.setImage(getImage("commonGoals/"+(commonGoals[0].getId()+1)+".jpg"));
-        commonGoal2Image.setImage(getImage("commonGoals/"+(commonGoals[1].getId()+1)+".jpg"));
-        token1Image.setImage(getImage("tokens/"+commonGoals[0].getTokens().get(commonGoals[0].getTokens().size()-1).getValue()+".jpg"));
-        token2Image.setImage(getImage("tokens/"+commonGoals[1].getTokens().get(commonGoals[1].getTokens().size()-1).getValue()+".jpg"));
+        commonGoal1Image.setImage(getImage("game/commonGoals/"+(commonGoals[0].getId()+1)+".jpg"));
+        commonGoal2Image.setImage(getImage("game/commonGoals/"+(commonGoals[1].getId()+1)+".jpg"));
+        token1Image.setImage(getImage("game/tokens/"+commonGoals[0].getTokens().get(commonGoals[0].getTokens().size()-1).getValue()+".jpg"));
+        token2Image.setImage(getImage("game/tokens/"+commonGoals[1].getTokens().get(commonGoals[1].getTokens().size()-1).getValue()+".jpg"));
 
         for(PlayerModelView pl : viewManager.getGameModelView().getPlayers()){
             if(pl.getName().equals(myName)) break;
@@ -445,10 +445,10 @@ public class GameController {
             List<Token> oldTokens = commonGoals[i].getTokens();
             if(oldTokens.size() > fullGameModelView.getCommonGoals().get(i).getTokens().size()) {
                 Image imageNew;
-                if(oldTokens.size()>1) imageNew = getImage("tokens/"+oldTokens.get(oldTokens.size()-2).getValue()+".jpg");
+                if(oldTokens.size()>1) imageNew = getImage("game/tokens/"+oldTokens.get(oldTokens.size()-2).getValue()+".jpg");
                 else imageNew = null;
 
-                Image imageTaken = getImage("tokens/"+oldTokens.get(oldTokens.size()-1).getValue()+".jpg");
+                Image imageTaken = getImage("game/tokens/"+oldTokens.get(oldTokens.size()-1).getValue()+".jpg");
                 takenTokens[i][previousPlayer] = imageTaken;
                 int finalI = i;
                 Image finalImageNew = imageNew;

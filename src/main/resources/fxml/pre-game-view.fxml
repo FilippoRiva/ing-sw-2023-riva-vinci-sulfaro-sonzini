@@ -18,12 +18,12 @@
                <children>
                   <ImageView fx:id="banner" cache="true" cacheHint="SCALE" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/Publisher%20material/banner%201386x400px.png" />
+                        <Image url="@../images/banner.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="logo" cache="true" cacheHint="SCALE" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
                      <image>
-                        <Image url="@../images/Publisher%20material/Title%202000x618px.png" />
+                        <Image url="@../images/title.png" />
                      </image>
                   </ImageView>
                </children>

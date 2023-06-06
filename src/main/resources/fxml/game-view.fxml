@@ -44,18 +44,18 @@
         </GridPane>
         <ImageView fx:id="lastTokenImage" fitWidth="60.0" layoutX="450.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true">
             <image>
-            <Image url="@../images/tokens/1.jpg" />
+            <Image url="@../images/game/tokens/1.jpg" />
             </image>
         </ImageView>
         <ImageView fx:id="personalGoalImage" fitHeight="260.0" layoutX="595.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
         <ImageView fx:id="takenToken1Image" fitWidth="60.0" layoutX="595.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
             <image>
-            <Image url="@../images/tokens/scoring.jpg" />
+            <Image url="@../images/game/tokens/scoring.jpg" />
             </image>
         </ImageView>
         <ImageView fx:id="takenToken2Image" fitWidth="60.0" layoutX="707.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
             <image>
-            <Image url="@../images/tokens/scoring.jpg" />
+            <Image url="@../images/game/tokens/scoring.jpg" />
             </image>
         </ImageView>
         <Button layoutX="758.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#prevPlayer" prefHeight="50.0" prefWidth="79.0" styleClass="arrow" />
