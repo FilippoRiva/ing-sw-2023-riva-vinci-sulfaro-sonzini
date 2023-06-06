@@ -5,6 +5,7 @@ import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
+import it.polimi.myshelfie.view.graphical.Effects;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -14,7 +15,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -53,6 +53,8 @@ public class JoinController {
         CustomBindings.bindSize(lobbiesScrollPane,listBackgroundImage.fitWidthProperty(),listBackgroundImage.fitHeightProperty());
 
         Animations.applyButtonAnimation(joinButton);
+        Effects.applyShadow(joinButton);
+
         CustomBindings.bindLowerPreGamePane(clearBackground,banner);
         this.preGameController = preGameController;
     }

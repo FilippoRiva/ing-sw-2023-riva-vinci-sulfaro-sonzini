@@ -23,6 +23,15 @@ public class CustomBindings {
         image.fitHeightProperty().bind(height);
     }
 
+    public static void bindSize(Region region, Region regionToCopySizeOf){
+        region.minWidthProperty().bind(regionToCopySizeOf.minWidthProperty());
+        region.maxWidthProperty().bind(regionToCopySizeOf.maxWidthProperty());
+        region.prefWidthProperty().bind(regionToCopySizeOf.prefWidthProperty());
+        region.minHeightProperty().bind(regionToCopySizeOf.minHeightProperty());
+        region.maxHeightProperty().bind(regionToCopySizeOf.maxHeightProperty());
+        region.prefHeightProperty().bind(regionToCopySizeOf.prefHeightProperty());
+    }
+
     public static void bindLowerPreGamePane(ImageView lowerBackground,ImageView banner){
         CustomBindings.bindSize(lowerBackground,GraphicalUI.stage.widthProperty(),
                 Bindings.max(

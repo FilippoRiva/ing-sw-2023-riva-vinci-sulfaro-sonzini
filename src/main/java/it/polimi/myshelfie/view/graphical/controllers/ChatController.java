@@ -93,10 +93,6 @@ public class ChatController implements Initializable {
         VBox singleMessageVBox = new VBox();
         CustomBindings.bindSize(messageBox,chatScroll.minWidthProperty().subtract(20),null);
 
-        singleMessageVBox.maxWidthProperty().bind(chatScroll.maxWidthProperty().divide(3).multiply(2));
-        singleMessageVBox.minWidthProperty().bind(chatScroll.maxWidthProperty().divide(3));
-        singleMessageVBox.prefWidthProperty().bind(singleMessageVBox.minWidthProperty());
-
         if(message.getSender().equals(ViewManager.getUsername())){
             messageBox.getChildren().addAll(emptySpace,singleMessageVBox);
         } else messageBox.getChildren().addAll(singleMessageVBox,emptySpace);
@@ -108,6 +104,11 @@ public class ChatController implements Initializable {
         textLabel.setStyle("-fx-font-size: 20; -fx-label-padding: 0 0 0 10; -fx-wrap-text: true");
         Label timeLabel = new Label(message.getTimeHHmm());
         timeLabel.setStyle("-fx-font-size: 10; -fx-label-padding: 0 0 0 10");
+
+        textLabel.maxWidthProperty().bind(chatScroll.maxWidthProperty().divide(3).multiply(2));
+        textLabel.minWidthProperty().bind(chatScroll.maxWidthProperty().divide(3));
+
+        CustomBindings.bindSize(singleMessageVBox,textLabel);
 
         if(message.getSender().equals(ViewManager.getUsername())){
             singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20");

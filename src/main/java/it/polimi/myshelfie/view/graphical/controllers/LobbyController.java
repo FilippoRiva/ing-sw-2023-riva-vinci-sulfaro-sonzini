@@ -3,10 +3,7 @@ package it.polimi.myshelfie.view.graphical.controllers;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
-import it.polimi.myshelfie.view.graphical.Animations;
-import it.polimi.myshelfie.view.graphical.CustomBindings;
-import it.polimi.myshelfie.view.graphical.GraphicalUI;
-import it.polimi.myshelfie.view.graphical.Images;
+import it.polimi.myshelfie.view.graphical.*;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
@@ -57,8 +54,10 @@ public class LobbyController {
         DoubleBinding maxHeight = stage.heightProperty().divide(3).multiply(2);
 
         CustomBindings.bindSize(scrollImage,stage.widthProperty().divide(3).multiply(2),maxHeight.divide(1.5));
-        CustomBindings.bindSize(chat,stage.widthProperty().divide(3),maxHeight.divide(2));
+        CustomBindings.bindSize(chat,stage.widthProperty().divide(3),maxHeight.divide(5).multiply(4));
         chat.setTranslateX(-60);
+
+        Effects.applyShadow(startButton);
 
         CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
 
