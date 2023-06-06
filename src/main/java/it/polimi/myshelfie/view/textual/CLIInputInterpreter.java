@@ -315,6 +315,7 @@ public class CLIInputInterpreter {
     }
 
     private void interpretMessage(String input){
+        if(input.isEmpty()) return;
         if(!input.startsWith("/")){
             Message message = new Message(ViewManager.username, Messages.toEveryOne,input);
             viewManager.sendChatMessage(message);
@@ -330,6 +331,10 @@ public class CLIInputInterpreter {
             UI.wrongInput("insert a valid username");
         }
         String msg = input.substring(user.length()+1);
+        if(msg.isEmpty()){
+            UI.wrongInput("insert message");
+            return;
+        }
         Message message = new Message(ViewManager.username, user, msg);
         viewManager.sendChatMessage(message);
     }

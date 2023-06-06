@@ -129,7 +129,7 @@ public class ChatController implements Initializable {
         Platform.runLater(()-> {
             ObservableList<Node> messages = messagesVBox.getChildren();
             if(messages.size() > 100) messages.remove(0);
-            messagesVBox.getChildren().add(messageBox);
+            messages.add(messageBox);
         });
     }
 
