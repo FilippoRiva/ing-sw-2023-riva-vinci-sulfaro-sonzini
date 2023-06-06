@@ -42,7 +42,6 @@ public class GraphicalUI extends Application implements UI {
     }
 
     public void startGUI(){
-        Images.initImages();
         Application.launch();
     }
     @Override
@@ -95,6 +94,8 @@ public class GraphicalUI extends Application implements UI {
                     updateProgress(3,10);
                     pane = fxmlLoader.load();
                     updateProgress(6,10);
+                    Images.initImages();
+                    updateProgress(9,10);
                 } catch (IOException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
