@@ -50,6 +50,25 @@ public class ControllerImpl implements Controller {
 
     @Override
     public synchronized LobbyController createLobby(Client client,ServerConnectionHandler connectionHandler, String playerName, String lobbyName){
+        if(playerName.contains("#")){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("# is not a valid character"));
+            return null;
+        } else if (playerName.contains(" ")){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Empty spaces not allowed"));
+            return null;
+        } else if (playerName.isEmpty()){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("No username"));
+            return null;
+        } else if(playerName.length()>20){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Usernames must not exceed 20 characters"));
+            return null;
+        } else if(lobbyName.replace(" ","").isEmpty()) {
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("No lobby name"));
+            return null;
+        } else if(lobbyName.length()>20){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Lobby names must no exceed 20 characters"));
+            return null;
+        }
         LobbyModel lobbyModel;
         try {
             lobbyModel = model.addLobby(lobbyName);
@@ -87,6 +106,19 @@ public class ControllerImpl implements Controller {
 
     @Override
     public synchronized LobbyController joinLobby(Client client, ServerConnectionHandler connectionHandler, String playerName, String lobbyName) {
+        if(playerName.contains("#")){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("# is not a valid character"));
+            return null;
+        } else if (playerName.contains(" ")){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Empty spaces not allowed"));
+            return null;
+        } else if (playerName.isEmpty()){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("No username"));
+            return null;
+        } else if(playerName.length()>20){
+            clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Usernames must not exceed 20 characters"));
+            return null;
+        }
         LobbyModel lobbyModel = getLobbyModel(lobbyName);
         LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
         if (lobbyModel != null) {

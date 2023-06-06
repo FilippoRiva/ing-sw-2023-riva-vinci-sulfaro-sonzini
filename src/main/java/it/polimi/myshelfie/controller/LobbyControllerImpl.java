@@ -126,6 +126,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
     @Override
     public synchronized void addMessage(Message message){
+        if(message.getMessage().isEmpty()) return;
         chatModel.addMessage(message);
     }
 
