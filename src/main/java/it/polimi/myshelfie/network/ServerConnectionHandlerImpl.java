@@ -82,7 +82,20 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
 
     @Override
-    public void close() throws RemoteException {
+    public void lifeline() throws RemoteException {
+        //this method blocks forever
+        Object obj = new Object();
+        synchronized (obj){
+            try {
+                obj.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public synchronized void close() throws RemoteException {
         controller.quit(client);
         if(gameController!=null) gameController.exitGame(playerName);
         else if(lobbyController!=null) lobbyController.exitLobby(playerName);

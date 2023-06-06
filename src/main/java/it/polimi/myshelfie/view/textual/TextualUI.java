@@ -1,28 +1,30 @@
 package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.model.modelviews.*;
-import it.polimi.myshelfie.utils.Observer;
-import it.polimi.myshelfie.view.InternalViewState;
-import it.polimi.myshelfie.view.ViewManager;
-import it.polimi.myshelfie.view.ViewType;
-import it.polimi.myshelfie.view.ViewUpdate;
+import it.polimi.myshelfie.view.*;
 import it.polimi.myshelfie.view.textual.pages.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TextualUI implements Observer<ViewUpdate, Object> {
+public class TextualUI implements UI {
     private final ViewManager viewManager;
     private final Terminal t;
     private String currentLibraryOwner;
     private ScreenPage currentPage;
     private final List<String> inputParameters;
     private InternalViewState internalViewState;
+    private final Thread readerThread;
+    private final CLIInputReader reader;
 
-    public TextualUI(ViewManager viewManager, List<String> inputParameters) {
-        this.viewManager = viewManager;
-        this.inputParameters = inputParameters;
+    public TextualUI() {
+        this.viewManager = ViewManager.getInstance();
+        this.inputParameters = new ArrayList<>();
         this.t = new Terminal();
         this.currentPage = new InitPage(t, viewManager,inputParameters);
+        this.reader = new CLIInputReader(this,viewManager,inputParameters);
+        this.readerThread = new Thread(reader::read);
+        readerThread.start();
     }
 
     /**
@@ -162,5 +164,17 @@ public class TextualUI implements Observer<ViewUpdate, Object> {
         t.clearAll();
         currentPage.render();
         t.clearInput();
+    }
+
+    @Override
+    public void stopUI() {
+        t.printPermanentError("Unable to reach server, press any button to try to reconnect");
+        this.internalViewState = InternalViewState.STOPPED;
+        readerThread.interrupt();
+        try {
+            readerThread.join();
+            t.clearAll();
+        } catch (InterruptedException ignored) {
+        }
     }
 }

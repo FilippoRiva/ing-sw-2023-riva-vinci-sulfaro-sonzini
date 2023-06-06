@@ -14,6 +14,13 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 
     @Override
     public void handshake(ServerConnectionHandler server) throws RemoteException {
+        new Thread(()->{
+            try {
+                server.lifeline();
+            } catch (RemoteException e) {
+                view.stopUI();
+            }
+        }).start();
         new Thread(()-> view.addObserver( (evt,message)->{
             if(evt==null) return;
             try {

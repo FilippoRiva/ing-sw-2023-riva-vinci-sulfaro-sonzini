@@ -37,8 +37,6 @@ public class Terminal {
         if(ANSI_ON_str == null) ANSI_ON = false;
         else ANSI_ON = ANSI_ON_str.equals("true");
         if(ANSI_ON) {
-            Thread shutDownHook = new Thread(this::clearAll);
-            Runtime.getRuntime().addShutdownHook(shutDownHook);
             clearAll();
             clearInput();
         }
@@ -66,6 +64,15 @@ public class Terminal {
             }
             clearError();
         }).start();
+    }
+
+    public void printPermanentError(String message){
+        if(ANSI_ON) {
+            positionCursor(EXCEPTION_LINE,1);
+            out.print(ANSI.RED_FG +message+ANSI.RESET);
+        }
+        else out.println("! "+message);
+        moveToInput();
     }
     public void printAction(String s) {
         positionCursor(ACTION_LINE,1);
@@ -104,7 +111,7 @@ public class Terminal {
         println(message);
     }
 
-    public void printMessage(String message, int line, int messageLength, int userLenght){
+    public void printMessage(String message, int line, int messageLength, int userLength){
         //TODO fix when message is too wide
         if(messageLength>(WIDTH-2)) {
             message = message.substring(0,WIDTH-2);

@@ -1,25 +1,23 @@
 package it.polimi.myshelfie.view.textual;
 
+import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 
 public class CLIInputReader {
-    private boolean on;
-    private final BufferedReader in;
+    public final BufferedReader in;
     private final CLIInputInterpreter interpreter;
+    private final TextualUI UI;
     public CLIInputReader(TextualUI textualUI, ViewManager viewManager, List<String> inputParameters) {
+        this.UI = textualUI;
         this.in = new BufferedReader(new InputStreamReader(System.in));
         this.interpreter = new CLIInputInterpreter(textualUI, viewManager,inputParameters);
-        this.on = true;
-        read();
     }
 
-    private void read(){
-        while(on){
+    void read(){
+        while(!Thread.currentThread().isInterrupted()){
             synchronized (this){
                 String input;
                 try {
@@ -27,12 +25,9 @@ public class CLIInputReader {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                interpreter.interpret(input);
+                if(UI.getInternalViewState() != InternalViewState.STOPPED) interpreter.interpret(input);
+                else return;
+                }
             }
-        }
-    }
-
-    public synchronized void stop(){
-        this.on = false;
     }
 }

@@ -2,10 +2,16 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.GraphicalUI;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,11 +25,16 @@ public class MainViewController implements Initializable {
     private AnchorPane game;
     @FXML
     private StackPane preGame;
+    @FXML
+    private Pane criticalErrorPane;
+    @FXML
+    private Label errorLabel;
     private ViewManager viewManager;
     private InternalViewState currentState;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.viewManager = ViewManager.getInstance();
+        criticalErrorPane.setVisible(false);
 
         currentState = InternalViewState.INIT;
 
@@ -56,10 +67,35 @@ public class MainViewController implements Initializable {
                 gameController.win();
             }
             case DISCONNECTION -> {
-                gameController.displayCrashError(viewManager.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
+                showErrorPane(viewManager.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
+            }
+            case  STOPPED -> {
+                showErrorPane("You have been disconnected. Try reconnecting later");
             }
         }
         currentState = internalViewState;
+    }
+
+    private void showErrorPane(String message) {
+        Platform.runLater(() -> {
+            criticalErrorPane.setMouseTransparent(false);
+            errorLabel.setText(message);
+            errorLabel.setTextFill(Color.RED);
+            errorLabel.setBackground(Background.fill(Color.BLACK));
+            criticalErrorPane.setVisible(true);
+        });
+    }
+
+    @FXML
+    public void onErrorButtonMouseClicked(){
+        criticalErrorPane.setMouseTransparent(true);
+        criticalErrorPane.setVisible(false);
+        if(currentState==InternalViewState.STOPPED){
+            GraphicalUI.stage.hide();
+            System.exit(0);
+        } else {
+            changeView(InternalViewState.INIT);
+        }
     }
 
     public void joinUpdate() {
@@ -87,4 +123,5 @@ public class MainViewController implements Initializable {
         preGameController.notifyNewMessage();
         preGameController.lobbyController.chatController.addChatMessage();
     }
+
 }

@@ -18,4 +18,5 @@ public abstract class View extends Observable<ViewEvent, NetworkMessage>{
     public abstract void updateInsertView(InsertModelView insertModelView);
     public abstract void updateTurnView(EndTurnModelView endTurnModelView);
     public abstract void setView(ViewType viewType);
+    public abstract void stopUI();
 }

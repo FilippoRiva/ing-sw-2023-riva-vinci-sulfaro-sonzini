@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.view;
 
+import it.polimi.myshelfie.ClientApp;
 import it.polimi.myshelfie.GameConfig;
 import it.polimi.myshelfie.model.*;
 import it.polimi.myshelfie.model.chatting.Message;
@@ -352,6 +353,15 @@ public class ViewManager extends View {
         }
     }
 
+    private void resetBuffer(){
+        this.fullGameModelView = null;
+        this.gameDifferences = null;
+        this.oldGameModelView = null;
+        this.lobbyModelView = null;
+        this.playerChatModelView = null;
+        this.disconnectedClientExceptionsNotifierView = null;
+    }
+
     @Override
     public void setView(ViewType viewType) {
         synchronized (sync) {
@@ -363,12 +373,7 @@ public class ViewManager extends View {
                         } catch (InterruptedException ignored) {
                         }
                     }
-                    fullGameModelView = null;
-                    gameDifferences = null;
-                    oldGameModelView = null;
-                    lobbyModelView = null;
-                    playerChatModelView = null;
-                    disconnectedClientExceptionsNotifierView = null;
+                    resetBuffer();
                 }
                 case LOBBY -> {
                     while (lobbyModelView == null) { //waits until lobbyModelView != null
@@ -595,5 +600,16 @@ public class ViewManager extends View {
             } catch (InvalidParameterException ignored) {
             }
         }
+    }
+
+    @Override
+    public void stopUI() {
+        for(Observer<ViewUpdate,Object> o : UINotifier.getObservers()){
+            ((UI)o).stopUI();
+        }
+        UINotifier.deleteObservers();
+        this.resetBuffer();
+        System.out.println("Disconnected from server...\nTry to reconnect\n");
+        ClientApp.initialUserChoice();
     }
 }

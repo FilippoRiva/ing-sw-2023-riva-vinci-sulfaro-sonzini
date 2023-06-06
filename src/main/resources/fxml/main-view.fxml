@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.MainViewController">
    <children>
       <fx:include fx:id="preGame" source="pre-game-view.fxml" AnchorPane.topAnchor="0.0" />
       <fx:include fx:id="game" source="game-view.fxml" />
+      <AnchorPane fx:id="criticalErrorPane">
+         <children>
+            <StackPane>
+               <children>
+                  <VBox alignment="CENTER" spacing="20.0" StackPane.alignment="CENTER">
+                     <children>
+                        <Label id="crashLabel" fx:id="errorLabel" alignment="CENTER" prefHeight="114.0" prefWidth="621.0" style="-fx-font-size: 30; -fx-text-fill: red;" styleClass="crash-label" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font size="130.0" />
+                           </font>
+                        </Label>
+                        <Button id="crashButton" fx:id="errorButton" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onErrorButtonMouseClicked" prefHeight="70.0" prefWidth="70.0" styleClass="crash-button" text="Ok" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

@@ -58,6 +58,7 @@ public class ClientSkeleton implements Client{
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 serverConnectionHandler.send(message);
             } catch (ClassNotFoundException ignored) {
+                //ignoring out of date messages
             }
         }
     }

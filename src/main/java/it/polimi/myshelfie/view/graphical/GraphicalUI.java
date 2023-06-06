@@ -1,6 +1,6 @@
 package it.polimi.myshelfie.view.graphical;
 
-import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.view.UI;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.controllers.*;
@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-public class GraphicalUI extends Application implements Observer<ViewUpdate, Object> {
+public class GraphicalUI extends Application implements UI {
     ViewManager viewManager = ViewManager.getInstance();
     public static Stage stage;
     public static MainViewController mainViewController;
@@ -128,5 +128,10 @@ public class GraphicalUI extends Application implements Observer<ViewUpdate, Obj
             case WIN -> mainViewController.changeView(InternalViewState.WIN);
             case DISCONNECTION -> mainViewController.changeView(InternalViewState.DISCONNECTION);
         }
+    }
+
+    @Override
+    public void stopUI() {
+        mainViewController.changeView(InternalViewState.STOPPED);
     }
 }

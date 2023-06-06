@@ -71,10 +71,14 @@ public class ControllerImpl implements Controller {
         }
         gamesControllers.put(lobbyName,gameController);
         lobbiesControllers.put(lobbyName,lobbyController);
+        try {
+            connectionHandler.setChatController(lobbyController);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
-                connectionHandler.setChatController(lobbyController);
             } catch (RemoteException ignored) {
             }
         }).start();
@@ -100,10 +104,14 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(new LobbyExistenceException(false, lobbyName));
             return null;
         }
+        try{
+            connectionHandler.setChatController(lobbyController);
+        } catch(RemoteException e){
+            throw new RuntimeException(e);
+        }
         new Thread(()-> {
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
-                connectionHandler.setChatController(lobbyController);
             } catch (RemoteException ignored) {
             }
         }).start();

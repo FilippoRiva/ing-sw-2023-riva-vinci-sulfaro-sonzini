@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.utils;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Observable<Event extends Enum<Event>, Representation>{
@@ -33,7 +34,7 @@ public class Observable<Event extends Enum<Event>, Representation>{
             ((Observer<Event, Representation>) o).update(event, representation);
         }
     }
-
+    public synchronized ArrayList<Observer<Event,Representation>> getObservers() {return new ArrayList<>(obs);};
     public synchronized void deleteObservers() { obs.removeAllElements();}
     public synchronized void setChanged() { changed = true;}
     public synchronized void clearChanged() { changed = false;}

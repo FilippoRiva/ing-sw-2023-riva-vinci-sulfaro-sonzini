@@ -1,11 +1,9 @@
 package it.polimi.myshelfie;
 
 import it.polimi.myshelfie.network.*;
-import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.view.ViewManager;
-import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
-import it.polimi.myshelfie.view.textual.CLIInputReader;
+import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.TextualUI;
 
 import java.io.IOException;
@@ -23,6 +21,13 @@ public class ClientApp {
     static String serverIP = "localhost";
     static int registryPort = 1099;
     public static void main(String[] args){
+        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+            System.out.println(ANSI.CLEAR_ALL);
+        }));
+        initialUserChoice();
+    }
+
+    public static void initialUserChoice(){
         Scanner scanner = new Scanner(System.in);
         int networkChoice = -1;
         int viewChoice = -1;
@@ -78,14 +83,14 @@ public class ClientApp {
             }
         }
 
-        List<String> inputParameters = new ArrayList<>();
-        Observer<ViewUpdate, Object> view;
-        if(viewChoice == 1) view = new TextualUI(viewManager,inputParameters);
-        else view = new GraphicalUI();
-        viewManager.addUI(view);
-        if(viewChoice==1) new Thread(()->new CLIInputReader((TextualUI) view, viewManager,inputParameters)).start();
+        if(viewChoice == 1) {
+            TextualUI view = new TextualUI();
+            viewManager.addUI(view);
+        }
         else {
-            ((GraphicalUI)view).startGUI();
+            GraphicalUI view = new GraphicalUI();
+            viewManager.addUI(view);
+            view.startGUI();
         }
     }
 
@@ -129,19 +134,18 @@ public class ClientApp {
                 try {
                     serverStub.receive(client);
                 } catch (RemoteException e) {
-                    System.err.println("Cannot receive from server. Stopping...");
                     try {
                         serverStub.close();
-                    } catch (RemoteException ex) {
-                        System.err.println("Cannot close connection with server. Halting...");
+                    } catch (RemoteException ignored) {
                     }
-                    System.exit(1);
+                    break;
                 } catch (InvalidClassException ignored){
                     //receiving different class versions
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
+            viewManager.stopUI();
         }).start();
     }
 }

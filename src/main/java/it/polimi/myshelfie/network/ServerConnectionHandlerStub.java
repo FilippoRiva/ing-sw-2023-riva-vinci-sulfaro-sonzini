@@ -3,6 +3,7 @@ package it.polimi.myshelfie.network;
 import it.polimi.myshelfie.controller.GameControllerImpl;
 import it.polimi.myshelfie.controller.interfaces.ChatController;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,12 +64,20 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     public void setChatController(ChatController chatController) throws RemoteException {
     }
 
+    @Override
+    public void lifeline() throws RemoteException {
+        //not needed in socket implementation
+    }
+
     public void receive(ClientImpl client) throws IOException {
         synchronized (receiveLock){
             try {
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 client.send(message);
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException ignored) {
+                //ignoring out of date messages
+            } catch (EOFException e) {
+                throw new RemoteException();
             }
         }
     }

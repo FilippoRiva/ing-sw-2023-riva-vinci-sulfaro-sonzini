@@ -10,5 +10,6 @@ public enum InternalViewState {
     GOALS,
     HELP,
     DISCONNECTION,
-    WIN
+    WIN,
+    STOPPED
 }

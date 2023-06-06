@@ -19,7 +19,6 @@ import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
@@ -470,16 +469,6 @@ public class GameController {
         Platform.runLater(() -> {
             takenToken1Image.setImage(takenTokens[0][seeingPlayer]);
             takenToken2Image.setImage(takenTokens[1][seeingPlayer]);
-        });
-    }
-
-    public void displayCrashError(String message){
-        Platform.runLater(() -> {
-            crashPane.setVisible(true);
-            crashLabel.setText(message);
-            crashLabel.setTextFill(Color.RED);
-            crashLabel.setBackground(Background.fill(Color.BLACK));
-            crashLabel.setVisible(true);
         });
     }
 
