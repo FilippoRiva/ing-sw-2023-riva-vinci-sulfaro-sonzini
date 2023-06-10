@@ -70,8 +70,8 @@ public class ClientApp {
             System.out.print("> Input server IP or press enter to connect to localhost : ");
             String ip = scanner.nextLine();
             try {
-                if(!ip.equals("") && !InetAddress.getByName(ip).isReachable(500)){
-                    System.out.println("   !! Not a valid hostname");
+                if(!InetAddress.getByName(ip).isReachable(1000)){
+                    System.out.println("   !! Not a reachable ip hostname");
                 } else {
                     if(!ip.equals("")) serverIP = ip;
                     if(networkChoice == 1) startSocketConnection(viewManager);

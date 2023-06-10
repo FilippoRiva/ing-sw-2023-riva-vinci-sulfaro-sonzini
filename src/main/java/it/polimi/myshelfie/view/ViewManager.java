@@ -584,16 +584,16 @@ public class ViewManager extends View {
     }
 
     public void startAutoPlayer(int roomSize) {
-        AutoPlayer a = new AutoPlayer(viewManager, null);
+        AutoPlayer a = new AutoPlayer();
         try {
             a.preGameStart(roomSize);
         } catch (InvalidParameterException ignored) {
         }
     }
     public void startAutoPlayer(){
-        AutoPlayer a = new AutoPlayer(viewManager, null);
+        AutoPlayer a = new AutoPlayer();
         if(fullGameModelView!=null){
-            a.postGameStart(username);
+            a.postGameStart();
         } else {
             try {
                 a.preGameStart(2);
