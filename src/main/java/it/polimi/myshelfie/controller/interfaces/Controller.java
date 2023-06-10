@@ -3,6 +3,7 @@ package it.polimi.myshelfie.controller.interfaces;
 
 import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.model.events.ModelEvent;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.Client;
@@ -38,7 +39,7 @@ public interface Controller {
      * @param networkExceptionsObserver (??)
      */
 
-    void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver, Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver);
+    void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver, Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver) throws InvalidParameterException;
 
     /**
      * Removes a client from the game.

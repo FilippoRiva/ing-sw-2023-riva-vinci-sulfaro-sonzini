@@ -43,5 +43,7 @@ public interface GameController {
      * Disconnects a player from the game.
      * @param playerName is the name of the player quitting.
      */
-    void exitGame(String playerName);
+    void disconnectFromGame(String playerName);
+
+    void leaveEndGame(String username, boolean fromDisconnection);
 }

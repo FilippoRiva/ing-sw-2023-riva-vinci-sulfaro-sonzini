@@ -5,7 +5,6 @@ import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.Position;
-import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.events.ChatEvent;
 import it.polimi.myshelfie.model.events.GameEvent;
@@ -31,10 +30,9 @@ import java.util.Map;
 
 public class GameControllerImpl implements GameController, ChatController{
 
-    private final String gameName;
     private final GameModel gameModel;
     private final ChatModel chatModel;
-    private final ControllerImpl controllerImpl;
+    private final ControllerImpl controller;
     private Map<String,Client> clientsMap;
     private Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
     private Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
@@ -42,21 +40,41 @@ public class GameControllerImpl implements GameController, ChatController{
 
     /**
      * Constructor for the GameControllerImpl class.
-     * @param gameName the name of the game.
      * @param gameModel the model associated to the game.
      * @param chatModel the model associated to the game chat.
-     * @param controllerImpl the controller of the game.
      */
-    public GameControllerImpl(String gameName, GameModel gameModel, ChatModel chatModel, ControllerImpl controllerImpl){
-        this.gameName = gameName;
+    public GameControllerImpl(ControllerImpl controller, GameModel gameModel, ChatModel chatModel){
+        this.controller = controller;
         this.gameModel = gameModel;
         this.chatModel = chatModel;
-        this.controllerImpl = controllerImpl;
         this.clientsMap = new HashMap<>();
         this.exceptionsNotifiersMap = new HashMap<>();
         this.gameObserverMap = new HashMap<>();
         this.chatObserverMap = new HashMap<>();
     }
+
+    /**
+     * This method initializes the attributes of the GameControllerImpl class.
+     * @param clientsMap the list of clients and their players.
+     * @param connectionHandlersMap the list of connection handlers.
+     * @param notifiersMap the list of the exceptions notifiers.
+     */
+    protected void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
+                        Map<String, ClientExceptionsNotifier> notifiersMap){
+        this.clientsMap = clientsMap;
+        this.exceptionsNotifiersMap = notifiersMap;
+        this.chatObserverMap = new HashMap<>();
+        for(ServerConnectionHandler sch : connectionHandlersMap.values()){
+            try {
+                sch.setGameController(this);
+                sch.setChatController(this);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        gameModel.setState(GameState.FIRST_DRAW);
+    }
+
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) {
         GameState currentGameState = gameModel.getState();
@@ -96,7 +114,6 @@ public class GameControllerImpl implements GameController, ChatController{
             return;
         }
         endTurn(playerName);
-
     }
 
     /**
@@ -146,7 +163,11 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     @Override
-    public synchronized void exitGame(String disconnectedPlayerName) {
+    public synchronized void disconnectFromGame(String disconnectedPlayerName) {
+        if(gameModel.getState()==GameState.WIN) {
+            leaveEndGame(disconnectedPlayerName,true);
+            return;
+        }
         clientsMap.remove(disconnectedPlayerName);
         //notifying non disconnected clients
         for(String player : clientsMap.keySet()){
@@ -156,49 +177,41 @@ public class GameControllerImpl implements GameController, ChatController{
                     clientsMap.get(player).send(new NetworkMessage(ViewType.DISCONNECTION));
                 } catch (RemoteException ignored) {
                 }
+                controller.clientHasLeft(clientsMap.get(player));
             }).start();
         }
         //removing observers
-        for(Observer<GameEvent, GameModelView> o : gameObserverMap.values()){
-            gameModel.removeGameObserver(o);
-        }
-        for(String player : chatObserverMap.keySet()){
-            chatModel.removeChatObserver(player,chatObserverMap.get(player));
-        }
-        gameModel.setState(GameState.WIN);
-        controllerImpl.deleteGame(gameName);
-    }
-
-    /**
-     * This method initializes the attributes of the GameControllerImpl class.
-     * @param clientsMap the list of clients and their players.
-     * @param connectionHandlersMap the list of connection handlers.
-     * @param notifiersMap the list of the exceptions notifiers.
-     * @param chatObserverMap the list of the chat observers.
-     */
-    protected void init(Map<String,Client> clientsMap, Map<String,ServerConnectionHandler> connectionHandlersMap,
-                     Map<String, ClientExceptionsNotifier> notifiersMap,
-                     Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap){
-        this.clientsMap = clientsMap;
-        this.exceptionsNotifiersMap = notifiersMap;
-        this.chatObserverMap = chatObserverMap;
-        for(ServerConnectionHandler sch : connectionHandlersMap.values()){
-            try {
-                sch.setGameController(this);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        gameModel.setState(GameState.FIRST_DRAW);
+        gameModel.removeGameObservers();
+        chatModel.removeChatObservers();
     }
 
     @Override
-    public synchronized void addMessage(Message message){
+    public synchronized void leaveEndGame(String username, boolean fromDisconnection) {
+        if(!fromDisconnection){
+            Client client = clientsMap.get(username);
+            new Thread(()->{
+                try {
+                    client.send(new NetworkMessage(ViewType.INIT));
+                } catch (RemoteException ignored) {
+                }
+            }).start();
+        }
+        gameModel.removeGameObserver(gameObserverMap.get(username));
+        chatModel.removeChatObserver(username,chatObserverMap.get(username));
+        gameObserverMap.remove(gameObserverMap.get(username));
+        chatObserverMap.remove(chatObserverMap.get(username));
+        controller.clientHasLeft(clientsMap.get(username));
+        clientsMap.remove(username);
+    }
+
+    @Override
+    public synchronized void addMessage(String playerName, Message message){
         chatModel.addMessage(message);
     }
 
     @Override
-    public synchronized void addChatObserver(String playername, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
-        chatModel.addChatObserver(playername,networkChatObserver);
+    public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
+        chatModel.addChatObserver(playerName,networkChatObserver);
+        chatObserverMap.put(playerName,networkChatObserver);
     }
 }

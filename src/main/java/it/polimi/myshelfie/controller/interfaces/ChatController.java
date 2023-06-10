@@ -11,7 +11,7 @@ public interface ChatController {
      * @param message is a message written by a player and sent to one or more players.
      *
      */
-    void addMessage(Message message);
+    void addMessage(String playerName, Message message);
 
     /**
      * Adds a chat observer.

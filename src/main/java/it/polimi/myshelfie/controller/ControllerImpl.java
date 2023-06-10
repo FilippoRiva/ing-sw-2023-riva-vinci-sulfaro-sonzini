@@ -23,21 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControllerImpl implements Controller {
-    private final Map<String, GameControllerImpl> gamesControllers;
-
     private final Map<String, LobbyControllerImpl> lobbiesControllers;
-
     private final Map<Client, ClientExceptionsNotifier> clientExceptionsNotifiers;
-
+    private final Map<Client,Boolean> clientHasJoinedMap;
     private Model model;
 
     /**
      * Constructor for the ControllerImpl class.
      */
     public ControllerImpl(){
-        this.gamesControllers = new HashMap<>();
         this.lobbiesControllers = new HashMap<>();
         this.clientExceptionsNotifiers = new HashMap<>();
+        this.clientHasJoinedMap = new HashMap<>();
     }
 
     /**
@@ -48,8 +45,52 @@ public class ControllerImpl implements Controller {
         this.model = model;
     }
 
+    /**
+     * Adds a client to this controller implementation.
+     * @param client is the client representing the player who's connecting.
+     * @param networkModelObserver is the network model observer (??)
+     * @param networkExceptionsObserver (??)
+     */
+    @Override
+    public synchronized void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver,
+                                       Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver) throws InvalidParameterException{
+        if(clientExceptionsNotifiers.containsKey(client)) {
+            throw new InvalidParameterException("Client already exists");
+        }
+
+        //connects the client to the model
+        model.addModelObserver(networkModelObserver);
+        ClientExceptionsNotifier cen = model.getNewClientExceptionNotifier();
+        cen.addExceptionsObserver(networkExceptionsObserver);
+        clientExceptionsNotifiers.put(client,cen);
+
+        clientHasJoinedMap.put(client,false);
+
+        //going to INIT view
+        new Thread(()->{
+            try {
+                client.send(new NetworkMessage(ViewType.INIT));
+            } catch (RemoteException ignored) {
+            }
+        }).start();
+    }
+
+    /**
+     * Creates a lobby and connects the creator to it.
+     * It checks if the username and the lobby name are valid names.
+     * Notifies the Client's ClientExceptionNotifier if the lobby has already been created
+     *
+     * @param client is the client representing the player who's connecting.
+     * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
+     * @param playerName is the name of this first player which is now the room owner and created this lobby.
+     * @param lobbyName is the name of the created lobby.
+     * @return null if the creation fails, the lobbyController of the created lobby otherwise.
+     */
     @Override
     public synchronized LobbyController createLobby(Client client,ServerConnectionHandler connectionHandler, String playerName, String lobbyName){
+        if(!clientExceptionsNotifiers.containsKey(client)) return null; //checking connection
+        if(clientHasJoinedMap.get(client)) return null; //client is already in a game
+        //checking player name and lobby name validity
         if(playerName.contains("#")){
             clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("# is not a valid character"));
             return null;
@@ -69,6 +110,8 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Lobby names must no exceed 20 characters"));
             return null;
         }
+
+        // starting lobby model
         LobbyModel lobbyModel;
         try {
             lobbyModel = model.addLobby(lobbyName);
@@ -76,36 +119,50 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(e);
             return null;
         }
-        GameControllerImpl gameController = new GameControllerImpl(lobbyName, lobbyModel.getGameModel(), lobbyModel.getChatModel(), this);
+
+        //starting lobby controller
         LobbyControllerImpl lobbyController = new LobbyControllerImpl(lobbyName, lobbyModel, lobbyModel.getChatModel(), this);
         try {
             lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
         } catch (InvalidParameterException | LobbyFullException e) {
             clientExceptionsNotifiers.get(client).notifyException(e);
-            try {
-                client.send(new NetworkMessage(ViewType.INIT));
-            } catch (RemoteException ignored) {
-            }
             return null;
         }
-        gamesControllers.put(lobbyName,gameController);
         lobbiesControllers.put(lobbyName,lobbyController);
         try {
             connectionHandler.setChatController(lobbyController);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
+        //going to LOBBY view
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
             } catch (RemoteException ignored) {
             }
         }).start();
+
+        clientHasJoinedMap.replace(client,true);
+
         return lobbyController;
     }
 
+    /**
+     * Connects the client to a pre-existing lobby.
+     * If the lobby doesn't exist it notifies the Client's ClientExceptionNotifier.
+     *
+     * @param client is the client representing the player who's connecting.
+     * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
+     * @param playerName is the name of the player that wants to join this lobby.
+     * @param lobbyName is the name of the joined lobby.
+     * @return null if connection fails, the lobbyController otherwise
+     */
     @Override
     public synchronized LobbyController joinLobby(Client client, ServerConnectionHandler connectionHandler, String playerName, String lobbyName) {
+        if(!clientExceptionsNotifiers.containsKey(client)) return null;
+        if(clientHasJoinedMap.get(client)) return null; //client is already in a game
+        //checking player name validity
         if(playerName.contains("#")){
             clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("# is not a valid character"));
             return null;
@@ -119,11 +176,12 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(new InvalidParameterException("Usernames must not exceed 20 characters"));
             return null;
         }
-        LobbyModel lobbyModel = getLobbyModel(lobbyName);
+
+        //joining lobby using lobby controller if lobby exists
         LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
-        if (lobbyModel != null) {
+        if (lobbyController != null) {
             try {
-                lobbiesControllers.get(lobbyName).addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
+                lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
             } catch (InvalidParameterException | LobbyFullException e) {
                 clientExceptionsNotifiers.get(client).notifyException(e);
                 try {
@@ -136,60 +194,30 @@ public class ControllerImpl implements Controller {
             clientExceptionsNotifiers.get(client).notifyException(new LobbyExistenceException(false, lobbyName));
             return null;
         }
-        try{
-            connectionHandler.setChatController(lobbyController);
-        } catch(RemoteException e){
-            throw new RuntimeException(e);
-        }
+
+        //going to LOBBY view
         new Thread(()-> {
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
             } catch (RemoteException ignored) {
             }
         }).start();
-        return lobbiesControllers.get(lobbyName);
+
+        clientHasJoinedMap.replace(client,true);
+
+        return lobbyController;
     }
-
-    @Override
-    public synchronized void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver,
-                                       Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver){
-
-        model.addModelObserver(networkModelObserver);
-
-        ClientExceptionsNotifier cen = model.getNewClientExceptionNotifier();
-        cen.addExceptionsObserver(networkExceptionsObserver);
-
-        clientExceptionsNotifiers.put(client,cen);
-        new Thread(()->{
-            try {
-                client.send(new NetworkMessage(ViewType.INIT));
-            } catch (RemoteException ignored) {
-
-            }
-        }).start();
-    }
-
     @Override
     public synchronized void quit(Client client) {
         clientExceptionsNotifiers.remove(client);
-    }
-
-    /**
-     * Returns the lobby model associated to that specific lobby.
-     * @param lobbyName the lobby whose model I want.
-     * @return the associated lobby model.
-     */
-    private LobbyModel getLobbyModel(String lobbyName) {
-        LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
-        if(lobbyController==null) return null;
-        return lobbyController.getLobbyModel();
+        clientHasJoinedMap.remove(client);
     }
 
     /**
      * Removes a lobby from the lobby list.
      * @param lobbyName is the name of the lobby that must be deleted.
      */
-    protected void deleteLobby(String lobbyName){
+    protected synchronized void deleteLobby(String lobbyName){
         if(!lobbiesControllers.containsKey(lobbyName)) return;
         lobbiesControllers.remove(lobbyName);
         try {
@@ -199,20 +227,7 @@ public class ControllerImpl implements Controller {
         }
     }
 
-    /**
-     * Returns the game controller associated to that specific game.
-     * @param lobbyName is the lobby/game whose controller I want.
-     * @return the associated game controller.
-     */
-    protected GameControllerImpl getGameController(String lobbyName){
-        return gamesControllers.get(lobbyName);
-    }
-
-    /**
-     * Removes a game from the game list.
-     * @param gameName is the name of the game that must be deleted.
-     */
-    protected void deleteGame(String gameName) {
-        gamesControllers.remove(gameName);
+    public void clientHasLeft(Client client) {
+        clientHasJoinedMap.replace(client, false);
     }
 }

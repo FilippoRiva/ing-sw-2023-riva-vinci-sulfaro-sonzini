@@ -5,6 +5,7 @@ import it.polimi.myshelfie.controller.interfaces.ChatController;
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
+import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -37,25 +38,30 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
                 }
             }
         }).start();
-        controller.addClient(client, ((evt, modelView)-> new Thread(()->{
-            try {
-                client.send(new NetworkMessage(evt,modelView));
-            } catch (RemoteException ignored) {
-            }
-        }).start()), ((evt, clientExceptionsNotifierView)->{
-            if(evt==null) return;
-            new Thread(()->{
+        try{
+            controller.addClient(client, ((evt, modelView)-> new Thread(()->{
                 try {
-                    client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
+                    client.send(new NetworkMessage(evt,modelView));
                 } catch (RemoteException ignored) {
                 }
-            }).start();
-        }));
+            }).start()), ((evt, clientExceptionsNotifierView)->{
+                if(evt==null) return;
+                new Thread(()->{
+                    try {
+                        client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
+                    } catch (RemoteException ignored) {
+                    }
+                }).start();
+            }));
+        } catch (InvalidParameterException e ){
+            throw new RuntimeException(e); //controller does not support multiple instances of the same client connected
+        }
     }
 
     @Override
     public synchronized void setGameController(GameControllerImpl gameController) throws RemoteException{
         this.gameController = gameController;
+        if(gameController == null) return;
         gameController.addGameObserver(playerName, (evt, gameModelView)->{
             if(evt==null) return;
             new Thread(()->{
@@ -70,6 +76,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public synchronized void setChatController(ChatController chatController) throws RemoteException{
         this.chatController = chatController;
+        if(chatController==null) return;
         chatController.addChatObserver(playerName, ((evt,playerChatModelView)->{
             if(evt==null) return;
             new Thread(()->{
@@ -97,7 +104,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public synchronized void close() throws RemoteException {
         controller.quit(client);
-        if(gameController!=null) gameController.exitGame(playerName);
+        if(gameController!=null) gameController.disconnectFromGame(playerName);
         else if(lobbyController!=null) lobbyController.exitLobby(playerName);
     }
 

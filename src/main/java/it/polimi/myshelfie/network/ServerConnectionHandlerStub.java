@@ -2,6 +2,7 @@ package it.polimi.myshelfie.network;
 
 import it.polimi.myshelfie.controller.GameControllerImpl;
 import it.polimi.myshelfie.controller.interfaces.ChatController;
+import it.polimi.myshelfie.controller.interfaces.LobbyController;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -62,6 +63,10 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
 
     @Override
     public void setChatController(ChatController chatController) throws RemoteException {
+    }
+
+    @Override
+    public void setLobbyController(LobbyController lobbyController) throws RemoteException {
     }
 
     @Override

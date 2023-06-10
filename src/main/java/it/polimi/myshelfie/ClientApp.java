@@ -21,9 +21,7 @@ public class ClientApp {
     static String serverIP = "localhost";
     static int registryPort = 1099;
     public static void main(String[] args){
-        Runtime.getRuntime().addShutdownHook(new Thread(()->{
-            System.out.println(ANSI.CLEAR_ALL);
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(()-> System.out.println(ANSI.CLEAR_ALL)));
         initialUserChoice();
     }
 

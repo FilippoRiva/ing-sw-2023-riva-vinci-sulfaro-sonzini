@@ -41,13 +41,13 @@ public class NetworkMessage implements Serializable {
             Client client = controllers.getClient();
             ServerConnectionHandlerImpl connectionHandler = controllers.getServerConnectionHandler();
             LobbyController lobbyController;
-            connectionHandler.setPlayerName(playerName);
             if(evt==ViewEvent.JOIN_REQUEST){
                 lobbyController = controllers.getController().joinLobby(client, connectionHandler, playerName, lobby);
             } else {
                 lobbyController = controllers.getController().createLobby(client, connectionHandler, playerName, lobby);
             }
             if(lobbyController==null) return;
+            connectionHandler.setPlayerName(playerName);
             lobbyController.addLobbyObserver(playerName,((event,lobbyModelView)-> new Thread(()->{
                 try {
                     client.send(new NetworkMessage(event,lobbyModelView));
@@ -74,7 +74,8 @@ public class NetworkMessage implements Serializable {
         this.event = evt;
         this.serverFunction = ((controllers)->{
             if(controllers.getChatController()==null) return;
-            new Thread(()->controllers.getChatController().addMessage(message)).start();
+            new Thread(()->controllers.getChatController().addMessage(
+                    controllers.getUsername(), message)).start();
         });
     }
 
@@ -82,13 +83,31 @@ public class NetworkMessage implements Serializable {
         if(evt!=ViewEvent.START_REQUEST && evt!= ViewEvent.EXIT_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)->{
-            if(controllers.getLobbyController()==null) return;
-            new Thread(()->{
-                if(evt == ViewEvent.START_REQUEST) controllers.getLobbyController().startGame(controllers.getUsername());
-                else controllers.getLobbyController().exitLobby(controllers.getUsername());
-            }).start();
-        });
+        this.serverFunction = ((controllers)-> new Thread(()->{
+            if(evt == ViewEvent.START_REQUEST) { //starting lobby
+                if(controllers.getLobbyController()==null) return;
+                controllers.getLobbyController().startGame(controllers.getUsername());
+            }
+            else {
+                if(controllers.getGameController()!=null) { //leaving game
+                    controllers.getGameController().leaveEndGame(controllers.getUsername(),false);
+                    try {
+                        controllers.getServerConnectionHandler().setGameController(null);
+                        controllers.getServerConnectionHandler().setChatController(null);
+                    } catch (RemoteException ignored) {
+                    }
+                }
+                else if(controllers.getLobbyController()!=null){ //leaving lobby
+                    controllers.getLobbyController().exitLobby(controllers.getUsername());
+                    controllers.getServerConnectionHandler().setPlayerName("");
+                    controllers.getServerConnectionHandler().setLobbyController(null);
+                    try {
+                        controllers.getServerConnectionHandler().setChatController(null);
+                    } catch (RemoteException ignored) {
+                    }
+                }
+            }
+        }).start());
     }
 
     public NetworkMessage(ViewEvent evt, List<?> positionsOrOrderedTiles) throws InvalidParameterException {

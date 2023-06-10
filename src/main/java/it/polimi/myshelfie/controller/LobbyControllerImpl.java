@@ -10,6 +10,7 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ChatModel;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
+import it.polimi.myshelfie.model.interfaces.GameModel;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
@@ -56,30 +57,49 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
     @Override
     public synchronized void exitLobby(String playerName){
+        if(lobbyModel.hasStarted()) {
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+            return;
+        }
+
+        //removes from model
         try {
             lobbyModel.removePlayer(playerName);
-            lobbyModel.removeLobbyObserver(lobbyObserverMap.get(playerName));
-            chatModel.removeChatObserver(playerName, chatObserverMap.get(playerName));
-            new Thread(()->{
-                try {
-                    clientsMap.get(playerName).send(new NetworkMessage(ViewType.INIT));
-                } catch (RemoteException e) {
-                    clientsMap.remove(playerName); //this means that the client crashed or lost connection
-                }
-            }).start();
         } catch (InvalidParameterException e) {
             exceptionsNotifiersMap.get(playerName).notifyException(e);
             return;
         }
+
+        //removes from controller
+        lobbyModel.removeLobbyObserver(lobbyObserverMap.get(playerName));
+        chatModel.removeChatObserver(playerName, chatObserverMap.get(playerName));
+        controllerImpl.clientHasLeft(clientsMap.get(playerName));
+
+        //going to INIT view
+        Client client = clientsMap.get(playerName);
+        new Thread(()->{
+            try {
+                client.send(new NetworkMessage(ViewType.INIT));
+            } catch (RemoteException ignored) {
+            }
+        }).start();
+        clientsMap.remove(playerName);
+
+        //deleting if empty
         if(lobbyModel.isLobbyEmpty()){
             controllerImpl.deleteLobby(lobbyModel.getLobbyName());
         }
+
     }
 
     @Override
     public synchronized void setConfig(String playerName, GameConfig config){
         if(!lobbyModel.isRoomOwner(playerName)){
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
+            return;
+        }
+        if(lobbyModel.hasStarted()) {
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Lobby closed"));
             return;
         }
         try {
@@ -95,60 +115,82 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
             return;
         }
+        if(lobbyModel.hasStarted()) {
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+            return;
+        }
 
-        if(lobbyModel.hasStarted()) return;
+        //initializes the model
         try {
             lobbyModel.initialize();
         }catch(LobbyFullException e){
             exceptionsNotifiersMap.get(playerName).notifyException(e);
+            return;
         }
-        GameControllerImpl result = controllerImpl.getGameController(lobbyModel.getLobbyName());
-        if(result!=null) { //sets the correct view type for every client and adds observer to the game
-            new Thread(()-> {
+
+        //removes lobby controllers
+        try {
+            for(ServerConnectionHandler sch : connectionHandlersMap.values()){
+                sch.setLobbyController(null);
+                sch.setChatController(null);
+            }
+        } catch (RemoteException ignored) {
+        }
+
+        //removing observers
+        lobbyModel.removeLobbyObservers();
+        chatModel.removeChatObservers();
+        controllerImpl.deleteLobby(lobbyName);
+
+        //creating game controller and starting the game
+        GameModel gameModel = lobbyModel.getGameModel();
+        GameControllerImpl gameController = new GameControllerImpl(controllerImpl, gameModel,gameModel.getChatModel());
+        gameController.init(new HashMap<>(clientsMap), new HashMap<>(connectionHandlersMap), new HashMap<>(exceptionsNotifiersMap));
+
+        //setting each client's views to GAME
+        for(Client client : clientsMap.values()){
+            new Thread(()->{
                 try {
-                    for(Client c : clientsMap.values()){
-                        c.send(new NetworkMessage(ViewType.GAME));
-                    }
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
+                    client.send(new NetworkMessage(ViewType.GAME));
+                } catch (RemoteException ignored){
                 }
             }).start();
-            result.init(clientsMap, connectionHandlersMap, exceptionsNotifiersMap,chatObserverMap);
         }
-        controllerImpl.deleteLobby(lobbyName);
     }
 
     @Override
     public synchronized void addLobbyObserver(String playerName,Observer<LobbyEvent, LobbyModelView> networkLobbyObserver) {
+        if(lobbyModel.hasStarted()) {
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+        }
         lobbyModel.addLobbyObserver(networkLobbyObserver);
         lobbyObserverMap.put(playerName,networkLobbyObserver);
     }
 
     @Override
-    public synchronized void addMessage(Message message){
+    public synchronized void addMessage(String playerName, Message message){
+        if(lobbyModel.hasStarted()) {
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+        }
         if(message.getMessage().isEmpty()) return;
         chatModel.addMessage(message);
     }
 
     @Override
     public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
+        if(lobbyModel.hasStarted()) {
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+        }
         chatModel.addChatObserver(playerName,networkChatObserver);
         chatObserverMap.put(playerName,networkChatObserver);
     }
 
-    /**
-     * Returns the lobby model associated to that lobby.
-     * @return a lobby model.
-     */
-    protected LobbyModel getLobbyModel(){
-        return lobbyModel;
-    }
 
     /**
      * Adds a player to the game.
      * @param client represents the player.
      * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
-     * @param exceptionsNotifier is the client expception notifier of this client.
+     * @param exceptionsNotifier is the client exception notifier of this client.
      * @param playerName is the name of the player that must be added to the lobby.
      * @throws InvalidParameterException if one of the parameter passed is not valid.
      * @throws LobbyFullException if the lobby is full.
@@ -158,5 +200,10 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         clientsMap.put(playerName,client);
         connectionHandlersMap.put(playerName,connectionHandler);
         exceptionsNotifiersMap.put(playerName,exceptionsNotifier);
+        try{
+            connectionHandler.setChatController(this);
+        } catch(RemoteException e){
+            throw new RuntimeException(e);
+        }
     }
 }
