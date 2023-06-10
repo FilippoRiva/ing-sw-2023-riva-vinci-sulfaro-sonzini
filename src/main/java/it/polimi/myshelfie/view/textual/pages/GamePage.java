@@ -12,11 +12,9 @@ import it.polimi.myshelfie.view.textual.Terminal;
 import java.util.List;
 
 public class GamePage extends ScreenPage{
-    private final String username;
     private final String currentLibraryOwner;
-    public GamePage(Terminal t, ViewManager viewManager, List<String> inputParameters, String username, String libraryOwner) {
-        super(t, viewManager, inputParameters);
-        this.username = username;
+    public GamePage(Terminal t, List<String> inputParameters, String libraryOwner) {
+        super(t, inputParameters);
         this.currentLibraryOwner = libraryOwner;
     }
 
@@ -26,10 +24,10 @@ public class GamePage extends ScreenPage{
         if(fullGameModelView ==null) return;
         t.clearScreen();
         t.printLivingRoom(fullGameModelView);
-        t.printPersonalGoal(fullGameModelView.getPlayer(username).getPersonalGoals().get(0).getGoal(),25,4);
+        t.printPersonalGoal(fullGameModelView.getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getGoal(),25,4);
         printGameInfo(fullGameModelView);
         t.printBookshelf(fullGameModelView.getPlayer(currentLibraryOwner).getBookshelf(),currentLibraryOwner,25,36);
-        if(!fullGameModelView.getCurrentPlayerName().equals(username)) {
+        if(!fullGameModelView.getCurrentPlayerName().equals(ViewManager.getUsername())) {
             t.printAction("help, chat, goals");
         } else {
             switch (fullGameModelView.getCurrentState()){
@@ -58,7 +56,7 @@ public class GamePage extends ScreenPage{
         for (PlayerModelView p : fullGameModelView.getPlayers()) {
             String username = p.getName();
             String trimmedUsername = String.format(username.length()>10 ? username.substring(0,9) : username , "%-10s");
-            if(username.equals(this.username)){
+            if(username.equals(ViewManager.getUsername())){
                 t.printInInfoTable("   "+idx+". "+ ANSI.PINK_FG+ANSI.BOLD+trimmedUsername+ANSI.RESET+" "+ p.getPoints(),pos);
             } else {
                 t.printInInfoTable("   "+idx+". "+trimmedUsername + " " + p.getPoints(), pos);
@@ -74,8 +72,8 @@ public class GamePage extends ScreenPage{
             idx++;
         }
         int numberOfCommonGoals = fullGameModelView.getCommonGoals().size();
-        if(fullGameModelView.getCurrentPlayerName().equals(username)) {
-            List<ItemTile> takenTiles = fullGameModelView.getPlayer(username).getTakenTiles();
+        if(fullGameModelView.getCurrentPlayerName().equals(ViewManager.getUsername())) {
+            List<ItemTile> takenTiles = fullGameModelView.getPlayer(ViewManager.getUsername()).getTakenTiles();
             if (takenTiles.size() != 0) {
                 t.printInInfoTable("Taken Tiles :", 10+numberOfCommonGoals+3);
                 t.printTakenTiles(takenTiles, 10+numberOfCommonGoals+4, 43, fullGameModelView.getCurrentState() == GameState.ORGANIZE);

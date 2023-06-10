@@ -8,10 +8,8 @@ import it.polimi.myshelfie.view.textual.Terminal;
 import java.util.List;
 
 public class LobbyPage extends ScreenPage{
-    private final String username;
-    public LobbyPage(Terminal t, ViewManager viewManager, List<String> inputParameters, String username) {
-        super(t, viewManager, inputParameters);
-        this.username = username;
+    public LobbyPage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override
@@ -30,7 +28,7 @@ public class LobbyPage extends ScreenPage{
             else t.centerPrint(idx + ". " + player,4+idx);
             idx++;
         }
-        if(viewManager.getLobbyModelView().isRoomOwner(username))t.printAction("help, chat, exit, +, -, s");
+        if(viewManager.getLobbyModelView().isRoomOwner(ViewManager.getUsername()))t.printAction("help, chat, exit, +, -, s");
         else t.printAction("help, chat, exit");
         printBorder();
     }

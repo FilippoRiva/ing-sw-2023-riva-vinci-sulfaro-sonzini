@@ -28,13 +28,10 @@ public class CLIInputInterpreter {
      * to notify its observers.
      * how a string is interpreted depends on how the UI and the ViewBuffer are set
      * @param UI the UI this interpreter should look at to interpret user input
-     * @param viewManager the ViewBuffer this interpreter should use to interpret user input and notify new ViewEvents
-     *                   like JOIN_REQUEST, CREATE_REQUEST, CONFIG_REQUEST, ... setting the appropriate parameters of
-     *                   the ViewBuffer
      */
-    public CLIInputInterpreter(TextualUI UI, ViewManager viewManager, List<String> inputParameters){
+    public CLIInputInterpreter(TextualUI UI, List<String> inputParameters){
         this.UI = UI;
-        this.viewManager = viewManager;
+        this.viewManager = ViewManager.getInstance();
         this.inputParameters = inputParameters;
     }
     public void interpret(String input){
@@ -56,7 +53,9 @@ public class CLIInputInterpreter {
         }
         switch (vtCopy){
             case INIT -> {
-                if(input.startsWith("autoplay")){
+                if(input.startsWith("close")){
+                    System.exit(0);
+                } else if(input.startsWith("autoplay")){
                     try {
                         String numbers = input.replace(" ","").substring(8);
                         if(numbers.length()!=0){
@@ -67,8 +66,7 @@ public class CLIInputInterpreter {
                     } catch (NumberFormatException e){
                         UI.wrongInput("Room size not available");
                     }
-                } else
-                if(UI.getInternalViewState()== InternalViewState.CREATE){
+                } else if(UI.getInternalViewState()== InternalViewState.CREATE){
                     interpretCreate(input);
                 } else if(UI.getInternalViewState()==InternalViewState.JOIN){
                     interpretJoin(input, modelView);
@@ -160,14 +158,7 @@ public class CLIInputInterpreter {
                     }
                 }
             }
-            case WIN -> {
-                if(input.equals("exit")){
-                    UI.setInternalViewState(InternalViewState.INIT);
-                    viewManager.exitRequest();
-                } else {
-                    UI.wrongInput("pls stop playing this game");
-                }
-            }
+            case WIN -> viewManager.exitRequest();
         }
         UI.clearInput();
     }
@@ -268,13 +259,13 @@ public class CLIInputInterpreter {
     }
 
     private void interpretOrder(String input) {
+        input = input.substring(1);
         if(input.equals("")){
-            viewManager.organizeRequest(new ArrayList<>());
+            viewManager.organizeRequest(viewManager.getGameModelView().getCurrentPlayer().getTakenTiles());
             return;
         }
         FullGameModelView gmv = viewManager.getGameModelView();
         List<ItemTile> takenTiles = gmv.getPlayer(ViewManager.username).getTakenTiles();
-        input = input.substring(1);
         input = input.replace(" ","");
         if (input.length()!=takenTiles.size()){
             UI.wrongInput();

@@ -9,9 +9,9 @@ public abstract class ScreenPage {
     final protected Terminal t;
     final protected ViewManager viewManager;
     final protected List<String> inputParameters;
-    public ScreenPage(Terminal t, ViewManager viewManager, List<String> inputParameters){
+    public ScreenPage(Terminal t, List<String> inputParameters){
         this.t = t;
-        this.viewManager = viewManager;
+        this.viewManager = ViewManager.getInstance();
         this.inputParameters = inputParameters;
     }
     public abstract void render();

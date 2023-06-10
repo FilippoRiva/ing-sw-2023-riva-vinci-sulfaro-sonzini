@@ -1,29 +1,29 @@
 package it.polimi.myshelfie.view.textual.pages;
 
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
 public class InitPage extends ScreenPage{
 
-    public InitPage(Terminal t, ViewManager viewManager, List<String> inputParameters) {
-        super(t, viewManager, inputParameters);
+    public InitPage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override
     public void render() {
+        ModelView modelView = viewManager.getModelView();
+        if(modelView == null) return;
         t.clearScreen();
         t.printTitle();
-        ModelView modelView = viewManager.getModelView();
-        if (modelView!=null && modelView.getLobbies().size() != 0) {
+        if (modelView.getLobbies().size() != 0) {
             t.centerPrint("1. create",20);
             t.centerPrint("2. join",21);
-            t.printAction("1, 2");
+            t.printAction("close, 1, 2");
         } else {
             t.centerPrint("1. create",20);
-            t.printAction("1");
+            t.printAction("close, 1");
         }
         printBorder();
     }

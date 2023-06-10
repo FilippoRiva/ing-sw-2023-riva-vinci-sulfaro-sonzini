@@ -1,14 +1,13 @@
 package it.polimi.myshelfie.view.textual.pages;
 
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
 public class JoinPage extends ScreenPage{
-    public JoinPage(Terminal t, ViewManager viewManager, List<String> inputParameters) {
-        super(t, viewManager, inputParameters);
+    public JoinPage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override
@@ -34,8 +33,12 @@ public class JoinPage extends ScreenPage{
 
     private void printAvailableLobbies() {
         ModelView modelView = viewManager.getModelView();
+        if(modelView == null) {
+            t.centerPrint("none", 21);
+            return;
+        }
         List<String> lobbies = modelView.getLobbies();
-        if (lobbies.size() == 0) {
+        if(lobbies==null || lobbies.size() == 0){
             t.centerPrint("none",21);
             return;
         }

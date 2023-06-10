@@ -1,6 +1,5 @@
 package it.polimi.myshelfie.view.textual.pages;
 
-import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.Terminal;
@@ -10,8 +9,8 @@ import java.util.List;
 public class HelpPage extends ScreenPage{
 
     private final String color = ANSI.PINK_FG;
-    public HelpPage(Terminal t, ViewManager viewManager, List<String> inputParameters) {
-        super(t, viewManager, inputParameters);
+    public HelpPage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override

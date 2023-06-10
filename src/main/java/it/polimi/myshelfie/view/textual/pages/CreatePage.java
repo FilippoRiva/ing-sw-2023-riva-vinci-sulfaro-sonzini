@@ -1,13 +1,12 @@
 package it.polimi.myshelfie.view.textual.pages;
 
-import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
 public class CreatePage extends ScreenPage{
-    public CreatePage(Terminal t, ViewManager viewManager, List<String> inputParameters) {
-        super(t, viewManager, inputParameters);
+    public CreatePage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override

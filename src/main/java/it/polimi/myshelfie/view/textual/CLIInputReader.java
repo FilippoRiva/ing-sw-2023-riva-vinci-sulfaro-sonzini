@@ -1,7 +1,6 @@
 package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.view.InternalViewState;
-import it.polimi.myshelfie.view.ViewManager;
 
 import java.io.*;
 import java.util.List;
@@ -10,10 +9,10 @@ public class CLIInputReader {
     public final BufferedReader in;
     private final CLIInputInterpreter interpreter;
     private final TextualUI UI;
-    public CLIInputReader(TextualUI textualUI, ViewManager viewManager, List<String> inputParameters) {
+    public CLIInputReader(TextualUI textualUI, List<String> inputParameters) {
         this.UI = textualUI;
         this.in = new BufferedReader(new InputStreamReader(System.in));
-        this.interpreter = new CLIInputInterpreter(textualUI, viewManager,inputParameters);
+        this.interpreter = new CLIInputInterpreter(textualUI, inputParameters);
     }
 
     void read(){

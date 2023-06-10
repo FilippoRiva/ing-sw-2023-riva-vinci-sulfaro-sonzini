@@ -2,21 +2,21 @@ package it.polimi.myshelfie.view.textual.pages;
 
 import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.FullGameModelView;
-import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.textual.ANSI;
 import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
 public class GoalPage extends ScreenPage{
-    public GoalPage(Terminal t, ViewManager viewManager, List<String> inputParameters) {
-        super(t, viewManager, inputParameters);
+    public GoalPage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override
     public void render() {
-        t.clearScreen();
         FullGameModelView gmv = viewManager.getGameModelView();
+        if(gmv == null) return;
+        t.clearScreen();
         List<CommonGoalModelView> goals = gmv.getCommonGoals();
         t.centerPrint(ANSI.PINK_FG+"COMMON GOALS"+ANSI.RESET,1,12);
         t.printDivider(2);

@@ -15,20 +15,19 @@ public class ChatPage extends ScreenPage{
     private final String[] colors = {
             ANSI.PINK_FG,ANSI.BLUE_FG,ANSI.GREEN_FG,ANSI.LIGHTBLUE_FG, ANSI.YELLOW_FG,ANSI.RED_FG
     };
-    private final String username;
-    public ChatPage(Terminal t, ViewManager viewManager, List<String> inputParameters, String username) {
-        super(t, viewManager, inputParameters);
-        this.username = username;
+    public ChatPage(Terminal t, List<String> inputParameters) {
+        super(t, inputParameters);
     }
 
     @Override
     public void render() {
-        t.clearScreen();
-        t.centerPrint("CHAT",2);
         LobbyModelView lobby = viewManager.getLobbyModelView();
         PlayerChatModelView chat = viewManager.getPlayerChatModelView();
+        if(lobby == null) return;
+        t.clearScreen();
+        t.centerPrint("CHAT",2);
         int line = 4;
-        if(lobby == null || chat == null || chat.getMessages().size()==0) {
+        if(chat == null || chat.getMessages().size()==0) {
             t.centerPrint("no messages ", 4);
         } else {
             List<Message> messages = chat.getMessages();
@@ -46,7 +45,7 @@ public class ChatPage extends ScreenPage{
                             (msg.getSender()+msg.getMessage()).length()+3,
                             msg.getSender().length()+3);
                 } else {
-                    if(msg.getSender().equals(username)){
+                    if(msg.getSender().equals(ViewManager.getUsername())){
                         playerIndex = lobby.getPlayers().indexOf(msg.getReceiver());
                         if(playerIndex!=-1) color = colors[lobby.getPlayers().indexOf(msg.getReceiver())];
                         else color = ANSI.GRAY_FG; //if player has left
@@ -54,13 +53,13 @@ public class ChatPage extends ScreenPage{
                                 "w(to :"+color+msg.getReceiver() +ANSI.RESET+ ") : "+msg.getMessage(),
                                 line+idx,
                                 (msg.getSender()+msg.getMessage()).length()+10,
-                                username.length()+10);
+                                ViewManager.getUsername().length()+10);
                     }
                     else t.printMessage(
                             "w(from :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),
                             line+idx,
                             (msg.getSender()+msg.getMessage()).length()+12,
-                            username.length()+12);
+                            ViewManager.getUsername().length()+12);
                 }
                 idx++;
             }

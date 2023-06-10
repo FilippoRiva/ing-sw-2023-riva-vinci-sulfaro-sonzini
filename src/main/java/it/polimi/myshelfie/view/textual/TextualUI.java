@@ -1,5 +1,6 @@
 package it.polimi.myshelfie.view.textual;
 
+import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.view.*;
 import it.polimi.myshelfie.view.textual.pages.*;
@@ -15,14 +16,13 @@ public class TextualUI implements UI {
     private final List<String> inputParameters;
     private InternalViewState internalViewState;
     private final Thread readerThread;
-    private final CLIInputReader reader;
 
     public TextualUI() {
         this.viewManager = ViewManager.getInstance();
         this.inputParameters = new ArrayList<>();
         this.t = new Terminal();
-        this.currentPage = new InitPage(t, viewManager,inputParameters);
-        this.reader = new CLIInputReader(this,viewManager,inputParameters);
+        this.currentPage = new InitPage(t, inputParameters);
+        CLIInputReader reader = new CLIInputReader(this,inputParameters);
         this.readerThread = new Thread(reader::read);
         readerThread.start();
     }
@@ -48,7 +48,11 @@ public class TextualUI implements UI {
     private synchronized void gameUpdate() {
         if(viewManager.getViewType()==ViewType.GAME && !(internalViewState == InternalViewState.CHAT ||
                 internalViewState == InternalViewState.HELP)){
-            currentPage.render();
+            if(viewManager.getGameModelView().getCurrentPlayerName().equals(ViewManager.getUsername()) &&
+            viewManager.getGameModelView().getCurrentState()== GameState.ORGANIZE &&
+            viewManager.getGameModelView().getCurrentPlayer().getTakenTiles().size() == 1){
+                viewManager.organizeRequest(viewManager.getGameModelView().getCurrentPlayer().getTakenTiles());
+            } else currentPage.render();
         }
     }
 
@@ -76,20 +80,20 @@ public class TextualUI implements UI {
         switch (viewType) {
             case INIT -> {
                 internalViewState = InternalViewState.INIT;
-                currentPage = new InitPage(t, viewManager,inputParameters);
+                currentPage = new InitPage(t, inputParameters);
             }
             case LOBBY -> {
                 internalViewState = InternalViewState.LOBBY;
-                currentPage = new LobbyPage(t, viewManager,inputParameters, ViewManager.getUsername());
+                currentPage = new LobbyPage(t, inputParameters);
             }
             case GAME -> {
                 internalViewState = InternalViewState.GAME;
                 currentLibraryOwner = ViewManager.getUsername();
-                currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.getUsername(),currentLibraryOwner);
+                currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
             }
             case WIN -> {
                 internalViewState = InternalViewState.WIN;
-                currentPage = new WinPage(t, viewManager,inputParameters);
+                currentPage = new WinPage(t, inputParameters);
             }
             case DISCONNECTION -> {
                 printException(true);
@@ -122,7 +126,7 @@ public class TextualUI implements UI {
         int index = players.indexOf(currentLibraryOwner);
         if(index == players.size()-1) currentLibraryOwner = players.get(0);
         else currentLibraryOwner = players.get(index+1);
-        currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.getUsername(),currentLibraryOwner);
+        currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
         currentPage.render();
     }
 
@@ -132,7 +136,7 @@ public class TextualUI implements UI {
         int index = players.indexOf(currentLibraryOwner);
         if(index == 0) currentLibraryOwner = players.get(players.size()-1);
         else currentLibraryOwner = players.get(index-1);
-        currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.getUsername(),currentLibraryOwner);
+        currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
         currentPage.render();
     }
 
@@ -143,15 +147,15 @@ public class TextualUI implements UI {
     public synchronized void setInternalViewState(InternalViewState internalViewState) {
         this.internalViewState = internalViewState;
         switch (internalViewState){
-            case INIT -> currentPage = new InitPage(t, viewManager,inputParameters);
-            case JOIN -> currentPage = new JoinPage(t, viewManager,inputParameters);
-            case CREATE -> currentPage = new CreatePage(t, viewManager,inputParameters);
-            case LOBBY -> currentPage = new LobbyPage(t, viewManager,inputParameters, ViewManager.username);
-            case GAME -> currentPage = new GamePage(t, viewManager,inputParameters, ViewManager.username,currentLibraryOwner);
-            case GOALS -> currentPage = new GoalPage(t, viewManager,inputParameters);
-            case CHAT -> currentPage = new ChatPage(t, viewManager,inputParameters, ViewManager.username);
-            case HELP -> currentPage = new HelpPage(t, viewManager,inputParameters);
-            case WIN -> currentPage = new WinPage(t, viewManager,inputParameters);
+            case INIT -> currentPage = new InitPage(t, inputParameters);
+            case JOIN -> currentPage = new JoinPage(t, inputParameters);
+            case CREATE -> currentPage = new CreatePage(t, inputParameters);
+            case LOBBY -> currentPage = new LobbyPage(t, inputParameters);
+            case GAME -> currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
+            case GOALS -> currentPage = new GoalPage(t, inputParameters);
+            case CHAT -> currentPage = new ChatPage(t, inputParameters);
+            case HELP -> currentPage = new HelpPage(t, inputParameters);
+            case WIN -> currentPage = new WinPage(t, inputParameters);
         }
         currentPage.render();
     }
