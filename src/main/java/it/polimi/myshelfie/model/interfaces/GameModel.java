@@ -109,4 +109,8 @@ public interface GameModel {
      * @return the lobby name.
      */
     String getLobbyName();
+
+    void removeGameObservers();
+
+    ChatModel getChatModel();
 }

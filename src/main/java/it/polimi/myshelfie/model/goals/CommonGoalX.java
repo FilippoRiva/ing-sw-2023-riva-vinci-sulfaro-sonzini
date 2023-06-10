@@ -25,11 +25,11 @@ public class CommonGoalX extends CommonGoal{
     }
 
     private boolean check(ItemTile[][] bookshelf, int i, int j){
-        if(bookshelf[i][j].getType()!=bookshelf[i+1][j+1].getType()) return false;
-        if(bookshelf[i][j].getType()!=bookshelf[i-1][j+1].getType()) return false;
-        if(bookshelf[i][j].getType()!=bookshelf[i+1][j-1].getType()) return false;
-        if(bookshelf[i][j].getType()!=bookshelf[i-1][j-1].getType()) return false;
-        return bookshelf[i][j].getType() == bookshelf[i - 1][j - 1].getType();
+        ItemTileType centerType = bookshelf[i][j].getType();
+        if(centerType != bookshelf[i+1][j+1].getType()) return false;
+        if(centerType != bookshelf[i-1][j+1].getType()) return false;
+        if(centerType != bookshelf[i+1][j-1].getType()) return false;
+        return centerType == bookshelf[i-1][j-1].getType();
     }
 
     @Override

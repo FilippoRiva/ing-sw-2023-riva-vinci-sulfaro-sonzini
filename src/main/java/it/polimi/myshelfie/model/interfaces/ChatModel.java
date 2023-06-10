@@ -23,4 +23,6 @@ public interface ChatModel {
      * @param obs the observer to remove
      */
     void removeChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs);
+
+    void removeChatObservers();
 }

@@ -6,7 +6,6 @@ import it.polimi.myshelfie.model.goals.CommonGoal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -161,6 +160,7 @@ public class FullGameModelView implements Serializable, GameModelView {
      */
     public ItemTile getTile(int x, int y){
         int offset = (livingRoom.length-1)/2;
+        if(x > offset || x < -offset || y > offset || y < -offset) return null;
         return livingRoom[x+offset][offset-y];
     }
 

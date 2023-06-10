@@ -33,8 +33,6 @@ public interface LobbyModel {
      */
     void removePlayer(String playerName) throws InvalidParameterException;
 
-    void refillLivingRoom();
-
     /**
      * Return true if the lobby is empty.
      * @return true or false.
@@ -92,4 +90,6 @@ public interface LobbyModel {
     boolean isRoomOwner(String username);
 
     boolean hasStarted();
+
+    void removeLobbyObservers();
 }

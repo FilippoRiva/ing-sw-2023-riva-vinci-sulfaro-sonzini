@@ -76,6 +76,13 @@ public class ChatSystem implements ChatModel {
         playerChats.remove(pc);
     }
 
+    @Override
+    public synchronized void removeChatObservers(){
+        for(PlayerChat pc : playerChats.values()){
+            pc.deleteObservers();
+        }
+    }
+
     /**
      * Adds a player to the chat system.
      * @param player is the name of a new player that has to be added to this chat system.

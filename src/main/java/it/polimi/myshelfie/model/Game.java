@@ -339,6 +339,7 @@ public class Game implements GameModel, LobbyModel {
     }
     @Override
     public GameModel getGameModel() {
+        if(!hasStarted()) return null; //lobby has not been initialized
         return this;
     }
 
@@ -524,5 +525,14 @@ public class Game implements GameModel, LobbyModel {
     @Override
     public boolean hasStarted(){
         return commonGoals!=null;
+    }
+
+    @Override
+    public void removeLobbyObservers() {
+        lobbyObservable.deleteObservers();
+    }
+    @Override
+    public void removeGameObservers() {
+        gameObservable.deleteObservers();
     }
 }

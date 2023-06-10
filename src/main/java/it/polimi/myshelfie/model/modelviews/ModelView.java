@@ -3,7 +3,6 @@ package it.polimi.myshelfie.model.modelviews;
 import it.polimi.myshelfie.model.ModelImpl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ public class ModelView implements Serializable {
         this.currentSizeMap = new HashMap<>();
         for(String lobby : lobbies){
             this.maxSizeMap.put(lobby,model.getLobbyMaxSize(lobby));
-            this.currentSizeMap.put(lobby,model.getLobbyCurrentSize(lobby));
+            this.currentSizeMap.put(lobby,Math.max(1,model.getLobbyCurrentSize(lobby)));
         }
     }
     /**
