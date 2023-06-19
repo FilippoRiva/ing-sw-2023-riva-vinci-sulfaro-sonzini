@@ -610,6 +610,6 @@ public class ViewManager extends View {
         UINotifier.deleteObservers();
         this.resetBuffer();
         System.out.println("Disconnected from server...\nTry to reconnect\n");
-        ClientApp.initialUserChoice();
+        ClientApp.initialUserChoice(new String[0]);
     }
 }
