@@ -19,6 +19,7 @@ import java.util.*;
 
 public class ClientApp {
     static String serverIP = "localhost";
+    static String clientIP = "";
     static int registryPort = 1099;
     public static void main(String[] args){
         Runtime.getRuntime().addShutdownHook(new Thread(()-> System.out.println(ANSI.CLEAR_ALL)));
@@ -63,7 +64,7 @@ public class ClientApp {
         ViewManager viewManager = ViewManager.getInstance();
 
         boolean connected = false;
-        while(!connected){
+        while(args[0]==null && !connected){
             System.out.println("--------------------------------------------------------");
             System.out.print("> Input server IP or press enter to connect to localhost : ");
             String ip = scanner.nextLine();
@@ -85,6 +86,23 @@ public class ClientApp {
             TextualUI view = new TextualUI();
             viewManager.addUI(view);
         }
+        if(args[1]!=null) clientIP = args[1];
+        if(args[0]!=null){
+            serverIP = args[0];
+            try{
+                if(networkChoice == 1) startSocketConnection(viewBuffer);
+                else startRMIConnection(viewBuffer);
+            } catch (RemoteException e){
+                throw new RuntimeException(e);
+            }
+        }
+
+        List<String> inputParameters = new ArrayList<>();
+        Observer<ViewUpdate, Object> view;
+        if(viewChoice == 1) view = new TextualUI(viewBuffer,inputParameters);
+        else view = new GraphicalUI();
+        viewBuffer.addUI(view);
+        if(viewChoice==1) new Thread(()->new CLIInputReader((TextualUI) view,viewBuffer,inputParameters)).start();
         else {
             GraphicalUI view = new GraphicalUI();
             viewManager.addUI(view);
@@ -109,6 +127,24 @@ public class ClientApp {
             if(clientIP.equals("")) clientIP = "localhost";
         } catch (SocketException e) {
             throw new RuntimeException("Unable to get Network Interfaces");
+    private static void startRMIConnection(ViewBuffer viewBuffer) throws RemoteException {
+        if(clientIP.equals("")) {
+            try {
+                Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+                for (NetworkInterface net : Collections.list(netInterfaces)) {
+                    if (net.isUp() && !net.isLoopback()) {
+                        for (InetAddress addr : Collections.list(net.getInetAddresses())) {
+                            if (!addr.getHostAddress().contains(":")) { //only IPv4
+                                clientIP = addr.getHostAddress();
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (clientIP.equals("")) clientIP = "localhost";
+            } catch (SocketException e) {
+                throw new RuntimeException("Unable to get Network Interfaces");
+            }
         }
         System.out.println("RMI started over : "+clientIP);
         System.setProperty("java.rmi.server.hostname",clientIP); //the property is still called server
