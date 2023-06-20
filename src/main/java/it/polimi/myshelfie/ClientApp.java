@@ -29,6 +29,10 @@ public class ClientApp {
         for(int i = 0; i <args.length; i++){
             if(args[i].equals("--client")){
                 i++;
+                if(args.length==i) {
+                    System.out.println("please insert client IP");
+                    return;
+                }
                 try {
                     if (!InetAddress.getByName(args[i]).isReachable(1000)) {
                         System.out.println("   !! The specified client IP is not reachable. Please enter your IP.");
@@ -42,6 +46,10 @@ public class ClientApp {
                 }
             } else if (args[i].equals("--server")) {
                 i++;
+                if(args.length==i) {
+                    System.out.println("please insert server IP");
+                    return;
+                }
                 try {
                     if(!InetAddress.getByName(args[i]).isReachable(1000)){
                         System.out.println("   !! The specified server IP is not reachable.");

@@ -20,21 +20,43 @@ import java.util.Enumeration;
 public class ServerApp {
     public static void main (String[] args){
         String serverIP = "";
-        try {
-            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-            for(NetworkInterface net : Collections.list(netInterfaces)){
-                if(net.isUp() && !net.isLoopback()) {
-                    for(InetAddress addr : Collections.list(net.getInetAddresses())){
-                        if(!addr.getHostAddress().contains(":")){ //only IPv4
-                            serverIP = addr.getHostAddress();
-                            break;
+        for(int i = 0; i < args.length; i++){
+            if(args[i].equals("--rmi")){
+                i++;
+                if(i==args.length){
+                    System.out.println("Please insert rmi parameter");
+                    return;
+                }
+                try {
+                    if (!InetAddress.getByName(args[i]).isReachable(1000)) {
+                        System.out.println("   !! The specified server IP is not reachable. Please enter your IP.");
+                        return;
+                    } else {
+                        serverIP = args[i];
+                    }
+                } catch (IOException e) {
+                    System.out.println("   !! Unknown server host name");
+                    return;
+                }
+            }
+        }
+        if(serverIP.equals("")){
+            try {
+                Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+                for(NetworkInterface net : Collections.list(netInterfaces)){
+                    if(net.isUp() && !net.isLoopback()) {
+                        for(InetAddress addr : Collections.list(net.getInetAddresses())){
+                            if(!addr.getHostAddress().contains(":")){ //only IPv4
+                                serverIP = addr.getHostAddress();
+                                break;
+                            }
                         }
                     }
                 }
+                if(serverIP.equals("")) serverIP = "localhost";
+            } catch (SocketException e) {
+                throw new RuntimeException("Unable to get Network Interfaces");
             }
-            if(serverIP.equals("")) serverIP = "localhost";
-        } catch (SocketException e) {
-            throw new RuntimeException("Unable to get Network Interfaces");
         }
         System.out.println("Server starting up over : "+serverIP);
         System.setProperty("java.rmi.server.hostname",serverIP);
