@@ -68,7 +68,7 @@ public class ClientApp {
         ViewManager viewManager = ViewManager.getInstance();
 
         boolean connected = false;
-        while (args[0] == null && !connected) {
+        while (args.length == 0 && !connected) {
             System.out.println("--------------------------------------------------------");
             System.out.print("> Input server IP or press enter to connect to localhost : ");
             String ip = scanner.nextLine();
@@ -90,8 +90,8 @@ public class ClientApp {
             TextualUI view = new TextualUI();
             viewManager.addUI(view);
         }
-        if (args[1] != null) clientIP = args[1];
-        if (args[0] != null) {
+        if (args.length == 2) clientIP = args[1];
+        if (args.length == 1) {
             serverIP = args[0];
             try {
                 if (networkChoice == 1) startSocketConnection(viewManager);

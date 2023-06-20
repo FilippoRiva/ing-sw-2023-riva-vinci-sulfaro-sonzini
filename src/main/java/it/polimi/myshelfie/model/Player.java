@@ -43,7 +43,8 @@ public class Player {
     public void addObtainedToken(Token token){
         if(token == null) return;
         obtainedTokens.add(token);
-        addEarnedPoints(new EarnedPoint(PointType.COMMON, token.getValue()));
+        if(token.getValue()==1) addEarnedPoints(new EarnedPoint(PointType.END_GAME, token.getValue()));
+        else addEarnedPoints(new EarnedPoint(PointType.COMMON, token.getValue()));
     }
 
     public void addEarnedPoints(EarnedPoint p){
