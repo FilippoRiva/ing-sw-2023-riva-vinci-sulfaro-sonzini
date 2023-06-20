@@ -132,6 +132,11 @@ public class GraphicalUI extends Application implements UI {
     }
 
     @Override
+    public void startUI() {
+        startGUI();
+    }
+
+    @Override
     public void stopUI() {
         mainViewController.changeView(InternalViewState.STOPPED);
     }

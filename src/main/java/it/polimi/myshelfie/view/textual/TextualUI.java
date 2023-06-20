@@ -24,7 +24,6 @@ public class TextualUI implements UI {
         this.currentPage = new InitPage(t, inputParameters);
         CLIInputReader reader = new CLIInputReader(this,inputParameters);
         this.readerThread = new Thread(reader::read);
-        readerThread.start();
     }
 
     /**
@@ -168,6 +167,11 @@ public class TextualUI implements UI {
         t.clearAll();
         currentPage.render();
         t.clearInput();
+    }
+
+    @Override
+    public void startUI() {
+        readerThread.start();
     }
 
     @Override

@@ -157,6 +157,10 @@ public class AutoPlayer implements UI{
     }
 
     @Override
+    public void startUI() {
+    }
+
+    @Override
     public void stopUI() {
     }
 }

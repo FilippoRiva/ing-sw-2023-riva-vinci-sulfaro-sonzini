@@ -1,19 +1,16 @@
 package it.polimi.myshelfie;
 
 import it.polimi.myshelfie.network.*;
-import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.utils.NetworkInterfaceProvider;
+import it.polimi.myshelfie.view.UI;
 import it.polimi.myshelfie.view.ViewManager;
-import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.textual.ANSI;
-import it.polimi.myshelfie.view.textual.CLIInputReader;
 import it.polimi.myshelfie.view.textual.TextualUI;
 
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,16 +30,19 @@ public class ClientApp {
                     System.out.println("please insert client IP");
                     return;
                 }
-                try {
-                    if (!InetAddress.getByName(args[i]).isReachable(1000)) {
-                        System.out.println("   !! The specified client IP is not reachable. Please enter your IP.");
+                if(!args[i].equals("")){
+                    try {
+                        if (!InetAddress.getByName(args[i]).isReachable(1000)) {
+                            System.out.println("   !! The specified client IP is not reachable. Please enter your IP.");
+                            return;
+                        } else {
+                            System.out.println("Client IP set : " +args[i]);
+                            clientIP = args[i];
+                        }
+                    } catch (IOException e) {
+                        System.out.println("   !! Unknown client host name. Please enter your IP.");
                         return;
-                    } else {
-                        clientIP = args[i];
                     }
-                } catch (IOException e) {
-                    System.out.println("   !! Unknown client host name. Please enter your IP.");
-                    return;
                 }
             } else if (args[i].equals("--server")) {
                 i++;
@@ -50,14 +50,17 @@ public class ClientApp {
                     System.out.println("please insert server IP");
                     return;
                 }
-                try {
-                    if(!InetAddress.getByName(args[i]).isReachable(1000)){
-                        System.out.println("   !! The specified server IP is not reachable.");
-                    } else {
-                        serverIP = args[i];
+                if(!args[i].equals("")) {
+                    try {
+                        if (!InetAddress.getByName(args[i]).isReachable(1000)) {
+                            System.out.println("   !! The specified server IP is not reachable.");
+                        } else {
+                            System.out.println("Server IP set : " + args[i]);
+                            serverIP = args[i];
+                        }
+                    } catch (IOException e) {
+                        System.out.println("   !! The specified server host name is unknown.");
                     }
-                } catch (IOException e) {
-                    System.out.println("   !! The specified server host name is unknown.");
                 }
             }
         }
@@ -131,37 +134,15 @@ public class ClientApp {
             }
         }
 
-        List<String> inputParameters = new ArrayList<>();
-        Observer<ViewUpdate, Object> view;
+        UI view;
         if (viewChoice == 1) view = new TextualUI();
         else view = new GraphicalUI();
         viewManager.addUI(view);
-        if (viewChoice == 1)
-            new Thread(() -> new CLIInputReader((TextualUI) view, inputParameters)).start();
-        else {
-            GraphicalUI gui = new GraphicalUI();
-            viewManager.addUI(gui);
-            gui.startGUI();
-        }
+        view.startUI();
     }
     private static void startRMIConnection (ViewManager viewManager) throws RemoteException {
         if (clientIP.equals("")) { //automatic client ip retrieval
-            try {
-                Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-                for (NetworkInterface net : Collections.list(netInterfaces)) {
-                    if (net.isUp() && !net.isLoopback()) {
-                        for (InetAddress addr : Collections.list(net.getInetAddresses())) {
-                            if (!addr.getHostAddress().contains(":")) { //only IPv4
-                                clientIP = addr.getHostAddress();
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (clientIP.equals("")) clientIP = "localhost";
-            } catch (SocketException e) {
-                throw new RuntimeException("Unable to get Network Interfaces");
-            }
+            clientIP = NetworkInterfaceProvider.getInterfaceHostName();
         }
         System.out.println("RMI started over : " + clientIP);
         System.setProperty("java.rmi.server.hostname", clientIP); //the property is still called server
