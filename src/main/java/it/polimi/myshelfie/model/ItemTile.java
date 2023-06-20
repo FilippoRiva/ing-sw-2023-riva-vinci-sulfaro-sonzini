@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class ItemTile implements Serializable {
     private final ItemTileType type;
     private final int id;
-    public ItemTile(ItemTileType type, int num){
+    public ItemTile(ItemTileType type, int id){
         this.type = type;
-        this.id = num;
+        this.id = id;
     }
 
     /**

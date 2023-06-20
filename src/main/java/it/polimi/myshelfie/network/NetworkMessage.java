@@ -41,13 +41,16 @@ public class NetworkMessage implements Serializable {
             Client client = controllers.getClient();
             ServerConnectionHandlerImpl connectionHandler = controllers.getServerConnectionHandler();
             LobbyController lobbyController;
+            connectionHandler.setPlayerName(playerName);
             if(evt==ViewEvent.JOIN_REQUEST){
                 lobbyController = controllers.getController().joinLobby(client, connectionHandler, playerName, lobby);
             } else {
                 lobbyController = controllers.getController().createLobby(client, connectionHandler, playerName, lobby);
             }
-            if(lobbyController==null) return;
-            connectionHandler.setPlayerName(playerName);
+            if(lobbyController==null) {
+                connectionHandler.setPlayerName("");
+                return;
+            }
             lobbyController.addLobbyObserver(playerName,((event,lobbyModelView)-> new Thread(()->{
                 try {
                     client.send(new NetworkMessage(event,lobbyModelView));

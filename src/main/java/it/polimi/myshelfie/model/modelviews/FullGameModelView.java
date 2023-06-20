@@ -63,16 +63,17 @@ public class FullGameModelView implements Serializable, GameModelView {
      * @return the list of player model views.
      */
     public List<PlayerModelView> getPlayers() {
-        return players;
+        return new ArrayList<>(players);
     }
 
     /**
      * Returns the player model view of the player given his position.
+     * The position can be requested with any offset, even negatives ones.
      * @param position the position of the player.
      * @return the player model view associated to that player.
      */
     public PlayerModelView getPlayer(int position){
-        return players.get(position);
+        return players.get((int) (Math.sqrt(Math.pow(position,2)) % players.size()));
     }
 
     /**
