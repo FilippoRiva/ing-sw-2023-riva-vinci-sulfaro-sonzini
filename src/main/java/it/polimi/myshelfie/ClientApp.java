@@ -26,11 +26,38 @@ public class ClientApp {
     static int registryPort = 1099;
 
     public static void main(String[] args) {
+        for(int i = 0; i <args.length; i++){
+            if(args[i].equals("--client")){
+                i++;
+                try {
+                    if (!InetAddress.getByName(args[i]).isReachable(1000)) {
+                        System.out.println("   !! The specified client IP is not reachable. Please enter your IP.");
+                        return;
+                    } else {
+                        clientIP = args[i];
+                    }
+                } catch (IOException e) {
+                    System.out.println("   !! Unknown client host name. Please enter your IP.");
+                    return;
+                }
+            } else if (args[i].equals("--server")) {
+                i++;
+                try {
+                    if(!InetAddress.getByName(args[i]).isReachable(1000)){
+                        System.out.println("   !! The specified server IP is not reachable.");
+                    } else {
+                        serverIP = args[i];
+                    }
+                } catch (IOException e) {
+                    System.out.println("   !! The specified server host name is unknown.");
+                }
+            }
+        }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println(ANSI.CLEAR_ALL)));
-        initialUserChoice(args);
+        initialUserChoice();
     }
 
-    public static void initialUserChoice(String[] args) {
+    public static void initialUserChoice() {
         Scanner scanner = new Scanner(System.in);
         int networkChoice = -1;
         int viewChoice = -1;
@@ -68,10 +95,20 @@ public class ClientApp {
         ViewManager viewManager = ViewManager.getInstance();
 
         boolean connected = false;
-        while (args.length == 0 && !connected) {
+        if(!serverIP.equals("localhost")) {
+            try {
+                if (networkChoice == 1) startSocketConnection(viewManager);
+                else startRMIConnection(viewManager);
+                connected = true;
+            } catch (IOException e) {
+                System.out.println("   !! Unable to connect using cli parameters " + serverIP);
+            }
+        }
+        while (!connected) {
+            String ip;
             System.out.println("--------------------------------------------------------");
             System.out.print("> Input server IP or press enter to connect to localhost : ");
-            String ip = scanner.nextLine();
+            ip = scanner.nextLine();
             try {
                 if (!InetAddress.getByName(ip).isReachable(1000)) {
                     System.out.println("   !! Not a reachable ip hostname");
@@ -83,21 +120,6 @@ public class ClientApp {
                 }
             } catch (IOException e) {
                 System.out.println("   !! Unable to connect to " + serverIP);
-            }
-        }
-
-        if (viewChoice == 1) {
-            TextualUI view = new TextualUI();
-            viewManager.addUI(view);
-        }
-        if (args.length == 2) clientIP = args[1];
-        if (args.length == 1) {
-            serverIP = args[0];
-            try {
-                if (networkChoice == 1) startSocketConnection(viewManager);
-                else startRMIConnection(viewManager);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
             }
         }
 
@@ -115,60 +137,60 @@ public class ClientApp {
         }
     }
     private static void startRMIConnection (ViewManager viewManager) throws RemoteException {
-                if (clientIP.equals("")) {
-                    try {
-                        Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-                        for (NetworkInterface net : Collections.list(netInterfaces)) {
-                            if (net.isUp() && !net.isLoopback()) {
-                                for (InetAddress addr : Collections.list(net.getInetAddresses())) {
-                                    if (!addr.getHostAddress().contains(":")) { //only IPv4
-                                        clientIP = addr.getHostAddress();
-                                        break;
-                                    }
-                                }
+        if (clientIP.equals("")) { //automatic client ip retrieval
+            try {
+                Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+                for (NetworkInterface net : Collections.list(netInterfaces)) {
+                    if (net.isUp() && !net.isLoopback()) {
+                        for (InetAddress addr : Collections.list(net.getInetAddresses())) {
+                            if (!addr.getHostAddress().contains(":")) { //only IPv4
+                                clientIP = addr.getHostAddress();
+                                break;
                             }
                         }
-                        if (clientIP.equals("")) clientIP = "localhost";
-                    } catch (SocketException e) {
-                        throw new RuntimeException("Unable to get Network Interfaces");
                     }
                 }
-                System.out.println("RMI started over : " + clientIP);
-                System.setProperty("java.rmi.server.hostname", clientIP); //the property is still called server
-                Registry registry;
-                registry = LocateRegistry.getRegistry(serverIP, registryPort);
-                Server server;
-                try {
-                    server = (Server) registry.lookup("server");
-                } catch (NotBoundException e) {
-                    throw new RemoteException("", e);
-                }
-                server.connect(new ClientImpl(viewManager));
-            }
-
-            private static void startSocketConnection (ViewManager viewManager) throws RemoteException {
-                ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(serverIP, 54321);
-                ClientImpl client = new ClientImpl(viewManager);
-                client.handshake(serverStub);
-                new Thread(() -> {
-                    while (true) {
-                        try {
-                            serverStub.receive(client);
-                        } catch (RemoteException e) {
-                            try {
-                                serverStub.close();
-                            } catch (RemoteException ignored) {
-                            }
-                            break;
-                        } catch (InvalidClassException ignored) {
-                            //receiving different class versions
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    viewManager.stopUI();
-                }).start();
+                if (clientIP.equals("")) clientIP = "localhost";
+            } catch (SocketException e) {
+                throw new RuntimeException("Unable to get Network Interfaces");
             }
         }
+        System.out.println("RMI started over : " + clientIP);
+        System.setProperty("java.rmi.server.hostname", clientIP); //the property is still called server
+        Registry registry;
+        registry = LocateRegistry.getRegistry(serverIP, registryPort);
+        Server server;
+        try {
+            server = (Server) registry.lookup("server");
+        } catch (NotBoundException e) {
+            throw new RemoteException("", e);
+        }
+        server.connect(new ClientImpl(viewManager));
+    }
+
+    private static void startSocketConnection (ViewManager viewManager) throws RemoteException {
+        ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(serverIP, 54321);
+        ClientImpl client = new ClientImpl(viewManager);
+        client.handshake(serverStub);
+        new Thread(() -> {
+            while (true) {
+                try {
+                    serverStub.receive(client);
+                } catch (RemoteException e) {
+                    try {
+                        serverStub.close();
+                    } catch (RemoteException ignored) {
+                    }
+                    break;
+                } catch (InvalidClassException ignored) {
+                    //receiving different class versions
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            viewManager.stopUI();
+        }).start();
+    }
+}
 
 
