@@ -65,4 +65,52 @@ properly to the java RMI server.
 
 If your terminal doesn't support ANSI escape sequences, or you're experiencing weird textual UI behaviour, please use the -n option.
 
+### Windows
+#### Server
+##### From CMD
+1. In a CMD windows launched as administrator run
+``` bash
+powershell.exe .\server.ps1 [ server_ip ]
+```
+##### From PowerShell
+1. In a PowerShell windows launched as administrator run
+``` bash
+.\server.ps1 [ server_ip ]
+```
+
+Where :
+- server_ip : the ip of the machine you're running the server on.
+
+If no server_ip flag is provided a random active network interface will be used to export java RMI objects.
+Not setting a server_ip is not recommended if you're going to use java RMI since it may not be able to publish its remote objects.
+
+#### Client
+##### From CMD
+1. In a CMD windows launched as administrator run
+``` bash
+powershell.exe .\client.ps1  [ -n ] [ client_ip server_ip ] 
+```
+
+##### From PowerShell
+1. In a PowerShell windows launched as administrator run
+``` bash
+.\client.ps1  [ -n ] [ client_ip server_ip ] 
+```
+
+Where :
+- -n : disables ANSI escape sequences (just in case your terminal doesn't support them).
+- client_ip : the ip of the machine you're running the client on.
+- server_ip : the ip of the machine where the server is running.
+
+For optimal Textual UI experience it is recommended not to set the -n option
+and to use a terminal of at least 63 characters wide and 33 characters tall.
+
+Keep in mind that parameters ordering is NOT meant to be mixed. Otherwise, the startup script might not work properly.
+
+If no client_ip flag is provided a random active network interface will be used to export java RMI objects.
+Not setting a client_ip is not recommended if you're going to use java RMI since it may not be able to connect
+properly to the java RMI server.
+
+If your terminal doesn't support ANSI escape sequences, or you're experiencing weird textual UI behaviour, please use the -n option.
+
 
