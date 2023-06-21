@@ -31,4 +31,6 @@ public interface ClientExceptionsNotifier {
      * @return a client exception notifier view.
      */
     ClientExceptionsNotifierView getClientExceptionNotifierView();
+
+    void removeExceptionsObservers();
 }

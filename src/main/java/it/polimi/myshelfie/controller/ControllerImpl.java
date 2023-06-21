@@ -25,6 +25,7 @@ import java.util.Map;
 public class ControllerImpl implements Controller {
     private final Map<String, LobbyControllerImpl> lobbiesControllers;
     private final Map<Client, ClientExceptionsNotifier> clientExceptionsNotifiers;
+    private final Map<Client, Observer<ModelEvent, ModelView>> clientToModelObserversMap;
     private final Map<Client,Boolean> clientHasJoinedMap;
     private Model model;
 
@@ -34,6 +35,7 @@ public class ControllerImpl implements Controller {
     public ControllerImpl(){
         this.lobbiesControllers = new HashMap<>();
         this.clientExceptionsNotifiers = new HashMap<>();
+        this.clientToModelObserversMap = new HashMap<>();
         this.clientHasJoinedMap = new HashMap<>();
     }
 
@@ -60,8 +62,11 @@ public class ControllerImpl implements Controller {
 
         //connects the client to the model
         model.addModelObserver(networkModelObserver);
+        clientToModelObserversMap.put(client,networkModelObserver);
+
         ClientExceptionsNotifier cen = model.getNewClientExceptionNotifier();
         cen.addExceptionsObserver(networkExceptionsObserver);
+
         clientExceptionsNotifiers.put(client,cen);
 
         clientHasJoinedMap.put(client,false);
@@ -209,6 +214,11 @@ public class ControllerImpl implements Controller {
     }
     @Override
     public synchronized void quit(Client client) {
+        if(!clientExceptionsNotifiers.containsKey(client)) { //ignoring disconnected clients
+            return;
+        }
+        model.removeModelObserver(clientToModelObserversMap.get(client));
+        if(clientExceptionsNotifiers.get(client)!=null) clientExceptionsNotifiers.get(client).removeExceptionsObservers();
         clientExceptionsNotifiers.remove(client);
         clientHasJoinedMap.remove(client);
     }

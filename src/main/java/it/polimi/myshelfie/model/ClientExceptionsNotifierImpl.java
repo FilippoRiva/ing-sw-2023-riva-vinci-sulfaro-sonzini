@@ -43,6 +43,11 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
         return new ClientExceptionsNotifierView(this);
     }
 
+    @Override
+    public void removeExceptionsObservers() {
+        deleteObservers();
+    }
+
     /**
      *
      * @return the last exception notified.
