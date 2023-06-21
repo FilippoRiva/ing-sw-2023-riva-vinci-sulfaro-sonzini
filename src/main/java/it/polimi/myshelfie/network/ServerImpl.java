@@ -15,7 +15,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server{
     public synchronized void connect(Client client) throws RemoteException {
         new Thread(()->{
             try {
-                ServerConnectionHandlerImpl s = new ServerConnectionHandlerImpl(client,controller);
+                ServerConnectionHandlerImpl s = new ServerConnectionHandlerImpl(client, controller);
                 s.start();
             } catch (RemoteException e) {
                 e.printStackTrace();

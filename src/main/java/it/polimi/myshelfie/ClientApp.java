@@ -11,6 +11,7 @@ import it.polimi.myshelfie.view.textual.TextualUI;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -173,6 +174,8 @@ public class ClientApp {
                     break;
                 } catch (InvalidClassException ignored) {
                     //receiving different class versions
+                } catch (SocketException e){
+                    System.err.println("Lost server connection. Disconnecting....");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

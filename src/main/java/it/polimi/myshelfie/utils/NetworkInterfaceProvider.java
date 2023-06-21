@@ -25,8 +25,10 @@ public class NetworkInterfaceProvider {
             }
         } catch (UnknownHostException ex){
             System.err.println("Not a valid hostname");
+            input = "";
         } catch (IOException e) {
             System.err.println("Unable to get user input");
+            input = "";
         }
         if(!input.equals("")) return input;
         System.out.println("Loading Random Network Interface...");

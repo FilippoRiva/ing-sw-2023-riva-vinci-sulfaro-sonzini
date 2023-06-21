@@ -8,4 +8,5 @@ public enum MessageType {
     EXCEPTION_MESSAGE,
     SELECT_VIEW_MESSAGE,
     VIEW_MESSAGE,
+    PING
 }

@@ -94,29 +94,30 @@ public class ServerApp {
                         } catch (InvalidClassException ignored){
                             System.err.println("Receiving unknown messages from client.");
                         } catch (IOException e) {
-                            System.err.println("Cannot receive from client. Closing connection...");
+                            assert serverConnectionHandler != null;
+                            System.out.println(serverConnectionHandler.hostName + " | ID : " + serverConnectionHandler.clientID + " Closing Socket");
                         } finally {
                             try {
                                 assert serverConnectionHandler != null;
                                 serverConnectionHandler.close();
                             } catch (RemoteException ignored) {
-                                System.err.println("Unable to close a Connection Handler after disconnection");
+                                System.out.println(serverConnectionHandler.hostName+" | ID : "+serverConnectionHandler.clientID+"Unable to close a Connection Handler after disconnection");
                             }
-                            System.out.println("Client Disconnected");
+                            System.out.println(serverConnectionHandler.hostName + " | ID : " + serverConnectionHandler.clientID + " Socket Closed");
                             try {
                                 socket.close();
                             } catch (IOException e) {
-                                System.err.println("Cannot close socket");
+                                System.out.println("Cannot close socket");
                             }
                         }
                     }).start();
                 } catch (IOException e){ //caught from ServerSocket accept
-                    System.err.println("Socket server failed");
+                    System.out.println("Socket server failed");
                     running = false;
                 }
             }
         } catch (IOException e) { //caught from ServerSocket constructor
-            System.err.println("Unable to start socket server. The requested socket is already being used");
+            System.out.println("Unable to start socket server. The requested socket is already being used");
         }
     }
 }

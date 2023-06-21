@@ -1,7 +1,7 @@
 package it.polimi.myshelfie.network;
 
-import it.polimi.myshelfie.controller.GameControllerImpl;
 import it.polimi.myshelfie.controller.interfaces.ChatController;
+import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
 
 import java.io.EOFException;
@@ -58,7 +58,7 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     }
 
     @Override
-    public void setGameController(GameControllerImpl gameController) throws RemoteException {
+    public void setGameController(GameController gameController) throws RemoteException {
     }
 
     @Override
@@ -94,5 +94,10 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         } catch (IOException e) {
             throw new RemoteException("Cannot close socket", e);
         }
+    }
+
+    @Override
+    public void ping() {
+        //not needed in socket implementation
     }
 }

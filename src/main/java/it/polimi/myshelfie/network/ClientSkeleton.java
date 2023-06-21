@@ -7,10 +7,12 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 
 public class ClientSkeleton implements Client{
+    private final Socket socket;
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
 
     public ClientSkeleton(Socket socket) throws RemoteException {
+        this.socket = socket;
         try {
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             this.oos.flush();
@@ -22,6 +24,11 @@ public class ClientSkeleton implements Client{
         } catch (IOException e) {
             throw new RemoteException("Cannot create input stream", e);
         }
+    }
+
+    @Override
+    public String getHostName() {
+        return socket.getInetAddress().getHostName();
     }
 
     @Override

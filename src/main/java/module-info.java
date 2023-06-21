@@ -18,6 +18,6 @@ module ingsw.myshelfie {
 
     //making graphical UI open for javafx
     opens it.polimi.myshelfie.view.graphical.controllers;
-    opens it.polimi.myshelfie.view.graphical.controllers.pregame;
-    opens it.polimi.myshelfie.view.graphical.controllers.game;
+    //opens it.polimi.myshelfie.view.graphical.controllers.pregame;
+    //opens it.polimi.myshelfie.view.graphical.controllers.game;
 }

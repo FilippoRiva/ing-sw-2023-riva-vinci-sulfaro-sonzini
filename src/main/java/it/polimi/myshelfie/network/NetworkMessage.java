@@ -186,6 +186,19 @@ public class NetworkMessage implements Serializable {
         this.clientFunction = ((view)-> new Thread(()->view.setModelView(modelView)).start());
     }
 
+    public NetworkMessage(){
+        this.messageType = MessageType.PING;
+        this.clientFunction = ((view)-> {});
+        this.serverFunction = ((controllersGroup)-> {
+            new Thread(()->{
+                try {
+                    controllersGroup.getServerConnectionHandler().ping();
+                } catch (RemoteException ignored){
+                }
+            }).start();
+        });
+    }
+
     public MessageType getMessageType() {
         return messageType;
     }

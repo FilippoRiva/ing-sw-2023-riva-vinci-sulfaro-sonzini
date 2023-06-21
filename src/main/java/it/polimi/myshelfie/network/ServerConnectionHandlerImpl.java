@@ -1,6 +1,5 @@
 package it.polimi.myshelfie.network;
 
-import it.polimi.myshelfie.controller.GameControllerImpl;
 import it.polimi.myshelfie.controller.interfaces.ChatController;
 import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.GameController;
@@ -9,6 +8,8 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements ServerConnectionHandler {
     private final Client client;
@@ -17,22 +18,31 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     private LobbyController lobbyController;
     private GameController gameController;
     private ChatController chatController;
+    private Timer timeOutTimer;
+    private boolean connected;
+    public final String hostName;
+    private static int id = 0;
+    public final int clientID;
     public ServerConnectionHandlerImpl(Client client, Controller controller) throws RemoteException {
         this.client = client;
         this.controller = controller;
+        this.timeOutTimer = new Timer();
+        this.hostName = client.getHostName();
+        this.clientID = id;
+        id++;
     }
     public void start() throws RemoteException {
         client.handshake(this);
-        System.out.println("Client connected");
+        System.out.println(hostName +" | ID : "+clientID+" connected");
         //RMI disconnection detection
         new Thread(()->{
             try {
                 client.lifeline();
             } catch (RemoteException e) {
                 try {
-                    System.err.println("Cannot receive from client. Closing connection...");
+                    if(!connected) return;
+                    System.out.println(hostName +" | ID : "+clientID+" Closing connection...");
                     close();
-                    System.out.println("Client Disconnected");
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -40,7 +50,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         }).start();
         try{
             controller.addClient(client, ((evt, modelView)-> new Thread(()->{
-                try {
+                try { //this is called every 10 seconds
                     client.send(new NetworkMessage(evt,modelView));
                 } catch (RemoteException ignored) {
                 }
@@ -56,10 +66,13 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         } catch (InvalidParameterException e ){
             throw new RuntimeException(e); //controller does not support multiple instances of the same client connected
         }
+
+        connected = true;
     }
 
     @Override
-    public synchronized void setGameController(GameControllerImpl gameController) throws RemoteException{
+    public synchronized void setGameController(GameController gameController) throws RemoteException{
+        if(!connected) throw new RemoteException();
         this.gameController = gameController;
         if(gameController == null) return;
         gameController.addGameObserver(playerName, (evt, gameModelView)->{
@@ -75,6 +88,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
 
     @Override
     public synchronized void setChatController(ChatController chatController) throws RemoteException{
+        if(!connected) throw new RemoteException();
         this.chatController = chatController;
         if(chatController==null) return;
         chatController.addChatObserver(playerName, ((evt,playerChatModelView)->{
@@ -103,15 +117,37 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
 
     @Override
     public synchronized void close() throws RemoteException {
+        if(!connected) return;
         controller.quit(client);
         if(gameController!=null) gameController.disconnectFromGame(playerName);
         else if(lobbyController!=null) lobbyController.exitLobby(playerName);
+        connected = false;
+        System.out.println(hostName +" | ID : "+clientID+" Disconnected");
+    }
+
+    @Override
+    public void ping() throws RemoteException{
+        if(!connected) throw new RemoteException();
+        this.timeOutTimer.cancel();
+        this.timeOutTimer = new Timer();
+        this.timeOutTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+            try {
+                if(!connected) return;
+                System.out.println(hostName +" | ID : "+clientID+" timed out. Closing Connection...");
+                close();
+            } catch (RemoteException ignored) {
+            }
+            }
+        },10000);
     }
 
     @Override
     public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
+        if(!connected) throw new RemoteException();
         MessageType messageType = networkMessage.getMessageType();
-        if(messageType!=MessageType.VIEW_MESSAGE) return;
+        if(messageType!=MessageType.VIEW_MESSAGE && messageType!=MessageType.PING) return;
         networkMessage.serverExecute(new ControllerGroup(client,this,
                 playerName,controller,lobbyController,gameController,chatController));
     }
