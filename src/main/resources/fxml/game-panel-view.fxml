@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GamePanelController">
+   <children>
+      <HBox fx:id="panelHBox" alignment="CENTER">
+         <children>
+            <fx:include fx:id="leftBookshelf" source="game-bookshelf-view.fxml" />
+            <StackPane prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="confirmButton" mnemonicParsing="false" text="Confirm" StackPane.alignment="CENTER" />
+                  <fx:include fx:id="livingRoom" source="game-livingroom-view.fxml" />
+               </children>
+            </StackPane>
+            <fx:include fx:id="rightBookshelf" source="game-bookshelf-view.fxml" />
+         </children>
+      </HBox>
+      <Button fx:id="actionSwitch" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="ActionSwitch" AnchorPane.leftAnchor="0.0" />
+   </children>
+</AnchorPane>

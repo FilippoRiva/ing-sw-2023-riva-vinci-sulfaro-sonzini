@@ -1,9 +1,10 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.pregame;
 
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.*;
+import it.polimi.myshelfie.view.graphical.controllers.ChatController;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.concurrent.Task;
@@ -99,6 +100,7 @@ public class LobbyController {
         Platform.runLater(()-> lobbyNameLabel.setText(viewManager.getLobbyModelView().getName()));
         updateListPlayers();
     }
+
     @FXML
     protected void onStartMouseClicked() {
         viewManager.startRequest();
@@ -192,29 +194,4 @@ public class LobbyController {
         });
         chatController.reset();
     }
-
-    /*
-    @FXML
-    protected void setChatVisible(){
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
-        translateTransition.setByX(+415);
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-
-        fadeTransition.play();
-        translateTransition.play();
-    }
-    @FXML
-    protected void SetChatInvisible() {
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), chatPane);
-        translateTransition.setByX(-415);
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), chatPane);
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
-
-        fadeTransition.play();
-        translateTransition.play();
-    }
-     */
 }

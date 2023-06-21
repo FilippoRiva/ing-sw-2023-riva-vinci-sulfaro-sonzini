@@ -1,92 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.GameController">
+<AnchorPane fx:id="mainAnchorPane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameController">
     <children>
-        <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Image url="@../images/gameBackground.png" />
+        <ImageView fx:id="backgroundImage" pickOnBounds="true">
+            <Image url="@../images/lightWood.jpg" />
         </ImageView>
-        <GridPane fx:id="livingRoomGrid" layoutX="22.0" layoutY="25.0" prefHeight="508.0" prefWidth="503.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-        </GridPane>
-        <ImageView fx:id="lastTokenImage" fitWidth="60.0" layoutX="450.0" layoutY="385.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-            <Image url="@../images/game/tokens/1.jpg" />
-            </image>
-        </ImageView>
-        <ImageView fx:id="personalGoalImage" fitHeight="260.0" layoutX="595.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="takenToken1Image" fitWidth="60.0" layoutX="595.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-            <Image url="@../images/game/tokens/scoring.jpg" />
-            </image>
-        </ImageView>
-        <ImageView fx:id="takenToken2Image" fitWidth="60.0" layoutX="707.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-            <Image url="@../images/game/tokens/scoring.jpg" />
-            </image>
-        </ImageView>
-        <Button layoutX="758.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#prevPlayer" prefHeight="50.0" prefWidth="79.0" styleClass="arrow" />
-        <Label fx:id="playerBookshelfLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="819.0" layoutY="15.0" prefHeight="58.0" prefWidth="383.0" text="player's bookshelf" AnchorPane.topAnchor="15.0" />
-        <Button layoutX="1190.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#nextPlayer" prefHeight="50.0" prefWidth="79.0" style="-fx-rotate: 180;" styleClass="arrow" />
-        <AnchorPane fx:id="bookshelfPane" layoutX="850.0" layoutY="105.0" maxHeight="342.0" maxWidth="323.0" minHeight="342.0" minWidth="323.0" prefHeight="342.0" prefWidth="323.0" />
-        <HBox fx:id="insertBox" layoutX="850.0" layoutY="456.0" prefHeight="58.0" prefWidth="324.0" spacing="17.0" visible="false">
-            <children>
-                <Button fx:id="insertButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
-                <Button fx:id="insertButton2" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
-                <Button fx:id="insertButton3" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
-                <Button fx:id="insertButton4" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
-                <Button fx:id="insertButton5" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="chooseColumn" />
-            </children>
-        </HBox>
-        <Label fx:id="playingLabel" layoutX="41.0" layoutY="555.0" prefHeight="150.0" prefWidth="200.0" text="Playing" textAlignment="CENTER" wrapText="true" />
-        <Button fx:id="button" layoutX="14.0" layoutY="601.0" mnemonicParsing="false" onMouseClicked="#onButtonMouseClicked" prefHeight="91.0" prefWidth="254.0" style="-fx-font-size: 30;" styleClass="myButton" text="Draw" visible="false" />
-        <HBox layoutX="300.0" layoutY="573.0" spacing="10.0">
-            <children>
-                <ImageView fx:id="takenTile1Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
-                <ImageView fx:id="takenTile2Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
-                <ImageView fx:id="takenTile3Image" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
-            </children>
-        </HBox>
-        <Label fx:id="errorLabel" layoutX="274.0" layoutY="671.0" prefHeight="43.0" prefWidth="551.0" styleClass="error" text="error" textFill="RED" visible="false" />
-        <ImageView fx:id="commonGoal1Image" fitWidth="200.0" layoutX="810.0" layoutY="580.0" onMouseEntered="#showDescription1" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="token1Image" fitWidth="70.0" layoutX="921.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="commonGoal2Image" fitWidth="200.0" layoutX="1050.0" layoutY="580.0" onMouseEntered="#showDescription2" onMouseExited="#hideDescription" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="token2Image" fitWidth="70.0" layoutX="1160.0" layoutY="607.0" pickOnBounds="true" preserveRatio="true" />
-        <Label fx:id="descriptionLabel" layoutX="757.0" layoutY="518.0" prefHeight="60.0" prefWidth="494.0" style="-fx-font-size: 15;" textAlignment="CENTER" visible="false" wrapText="true" />
-        <ProgressIndicator fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
       <fx:include fx:id="endGame" source="endGame-view.fxml" />
+      <fx:include fx:id="gamePanel" source="game-panel-view.fxml" />
+      <fx:include fx:id="gameOverlay" source="game-overlay-view.fxml" />
+        <ProgressIndicator fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
     </children>
 </AnchorPane>

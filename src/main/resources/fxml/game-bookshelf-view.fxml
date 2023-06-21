@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainBorderPane" style="-fx-background-color: blue;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.BookshelfController">
+   <top>
+      <HBox fx:id="topHBox" alignment="TOP_CENTER" style="-fx-background-color: brown;" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" text="^" />
+            <Button mnemonicParsing="false" text="^" />
+            <Button mnemonicParsing="false" text="^" />
+            <Button mnemonicParsing="false" text="^" />
+            <Button mnemonicParsing="false" text="^" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <StackPane fx:id="gridStack" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane fx:id="bookshelfGrid" alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: yellow;" StackPane.alignment="CENTER">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+            </GridPane>
+            <ImageView fx:id="bookshelfImage" cache="true" cacheHint="SPEED" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+               <image>
+                  <Image url="@../images/game/boards/bookshelf_orth_corrected.png" />
+               </image>
+            </ImageView>
+         </children>
+      </StackPane>
+   </center>
+   <bottom>
+      <HBox fx:id="bottomHBox" alignment="CENTER" spacing="30.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="chair" cache="true" cacheHint="SPEED" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/game/chair.png" />
+               </image></ImageView>
+            <Label fx:id="playerName" cache="true" cacheHint="SPEED" styleClass="bookshelfPlayerName" text="PlayerName">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <StackPane fx:id="commonGoalTokensStack" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" top="20.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <left>
+      <StackPane fx:id="leftStack" style="-fx-background-color: pink;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="prevButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&lt;" StackPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </Button>
+         </children>
+      </StackPane>
+   </left>
+   <right>
+      <StackPane fx:id="rightStack" style="-fx-background-color: green;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="nextButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&gt;" StackPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </Button>
+         </children>
+      </StackPane>
+   </right>
+</BorderPane>

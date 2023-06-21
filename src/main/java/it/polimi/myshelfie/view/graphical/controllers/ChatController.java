@@ -49,7 +49,7 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    protected void setChatVisible(boolean value) {
+    public void setChatVisible(boolean value) {
         if(value){
             chatIsOpen = true;
             messageText.requestFocus();
@@ -62,7 +62,7 @@ public class ChatController implements Initializable {
         }
     }
     @FXML
-    protected void sendMessage() {
+    public void sendMessage() {
         String receiver;
         if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
         else receiver = receiverChoice.getValue();
@@ -72,7 +72,7 @@ public class ChatController implements Initializable {
         viewBuffer.sendChatMessage(message);
     }
 
-    protected void updateChoiceBox() {
+    public void updateChoiceBox() {
         List<String> players = new ArrayList<>(viewBuffer.getLobbyModelView().getPlayers());
         players.remove(ViewManager.getUsername());
         players.add("Everyone");

@@ -572,6 +572,10 @@ public class ViewManager extends View {
         return fullGameModelView.getCurrentPlayer().getTakenTiles().size()< oldGameModelView.getCurrentPlayer().getTakenTiles().size();
     }
 
+    public synchronized boolean isMyTurn(){
+        return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+    }
+
     public synchronized int getLastPlayerInsertedColumnPosition(){
         if(!hasLastPlayerInsertedTiles()) return -1;
         ItemTile[][] bookshelf = gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getBookshelf();

@@ -106,3 +106,7 @@
 .choice-box > .label {
     -fx-font-size: 10;
 }
+
+.bookshelfPlayerName {
+    -fx-font-size: 35;
+}

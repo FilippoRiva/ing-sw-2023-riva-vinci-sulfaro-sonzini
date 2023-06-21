@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.PreGameController">
+<StackPane cache="true" cacheHint="SPEED" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.pregame.PreGameController">
    <children>
       <AnchorPane cacheHint="SCALE">
          <children>
-            <StackPane AnchorPane.topAnchor="0.0">
+            <StackPane cache="true" cacheHint="SPEED" AnchorPane.topAnchor="0.0">
                <children>
                   <ImageView fx:id="banner" cache="true" cacheHint="SCALE" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -52,7 +52,7 @@
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>
       </Button>
-      <Button fx:id="chatButton" layoutX="15.0" layoutY="15.0" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#toggleChatVisible" prefHeight="70.0" prefWidth="70.0" styleClass="chat" StackPane.alignment="TOP_LEFT">
+      <Button fx:id="chatButton" cache="true" cacheHint="SPEED" layoutX="15.0" layoutY="15.0" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#toggleChatVisible" prefHeight="70.0" prefWidth="70.0" styleClass="chat" StackPane.alignment="TOP_LEFT">
          <StackPane.margin>
             <Insets left="20.0" top="110.0" />
          </StackPane.margin></Button>

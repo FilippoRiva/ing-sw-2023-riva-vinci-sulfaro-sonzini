@@ -1,34 +1,83 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.game;
 
-import it.polimi.myshelfie.GameConfig;
-import it.polimi.myshelfie.model.*;
-import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
-import it.polimi.myshelfie.model.modelviews.FullGameModelView;
-import it.polimi.myshelfie.model.modelviews.PlayerModelView;
+import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewManager;
-import it.polimi.myshelfie.view.ViewType;
-import it.polimi.myshelfie.view.graphical.BookshelfView;
-import it.polimi.myshelfie.view.graphical.Images;
-import javafx.application.Platform;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
+import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class GameController{
 
-import static it.polimi.myshelfie.view.graphical.Images.getImage;
-import static it.polimi.myshelfie.view.graphical.Images.getTileImage;
+    @FXML
+    protected AnchorPane endGame;
+    @FXML
+    protected AnchorPane gameOverlay;
+    @FXML
+    protected AnchorPane gamePanel;
+    @FXML
+    protected ImageView backgroundImage;
+    @FXML
+    protected AnchorPane mainAnchorPane;
 
-public class GameController {
+    @FXML
+    protected GameOverlayController gameOverlayController;
+    @FXML
+    protected  GamePanelController gamePanelController;
+    @FXML
+    protected EndGameController endGameController;
+
+    private final ViewManager viewManager = ViewManager.getInstance();
+
+    public void initialize() {
+        Stage stage = GraphicalUI.stage;
+        endGame.setVisible(false);
+        endGame.setMouseTransparent(true);
+        gameOverlay.setVisible(false);
+        gameOverlay.setMouseTransparent(true);
+        gameOverlayController.initialize(this);
+        gamePanelController.initialize(this);
+        endGameController.initialize(this);
+        CustomBindings.bindSize(backgroundImage,stage.widthProperty(),stage.heightProperty());
+        CustomBindings.bindSize(mainAnchorPane,stage.widthProperty(),stage.heightProperty());
+    }
+    
+    public void gameStart(){
+        //completely loading everything
+        gamePanelController.setActive(viewManager.isMyTurn());
+        gamePanelController.setState(viewManager.getGameModelView().getCurrentState());
+        gamePanelController.leftBookshelfController.loadLeft();
+        gamePanelController.rightBookshelfController.loadRight();
+        gamePanelController.livingRoomController.reloadGrid();
+    }
+
+    public void win() {
+    }
+
+    public void update() {
+        if(viewManager.isCurrentPlayerDiff()){
+            gamePanelController.setActive(viewManager.isMyTurn());
+        }
+
+        if(viewManager.isCurrentStateDiff()){
+            gamePanelController.setState(viewManager.getCurrentStateDiff());
+        }
+
+        //reloading everything
+        gamePanelController.leftBookshelfController.loadLeft();
+        gamePanelController.rightBookshelfController.loadRight();
+        gamePanelController.livingRoomController.reloadGrid();
+    }
+
+    public void updateChat() {
+    }
+
+    public void displayError(String message) {
+    }
+
+    /*
     @FXML
     protected GridPane livingRoomGrid;
     @FXML
@@ -144,7 +193,6 @@ public class GameController {
                     if(chatIsOpen) setChatInvisible();
                     else setChatVisible();
                 }
-                 */
             }
         });
     }
@@ -539,4 +587,5 @@ public class GameController {
         endGame.setVisible(true);
         endGame.setMouseTransparent(false);
     }
+    */
 }

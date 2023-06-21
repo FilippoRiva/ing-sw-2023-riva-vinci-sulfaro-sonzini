@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view.graphical;
 import it.polimi.myshelfie.view.UI;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewUpdate;
+import it.polimi.myshelfie.view.graphical.components.TileImageView;
 import it.polimi.myshelfie.view.graphical.controllers.*;
 import it.polimi.myshelfie.view.InternalViewState;
 import javafx.application.Application;
@@ -88,13 +89,12 @@ public class GraphicalUI extends Application implements UI {
             @Override
             protected AnchorPane call() {
                 AnchorPane pane;
+                TileImageView.initImages();
+                updateProgress(3,10);
                 FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/main-view.fxml"));
-                updateProgress(2,10);
+                updateProgress(6,10);
                 try {
-                    updateProgress(3,10);
                     pane = fxmlLoader.load();
-                    updateProgress(6,10);
-                    Images.initImages();
                     updateProgress(9,10);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -118,7 +118,7 @@ public class GraphicalUI extends Application implements UI {
             });
         });
         progressBar.progressProperty().bind(task.progressProperty());
-        new Thread(task).start();
+        new Thread(task,"GUI Loader").start();
     }
 
     private synchronized void viewTypeUpdate() {

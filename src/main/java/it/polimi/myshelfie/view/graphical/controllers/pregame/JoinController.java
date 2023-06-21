@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.pregame;
 
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.view.InternalViewState;
@@ -52,7 +52,7 @@ public class JoinController {
         CustomBindings.bindSize(lobbiesVBox,listBackgroundImage.fitWidthProperty(),listBackgroundImage.fitHeightProperty());
         CustomBindings.bindSize(lobbiesScrollPane,listBackgroundImage.fitWidthProperty(),listBackgroundImage.fitHeightProperty());
 
-        Animations.applyButtonAnimation(joinButton);
+        Animations.applyHoverScaling(joinButton);
         Effects.applyShadow(joinButton);
 
         CustomBindings.bindLowerPreGamePane(clearBackground,banner);

@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.pregame;
 
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
@@ -30,7 +30,7 @@ public class CreateController {
 
     public void initialize(ImageView banner,PreGameController preGameController){
         CustomBindings.bindLowerPreGamePane(backgroundClear,banner);
-        Animations.applyButtonAnimation(createButton);
+        Animations.applyHoverScaling(createButton);
         Effects.applyShadow(createButton);
         this.preGameController = preGameController;
     }

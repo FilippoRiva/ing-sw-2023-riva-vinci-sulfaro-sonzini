@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.pregame;
 
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
@@ -42,13 +42,13 @@ public class PreGameController implements Initializable {
     @FXML
     protected Label notificationDot;
     @FXML
-    HomeController homeController;
+    public HomeController homeController;
     @FXML
-    JoinController joinController;
+    public JoinController joinController;
     @FXML
-    CreateController createController;
+    public CreateController createController;
     @FXML
-    LobbyController lobbyController;
+    public LobbyController lobbyController;
 
     InternalViewState page;
     StackPane lastSlideUp;
@@ -65,8 +65,8 @@ public class PreGameController implements Initializable {
         createController.initialize(banner,this);
         lobbyController.initialize(banner,this);
 
-        Animations.applyButtonAnimation(backButton);
-        Animations.applyButtonAnimation(chatButton);
+        Animations.applyHoverScaling(backButton);
+        Animations.applyHoverScaling(chatButton);
 
         changePage(InternalViewState.INIT);
     }
@@ -77,7 +77,7 @@ public class PreGameController implements Initializable {
     public void stopLoading(){
         Platform.runLater(() -> progress.setVisible(false));
     }
-    protected void changePage(InternalViewState page){
+    public void changePage(InternalViewState page){
         if(page==this.page) return; //avoiding forced animations
         stopLoading();
         switch (page){
@@ -137,8 +137,8 @@ public class PreGameController implements Initializable {
     }
 
     private void dualHidePane(StackPane pane, StackPane secondPane){
-        TranslateTransition tt = Animations.getSlideDownTransition(pane);
-        TranslateTransition tt2 = Animations.getSlideDownTransition(secondPane);
+        TranslateTransition tt = Animations.getSlideToBottom(pane);
+        TranslateTransition tt2 = Animations.getSlideToBottom(secondPane);
         tt.setOnFinished((finish)->{
             pane.setVisible(false);
             pane.setMouseTransparent(true);
@@ -152,7 +152,7 @@ public class PreGameController implements Initializable {
     }
     private void hidePane(StackPane pane){
         pane.setTranslateY(pane.getHeight());
-        TranslateTransition tt = Animations.getSlideDownTransition(pane);
+        TranslateTransition tt = Animations.getSlideToBottom(pane);
         tt.setOnFinished((finish)->{
             pane.setVisible(false);
             pane.setMouseTransparent(true);
@@ -163,7 +163,7 @@ public class PreGameController implements Initializable {
         pane.setTranslateY(pane.getHeight());
         pane.setVisible(true);
         pane.setMouseTransparent(false);
-        TranslateTransition tt = Animations.getSlideUpTransition(pane);
+        TranslateTransition tt = Animations.getSlideFromBottom(pane);
         tt.play();
     }
 
@@ -231,6 +231,7 @@ public class PreGameController implements Initializable {
     }
 
     public void notifyNewMessage() {
+        lobbyController.chatController.addChatMessage();
         if(lobbyController.chatController.isChatVisible()) return;
         int prev = Integer.parseInt(notificationDot.getText());
         if(prev==0) {

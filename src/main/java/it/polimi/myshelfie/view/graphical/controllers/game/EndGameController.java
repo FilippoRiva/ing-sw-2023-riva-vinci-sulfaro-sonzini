@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.game;
 
 import it.polimi.myshelfie.model.EarnedPoint;
 import it.polimi.myshelfie.model.PointType;
@@ -11,7 +11,6 @@ import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,11 +19,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class EndGameController implements Initializable {
+public class EndGameController{
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -50,10 +47,8 @@ public class EndGameController implements Initializable {
     ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        FullGameModelView fullGameModelView = viewManager.getGameModelView();
+    public void initialize(GameController gameController) {
+        System.out.println("initialized end game");
     }
 
     public void setKeyListeners(Scene scene) {
