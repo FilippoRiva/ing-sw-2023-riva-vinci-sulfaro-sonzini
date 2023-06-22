@@ -22,4 +22,6 @@ module ingsw.myshelfie {
     opens it.polimi.myshelfie.view.graphical.controllers;
     opens it.polimi.myshelfie.view.graphical.controllers.pregame;
     opens it.polimi.myshelfie.view.graphical.controllers.game;
+
+    exports it.polimi.myshelfie.view.graphical.components;
 }

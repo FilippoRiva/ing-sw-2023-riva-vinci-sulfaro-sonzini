@@ -1,6 +1,5 @@
 package it.polimi.myshelfie.view.graphical.controllers.game;
 
-import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
@@ -50,25 +49,21 @@ public class GameController{
         gamePanelController.setState(viewManager.getGameModelView().getCurrentState());
         gamePanelController.leftBookshelfController.loadLeft();
         gamePanelController.rightBookshelfController.loadRight();
-        gamePanelController.livingRoomController.reloadGrid();
+        gamePanelController.livingRoomController.loadGrid();
+        setKeyListeners(GraphicalUI.stage);
+    }
+
+    private void setKeyListeners(Stage stage){
+        stage.getScene().setOnKeyPressed((keyEvent)->{});
     }
 
     public void win() {
     }
 
     public void update() {
-        if(viewManager.isCurrentPlayerDiff()){
-            gamePanelController.setActive(viewManager.isMyTurn());
-        }
-
         if(viewManager.isCurrentStateDiff()){
-            gamePanelController.setState(viewManager.getCurrentStateDiff());
+            gamePanelController.setState(viewManager.getCurrentStateDiff()); //this reloads game panel elements
         }
-
-        //reloading everything
-        gamePanelController.leftBookshelfController.loadLeft();
-        gamePanelController.rightBookshelfController.loadRight();
-        gamePanelController.livingRoomController.reloadGrid();
     }
 
     public void updateChat() {

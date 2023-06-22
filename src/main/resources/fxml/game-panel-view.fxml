@@ -4,17 +4,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
-
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GamePanelController">
    <children>
       <HBox fx:id="panelHBox" alignment="CENTER">
          <children>
             <fx:include fx:id="leftBookshelf" source="game-bookshelf-view.fxml" />
-            <StackPane prefHeight="150.0" prefWidth="200.0">
+            <StackPane>
                <children>
-                  <Button fx:id="confirmButton" mnemonicParsing="false" text="Confirm" StackPane.alignment="CENTER" />
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <fx:include fx:id="tileSorter" source="game-tile-sorter.fxml" />
+                     </children>
+                  </VBox>
                   <fx:include fx:id="livingRoom" source="game-livingroom-view.fxml" />
+                  <Button fx:id="confirmButton" mnemonicParsing="false" text="Confirm" />
                </children>
             </StackPane>
             <fx:include fx:id="rightBookshelf" source="game-bookshelf-view.fxml" />

@@ -10,10 +10,8 @@ import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.components.TileImageView;
 import it.polimi.myshelfie.view.graphical.components.TokenImageView;
 import javafx.application.Platform;
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -53,6 +51,17 @@ public class BookshelfController {
     protected StackPane rightStack;
     @FXML
     protected StackPane leftStack;
+    @FXML
+    protected Button column1Insert;
+    @FXML
+    protected Button column2Insert;
+    @FXML
+    protected Button column3Insert;
+    @FXML
+    protected Button column4Insert;
+    @FXML
+    protected Button column5Insert;
+    private Button[] columnInserts;
     private int currentPlayerPos;
     private final ViewManager viewManager = ViewManager.getInstance();
     private final float bookshelfImageWidth = 1413;
@@ -75,6 +84,9 @@ public class BookshelfController {
     protected Stage stage = GraphicalUI.stage;
 
     public void initialize(boolean left){
+
+        this.columnInserts = new Button[]{column1Insert,column2Insert,column3Insert,column4Insert,column5Insert};
+
         CustomBindings.bindSize(mainBorderPane,bookshelfImage.fitWidthProperty().add(80),
                 bookshelfImage.fitHeightProperty().add(topHBox.heightProperty()).add(bottomHBox.heightProperty()));
         CustomBindings.bindSize(bookshelfImage,
@@ -122,6 +134,7 @@ public class BookshelfController {
         CustomBindings.bindSize(chair,stage.widthProperty().divide(25),stage.heightProperty().divide(15));
 
         Animations.applyHoverScaling(chair);
+        this.setActive(false);
     }
 
     private void nextBookshelf() {
@@ -241,5 +254,28 @@ public class BookshelfController {
 
     public DoubleBinding tileWidthProperty() {
         return bookshelfImage.fitWidthProperty().multiply(tileWidthToBookshelfWidth);
+    }
+
+    public void setActive(boolean active){
+        if(active){
+            for(int i = 0; i < columnInserts.length; i++){
+                columnInserts[i].setVisible(true);
+                int finalI = i;
+                columnInserts[i].setOnMouseClicked((evt)->{
+                    insertAction(finalI);
+                });
+                columnInserts[i].setMouseTransparent(false);
+            }
+        } else {
+            for(int i = 0; i < columnInserts.length; i++){
+                columnInserts[i].setVisible(false);
+                columnInserts[i].setMouseTransparent(true);
+                columnInserts[i].setOnMouseClicked((evt)->{});
+            }
+        }
+    }
+
+    private void insertAction(int column) {
+        viewManager.insertRequest(column);
     }
 }

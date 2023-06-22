@@ -3,13 +3,13 @@ package it.polimi.myshelfie.view.graphical;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
-
-import java.awt.*;
 
 public class CustomBindings {
 
@@ -106,6 +106,10 @@ public class CustomBindings {
             rowConstraints.maxHeightProperty().bind(height);
             rowConstraints.prefHeightProperty().bind(height);
         }
+    }
 
+    public static Point2D getAbsolutePosition(Node node){
+        Bounds regionBounds = node.localToScene(node.getBoundsInLocal());
+        return new Point2D(regionBounds.getMinX(),regionBounds.getMinY());
     }
 }

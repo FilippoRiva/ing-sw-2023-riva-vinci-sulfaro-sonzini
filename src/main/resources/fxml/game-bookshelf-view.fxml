@@ -13,22 +13,22 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" style="-fx-background-color: blue;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.BookshelfController">
+<BorderPane fx:id="mainBorderPane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.BookshelfController">
    <top>
-      <HBox fx:id="topHBox" alignment="TOP_CENTER" style="-fx-background-color: brown;" BorderPane.alignment="CENTER">
+      <HBox fx:id="topHBox" alignment="TOP_CENTER" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="^" />
-            <Button mnemonicParsing="false" text="^" />
-            <Button mnemonicParsing="false" text="^" />
-            <Button mnemonicParsing="false" text="^" />
-            <Button mnemonicParsing="false" text="^" />
+            <Button fx:id="column1Insert" mnemonicParsing="false" text="^" />
+            <Button fx:id="column2Insert" mnemonicParsing="false" text="^" />
+            <Button fx:id="column3Insert" mnemonicParsing="false" text="^" />
+            <Button fx:id="column4Insert" mnemonicParsing="false" text="^" />
+            <Button fx:id="column5Insert" mnemonicParsing="false" text="^" />
          </children>
       </HBox>
    </top>
    <center>
-      <StackPane fx:id="gridStack" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
+      <StackPane fx:id="gridStack" BorderPane.alignment="CENTER">
          <children>
-            <GridPane fx:id="bookshelfGrid" alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: yellow;" StackPane.alignment="CENTER">
+            <GridPane fx:id="bookshelfGrid" alignment="CENTER" gridLinesVisible="true" StackPane.alignment="CENTER">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" />
                   <ColumnConstraints hgrow="SOMETIMES" />
@@ -57,7 +57,7 @@
       </StackPane>
    </center>
    <bottom>
-      <HBox fx:id="bottomHBox" alignment="CENTER" spacing="30.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
+      <HBox fx:id="bottomHBox" alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="chair" cache="true" cacheHint="SPEED" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -76,7 +76,7 @@
       </HBox>
    </bottom>
    <left>
-      <StackPane fx:id="leftStack" style="-fx-background-color: pink;" BorderPane.alignment="CENTER">
+      <StackPane fx:id="leftStack" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="prevButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&lt;" StackPane.alignment="CENTER">
                <padding>
@@ -87,7 +87,7 @@
       </StackPane>
    </left>
    <right>
-      <StackPane fx:id="rightStack" style="-fx-background-color: green;" BorderPane.alignment="CENTER">
+      <StackPane fx:id="rightStack" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="nextButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&gt;" StackPane.alignment="CENTER">
                <padding>

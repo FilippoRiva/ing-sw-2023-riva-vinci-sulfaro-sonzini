@@ -36,6 +36,8 @@ public class PreGameController implements Initializable {
     @FXML
     ImageView logo;
     @FXML
+    Button exitButton;
+    @FXML
     protected ProgressIndicator progress;
     @FXML
     protected Button chatButton;
@@ -109,6 +111,7 @@ public class PreGameController implements Initializable {
                     notificationDot.setVisible(true);
                     notificationDot.setOpacity(0);
                 }
+                showButton(exitButton);
                 homeController.setKeyListeners();
             }
             case JOIN -> {
@@ -116,12 +119,14 @@ public class PreGameController implements Initializable {
                 showPane(join);
                 lastSlideUp = join;
                 showButton(backButton);
+                hideButton(exitButton);
                 joinController.setKeyListeners();
             }
             case CREATE -> {
                 showPane(create);
                 lastSlideUp = create;
                 showButton(backButton);
+                hideButton(exitButton);
                 createController.setKeyListeners();
             }
             case LOBBY -> {
@@ -184,6 +189,11 @@ public class PreGameController implements Initializable {
             ViewManager.getInstance().exitRequest();
         }
         GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+    }
+
+    @FXML
+    public void onExitButtonClicked() {
+        System.exit(0);
     }
 
     public void displayError(String errorMessage){

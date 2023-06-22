@@ -499,6 +499,7 @@ public class ViewManager extends View {
      * @return if remaining tiles have changed since the last game update
      */
     public synchronized boolean isRemainingTilesDiff(){
+        if(gameDifferences==null) return false;
         return gameDifferences.getRemainingTiles()!=-1;
     }
     public synchronized int getRemainingTilesDiff(){
@@ -514,6 +515,7 @@ public class ViewManager extends View {
      * @return a map from Positions to ItemTiles that have changed from the previous game update
      */
     public synchronized HashMap<Position,ItemTile> getLivingRoomDiff(){
+        if(gameDifferences==null) return null;
         HashMap<Position,ItemTile> result = new HashMap<>();
         ItemTile[][] diffLivingRoom = gameDifferences.getLivingRoom();
         for(int i = 0; i<diffLivingRoom.length; i++){

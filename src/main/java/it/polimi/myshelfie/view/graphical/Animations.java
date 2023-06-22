@@ -1,7 +1,9 @@
 package it.polimi.myshelfie.view.graphical;
 
 
+import it.polimi.myshelfie.view.graphical.components.TileImageView;
 import javafx.animation.*;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -96,8 +98,7 @@ public class Animations {
             region.setVisible(true);
             region.setMouseTransparent(false);
         }
-        TranslateTransition tt = Animations.getSlideFromTop(region);
-        return tt;
+        return Animations.getSlideFromTop(region);
     }
 
     /**
@@ -206,6 +207,17 @@ public class Animations {
     }
 
     /**
+     * Returns an animation that fades out a node if the node opacity is set to lower than 1.
+     * @param node the region to be faded in
+     * @return the fading animation
+     */
+    public static Animation fadeOut(Node node) {
+        FadeTransition ft = new FadeTransition(Duration.millis(100),node);
+        ft.setByValue(-1);
+        return ft;
+    }
+
+    /**
      * Returns an animation that scales in 100 millis a node from 0% scaling to 100% scaling.
      * @param node the node to be popped
      * @return the animation
@@ -219,6 +231,15 @@ public class Animations {
         return pop;
     }
 
+    public static Animation reversePop(Node node){
+        ScaleTransition pop = new ScaleTransition(Duration.millis(100),node);
+        pop.setFromX(1);
+        pop.setFromY(1);
+        pop.setToX(0);
+        pop.setToY(0);
+        return pop;
+    }
+
     /**
      * Returns the parallel combination of the pop and fadeIn animations
      * @param node the node to be animated
@@ -228,6 +249,12 @@ public class Animations {
         Animation fade = fadeIn(node);
         Animation pop = pop(node);
         return new ParallelTransition(fade,pop);
+    }
+
+    public static Animation popFadeOut(Node node){
+        Animation fade = Animations.fadeOut(node);
+        Animation revPop = reversePop(node);
+        return new ParallelTransition(fade,revPop);
     }
 
     /**
@@ -272,10 +299,10 @@ public class Animations {
      * @param nodes the varargs nodes
      * @return the animation
      */
-    public static Animation rotateY(double degrees,Node ... nodes){
+    public static Animation rotateY(double degrees,Duration duration,Node ... nodes){
         List<RotateTransition> rotations = new ArrayList<>();
         for(Node node : nodes){
-            RotateTransition rt = new RotateTransition(Duration.millis(200));
+            RotateTransition rt = new RotateTransition(duration);
             rt.setAxis(Rotate.Y_AXIS);
             rt.setNode(node);
             rt.setByAngle(degrees);
@@ -318,11 +345,43 @@ public class Animations {
         return tt;
     }
 
+    public static Animation translateTo(Node node, Point2D coordinate){
+        TranslateTransition tt = new TranslateTransition(Duration.millis(400));
+        tt.setNode(node);
+        tt.setToX(coordinate.getX()-CustomBindings.getAbsolutePosition(node).getX());
+        tt.setToY(coordinate.getY()-CustomBindings.getAbsolutePosition(node).getY());
+        return tt;
+    }
+
+    public static Animation fixTranslateTo(Node node, Point2D coordinate){
+        TranslateTransition tt = new TranslateTransition(Duration.millis(400));
+        tt.setNode(node);
+        double yPos = CustomBindings.getAbsolutePosition(node).getY();
+        tt.setByY(coordinate.getY()-yPos);
+        return tt;
+    }
+
     public static Animation eraseTranslation(Node node){
         TranslateTransition tt = new TranslateTransition(Duration.millis(200));
         tt.setNode(node);
         tt.setByX(-node.getTranslateX());
         tt.setByY(-node.getTranslateY());
         return tt;
+    }
+
+    public static Animation tileRotateIn(TileImageView tile,Duration duration){
+        tile.setRotationAxis(Rotate.Y_AXIS);
+        tile.setRotate(-90);
+        tile.setVisible(true);
+        return rotateY(90,duration,tile);
+    }
+
+    public static Animation tileRotateOut(TileImageView tile, Duration duration){
+        tile.setRotationAxis(Rotate.Y_AXIS);
+        tile.setRotate(0);
+        tile.setVisible(true);
+        Animation rotation = rotateY(-90,duration,tile);
+        rotation.setOnFinished((evt)->tile.setVisible(false));
+        return rotation;
     }
 }

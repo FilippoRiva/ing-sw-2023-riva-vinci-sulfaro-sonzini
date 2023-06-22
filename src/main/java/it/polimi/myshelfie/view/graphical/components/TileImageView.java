@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public class TileImageView extends ImageView {
     private static final HashMap<String, Image> tilesNameToImage = new HashMap<>();
+    private ItemTile tile;
 
     /**
      * Preloads the Tiles images such that it is no longer required to get them from resources
@@ -40,7 +41,19 @@ public class TileImageView extends ImageView {
      */
     public TileImageView(ItemTile tile){
         Image image = getTileImage(tile);
+        this.tile = tile;
         super.setImage(image);
+    }
+
+    public TileImageView(){
+        super();
+        this.tile = null;
+    }
+
+    public void setTile(ItemTile tile,int opacity){
+        super.setImage(getTileImage(tile));
+        this.tile = tile;
+        this.setOpacity(opacity);
     }
 
     /**
@@ -56,5 +69,9 @@ public class TileImageView extends ImageView {
             }
         }
         return result;
+    }
+
+    public ItemTile getTile(){
+        return tile;
     }
 }
