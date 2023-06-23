@@ -129,11 +129,6 @@ public class ControllerImpl implements Controller {
             return null;
         }
         lobbiesControllers.put(lobbyName,lobbyController);
-        try {
-            connectionHandler.setChatController(lobbyController);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
 
         //going to LOBBY view
         new Thread(()->{

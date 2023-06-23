@@ -165,4 +165,8 @@ public class EndGameController{
 
         Platform.runLater(()->lobbyNameLabel.setText(lobbyModelView.getName()));
     }
+
+    public void reset() {
+        //TODO
+    }
 }

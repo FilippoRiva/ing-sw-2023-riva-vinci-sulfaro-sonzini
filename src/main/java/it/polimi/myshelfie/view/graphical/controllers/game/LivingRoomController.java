@@ -243,4 +243,9 @@ public class LivingRoomController {
     public void setActive(boolean active){
         this.active = active;
     }
+
+    public void reset() {
+        resetChoice();
+        imagesLivingRoom = new TileImageView[9][9];
+    }
 }

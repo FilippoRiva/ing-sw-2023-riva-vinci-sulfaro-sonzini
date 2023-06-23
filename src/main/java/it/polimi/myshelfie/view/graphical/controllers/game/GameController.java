@@ -25,7 +25,6 @@ public class GameController{
     protected ImageView backgroundImage;
     @FXML
     protected AnchorPane mainAnchorPane;
-
     @FXML
     protected GameOverlayController gameOverlayController;
     @FXML
@@ -49,6 +48,16 @@ public class GameController{
     }
     
     public void gameStart(){
+        //default visible panels
+        endGame.setVisible(false);
+        endGame.setMouseTransparent(true);
+        //gameOverlay.setVisible(true); //TODO
+        //gameOverlay.setMouseTransparent(false);
+        gamePanel.setVisible(true);
+        gamePanel.setMouseTransparent(false);
+        //AutoPlayer Activation
+        if(ViewManager.getInstance().getLobbyModelView().getName().equals("test") &&
+                ViewManager.getUsername().startsWith("bot")) ViewManager.getInstance().startAutoPlayer();
         //completely loading everything
         gamePanelController.setState(viewManager.getGameModelView().getCurrentState());
         gamePanelController.leftBookshelfController.loadLeft();
@@ -83,6 +92,14 @@ public class GameController{
     }
 
     public void displayError(String message) {
+    }
+
+    public void reset() {
+        endGame.setVisible(false);
+        endGame.setMouseTransparent(true);
+        gamePanelController.reset();
+        gameOverlayController.reset();
+        endGameController.reset();
     }
 
     /*

@@ -63,8 +63,12 @@ public class MainViewController implements Initializable {
                 preGame.setVisible(true);
                 game.setMouseTransparent(true);
                 game.setVisible(false);
-                if(this.currentState == InternalViewState.LOBBY || this.currentState == InternalViewState.GAME)
+                if(this.currentState == InternalViewState.LOBBY){
                     preGameController.reset();
+                } else if(this.currentState == InternalViewState.GAME || this.currentState == InternalViewState.WIN){
+                    preGameController.reset();
+                    gameController.reset();
+                }
                 preGameController.changePage(InternalViewState.INIT);
             }
             case CREATE -> preGameController.changePage(InternalViewState.CREATE);

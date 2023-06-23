@@ -5,4 +5,7 @@ public class GameOverlayController {
     public void initialize(GameController gameController){
         System.out.println("initialized overlay");
     }
+
+    public void reset() {
+    }
 }

@@ -289,4 +289,8 @@ public class BookshelfController {
             addToken(t,true);
         }
     }
+
+    public void reset() {
+        currentPlayerPos = -1;
+    }
 }

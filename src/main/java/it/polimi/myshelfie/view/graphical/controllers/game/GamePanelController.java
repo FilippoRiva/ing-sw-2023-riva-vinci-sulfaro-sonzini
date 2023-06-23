@@ -47,6 +47,14 @@ public class GamePanelController {
     LivingRoomController livingRoomController;
     @FXML
     TileSorterController tileSorterController;
+
+    public void reset() {
+        leftBookshelfController.reset();
+        rightBookshelfController.reset();
+        livingRoomController.reset();
+        tileSorterController.resetAll();
+    }
+
     private enum PanelState {ACTION, SPECTATE}
     private PanelState state;
     private final ViewManager vm = ViewManager.getInstance();
