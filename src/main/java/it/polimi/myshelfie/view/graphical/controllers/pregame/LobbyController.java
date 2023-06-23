@@ -62,6 +62,8 @@ public class LobbyController {
 
         CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
 
+        Animations.applyHoverScaling(startButton);
+
         this.preGameController = preGameController;
     }
 

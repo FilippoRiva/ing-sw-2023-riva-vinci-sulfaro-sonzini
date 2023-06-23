@@ -221,10 +221,12 @@ public class LivingRoomController {
         return pt;
     }
 
-    public void setChosenTileTranslations(){
-        for(int i = 0; i < chosenTilesImages.size(); i++){
+    public Animation setChosenTileTranslations(){
+        for(int i = 0; i < chosenTilesImages.size()-1; i++){
             Animations.translateTo(chosenTilesImages.get(i),gamePanelController.tileSorterController.getPosition(i+1)).play();
         }
+        if(chosenTilesImages.size()==0) return new TranslateTransition(Duration.millis(0));
+        return Animations.translateTo(chosenTilesImages.get(chosenTilesImages.size()-1),gamePanelController.tileSorterController.getPosition(chosenTiles.size()));
     }
 
     public void fixChosenTileTranslations(){

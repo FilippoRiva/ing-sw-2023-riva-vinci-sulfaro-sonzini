@@ -78,6 +78,7 @@ public class MainViewController implements Initializable {
                 gameController.gameStart();
                 preGame.setMouseTransparent(true);
                 preGame.setVisible(false);
+                preGameController.changePage(InternalViewState.INIT); //presetting INIT PAGE
                 game.setMouseTransparent(false);
                 game.setVisible(true);
             }

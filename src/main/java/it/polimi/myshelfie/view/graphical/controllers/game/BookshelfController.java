@@ -6,9 +6,12 @@ import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
+import it.polimi.myshelfie.view.graphical.Effects;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.components.TileImageView;
 import it.polimi.myshelfie.view.graphical.components.TokenImageView;
+import javafx.animation.Animation;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -53,16 +56,17 @@ public class BookshelfController {
     @FXML
     protected StackPane leftStack;
     @FXML
-    protected Button column1Insert;
+    protected Label column1Insert;
     @FXML
-    protected Button column2Insert;
+    protected Label column2Insert;
     @FXML
-    protected Button column3Insert;
+    protected Label column3Insert;
     @FXML
-    protected Button column4Insert;
+    protected Label column4Insert;
     @FXML
-    protected Button column5Insert;
-    private Button[] columnInserts;
+    protected Label column5Insert;
+    private Label[] columnInserts;
+    private List<TokenImageView> tokenStack;
     private int currentPlayerPos;
     private final ViewManager viewManager = ViewManager.getInstance();
     private final float bookshelfImageWidth = 1413;
@@ -87,8 +91,9 @@ public class BookshelfController {
 
     public void initialize(boolean left){
 
-        this.columnInserts = new Button[]{column1Insert,column2Insert,column3Insert,column4Insert,column5Insert};
+        this.columnInserts = new Label[]{column1Insert,column2Insert,column3Insert,column4Insert,column5Insert};
         this.left = left;
+        this.tokenStack = new ArrayList<>();
 
         CustomBindings.bindSize(mainBorderPane,bookshelfImage.fitWidthProperty().add(80),
                 bookshelfImage.fitHeightProperty().add(topHBox.heightProperty()).add(bottomHBox.heightProperty()));
@@ -101,21 +106,7 @@ public class BookshelfController {
         CustomBindings.bindSize(leftStack,null,bookshelfImage.fitHeightProperty());
         CustomBindings.bindSize(rightStack,null,bookshelfImage.fitHeightProperty());
 
-        //left and right differences
-        if(!left) {
-            leftStack.getChildren().removeAll(prevButton);
-            rightStack.getChildren().removeAll(nextButton);
-            topHBox.spacingProperty().bind(bookshelfImage.fitHeightProperty().multiply(hGapToBookshelfHeight));
-            for(Node node : topHBox.getChildren()){
-                CustomBindings.bindSize((Region)node,bookshelfImage.fitWidthProperty().multiply(tileWidthToBookshelfWidth),
-                        bookshelfImage.fitHeightProperty().multiply(tileHeightToBookshelfHeight));
-            }
-        } else {
-            prevButton.setOnMousePressed((event)->prevBookshelf());
-            nextButton.setOnMousePressed((event)->nextBookshelf());
-            topHBox.getChildren().removeAll(topHBox.getChildren());
-            currentPlayerPos = 0;
-        }
+        addToken(Token.ENDGAME,false);//invisible placeholder token
 
         //grid settings
         bookshelfGrid.vgapProperty().bind(bookshelfImage.fitWidthProperty().multiply(vGapToBookshelfWidth));
@@ -136,22 +127,56 @@ public class BookshelfController {
 
         CustomBindings.bindSize(chair,stage.widthProperty().divide(25),stage.heightProperty().divide(15));
 
+        //left and right differences
+        if(!left) {
+            leftStack.getChildren().removeAll(prevButton);
+            rightStack.getChildren().removeAll(nextButton);
+            topHBox.spacingProperty().bind(bookshelfImage.fitHeightProperty().multiply(hGapToBookshelfHeight));
+            for(Node node : topHBox.getChildren()){
+                CustomBindings.bindSize((Region)node,bookshelfImage.fitWidthProperty().multiply(tileWidthToBookshelfWidth),
+                        bookshelfImage.fitHeightProperty().multiply(tileHeightToBookshelfHeight));
+                node.setStyle("-fx-background-size: "+bookshelfImage.getFitWidth()*tileWidthToBookshelfWidth);
+            }
+        } else {
+            prevButton.setOpacity(0);
+            nextButton.setOpacity(0);
+            prevButton.setOnMousePressed((event)->prevBookshelf());
+            nextButton.setOnMousePressed((event)->nextBookshelf(false));
+            topHBox.getChildren().removeAll(topHBox.getChildren());
+            currentPlayerPos = 0;
+        }
+
+        for(Label insertLabel : columnInserts){
+            Animations.applyHoverScaling(insertLabel);
+        }
         Animations.applyHoverScaling(chair);
+        Effects.applyShadow(prevButton);
+        Effects.applyShadow(nextButton);
+        Animations.applyHoverScaling(prevButton);
+        Animations.applyHoverScaling(nextButton);
         this.setActive(false);
     }
 
-    private void nextBookshelf() {
+    private void nextBookshelf(boolean firstLoad) {
         PlayerModelView player;
         List<PlayerModelView> players = viewManager.getGameModelView().getPlayers();
         players.remove(viewManager.getGameModelView().getPlayer(ViewManager.getUsername()));
         currentPlayerPos++;
-        if(currentPlayerPos<players.size()) {
-            player = players.get(currentPlayerPos);
-        } else {
-            currentPlayerPos = 0;
-            player = players.get(0);
-        }
+
+        player = players.get(currentPlayerPos);
         loadBookshelf(player);
+
+        if(!firstLoad){
+            prevButton.setMouseTransparent(false);
+            Animations.fadeIn(prevButton).play();
+        }
+        if(currentPlayerPos!=players.size()-1){
+            nextButton.setMouseTransparent(false);
+            Animations.fadeIn(nextButton).play();
+        } else {
+            nextButton.setMouseTransparent(true);
+            Animations.fadeOut(nextButton).play();
+        }
     }
 
     private void prevBookshelf() {
@@ -159,13 +184,20 @@ public class BookshelfController {
         List<PlayerModelView> players = viewManager.getGameModelView().getPlayers();
         players.remove(viewManager.getGameModelView().getPlayer(ViewManager.getUsername()));
         currentPlayerPos--;
-        if(currentPlayerPos < 0) {
-            currentPlayerPos = players.size()-1;
-            player = players.get(players.size()-1);
-        } else {
-            player = players.get(currentPlayerPos);
-        }
+
+        player = players.get(currentPlayerPos);
         loadBookshelf(player);
+
+        nextButton.setMouseTransparent(false);
+        Animations.fadeIn(nextButton).play();
+
+        if(currentPlayerPos==0){
+            prevButton.setMouseTransparent(true);
+            Animations.fadeOut(prevButton).play();
+        } else {
+            prevButton.setMouseTransparent(false);
+            Animations.fadeIn(prevButton).play();
+        }
     }
 
     protected void loadBookshelf(PlayerModelView player) {
@@ -174,10 +206,8 @@ public class BookshelfController {
         boolean firstPlayer = ViewManager.getInstance().getGameModelView().getFirstPlayer().equals(player);
         Platform.runLater(()->{
             bookshelfGrid.getChildren().removeAll(bookshelfGrid.getChildren());
-            commonGoalTokensStack.getChildren().removeAll(commonGoalTokensStack.getChildren());
-            if(player.getTokens().size()==0){
-                addToken(Token.ENDGAME,false);
-            }
+            commonGoalTokensStack.getChildren().removeAll(tokenStack);
+            tokenStack.clear();
             for(Token t : player.getTokens()){
                 addToken(t,true);
             }
@@ -190,21 +220,33 @@ public class BookshelfController {
                     bookshelfGrid.add(tileImage,j,i);
                 }
             }
-            chair.setVisible(firstPlayer);
+            if(firstPlayer) Animations.fadeIn(chair).play();
+            else Animations.fadeOut(chair).play();
             playerName.setText(player.getName());
         });
     }
 
     public void addToken(Token token,boolean visible){
-        int stackSize = commonGoalTokensStack.getChildren().size();
+        int stackSize = commonGoalTokensStack.getChildren().size()-1;
         TokenImageView tokenImage = new TokenImageView(token);
-        if(!visible) tokenImage.setVisible(false);
+        Animation animation;
+        if(visible){
+            tokenImage.setOpacity(0);
+            animation = Animations.popFadeIn(tokenImage);
+            tokenStack.add(tokenImage);
+        } else {
+            tokenImage.setVisible(false);
+            animation = new TranslateTransition(Duration.millis(0));
+        }
         tokenImage.setPreserveRatio(true);
         CustomBindings.bindSize(tokenImage,stage.widthProperty().divide(25),stage.heightProperty().divide(15));
         CustomBindings.bindTranslate(tokenImage,
                 tokenImage.fitWidthProperty().divide(2).multiply(stackSize),
                 tokenImage.fitWidthProperty().divide(2).multiply(stackSize));
-        Platform.runLater(()-> commonGoalTokensStack.getChildren().add(tokenImage));
+        Platform.runLater(()-> {
+            commonGoalTokensStack.getChildren().add(tokenImage);
+            animation.play();
+        });
     }
 
 
@@ -246,7 +288,7 @@ public class BookshelfController {
 
     public void loadLeft() {
         currentPlayerPos = -1;
-        this.nextBookshelf();
+        this.nextBookshelf(true);
     }
 
     public void loadRight() {
@@ -270,7 +312,7 @@ public class BookshelfController {
                 }
             }
         } else {
-            for (Button columnInsert : columnInserts) {
+            for (Label columnInsert : columnInserts) {
                 columnInsert.setMouseTransparent(true);
                 columnInsert.setOnMousePressed((evt) -> {
                 });

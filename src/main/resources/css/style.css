@@ -114,3 +114,9 @@
 .confirmButtonLabel {
     -fx-font-size: 15;
 }
+
+.darkWoodArrowButton {
+    -fx-background-image: url('../images/darkWoodArrow.png');
+    -fx-background-size: 70px;
+    -fx-background-position: center;
+}

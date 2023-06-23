@@ -17,11 +17,11 @@
    <top>
       <HBox fx:id="topHBox" alignment="TOP_CENTER" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="column1Insert" mnemonicParsing="false" text="^" />
-            <Button fx:id="column2Insert" mnemonicParsing="false" text="^" />
-            <Button fx:id="column3Insert" mnemonicParsing="false" text="^" />
-            <Button fx:id="column4Insert" mnemonicParsing="false" text="^" />
-            <Button fx:id="column5Insert" mnemonicParsing="false" text="^" />
+            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column1Insert" rotate="90"/>
+            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column2Insert" rotate="90"/>
+            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column3Insert" rotate="90"/>
+            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column4Insert" rotate="90"/>
+            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column5Insert" rotate="90"/>
          </children>
       </HBox>
    </top>
@@ -58,6 +58,9 @@
    </center>
    <bottom>
       <HBox fx:id="bottomHBox" alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
+          <BorderPane.margin>
+              <Insets top="20.0" />
+          </BorderPane.margin>
          <children>
             <ImageView fx:id="chair" cache="true" cacheHint="SPEED" pickOnBounds="true" preserveRatio="true">
                <image>
