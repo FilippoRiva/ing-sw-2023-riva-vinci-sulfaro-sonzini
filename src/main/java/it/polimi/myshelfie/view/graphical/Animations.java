@@ -346,6 +346,8 @@ public class Animations {
 
     public static Animation translateTo(Node node, Point2D coordinate){
         TranslateTransition tt = new TranslateTransition(Duration.millis(400));
+        node.setMouseTransparent(true);
+        tt.setOnFinished((evt)->node.setMouseTransparent(false));
         tt.setNode(node);
         tt.setToX(coordinate.getX()-CustomBindings.getAbsolutePosition(node).getX());
         tt.setToY(coordinate.getY()-CustomBindings.getAbsolutePosition(node).getY());
@@ -355,13 +357,21 @@ public class Animations {
     public static Animation fixTranslateTo(Node node, Point2D coordinate){
         TranslateTransition tt = new TranslateTransition(Duration.millis(400));
         tt.setNode(node);
+        node.setMouseTransparent(true);
+        tt.setOnFinished((evt)->node.setMouseTransparent(false));
         double yPos = CustomBindings.getAbsolutePosition(node).getY();
+        if(coordinate.getY()-yPos==0) {
+            node.setMouseTransparent(false);
+            return new TranslateTransition(Duration.millis(0));
+        }
         tt.setByY(coordinate.getY()-yPos);
         return tt;
     }
 
     public static Animation eraseTranslation(Node node){
         TranslateTransition tt = new TranslateTransition(Duration.millis(200));
+        node.setMouseTransparent(true);
+        tt.setOnFinished((evt)->node.setMouseTransparent(false));
         tt.setNode(node);
         tt.setByX(-node.getTranslateX());
         tt.setByY(-node.getTranslateY());

@@ -212,7 +212,9 @@ public class LivingRoomController {
 
     public void fixChosenTileTranslations(){
         for(int i = 0; i < chosenTilesImages.size(); i++){
-            Animations.fixTranslateTo(chosenTilesImages.get(i),gamePanelController.tileSorterController.getPosition(i+1)).play();
+            TileImageView tile = chosenTilesImages.get(i);
+            Animation animation = Animations.fixTranslateTo(tile,gamePanelController.tileSorterController.getPosition(i+1));
+            animation.play();
         }
     }
 
