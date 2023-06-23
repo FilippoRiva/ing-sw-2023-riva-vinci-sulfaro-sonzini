@@ -197,6 +197,7 @@ public class TileSorterController {
                 an.setOnFinished((ev)-> Platform.runLater(()->{
                     t.setTile(new ItemTile(ItemTileType.EMPTY,0),0);
                     Animations.tileRotateIn(t,Duration.millis(200)).play();
+                    t.setMouseTransparent(false);
                 }));
                 an.play();
             });

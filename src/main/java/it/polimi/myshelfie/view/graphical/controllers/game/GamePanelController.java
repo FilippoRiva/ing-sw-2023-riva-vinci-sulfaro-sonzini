@@ -2,6 +2,7 @@ package it.polimi.myshelfie.view.graphical.controllers.game;
 
 import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.ItemTile;
+import it.polimi.myshelfie.model.Position;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
@@ -151,7 +152,11 @@ public class GamePanelController {
     public void setState(GameState state) {
         switch (state){
             case DRAW,LAST_DRAW -> {
-                //TODO update last player bookshelf
+                if(vm.getLastPlayer().equals(ViewManager.getUsername())){
+                    rightBookshelfController.loadTokens();
+                } else {
+                    leftBookshelfController.loadTokens();
+                }
                 if(vm.isRemainingTilesDiff()) {
                     livingRoomController.updateLivingRoom(vm.getLivingRoomDiff());
                 }
@@ -162,10 +167,10 @@ public class GamePanelController {
                         if(livingRoomController.chosenTiles.size()==0){
                             Animations.nodeError(confirmButton,1).play();
                             showConfirmError("Choose some tiles first");
-                        } else if(!vm.areChosenTilesValid(livingRoomController.chosenTiles)){
+                        } else if(vm.areChosenTilesInvalid(livingRoomController.chosenTiles)){
                             Animations.nodeError(confirmButton,1).play(); //not valid positions
                             showConfirmError("Tiles are not valid");
-                        } else if(!vm.areChosenTilesAligned(livingRoomController.chosenTiles)){
+                        } else if(Position.arePositionsMisaligned(livingRoomController.chosenTiles)){
                             Animations.nodeError(confirmButton,1).play(); //not aligned
                             showConfirmError("Tiles are not aligned");
                         } else {
@@ -180,22 +185,25 @@ public class GamePanelController {
                 if(vm.isMyTurn()){
                     livingRoomController.resetChoice();
                     tileSorterController.loadTiles();
-                    Platform.runLater(()->confirmButton.setText("Confirm Organize"));
                     livingRoomController.setActive(false); //disabling clickable tiles and emptying list
-                    tileSorterController.setActive(true);
-                    confirmButton.setOnMousePressed((event)->{
-                        List<ItemTile> orderedTiles = tileSorterController.getOrderedTiles();
-                        if(orderedTiles.size()==0 || orderedTiles.size()==vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()){
-                            vm.organizeRequest(tileSorterController.getOrderedTiles());
-                        } else {
-                            Animations.nodeError(confirmButton,1).play();
-                            showConfirmError("Order every tile first");
-                        }
-                    });
+                    if(vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()==1){
+                        vm.organizeRequest(vm.getGameModelView().getCurrentPlayer().getTakenTiles());
+                    } else {
+                        Platform.runLater(()->confirmButton.setText("Confirm Organize"));
+                        tileSorterController.setActive(true);
+                        confirmButton.setOnMousePressed((event)->{
+                            List<ItemTile> orderedTiles = tileSorterController.getOrderedTiles();
+                            if(orderedTiles.size()==0 || orderedTiles.size()==vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()){
+                                vm.organizeRequest(tileSorterController.getOrderedTiles());
+                            } else {
+                                Animations.nodeError(confirmButton,1).play();
+                                showConfirmError("Order every tile first");
+                            }
+                        });
+                    }
                 }
             }
             case INSERT,LAST_INSERT -> {
-                //TODO update bookshelf insert
                 if(vm.isMyTurn()){
                     Animations.fadeOut(confirmButton).play();
                     tileSorterController.setActive(false);
@@ -206,25 +214,26 @@ public class GamePanelController {
             }
             case COUNTING_POINTS,LAST_COUNTING_POINTS -> {
                 if(vm.isMyTurn()){
+                    rightBookshelfController.loadNewTiles();
                     rightBookshelfController.setActive(false);
                     tileSorterController.resetAll();
                     Animations.timer(this::spectatorView,1000);
+                } else {
+                    leftBookshelfController.loadNewTiles();
                 }
             }
+            case WIN -> {
+                if(vm.getWinner().getName().equals(ViewManager.getUsername())) rightBookshelfController.loadTokens();
+                else leftBookshelfController.loadTokens();
+            }
         }
-
-        //completely reloading elements
-        leftBookshelfController.loadLeft();
-        rightBookshelfController.loadRight();
     }
 
-    private void showConfirmError(String message){
+    public void showConfirmError(String message){
         Platform.runLater(()->{
             confirmButtonLabel.setText(message);
             Animations.fadeIn(confirmButtonLabel).play();
-            Animations.timer(()->{
-                Animations.fadeOut(confirmButtonLabel).play();
-            },2000);
+            Animations.timer(()-> Animations.fadeOut(confirmButtonLabel).play(),2000);
         });
     }
 }

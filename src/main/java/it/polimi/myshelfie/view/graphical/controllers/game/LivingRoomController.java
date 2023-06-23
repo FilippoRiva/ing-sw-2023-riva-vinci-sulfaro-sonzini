@@ -97,8 +97,17 @@ public class LivingRoomController {
                     if(selected[0]){ //selected
                         List<Position> tryChosenTiles = new ArrayList<>(chosenTiles);
                         tryChosenTiles.add(position[0]);
-                        if(!viewManager.areChosenTilesAligned(tryChosenTiles) || !viewManager.areChosenTilesValid(tryChosenTiles)){
+                        if(Position.arePositionsMisaligned(tryChosenTiles)){
                             Animations.nodeError(tile,3).play();
+                            gamePanelController.showConfirmError("Misaligned position");
+                            return;
+                        } else if(viewManager.areChosenTilesInvalid(tryChosenTiles)){
+                            Animations.nodeError(tile,3).play();
+                            gamePanelController.showConfirmError("No side free");
+                            return;
+                        } else if(!viewManager.isThereEnoughBookshelfSpace(tryChosenTiles)){
+                            Animations.nodeError(tile,3).play();
+                            gamePanelController.showConfirmError("Not enough bookshelf space");
                             return;
                         }
                         this.chosenTiles.add(position[0]);
@@ -160,8 +169,7 @@ public class LivingRoomController {
                     });
                 }
             } else {
-                Position correctPosition = new Position(pos.getY(),pos.getX());
-                Position centeredPos = correctPosition.centered(9);
+                Position centeredPos = pos.centeredMatrix(9);
                 Platform.runLater(()->{
                     tilesGrid.getChildren().remove(changedTileImage);
                     TileImageView newImage = new TileImageView(changedTile);
@@ -176,9 +184,18 @@ public class LivingRoomController {
                         selected[0] = !selected[0];
                         if(selected[0]){ //selected
                             List<Position> tryChosenTiles = new ArrayList<>(chosenTiles);
-                            tryChosenTiles.add(pos);
-                            if(!viewManager.areChosenTilesAligned(tryChosenTiles) || !viewManager.areChosenTilesValid(tryChosenTiles)){
+                            tryChosenTiles.add(centeredPos);
+                            if(Position.arePositionsMisaligned(tryChosenTiles)){
                                 Animations.nodeError(newImage,3).play();
+                                gamePanelController.showConfirmError("Misaligned position");
+                                return;
+                            } else if(viewManager.areChosenTilesInvalid(tryChosenTiles)){
+                                Animations.nodeError(newImage,3).play();
+                                gamePanelController.showConfirmError("No side free");
+                                return;
+                            } else if(!viewManager.isThereEnoughBookshelfSpace(tryChosenTiles)){
+                                Animations.nodeError(newImage,3).play();
+                                gamePanelController.showConfirmError("Not enough bookshelf space");
                                 return;
                             }
                             this.chosenTiles.add(centeredPos);

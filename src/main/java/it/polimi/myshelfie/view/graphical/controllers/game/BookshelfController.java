@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +67,9 @@ public class BookshelfController {
     private final ViewManager viewManager = ViewManager.getInstance();
     private final float bookshelfImageWidth = 1413;
     private final float bookshelfImageHeight = 1410;
-    private final float tileImageSize = 163;
-    private final float imageVGap = 30;
-    private final float imageHGap = 62;
+    private final float tileImageSize = 168;
+    private final float imageVGap = 28;
+    private final float imageHGap = 58;
     private final float gridWidth = tileImageSize*5+imageHGap*4;
     private final float gridHeigth = tileImageSize*6+imageVGap*5;
     private final float bookshelfTranslationY = -40;
@@ -80,12 +81,14 @@ public class BookshelfController {
     private final float gridYTranslateToBookshelfHeight = bookshelfTranslationY/bookshelfImageHeight;
     private final float gridWidthToBookshelfWidth = gridWidth/bookshelfImageWidth;
     private final float gridHeigthToBookshelfHeigth = gridHeigth/bookshelfImageHeight;
-
+    private boolean left;
+    private TileImageView[][] gridImages = new TileImageView[6][5];
     protected Stage stage = GraphicalUI.stage;
 
     public void initialize(boolean left){
 
         this.columnInserts = new Button[]{column1Insert,column2Insert,column3Insert,column4Insert,column5Insert};
+        this.left = left;
 
         CustomBindings.bindSize(mainBorderPane,bookshelfImage.fitWidthProperty().add(80),
                 bookshelfImage.fitHeightProperty().add(topHBox.heightProperty()).add(bottomHBox.heightProperty()));
@@ -167,10 +170,11 @@ public class BookshelfController {
 
     protected void loadBookshelf(PlayerModelView player) {
         TileImageView[][] bookshelf = TileImageView.convertMatrix(player.getBookshelf());
+        gridImages = bookshelf;
         boolean firstPlayer = ViewManager.getInstance().getGameModelView().getFirstPlayer().equals(player);
         Platform.runLater(()->{
-            clearTiles();
-            clearTokens();
+            bookshelfGrid.getChildren().removeAll(bookshelfGrid.getChildren());
+            commonGoalTokensStack.getChildren().removeAll(commonGoalTokensStack.getChildren());
             if(player.getTokens().size()==0){
                 addToken(Token.ENDGAME,false);
             }
@@ -191,14 +195,6 @@ public class BookshelfController {
         });
     }
 
-    private PlayerModelView getCurrentPlayer(){
-        return viewManager.getGameModelView().getPlayer(currentPlayerPos);
-    }
-
-    public void reloadBookshelf(){
-        loadBookshelf(getCurrentPlayer());
-    }
-
     public void addToken(Token token,boolean visible){
         int stackSize = commonGoalTokensStack.getChildren().size();
         TokenImageView tokenImage = new TokenImageView(token);
@@ -208,32 +204,42 @@ public class BookshelfController {
         CustomBindings.bindTranslate(tokenImage,
                 tokenImage.fitWidthProperty().divide(2).multiply(stackSize),
                 tokenImage.fitWidthProperty().divide(2).multiply(stackSize));
-        Platform.runLater(()->{
-            commonGoalTokensStack.getChildren().add(tokenImage);
-        });
+        Platform.runLater(()-> commonGoalTokensStack.getChildren().add(tokenImage));
     }
 
-    public void clearTokens(){
-        commonGoalTokensStack.getChildren().removeAll(commonGoalTokensStack.getChildren());
-    }
 
-    public void clearTiles(){
-        bookshelfGrid.getChildren().removeAll(bookshelfGrid.getChildren());
-    }
-
-    public void addTiles(List<ItemTile> tiles, int column){
+    public void loadNewTiles(){
+        FullGameModelView gmv = viewManager.getGameModelView();
+        if(left){
+            if(!playerName.getText().equals(gmv.getCurrentPlayer().getName())) return;
+        } else {
+            if(!gmv.getCurrentPlayerName().equals(ViewManager.getUsername())) return;
+        }
+        int column = viewManager.getCurrentPlayerInsertedColumnPosition();
+        if(column == -1) return;
+        List<ItemTile> takenTiles = viewManager.getCurrentPlayerInsertedTiles();
         List<TileImageView> tilesImages = new ArrayList<>();
-        for(ItemTile tile : tiles){
+        for(ItemTile tile : takenTiles){
             TileImageView tileImage = new TileImageView(tile);
             tileImage.setPreserveRatio(true);
             CustomBindings.bindSize(tileImage,bookshelfImage.fitWidthProperty().multiply(tileWidthToBookshelfWidth),
                 bookshelfImage.fitHeightProperty().multiply(tileHeightToBookshelfHeight));
+            tileImage.setVisible(false);
             tilesImages.add(tileImage);
         }
         Platform.runLater(()->{
-            int i = 0;
+            int baseIndex = 5;
+            for(int i = 5; i>=0; i--){
+                if(gridImages[i][column].getTile().getType()==ItemTileType.EMPTY) {
+                    baseIndex=i;
+                    break;
+                }
+            }
             for(TileImageView tile : tilesImages){
-                bookshelfGrid.add(tile,column,5-i++);
+                gridImages[baseIndex][column] = tile;
+                bookshelfGrid.add(tile,column,baseIndex);
+                Animations.tileRotateIn(tile, Duration.millis(100)).play();
+                baseIndex--;
             }
         });
     }
@@ -248,34 +254,39 @@ public class BookshelfController {
         loadBookshelf(gmv.getPlayer(ViewManager.getUsername()));
     }
 
-    public DoubleBinding tileHeightProperty() {
-        return bookshelfImage.fitHeightProperty().multiply(tileHeightToBookshelfHeight);
-    }
-
     public DoubleBinding tileWidthProperty() {
         return bookshelfImage.fitWidthProperty().multiply(tileWidthToBookshelfWidth);
     }
 
     public void setActive(boolean active){
         if(active){
+            int numTakenTiles = viewManager.getGameModelView().getCurrentPlayer().getTakenTiles().size();
             for(int i = 0; i < columnInserts.length; i++){
-                columnInserts[i].setVisible(true);
-                int finalI = i;
-                columnInserts[i].setOnMousePressed((evt)->{
-                    insertAction(finalI);
-                });
-                columnInserts[i].setMouseTransparent(false);
+                if(gridImages[numTakenTiles-1][i].getTile().getType() == ItemTileType.EMPTY){
+                    int finalI = i;
+                    columnInserts[i].setOnMousePressed((evt)-> insertAction(finalI));
+                    columnInserts[i].setMouseTransparent(false);
+                    Animations.fadeIn(columnInserts[i]).play();
+                }
             }
         } else {
-            for(int i = 0; i < columnInserts.length; i++){
-                columnInserts[i].setVisible(false);
-                columnInserts[i].setMouseTransparent(true);
-                columnInserts[i].setOnMousePressed((evt)->{});
+            for (Button columnInsert : columnInserts) {
+                columnInsert.setMouseTransparent(true);
+                columnInsert.setOnMousePressed((evt) -> {
+                });
+                Animations.fadeOut(columnInsert).play();
             }
         }
     }
 
     private void insertAction(int column) {
         viewManager.insertRequest(column);
+    }
+
+    public void loadTokens() {
+        List<Token> newTokens = viewManager.getLastPlayerTokenDiff();
+        for(Token t : newTokens){
+            addToken(t,true);
+        }
     }
 }

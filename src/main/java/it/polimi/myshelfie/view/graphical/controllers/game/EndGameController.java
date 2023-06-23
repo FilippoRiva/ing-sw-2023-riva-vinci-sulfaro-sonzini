@@ -145,10 +145,7 @@ public class EndGameController{
         pointsPodium = new Label[]{points1, points2, points3};
 
         //order players for taken points
-        List<PlayerModelView> players = fullGameModelView.getPlayers().stream().sorted((x,y)->{
-            if(x.getPoints()==y.getPoints()) return 0;
-            else return x.getPoints()>=y.getPoints() ? -1:1 ;
-        }).toList();
+        List<PlayerModelView> players = viewManager.getPlayersOrderedByScores();
 
         numPlayers = players.size();
 

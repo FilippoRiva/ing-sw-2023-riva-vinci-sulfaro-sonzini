@@ -13,7 +13,6 @@ import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -473,6 +472,7 @@ public class ViewManager extends View {
      * @return the username of the player that was playing in the last game update
      */
     public synchronized String getLastPlayer(){
+        if(oldGameModelView==null) return "";
         return oldGameModelView.getCurrentPlayerName();
     }
 
@@ -563,17 +563,22 @@ public class ViewManager extends View {
      * @return the tokens that the last player has earned in the last game update
      */
     public synchronized List<Token> getLastPlayerTokenDiff(){
+        if(oldGameModelView==null) return new ArrayList<>();
         return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTokens();
     }
 
     /**
      * @return the last player taken tiles that have been added in the last game update
      */
-    public synchronized List<ItemTile> getLastPlayerTakenTilesDiff(){
+    public synchronized List<ItemTile> getCurrentPlayerTakenTilesDiff(){
         return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTakenTiles();
     }
 
-    public synchronized boolean hasLastPlayerInsertedTiles(){
+    public synchronized List<ItemTile> getCurrentPlayerInsertedTiles(){
+        return oldGameModelView.getCurrentPlayer().getTakenTiles();
+    }
+
+    public synchronized boolean hasCurrentPlayerInsertedTiles(){
         return fullGameModelView.getCurrentPlayer().getTakenTiles().size()< oldGameModelView.getCurrentPlayer().getTakenTiles().size();
     }
 
@@ -581,39 +586,25 @@ public class ViewManager extends View {
         return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
     }
 
-    public synchronized boolean areChosenTilesValid(List<Position> chosenTiles){
-        if(chosenTiles.size()==0) return false;
+    public synchronized boolean areChosenTilesInvalid(List<Position> chosenTiles){
+        if(chosenTiles.size()==0) return true;
         for(Position p : chosenTiles){
-            if(!fullGameModelView.atLeastOneSideFree(p)) return false;
+            if(!fullGameModelView.atLeastOneSideFree(p)) return true;
         }
-        return true;
+        return false;
     }
 
-    public boolean areChosenTilesAligned(List<Position> positions){
-        if(positions.size()==1) return true;
-        int maxIndex = positions.size()-1;
-
-        //Should not affect the initial order for GUI
-        List<Position> sortedPositions = new ArrayList<>();
-        for(Position p : positions){
-            sortedPositions.add(new Position(p));
+    public boolean isThereEnoughBookshelfSpace(List<Position> tryChosenTiles) {
+        ItemTile[][] bookshelf = fullGameModelView.getCurrentPlayer().getBookshelf();
+        int width = bookshelf[0].length;
+        for(int i = 0; i< width; i++){
+            if(bookshelf[tryChosenTiles.size()-1][i].getType()==ItemTileType.EMPTY) return true;
         }
-
-        sortedPositions.sort(Comparator.comparingInt(Position::getX));
-        int maxX = sortedPositions.get(maxIndex).getX();
-        int minX = sortedPositions.get(0).getX();
-
-        sortedPositions.sort(Comparator.comparingInt(Position::getY));
-        int maxY = sortedPositions.get(maxIndex).getY();
-        int minY = sortedPositions.get(0).getY();
-
-        if(maxX != minX && maxY != minY) return false; //not in a line
-        if(maxX == minX && maxY-minY+1 != sortedPositions.size()) return false; //vertical line but not consecutive
-        return !(maxY == minY && maxX-minX+1 !=sortedPositions.size()); //horizontal line but not consecutive
+        return false;
     }
 
-    public synchronized int getLastPlayerInsertedColumnPosition(){
-        if(!hasLastPlayerInsertedTiles()) return -1;
+    public synchronized int getCurrentPlayerInsertedColumnPosition(){
+        if(!hasCurrentPlayerInsertedTiles()) return -1;
         ItemTile[][] bookshelf = gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getBookshelf();
         for (ItemTile[] itemTiles : bookshelf) {
             for (int j = 0; j < bookshelf[0].length; j++) {
@@ -621,6 +612,17 @@ public class ViewManager extends View {
             }
         }
         return -1;
+    }
+
+    public synchronized List<PlayerModelView> getPlayersOrderedByScores(){
+        return fullGameModelView.getPlayers().stream().sorted((x,y)->{
+            if(x.getPoints()==y.getPoints()) return 0;
+            else return x.getPoints()>=y.getPoints() ? -1:1 ;
+        }).toList();
+    }
+
+    public synchronized PlayerModelView getWinner(){
+        return getPlayersOrderedByScores().get(0);
     }
 
     public void startAutoPlayer(int roomSize) {
@@ -652,4 +654,5 @@ public class ViewManager extends View {
         System.out.println("Disconnected from server...\nTry to reconnect\n");
         ClientApp.initialUserChoice();
     }
+
 }
