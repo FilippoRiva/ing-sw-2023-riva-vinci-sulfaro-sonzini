@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view.graphical.components;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.view.graphical.Images;
+import javafx.scene.CacheHint;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -43,11 +44,15 @@ public class TileImageView extends ImageView {
         Image image = getTileImage(tile);
         this.tile = tile;
         super.setImage(image);
+        super.setCache(true);
+        super.setCacheHint(CacheHint.SPEED);
     }
 
     public TileImageView(){
         super();
         this.tile = null;
+        super.setCache(true);
+        super.setCacheHint(CacheHint.SPEED);
     }
 
     public void setTile(ItemTile tile,int opacity){

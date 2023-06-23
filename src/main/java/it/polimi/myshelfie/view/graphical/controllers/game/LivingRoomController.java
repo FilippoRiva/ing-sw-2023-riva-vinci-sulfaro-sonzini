@@ -90,11 +90,17 @@ public class LivingRoomController {
                 CustomBindings.bindSize(tile, this.tileSizeBinding,this.tileHeightProperty);
                 final boolean[] selected = {false};
                 final Position[] position = {new Position(i,j).centered(9)};
-                tile.setOnMouseClicked((mouseEvent -> {
+                tile.setOnMousePressed((mouseEvent -> {
                     if(!this.active) return;
                     if(chosenTiles.size()==3 && !selected[0]) return; //not allowing selection for more than 3 tiles
                     selected[0] = !selected[0];
                     if(selected[0]){ //selected
+                        List<Position> tryChosenTiles = new ArrayList<>(chosenTiles);
+                        tryChosenTiles.add(position[0]);
+                        if(!viewManager.areChosenTilesAligned(tryChosenTiles) || !viewManager.areChosenTilesValid(tryChosenTiles)){
+                            Animations.nodeError(tile,3).play();
+                            return;
+                        }
                         this.chosenTiles.add(position[0]);
                         this.chosenTilesImages.add(tile);
                         Animations.translateTo(tile,gamePanelController.tileSorterController.getPosition(chosenTiles.size())).play();
@@ -164,11 +170,17 @@ public class LivingRoomController {
                     final boolean[] selected = {false};
                     imagesLivingRoom[pos.getY()][pos.getX()] = newImage;
                     tilesGrid.add(newImage,pos.getY(),pos.getX());
-                    newImage.setOnMouseClicked(mouseEvent -> {
+                    newImage.setOnMousePressed(mouseEvent -> {
                         if(!this.active) return;
                         if(chosenTiles.size()==3 && !selected[0]) return; //not allowing selection for more than 3 tiles
                         selected[0] = !selected[0];
                         if(selected[0]){ //selected
+                            List<Position> tryChosenTiles = new ArrayList<>(chosenTiles);
+                            tryChosenTiles.add(pos);
+                            if(!viewManager.areChosenTilesAligned(tryChosenTiles) || !viewManager.areChosenTilesValid(tryChosenTiles)){
+                                Animations.nodeError(newImage,3).play();
+                                return;
+                            }
                             this.chosenTiles.add(centeredPos);
                             this.chosenTilesImages.add(newImage);
                             Animations.translateTo(newImage,gamePanelController.tileSorterController.getPosition(chosenTiles.size())).play();
@@ -204,11 +216,12 @@ public class LivingRoomController {
         }
     }
 
+    public void resetChoice(){
+        chosenTiles.clear();
+        chosenTilesImages.clear();
+    }
+
     public void setActive(boolean active){
         this.active = active;
-        if(!active) {
-            chosenTiles.clear();
-            chosenTilesImages.clear();
-        }
     }
 }

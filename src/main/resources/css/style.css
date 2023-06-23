@@ -23,7 +23,7 @@
 }
 
 .crash-label{
-    -fx-font-family: "Arial";
+    -fx-font-family: "Kristen ITC";
     -fx-text-fill: red;
 }
 
@@ -89,7 +89,7 @@
 }
 
 .thEndGame {
-    -fx-font-family: "Arial Black";
+    -fx-font-family: "Kristen ITC";
     -fx-font-size: 15;
     -fx-font-weight: bold;
 }
@@ -109,4 +109,8 @@
 
 .bookshelfPlayerName {
     -fx-font-size: 35;
+}
+
+.confirmButtonLabel {
+    -fx-font-size: 15;
 }

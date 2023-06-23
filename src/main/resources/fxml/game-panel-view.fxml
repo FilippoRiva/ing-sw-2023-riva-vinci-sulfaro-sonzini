@@ -6,12 +6,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Label?>
 <AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GamePanelController">
    <children>
       <HBox fx:id="panelHBox" alignment="CENTER">
          <children>
             <fx:include fx:id="leftBookshelf" source="game-bookshelf-view.fxml" />
-            <StackPane>
+            <StackPane >
                <children>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -19,12 +20,13 @@
                      </children>
                   </VBox>
                   <fx:include fx:id="livingRoom" source="game-livingroom-view.fxml" />
-                  <Button fx:id="confirmButton" mnemonicParsing="false" text="Confirm" />
+                  <Button cache="true" fx:id="confirmButton" mnemonicParsing="false" text="Confirm" />
+                  <Label styleClass="confirmButtonLabel" fx:id="confirmButtonLabel" opacity="0"> </Label>
                </children>
             </StackPane>
             <fx:include fx:id="rightBookshelf" source="game-bookshelf-view.fxml" />
          </children>
       </HBox>
-      <Button fx:id="actionSwitch" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="ActionSwitch" AnchorPane.leftAnchor="0.0" />
+      <Button cache="true" cacheHint="SCALE" fx:id="actionSwitch" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="ActionSwitch" AnchorPane.leftAnchor="0.0" />
    </children>
 </AnchorPane>

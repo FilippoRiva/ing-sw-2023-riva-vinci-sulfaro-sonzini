@@ -5,7 +5,6 @@ import it.polimi.myshelfie.view.graphical.components.TileImageView;
 import javafx.animation.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -145,11 +144,11 @@ public class Animations {
         return tt;
     }
     /**
-     * Returns an animation that shakes a button and scales it. To be used for visual error notification.
-     * @param button the button node
+     * Returns an animation that shakes a node and scales it. To be used for visual error notification.
+     * @param node the node
      * @return the animation
      */
-    public static Animation buttonError(Button button) {
+    public static Animation nodeError(Node node, double rotation) {
         RotateTransition rt = new RotateTransition(Duration.millis(40));
         RotateTransition rt2 = new RotateTransition(Duration.millis(60));
         RotateTransition rt3 = new RotateTransition(Duration.millis(40));
@@ -158,22 +157,22 @@ public class Animations {
         ParallelTransition pt = new ParallelTransition(st,scaleT);
 
         scaleT.setFromX(1);
-        scaleT.setToX(1.2);
+        scaleT.setToX(1.1);
         scaleT.setFromY(1);
-        scaleT.setToY(1.2);
+        scaleT.setToY(1.1);
         scaleT.setCycleCount(2);
         scaleT.setAutoReverse(true);
-        scaleT.setNode(button);
+        scaleT.setNode(node);
 
-        rt.setByAngle(10);
-        rt.setNode(button);
+        rt.setByAngle(rotation);
+        rt.setNode(node);
 
-        rt2.setByAngle(-20);
-        rt2.setNode(button);
+        rt2.setByAngle(-2*rotation);
+        rt2.setNode(node);
 
-        rt3.setByAngle(10);
+        rt3.setByAngle(rotation);
         rt3.setToAngle(0);
-        rt3.setNode(button);
+        rt3.setNode(node);
 
         return pt;
     }

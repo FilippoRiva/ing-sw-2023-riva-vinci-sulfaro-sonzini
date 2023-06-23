@@ -108,8 +108,8 @@ public class BookshelfController {
                         bookshelfImage.fitHeightProperty().multiply(tileHeightToBookshelfHeight));
             }
         } else {
-            prevButton.setOnMouseClicked((event)->prevBookshelf());
-            nextButton.setOnMouseClicked((event)->nextBookshelf());
+            prevButton.setOnMousePressed((event)->prevBookshelf());
+            nextButton.setOnMousePressed((event)->nextBookshelf());
             topHBox.getChildren().removeAll(topHBox.getChildren());
             currentPlayerPos = 0;
         }
@@ -261,7 +261,7 @@ public class BookshelfController {
             for(int i = 0; i < columnInserts.length; i++){
                 columnInserts[i].setVisible(true);
                 int finalI = i;
-                columnInserts[i].setOnMouseClicked((evt)->{
+                columnInserts[i].setOnMousePressed((evt)->{
                     insertAction(finalI);
                 });
                 columnInserts[i].setMouseTransparent(false);
@@ -270,7 +270,7 @@ public class BookshelfController {
             for(int i = 0; i < columnInserts.length; i++){
                 columnInserts[i].setVisible(false);
                 columnInserts[i].setMouseTransparent(true);
-                columnInserts[i].setOnMouseClicked((evt)->{});
+                columnInserts[i].setOnMousePressed((evt)->{});
             }
         }
     }

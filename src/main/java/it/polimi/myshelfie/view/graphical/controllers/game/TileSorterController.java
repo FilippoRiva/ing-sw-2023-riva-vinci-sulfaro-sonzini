@@ -100,7 +100,7 @@ public class TileSorterController {
             TileImageView tile = tiles[i];
             tile.setTile(drawnTiles.get(i),1);
             int finalI = i;
-            tile.setOnMouseClicked((mouseEvent)->{
+            tile.setOnMousePressed((mouseEvent)->{
                 if(!active) return;
                 if(orderedTiles.contains(tile)){
                     orderedTiles.remove(tile);
@@ -129,6 +129,10 @@ public class TileSorterController {
         }
     }
 
+    /**
+     * Returns the chosen ordered tiles. If the player confirm without selecting any tile it returns an empty ItemTile List
+     * @return the list of the ItemTile chosen by the player
+     */
     public synchronized List<ItemTile> getOrderedTiles(){
         Map<Integer,ItemTile> orderedTiles = new HashMap<>();
         for(int i = 0; i < tiles.length; i++){
@@ -146,6 +150,10 @@ public class TileSorterController {
         return result;
     }
 
+
+    /**
+     * Corrects the ordering of the tiles given the new order in the ViewManager
+     */
     public void fixOrdering(){
         List<Animation> orderingAnimations = new ArrayList<>();
         List<ItemTile> orderedTiles = ViewManager.getInstance().getGameModelView().getCurrentPlayer().getTakenTiles();
@@ -164,6 +172,9 @@ public class TileSorterController {
         for(Animation a : orderingAnimations) a.play();
     }
 
+    /**
+     * Hides active dots and resets their numbers afterward
+     */
     public synchronized void resetDots(){
         for(Label l : activeDots){
             Animation hideAnimation = Animations.popFadeOut(l);
@@ -172,6 +183,10 @@ public class TileSorterController {
         }
     }
 
+    /**
+     * Completely reset the component emptying the orderedTiles list, resetting the active Dots,
+     * rotating out the TileImageView and erasing translations afterward
+     */
     public synchronized void resetAll(){
         orderedTiles.clear();
         activeDots.clear();
@@ -189,6 +204,10 @@ public class TileSorterController {
         }
     }
 
+    /**
+     * Enable the ability to choose tile ordering
+     * @param active the active boolean
+     */
     public void setActive(boolean active){
         this.active = active;
     }

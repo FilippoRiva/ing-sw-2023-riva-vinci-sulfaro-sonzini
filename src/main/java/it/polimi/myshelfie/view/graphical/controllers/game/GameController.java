@@ -4,12 +4,15 @@ import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class GameController{
 
+    @FXML
+    protected ProgressIndicator progress;
     @FXML
     protected AnchorPane endGame;
     @FXML
@@ -45,7 +48,6 @@ public class GameController{
     
     public void gameStart(){
         //completely loading everything
-        gamePanelController.setActive(viewManager.isMyTurn());
         gamePanelController.setState(viewManager.getGameModelView().getCurrentState());
         gamePanelController.leftBookshelfController.loadLeft();
         gamePanelController.rightBookshelfController.loadRight();

@@ -47,7 +47,7 @@
             <Label styleClass="thEndGame" text="Tot" GridPane.rowIndex="5" />
          </children>
       </GridPane>
-      <Button layoutX="59.0" layoutY="58.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClick" prefHeight="77.0" prefWidth="86.0" styleClass="arrow" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
-        <Button fx:id="detailsButton" layoutX="1111.0" layoutY="379.0" mnemonicParsing="false" onMouseClicked="#changeViewDetail" text="Details&gt;&gt;" />
+      <Button layoutX="59.0" layoutY="58.0" mnemonicParsing="false" onMousePressed="#onBackArrowClick" prefHeight="77.0" prefWidth="86.0" styleClass="arrow" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
+        <Button fx:id="detailsButton" layoutX="1111.0" layoutY="379.0" mnemonicParsing="false" onMousePressed="#changeViewDetail" text="Details&gt;&gt;" />
     </children>
 </AnchorPane>

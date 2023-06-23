@@ -245,4 +245,15 @@ public class FullGameModelView implements Serializable, GameModelView {
         this.setCommonGoals(endTurnModelView.getCommonGoals());
         this.setCurrentPlayer(endTurnModelView.getCurrentPlayer());
     }
+
+    public boolean atLeastOneSideFree(Position p) {
+        int x = p.getX();
+        int y = p.getY();
+
+        int offset = livingRoom.length/2;
+        if(p.getY() == offset  || getTile(x, y+1) == null || getTile(x, y+1).getType() == ItemTileType.EMPTY) return true;
+        if(p.getX() == offset  || getTile(x+1, y) == null || getTile(x+1, y).getType() == ItemTileType.EMPTY) return true;
+        if(p.getY() == -offset || getTile(x, y-1) == null || getTile(x,y-1).getType() == ItemTileType.EMPTY) return true;
+        return p.getX() == -offset || getTile(x - 1, y) == null || getTile(x - 1, y).getType() == ItemTileType.EMPTY;
+    }
 }

@@ -12,6 +12,8 @@ import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -485,6 +487,7 @@ public class ViewManager extends View {
      * @return the new state if the state has changed, otherwise it returns null
      */
     public synchronized GameState getCurrentStateDiff(){
+        if(gameDifferences==null) return GameState.DRAW; //first turn
         return gameDifferences.getCurrentState();
     }
 
@@ -576,6 +579,37 @@ public class ViewManager extends View {
 
     public synchronized boolean isMyTurn(){
         return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+    }
+
+    public synchronized boolean areChosenTilesValid(List<Position> chosenTiles){
+        if(chosenTiles.size()==0) return false;
+        for(Position p : chosenTiles){
+            if(!fullGameModelView.atLeastOneSideFree(p)) return false;
+        }
+        return true;
+    }
+
+    public boolean areChosenTilesAligned(List<Position> positions){
+        if(positions.size()==1) return true;
+        int maxIndex = positions.size()-1;
+
+        //Should not affect the initial order for GUI
+        List<Position> sortedPositions = new ArrayList<>();
+        for(Position p : positions){
+            sortedPositions.add(new Position(p));
+        }
+
+        sortedPositions.sort(Comparator.comparingInt(Position::getX));
+        int maxX = sortedPositions.get(maxIndex).getX();
+        int minX = sortedPositions.get(0).getX();
+
+        sortedPositions.sort(Comparator.comparingInt(Position::getY));
+        int maxY = sortedPositions.get(maxIndex).getY();
+        int minY = sortedPositions.get(0).getY();
+
+        if(maxX != minX && maxY != minY) return false; //not in a line
+        if(maxX == minX && maxY-minY+1 != sortedPositions.size()) return false; //vertical line but not consecutive
+        return !(maxY == minY && maxX-minX+1 !=sortedPositions.size()); //horizontal line but not consecutive
     }
 
     public synchronized int getLastPlayerInsertedColumnPosition(){

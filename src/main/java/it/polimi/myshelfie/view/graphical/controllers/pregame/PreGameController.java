@@ -69,6 +69,7 @@ public class PreGameController implements Initializable {
 
         Animations.applyHoverScaling(backButton);
         Animations.applyHoverScaling(chatButton);
+        Animations.applyHoverScaling(exitButton);
 
         changePage(InternalViewState.INIT);
     }
