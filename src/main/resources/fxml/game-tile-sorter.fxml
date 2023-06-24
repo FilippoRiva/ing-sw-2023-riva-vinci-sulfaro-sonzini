@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import it.polimi.myshelfie.view.graphical.components.TileImageView?>
+<?import javafx.scene.control.Label?>
+<StackPane cacheHint="SPEED" fx:id="mainStackPane" cache="true" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.TileSorterController">
+   <ImageView fx:id="backgroundImage" pickOnBounds="true" StackPane.alignment="CENTER">
+      <Image url="@../images/darkWood.jpg"/>
+   </ImageView>
+   <HBox fx:id="tilesHBox" alignment="CENTER" StackPane.alignment="CENTER">
+      <VBox fx:id="tilesVBox" alignment="CENTER" cache="true" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
+         <StackPane fx:id="topStack">
+            <TileImageView fx:id="top" />
+            <Label fx:id="topChoiceDot" alignment="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: AntiqueWhite; -fx-background-radius: 100; -fx-font-size: 15;" text="-1" textAlignment="CENTER" StackPane.alignment="TOP_LEFT">
+            </Label>
+         </StackPane>
+         <StackPane fx:id="midStack">
+            <TileImageView fx:id="middle" />
+            <Label fx:id="midChoiceDot" alignment="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: AntiqueWhite; -fx-background-radius: 100; -fx-font-size: 15;" text="-1" textAlignment="CENTER"  StackPane.alignment="TOP_LEFT">
+            </Label>
+         </StackPane>
+         <StackPane fx:id="bottomStack">
+            <TileImageView fx:id="bottom" />
+            <Label fx:id="bottomChoiceDot" alignment="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: AntiqueWhite; -fx-background-radius: 100; -fx-font-size: 15;" text="-1" textAlignment="CENTER"  StackPane.alignment="TOP_LEFT">
+            </Label>
+         </StackPane>
+      </VBox>
+   </HBox>
+</StackPane>

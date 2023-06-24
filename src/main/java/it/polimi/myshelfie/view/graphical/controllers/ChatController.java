@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -89,6 +90,8 @@ public class ChatController implements Initializable {
 
         //create default messagePane
         HBox messageBox = new HBox();
+        messageBox.setCache(true);
+        messageBox.setCacheHint(CacheHint.SPEED);
         Region emptySpace = new Region();
         HBox.setHgrow(emptySpace, Priority.ALWAYS);
         VBox singleMessageVBox = new VBox();

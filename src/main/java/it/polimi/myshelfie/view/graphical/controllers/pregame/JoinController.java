@@ -93,7 +93,7 @@ public class JoinController {
                     AnchorPane anchorPane = new AnchorPane();
                     if(lobby.equals(selected)) anchorPane.setBackground(Background.fill(Color.rgb(218, 106, 45)));
 
-                    anchorPane.setOnMouseClicked(event -> {
+                    anchorPane.setOnMousePressed(event -> {
                         selected = lobby;
                         Platform.runLater(() -> joinButton.setDisable(false));
                         updateListLobbies();

@@ -2,13 +2,17 @@ package it.polimi.myshelfie.view.graphical.controllers;
 
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.Animations;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.controllers.game.GameController;
 import it.polimi.myshelfie.view.graphical.controllers.pregame.PreGameController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -19,6 +23,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainViewController implements Initializable {
+    @FXML
+    protected Button errorButton;
+    @FXML
+    protected ImageView criticalErrorBackground;
     @FXML
     protected PreGameController preGameController;
     @FXML
@@ -42,13 +50,19 @@ public class MainViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         criticalErrorPane.setVisible(false);
+        CustomBindings.bindSize(criticalErrorPane,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
+        CustomBindings.bindSize(criticalErrorBackground,errorLabel.widthProperty().add(40),
+                errorLabel.heightProperty().add(200));
 
+        errorLabel.setBackground(Background.fill(Color.BLACK));
         currentState = InternalViewState.INIT;
 
         preGame.setVisible(true);
         preGame.setMouseTransparent(false);
         game.setVisible(false);
         game.setMouseTransparent(true);
+
+        Animations.applyHoverScaling(errorButton);
     }
 
     /**
@@ -63,8 +77,12 @@ public class MainViewController implements Initializable {
                 preGame.setVisible(true);
                 game.setMouseTransparent(true);
                 game.setVisible(false);
-                if(this.currentState == InternalViewState.LOBBY || this.currentState == InternalViewState.GAME)
+                if(this.currentState == InternalViewState.LOBBY){
                     preGameController.reset();
+                } else if(this.currentState == InternalViewState.GAME || this.currentState == InternalViewState.WIN || this.currentState == InternalViewState.DISCONNECTION){
+                    preGameController.reset();
+                    gameController.reset();
+                }
                 preGameController.changePage(InternalViewState.INIT);
             }
             case CREATE -> preGameController.changePage(InternalViewState.CREATE);
@@ -74,6 +92,7 @@ public class MainViewController implements Initializable {
                 gameController.gameStart();
                 preGame.setMouseTransparent(true);
                 preGame.setVisible(false);
+                preGameController.changePage(InternalViewState.INIT); //presetting INIT PAGE
                 game.setMouseTransparent(false);
                 game.setVisible(true);
             }
@@ -92,8 +111,6 @@ public class MainViewController implements Initializable {
         Platform.runLater(() -> {
             criticalErrorPane.setMouseTransparent(false);
             errorLabel.setText(message);
-            errorLabel.setTextFill(Color.RED);
-            errorLabel.setBackground(Background.fill(Color.BLACK));
             criticalErrorPane.setVisible(true);
         });
     }

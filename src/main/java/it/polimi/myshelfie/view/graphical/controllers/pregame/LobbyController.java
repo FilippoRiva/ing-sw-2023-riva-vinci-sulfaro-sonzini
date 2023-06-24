@@ -62,6 +62,8 @@ public class LobbyController {
 
         CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
 
+        Animations.applyHoverScaling(startButton);
+
         this.preGameController = preGameController;
     }
 
@@ -109,14 +111,14 @@ public class LobbyController {
     @FXML
     protected void onMouseMinusClicked() {
         if(!viewManager.removePlayer()) {
-            Animations.buttonError(minusButton).play();
+            Animations.nodeError(minusButton,6).play();
         }
     }
 
     @FXML
     protected void onMousePlusClicked() {
         if(!viewManager.addPlayer()) {
-            Animations.buttonError(plusButton).play();
+            Animations.nodeError(plusButton,6).play();
         }
     }
 

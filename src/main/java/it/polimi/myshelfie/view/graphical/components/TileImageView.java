@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view.graphical.components;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.view.graphical.Images;
+import javafx.scene.CacheHint;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
 
 public class TileImageView extends ImageView {
     private static final HashMap<String, Image> tilesNameToImage = new HashMap<>();
+    private ItemTile tile;
 
     /**
      * Preloads the Tiles images such that it is no longer required to get them from resources
@@ -40,7 +42,23 @@ public class TileImageView extends ImageView {
      */
     public TileImageView(ItemTile tile){
         Image image = getTileImage(tile);
+        this.tile = tile;
         super.setImage(image);
+        super.setCache(true);
+        super.setCacheHint(CacheHint.SPEED);
+    }
+
+    public TileImageView(){
+        super();
+        this.tile = null;
+        super.setCache(true);
+        super.setCacheHint(CacheHint.SPEED);
+    }
+
+    public void setTile(ItemTile tile,int opacity){
+        super.setImage(getTileImage(tile));
+        this.tile = tile;
+        this.setOpacity(opacity);
     }
 
     /**
@@ -56,5 +74,9 @@ public class TileImageView extends ImageView {
             }
         }
         return result;
+    }
+
+    public ItemTile getTile(){
+        return tile;
     }
 }

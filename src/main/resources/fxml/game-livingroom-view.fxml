@@ -9,7 +9,7 @@
 
 <StackPane fx:id="mainStack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.LivingRoomController">
    <children>
-      <ImageView fx:id="livingRoomImage" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="livingRoomImage" cache="true" cacheHint="SPEED" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/game/boards/livingroom.png" />
          </image>

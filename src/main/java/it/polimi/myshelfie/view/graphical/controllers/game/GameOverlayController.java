@@ -82,4 +82,7 @@ public class GameOverlayController {
     public void hidePersonalGoal() {
         personalGoal.setTranslateY(stage.getHeight()/5*3 - 70);
     }
+
+    public void reset() {
+    }
 }
