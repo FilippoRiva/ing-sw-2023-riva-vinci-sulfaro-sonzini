@@ -22,6 +22,10 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *This class has a list of LobbiesControllers and Clients.
+ * It allows to create or delete a lobby, add a client, join a lobby and connect the correct client who joined it and quit.
+ */
 public class ControllerImpl implements Controller {
     private final Map<String, LobbyControllerImpl> lobbiesControllers;
     private final Map<Client, ClientExceptionsNotifier> clientExceptionsNotifiers;
@@ -40,7 +44,7 @@ public class ControllerImpl implements Controller {
     }
 
     /**
-     * Sets the model.
+     * this method sets the model.
      * @param model is the model to set.
      */
     public void setModel(Model model){
@@ -237,6 +241,10 @@ public class ControllerImpl implements Controller {
         }
     }
 
+    /**
+     * this method signals in the client list that one has left by changing its associated boolean to false.
+     * @param client the client who's left.
+     */
     public void clientHasLeft(Client client) {
         clientHasJoinedMap.replace(client, false);
     }

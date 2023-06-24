@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class allows to do the basic moves of the game, disconnect from a game, add the observers and is responsible for signaling the end turn and end game.
+ */
 public class GameControllerImpl implements GameController, ChatController{
 
     private final GameModel gameModel;
@@ -147,6 +150,9 @@ public class GameControllerImpl implements GameController, ChatController{
         }
     }
 
+    /**
+     * this method sets the end game state WIN
+     */
     private void endGame() {
         gameModel.calculateWinResults();
         gameModel.setState(GameState.WIN);

@@ -9,8 +9,10 @@ import it.polimi.myshelfie.utils.Observer;
 
 import java.util.List;
 
+/**
+ * this interface represents a controller for the game.
+ */
 public interface GameController {
-
     /**
      * Allows the player playing to draw from the board the tiles he wants to add to his bookshelf.
      * @param positions are the positions of the tiles the player wants to select from the board.
