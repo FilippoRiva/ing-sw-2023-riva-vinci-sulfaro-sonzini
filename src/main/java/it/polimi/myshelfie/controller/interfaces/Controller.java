@@ -11,7 +11,7 @@ import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.utils.Observer;
 
 /**
- * this interface represents a general controller that create a lobby and allows to join it, and add or disconnect a client.
+ * This interface represents a general controller that create a lobby and allows to join it, and add or disconnect a client.
  */
 public interface Controller {
 

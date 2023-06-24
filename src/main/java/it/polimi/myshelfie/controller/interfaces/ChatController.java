@@ -6,7 +6,7 @@ import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
 import it.polimi.myshelfie.utils.Observer;
 
 /**
- * this interface represents a controller for the chat system.
+ * This interface represents a controller for the chat system.
  */
 public interface ChatController {
     /**

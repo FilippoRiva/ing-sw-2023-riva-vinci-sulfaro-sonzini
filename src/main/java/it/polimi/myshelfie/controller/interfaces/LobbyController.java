@@ -6,7 +6,7 @@ import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.utils.Observer;
 
 /**
- * this interface represents a controller for the lobby.
+ * This interface represents a controller for the lobby.
  */
 public interface LobbyController {
 

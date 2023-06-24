@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * this class allows to exit a lobby, add players to it, start the game if the player is the room owner and add observers.
+ * This class allows to exit a lobby, add players to it, start the game if the player is the room owner and add observers.
  */
 public class LobbyControllerImpl implements LobbyController, ChatController{
 

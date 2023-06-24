@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  *This class has a list of LobbiesControllers and Clients.
- * It allows to create or delete a lobby, add a client, join a lobby and connect the correct client who joined it and quit.
+ *It allows to create or delete a lobby, add a client, join a lobby and connect the correct client who joined it and quit.
  */
 public class ControllerImpl implements Controller {
     private final Map<String, LobbyControllerImpl> lobbiesControllers;

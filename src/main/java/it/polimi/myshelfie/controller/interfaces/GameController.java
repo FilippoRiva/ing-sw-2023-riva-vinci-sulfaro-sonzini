@@ -10,7 +10,7 @@ import it.polimi.myshelfie.utils.Observer;
 import java.util.List;
 
 /**
- * this interface represents a controller for the game.
+ * This interface represents a controller for the game.
  */
 public interface GameController {
     /**
