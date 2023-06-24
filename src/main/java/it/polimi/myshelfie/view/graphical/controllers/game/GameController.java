@@ -14,7 +14,7 @@ public class GameController{
     @FXML
     protected AnchorPane endGame;
     @FXML
-    protected AnchorPane gameOverlay;
+    protected StackPane gameOverlay;
     @FXML
     protected AnchorPane gamePanel;
     @FXML
@@ -35,8 +35,8 @@ public class GameController{
         Stage stage = GraphicalUI.stage;
         endGame.setVisible(false);
         endGame.setMouseTransparent(true);
-        gameOverlay.setVisible(false);
-        gameOverlay.setMouseTransparent(true);
+        gameOverlay.setVisible(true);
+        //gameOverlay.setMouseTransparent(true);
         gameOverlayController.initialize(this);
         gamePanelController.initialize(this);
         endGameController.initialize(this);
@@ -51,6 +51,8 @@ public class GameController{
         gamePanelController.leftBookshelfController.loadLeft();
         gamePanelController.rightBookshelfController.loadRight();
         gamePanelController.livingRoomController.reloadGrid();
+
+        gameOverlayController.gameStart();
     }
 
     public void win() {

@@ -10,9 +10,9 @@
         <ImageView fx:id="backgroundImage" pickOnBounds="true">
             <Image url="@../images/lightWood.jpg" />
         </ImageView>
-      <fx:include fx:id="endGame" source="endGame-view.fxml" />
-      <fx:include fx:id="gamePanel" source="game-panel-view.fxml" />
-      <fx:include fx:id="gameOverlay" source="game-overlay-view.fxml" />
+        <fx:include fx:id="endGame" source="endGame-view.fxml" />
+        <fx:include fx:id="gamePanel" source="game-panel-view.fxml" />
+        <fx:include fx:id="gameOverlay" source="game-overlay-view.fxml" />
         <ProgressIndicator fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
     </children>
 </AnchorPane>
