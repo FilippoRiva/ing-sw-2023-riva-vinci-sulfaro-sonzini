@@ -82,6 +82,7 @@ public class GameController{
                 gameOverlay.setVisible(false);
                 gamePanel.setVisible(false);
                 endGameController.update();
+                endGameController.setKeyListeners();
                 endGame.setVisible(true);
                 endGame.setMouseTransparent(false);
             },2000);

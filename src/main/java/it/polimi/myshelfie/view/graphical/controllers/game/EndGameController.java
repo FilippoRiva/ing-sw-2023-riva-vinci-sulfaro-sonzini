@@ -8,6 +8,7 @@ import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,18 +17,26 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 
 import java.util.List;
 
 public class EndGameController{
+    @FXML
+    protected ImageView secondPodiumImage;
+    @FXML
+    protected ImageView firstPodiumImage;
+    @FXML
+    protected ImageView thirdPodiumImage;
     @FXML
     protected Label lobbyNameLabel;
     @FXML
     protected GridPane detailsGrid;
     @FXML
     protected GridPane scoreboardGrid;
+    @FXML
+    protected StackPane detailsStack;
     @FXML
     protected Label player1;
     @FXML
@@ -42,16 +51,25 @@ public class EndGameController{
     protected Label points3;
     @FXML
     protected Button detailsButton;
+    @FXML
+    protected HBox mainHBox;
     Label[] pointsPodium;
     Label[] playersPodium;
     ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
     public void initialize(GameController gameController) {
-        System.out.println("initialized end game");
+        CustomBindings.bindSize(mainHBox,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
+        CustomBindings.bindSize(firstPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+        CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+        CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+
+        playersPodium = new Label[]{player1, player2, player3};
+        pointsPodium = new Label[]{points1, points2, points3};
     }
 
-    public void setKeyListeners(Scene scene) {
+    public void setKeyListeners() {
+        Scene scene = GraphicalUI.stage.getScene();
         scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()){
                 case ESCAPE -> onBackArrowClick();
@@ -113,7 +131,7 @@ public class EndGameController{
     private Label createLabel(int value){
         Label label = new Label(String.valueOf(value));
         label.setAlignment(Pos.CENTER);
-        label.setStyle("-fx-font-size: 10");
+        label.setStyle("-fx-font-size: 20; -fx-text-fill: white");
 
         return label;
     }
@@ -140,9 +158,6 @@ public class EndGameController{
 
     public void update() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        FullGameModelView fullGameModelView = viewManager.getGameModelView();
-        playersPodium = new Label[]{player1, player2, player3};
-        pointsPodium = new Label[]{points1, points2, points3};
 
         //order players for taken points
         List<PlayerModelView> players = viewManager.getPlayersOrderedByScores();
