@@ -318,11 +318,6 @@ public class Game implements GameModel, LobbyModel {
         return this;
     }
 
-    @Override
-    public synchronized void setRoomOwner(String owner) {
-        this.roomOwner = owner;
-    }
-
     /**
      * @return the name of the player that created the lobby.
      */

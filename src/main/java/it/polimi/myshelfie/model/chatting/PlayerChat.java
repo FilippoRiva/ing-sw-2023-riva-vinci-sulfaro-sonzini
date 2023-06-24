@@ -9,14 +9,11 @@ import java.util.ArrayList;
 
 public class PlayerChat extends Observable<ChatEvent, PlayerChatModelView> {
     private final ArrayList<Message> messages;
-    private final String player;
 
     /**
      * Instantiates a new PlayerChat.
-     * @param player the name of the owner of this PlayerChat.
      */
-    public PlayerChat(String player) {
-        this.player = player;
+    public PlayerChat() {
         this.messages = new ArrayList<>();
     }
 

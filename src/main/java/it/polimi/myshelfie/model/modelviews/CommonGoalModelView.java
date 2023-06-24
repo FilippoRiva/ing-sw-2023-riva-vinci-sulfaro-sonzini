@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommonGoalModelView implements Serializable {
-    private List<Token> tokens;
+    private final List<Token> tokens;
     private final int id;
     private final String description;
     public CommonGoalModelView(CommonGoal commonGoal){

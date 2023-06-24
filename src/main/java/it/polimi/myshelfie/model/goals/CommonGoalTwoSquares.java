@@ -6,7 +6,6 @@ import it.polimi.myshelfie.model.ItemTileType;
 import java.util.Arrays;
 
 public class CommonGoalTwoSquares extends CommonGoal{
-    private final int id = 0;
     /**
      *
      * @param bookshelf is a generic n x m matrix of ItemTile
@@ -38,7 +37,7 @@ public class CommonGoalTwoSquares extends CommonGoal{
 
     @Override
     public int getId() {
-        return id;
+        return 0;
     }
 
     @Override

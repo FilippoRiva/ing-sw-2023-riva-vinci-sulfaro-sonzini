@@ -1,7 +1,6 @@
 package it.polimi.myshelfie.model.modelviews;
 
 import it.polimi.myshelfie.model.ItemTile;
-import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.model.goals.PersonalGoal;
 
 import java.io.Serializable;
