@@ -134,11 +134,6 @@ public class ControllerImpl implements Controller {
             return null;
         }
         lobbiesControllers.put(lobbyName,lobbyController);
-        try {
-            connectionHandler.setChatController(lobbyController);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
 
         //going to LOBBY view
         new Thread(()->{
@@ -189,10 +184,6 @@ public class ControllerImpl implements Controller {
                 lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
             } catch (InvalidParameterException | LobbyFullException e) {
                 clientExceptionsNotifiers.get(client).notifyException(e);
-                try {
-                    client.send(new NetworkMessage(ViewType.INIT));
-                } catch (RemoteException ignored) {
-                }
                 return null;
             }
         } else {

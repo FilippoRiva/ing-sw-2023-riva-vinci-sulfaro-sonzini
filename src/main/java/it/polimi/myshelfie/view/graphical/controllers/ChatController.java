@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -49,7 +50,7 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    protected void setChatVisible(boolean value) {
+    public void setChatVisible(boolean value) {
         if(value){
             chatIsOpen = true;
             messageText.requestFocus();
@@ -62,7 +63,7 @@ public class ChatController implements Initializable {
         }
     }
     @FXML
-    protected void sendMessage() {
+    public void sendMessage() {
         String receiver;
         if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
         else receiver = receiverChoice.getValue();
@@ -72,7 +73,7 @@ public class ChatController implements Initializable {
         viewBuffer.sendChatMessage(message);
     }
 
-    protected void updateChoiceBox() {
+    public void updateChoiceBox() {
         List<String> players = new ArrayList<>(viewBuffer.getLobbyModelView().getPlayers());
         players.remove(ViewManager.getUsername());
         players.add("Everyone");
@@ -89,6 +90,8 @@ public class ChatController implements Initializable {
 
         //create default messagePane
         HBox messageBox = new HBox();
+        messageBox.setCache(true);
+        messageBox.setCacheHint(CacheHint.SPEED);
         Region emptySpace = new Region();
         HBox.setHgrow(emptySpace, Priority.ALWAYS);
         VBox singleMessageVBox = new VBox();

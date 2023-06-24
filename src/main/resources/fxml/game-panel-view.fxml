@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Label?>
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GamePanelController">
+   <HBox fx:id="panelHBox" alignment="CENTER">
+      <fx:include fx:id="leftBookshelf" source="game-bookshelf-view.fxml"/>
+      <StackPane>
+         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <fx:include fx:id="tileSorter" source="game-tile-sorter.fxml"/>
+         </VBox>
+         <fx:include fx:id="livingRoom" source="game-livingroom-view.fxml"/>
+         <Button cache="true" fx:id="confirmButton" mnemonicParsing="false" text="Confirm"/>
+         <Label cache="true" cacheHint="SCALE" styleClass="confirmButtonLabel" fx:id="confirmButtonLabel" opacity="0"/>
+      </StackPane>
+      <fx:include fx:id="rightBookshelf" source="game-bookshelf-view.fxml"/>
+   </HBox>
+   <Label styleClass="darkWoodArrowButton" cache="true" cacheHint="SCALE_AND_ROTATE" fx:id="actionSwitch" maxHeight="70.0" maxWidth="70.0" minHeight="70.0"
+          minWidth="70.0" prefHeight="70.0" prefWidth="70.0" AnchorPane.leftAnchor="40.0">
+   </Label>
+</AnchorPane>

@@ -8,11 +8,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.PreGameController">
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.pregame.PreGameController">
    <children>
-      <AnchorPane cacheHint="SCALE">
+      <AnchorPane>
          <children>
             <StackPane AnchorPane.topAnchor="0.0">
                <children>
@@ -42,26 +41,29 @@
             </AnchorPane>
          </children>
       </StackPane>
-      <ProgressIndicator fx:id="progress" visible="false" StackPane.alignment="BOTTOM_LEFT">
+      <ProgressIndicator fx:id="progress" cacheHint="SPEED" visible="false" StackPane.alignment="BOTTOM_LEFT">
          <StackPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </StackPane.margin>
       </ProgressIndicator>
-      <Button fx:id="backButton" cache="true" cacheHint="SPEED" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClicked" styleClass="arrow" StackPane.alignment="TOP_LEFT">
+      <Button fx:id="backButton" cacheHint="SCALE" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onBackArrowClicked" styleClass="arrow" StackPane.alignment="TOP_LEFT">
          <StackPane.margin>
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>
       </Button>
-      <Button fx:id="chatButton" layoutX="15.0" layoutY="15.0" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#toggleChatVisible" prefHeight="70.0" prefWidth="70.0" styleClass="chat" StackPane.alignment="TOP_LEFT">
+      <Button fx:id="chatButton" cache="true" cacheHint="SCALE" layoutX="15.0" layoutY="15.0" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#toggleChatVisible" prefHeight="70.0" prefWidth="70.0" styleClass="chat" StackPane.alignment="TOP_LEFT">
          <StackPane.margin>
             <Insets left="20.0" top="110.0" />
          </StackPane.margin></Button>
-      <Label fx:id="notificationDot" alignment="CENTER" cache="true" cacheHint="SPEED" layoutX="70.0" layoutY="4.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: AntiqueWhite; -fx-background-radius: 100; -fx-font-size: 15;" text="0" textAlignment="CENTER" visible="false" StackPane.alignment="TOP_LEFT">
+      <Label fx:id="notificationDot" cache="true"  alignment="CENTER" cacheHint="SCALE" layoutX="70.0" layoutY="4.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: AntiqueWhite; -fx-background-radius: 100; -fx-font-size: 15;" text="0" textAlignment="CENTER" visible="false" StackPane.alignment="TOP_LEFT">
          <StackPane.margin>
             <Insets left="75.0" top="95.0" />
          </StackPane.margin>
-         <font>
-            <Font size="1.0" />
-         </font></Label>
+      </Label>
+      <Button fx:id="exitButton" cache="true" cacheHint="SCALE" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onExitButtonClicked" styleClass="arrow" StackPane.alignment="TOP_RIGHT">
+         <StackPane.margin>
+            <Insets right="20.0" top="20.0" />
+         </StackPane.margin>
+      </Button>
    </children>
 </StackPane>

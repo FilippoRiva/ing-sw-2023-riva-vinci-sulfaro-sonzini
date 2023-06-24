@@ -6,18 +6,18 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.HomeController">
+<StackPane cache="true" cacheHint="SPEED" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.pregame.HomeController">
    <children>
       <ImageView fx:id="clearBackground" cache="true" cacheHint="SPEED" pickOnBounds="true">
          <image>
             <Image url="@../images/lightWood.jpg" />
          </image>
       </ImageView>
-      <VBox fx:id="buttonsVBox" alignment="CENTER" spacing="10.0">
+      <VBox fx:id="buttonsVBox" alignment="CENTER" cache="true" cacheHint="SPEED" spacing="10.0">
          <children>
-            <Button fx:id="joinButton" mnemonicParsing="false" onMouseClicked="#onJoinChoice" prefHeight="100.0" prefWidth="630.0" styleClass="myButton" text="Join" VBox.vgrow="ALWAYS">
+            <Button fx:id="joinButton" cache="true" cacheHint="SPEED" mnemonicParsing="false" onMouseClicked="#onJoinChoice" prefHeight="100.0" prefWidth="630.0" styleClass="myButton" text="Join" VBox.vgrow="ALWAYS">
       </Button>
-            <Button fx:id="createButton" mnemonicParsing="false" onMouseClicked="#onCreateChoice" prefHeight="100.0" prefWidth="630.0" styleClass="myButton" text="Create" VBox.vgrow="ALWAYS">
+            <Button fx:id="createButton" cache="true" cacheHint="SPEED" mnemonicParsing="false" onMouseClicked="#onCreateChoice" prefHeight="100.0" prefWidth="630.0" styleClass="myButton" text="Create" VBox.vgrow="ALWAYS">
       </Button>
          </children>
       </VBox>
