@@ -21,6 +21,9 @@ module ingsw.myshelfie {
     exports it.polimi.myshelfie.model.interfaces;
     exports it.polimi.myshelfie.utils;
     exports it.polimi.myshelfie.model.goals;
+    exports it.polimi.myshelfie.view.graphical.controllers;
+    exports it.polimi.myshelfie.view.graphical.controllers.game;
+    exports it.polimi.myshelfie.view.graphical.controllers.pregame;
 
     //making graphical UI open for javafx
     opens it.polimi.myshelfie.view.graphical.controllers;

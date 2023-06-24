@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@SuppressWarnings("FieldCanBeLocal")
 public class BookshelfController {
     @FXML
     protected BorderPane mainBorderPane;
@@ -75,7 +76,7 @@ public class BookshelfController {
     private final float imageVGap = 28;
     private final float imageHGap = 58;
     private final float gridWidth = tileImageSize*5+imageHGap*4;
-    private final float gridHeigth = tileImageSize*6+imageVGap*5;
+    private final float gridHeight = tileImageSize*6+imageVGap*5;
     private final float bookshelfTranslationY = -40;
     private final float bookshelfImageRatio = bookshelfImageWidth/bookshelfImageHeight;
     private final float tileHeightToBookshelfHeight = tileImageSize/bookshelfImageHeight;
@@ -84,7 +85,7 @@ public class BookshelfController {
     private final float vGapToBookshelfWidth = imageVGap/bookshelfImageWidth;
     private final float gridYTranslateToBookshelfHeight = bookshelfTranslationY/bookshelfImageHeight;
     private final float gridWidthToBookshelfWidth = gridWidth/bookshelfImageWidth;
-    private final float gridHeigthToBookshelfHeigth = gridHeigth/bookshelfImageHeight;
+    private final float gridHeightToBookshelfHeight = gridHeight /bookshelfImageHeight;
     private boolean left;
     private TileImageView[][] gridImages = new TileImageView[6][5];
     protected Stage stage = GraphicalUI.stage;
@@ -123,7 +124,7 @@ public class BookshelfController {
         }
         bookshelfGrid.translateYProperty().bind(bookshelfImage.fitHeightProperty().multiply(gridYTranslateToBookshelfHeight));
         CustomBindings.bindSize(bookshelfGrid,bookshelfImage.fitWidthProperty().multiply(gridWidthToBookshelfWidth),
-                bookshelfImage.fitHeightProperty().multiply(gridHeigthToBookshelfHeigth));
+                bookshelfImage.fitHeightProperty().multiply(gridHeightToBookshelfHeight));
 
         CustomBindings.bindSize(chair,stage.widthProperty().divide(25),stage.heightProperty().divide(15));
 

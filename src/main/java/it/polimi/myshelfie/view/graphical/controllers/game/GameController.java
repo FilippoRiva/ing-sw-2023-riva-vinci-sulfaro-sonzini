@@ -41,8 +41,8 @@ public class GameController{
         gameOverlay.setVisible(false);
         gameOverlay.setMouseTransparent(true);
         gameOverlayController.initialize(this);
-        gamePanelController.initialize(this);
-        endGameController.initialize(this);
+        gamePanelController.customInitialize();
+        endGameController.customInitialize();
         CustomBindings.bindSize(backgroundImage,stage.widthProperty(),stage.heightProperty());
         CustomBindings.bindSize(mainAnchorPane,stage.widthProperty(),stage.heightProperty());
     }

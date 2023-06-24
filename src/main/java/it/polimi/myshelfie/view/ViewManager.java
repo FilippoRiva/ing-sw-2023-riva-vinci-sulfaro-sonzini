@@ -145,15 +145,19 @@ public class ViewManager extends View {
         }
     }
 
+    /**
+     *
+     * @return true if remove player fails
+     */
     public boolean removePlayer() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
-        if(currentSize==2) return false;
+        if(currentSize==2) return true;
         GameConfig config;
         try {
             config = new GameConfig(currentSize-1);
         } catch (InvalidParameterException ignored) {
-            return false;
+            return true;
         }
         synchronized (this) {
             try {
@@ -162,18 +166,22 @@ public class ViewManager extends View {
                 throw new RuntimeException(e);
             }
         }
-        return true;
+        return false;
     }
 
+    /**
+     *
+     * @return true if addPlayer fails
+     */
     public boolean addPlayer() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
-        if(currentSize==4) return false;
+        if(currentSize==4) return true;
         GameConfig config;
         try {
             config = new GameConfig(currentSize+1);
         } catch (InvalidParameterException e) {
-            return false;
+            return true;
         }
         synchronized (this) {
             try {
@@ -182,7 +190,7 @@ public class ViewManager extends View {
                 throw new RuntimeException(e);
             }
         }
-        return true;
+        return false;
     }
 
     @Override

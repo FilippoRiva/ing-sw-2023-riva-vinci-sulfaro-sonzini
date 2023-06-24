@@ -13,9 +13,6 @@ public class Terminal {
     public final int WIDTH = 63;
     public final int SCREEN_HEIGHT = 33;
     public final int INPUT_HEIGHT = 3;
-    public final int ACTION_HEIGHT = 1;
-    public final int ERROR_HEIGHT = 1;
-    public final int HEIGHT = SCREEN_HEIGHT + INPUT_HEIGHT + ACTION_HEIGHT + ERROR_HEIGHT-1;
     public final int INPUT_LINE = SCREEN_HEIGHT +1;
     public final int INPUT_COLUMN = 15;
     public final int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
@@ -111,8 +108,7 @@ public class Terminal {
         println(message);
     }
 
-    public void printMessage(String message, int line, int messageLength, int userLength){
-        //TODO fix when message is too wide
+    public void printMessage(String message, int line, int messageLength){
         if(messageLength>(WIDTH-2)) {
             message = message.substring(0,WIDTH-2);
             messageLength = WIDTH-2;
@@ -302,7 +298,7 @@ public class Terminal {
         out.print(ANSI.CLEAR_ALL);
     }
     public void clearScreen(){
-        eraseLines(0, SCREEN_HEIGHT+1);
+        eraseLines();
         moveToInput();
     }
 
@@ -322,16 +318,12 @@ public class Terminal {
         moveToInput();
     }
 
-    private void eraseLines(int begin, int end){
-        if(end<begin) return;
-        eraseLines(begin,end,0,WIDTH);
-    }
 
-    private void eraseLines(int begin, int end, int column, int width){
+    private void eraseLines(){
         goOnTop();
-        cursorDown(begin);
-        for(int i = 0; i<end-begin; i++){
-            eraseLine(begin+i,column,width);
+        cursorDown(0);
+        for(int i = 0; i< 34; i++){
+            eraseLine(i, 0,WIDTH);
         }
         moveToInput();
     }
@@ -354,12 +346,6 @@ public class Terminal {
         }
     }
 
-    private void cursorUp(int lines){
-        if(lines==0) return;
-        if(ANSI_ON){
-            for(int i = 0; i<lines; i++) out.print(ANSI.CURSOR_UP);
-        }
-    }
     private void cursorDown(int lines){
         if(lines==0) return;
         if(ANSI_ON){
@@ -390,15 +376,8 @@ public class Terminal {
     private void goOnTop() {
         if(ANSI_ON) out.print(ANSI.HOME);
     }
-    private void goToBottom() {
-        positionCursor(HEIGHT,0);
-    }
 
     private void moveToInput(){
         if(ANSI_ON) positionCursor(INPUT_LINE+INPUT_HEIGHT/2,INPUT_COLUMN);
-    }
-
-    public void clearAction() {
-        printAction("");
     }
 }

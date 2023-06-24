@@ -110,14 +110,14 @@ public class LobbyController {
 
     @FXML
     protected void onMouseMinusClicked() {
-        if(!viewManager.removePlayer()) {
+        if(viewManager.removePlayer()) {
             Animations.nodeError(minusButton,6).play();
         }
     }
 
     @FXML
     protected void onMousePlusClicked() {
-        if(!viewManager.addPlayer()) {
+        if(viewManager.addPlayer()) {
             Animations.nodeError(plusButton,6).play();
         }
     }

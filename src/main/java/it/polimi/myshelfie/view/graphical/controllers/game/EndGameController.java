@@ -3,7 +3,6 @@ package it.polimi.myshelfie.view.graphical.controllers.game;
 import it.polimi.myshelfie.model.EarnedPoint;
 import it.polimi.myshelfie.model.PointType;
 import it.polimi.myshelfie.model.Token;
-import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.InternalViewState;
@@ -58,7 +57,7 @@ public class EndGameController{
     ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
-    public void initialize(GameController gameController) {
+    public void customInitialize() {
         CustomBindings.bindSize(mainHBox,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
         CustomBindings.bindSize(firstPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
         CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);

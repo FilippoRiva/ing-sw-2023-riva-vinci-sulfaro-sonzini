@@ -60,7 +60,7 @@ public class GamePanelController {
     private enum PanelState {ACTION, SPECTATE}
     private PanelState state;
     private final ViewManager vm = ViewManager.getInstance();
-    public void initialize(GameController gameController){
+    public void customInitialize(){
         Stage stage = GraphicalUI.stage;
         CustomBindings.bindSize(panelHBox,stage.widthProperty(),stage.heightProperty());
         leftBookshelfController.initialize(true);
@@ -104,7 +104,7 @@ public class GamePanelController {
         }
 
         //Animation
-        Animation translate = Animations.tranlateToLeft(leftBookshelf);
+        Animation translate = Animations.translateToLeft(leftBookshelf);
         translate.setOnFinished((event)->{
             leftBookshelf.setVisible(false);
             leftBookshelf.setMouseTransparent(true);

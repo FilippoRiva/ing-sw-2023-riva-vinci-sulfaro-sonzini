@@ -42,8 +42,7 @@ public class ChatPage extends ScreenPage{
                     t.printMessage(
                             color+msg.getSender() +ANSI.RESET+" : "+msg.getMessage(),
                             line+idx,
-                            (msg.getSender()+msg.getMessage()).length()+3,
-                            msg.getSender().length()+3);
+                            (msg.getSender()+msg.getMessage()).length()+3);
                 } else {
                     if(msg.getSender().equals(ViewManager.getUsername())){
                         playerIndex = lobby.getPlayers().indexOf(msg.getReceiver());
@@ -52,14 +51,12 @@ public class ChatPage extends ScreenPage{
                         t.printMessage(
                                 "w(to :"+color+msg.getReceiver() +ANSI.RESET+ ") : "+msg.getMessage(),
                                 line+idx,
-                                (msg.getSender()+msg.getMessage()).length()+10,
-                                ViewManager.getUsername().length()+10);
+                                (msg.getSender()+msg.getMessage()).length()+10);
                     }
                     else t.printMessage(
                             "w(from :"+color+msg.getSender() +ANSI.RESET+ ") : "+msg.getMessage(),
                             line+idx,
-                            (msg.getSender()+msg.getMessage()).length()+12,
-                            ViewManager.getUsername().length()+12);
+                            (msg.getSender()+msg.getMessage()).length()+12);
                 }
                 idx++;
             }

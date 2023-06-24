@@ -95,12 +95,12 @@ public class CLIInputInterpreter {
                         case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
                         case "lobby" -> UI.setInternalViewState(InternalViewState.LOBBY);
                         case "+" -> {
-                            if (!viewManager.addPlayer()) {
+                            if (viewManager.addPlayer()) {
                                 UI.wrongInput();
                             }
                         }
                         case "-" -> {
-                            if (!viewManager.removePlayer()) {
+                            if (viewManager.removePlayer()) {
                                 UI.wrongInput();
                             }
                         }

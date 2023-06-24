@@ -5,7 +5,6 @@ import it.polimi.myshelfie.view.graphical.components.TileImageView;
 import javafx.animation.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -273,7 +272,7 @@ public class Animations {
      * @param pane the pane to be slid
      * @return the animation
      */
-    public static Animation tranlateToLeft(Region pane) {
+    public static Animation translateToLeft(Region pane) {
         TranslateTransition animation = new TranslateTransition(Duration.millis(200));
         animation.setNode(pane);
         animation.setByX(-(pane.getWidth()+pane.getLayoutX()));
