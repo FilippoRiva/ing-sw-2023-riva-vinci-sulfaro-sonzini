@@ -5,29 +5,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane cache="true" cacheHint="SPEED"  xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.MainViewController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane cache="true" cacheHint="SPEED" xmlns="http://javafx.com/javafx/19" stylesheets="@../css/style.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.MainViewController">
    <children>
       <fx:include fx:id="preGame" source="pre-game-view.fxml" AnchorPane.topAnchor="0.0" />
       <fx:include fx:id="game" source="game-view.fxml" />
-      <AnchorPane cache="true" cacheHint="SPEED"  fx:id="criticalErrorPane">
+      <StackPane id="criticalErrorPane" fx:id="criticalErrorPane">
          <children>
-            <StackPane cache="true" cacheHint="SPEED" >
+            <ImageView fx:id="criticalErrorBackground" cache="true" pickOnBounds="true" StackPane.alignment="CENTER">
+               <image>
+                  <Image url="@../images/darkWood.jpg" />
+               </image>
+            </ImageView>
+            <VBox alignment="CENTER" spacing="20.0" StackPane.alignment="CENTER">
                <children>
-                  <VBox cache="true" cacheHint="SPEED" alignment="CENTER" spacing="20.0" StackPane.alignment="CENTER">
-                     <children>
-                        <Label cache="true" cacheHint="SPEED" id="crashLabel" fx:id="errorLabel" alignment="CENTER" prefHeight="114.0" prefWidth="621.0" style="-fx-font-size: 30; -fx-text-fill: red;" styleClass="crash-label" textAlignment="CENTER" wrapText="true">
-                           <font>
-                              <Font size="130.0" />
-                           </font>
-                        </Label>
-                        <Button cache="true" cacheHint="SPEED"  id="crashButton" fx:id="errorButton" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onErrorButtonMouseClicked" prefHeight="70.0" prefWidth="70.0" styleClass="crash-button" text="Ok" />
-                     </children>
-                  </VBox>
+                  <Label fx:id="errorLabel" alignment="CENTER" prefHeight="114.0" prefWidth="621.0" style="-fx-font-size: 30; -fx-text-fill: red;" textAlignment="CENTER" wrapText="true"/>
+                  <Button fx:id="errorButton" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onErrorButtonMouseClicked" prefHeight="70.0" prefWidth="70.0" text="Ok" />
                </children>
-            </StackPane>
+            </VBox>
          </children>
-      </AnchorPane>
+      </StackPane>
    </children>
 </AnchorPane>

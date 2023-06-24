@@ -14,26 +14,14 @@
     -fx-opacity: 1;
 }
 
-.crash-button{
-    -fx-background-color: grey;
-    -fx-text-fill: black;
-    -fx-font-family: "Kristen ITC";
-    -fx-font-size: 20;
-    -fx-font-weight :bold;
-}
-
-.crash-label{
-    -fx-font-family: "Kristen ITC";
-    -fx-text-fill: red;
-}
-
 .label {
     -fx-font-family: "Kristen ITC";
     -fx-font-size: 40;
 }
 .error {
+    -fx-font-family: "Kristen ITC";
     -fx-text-fill: red;
-    -fx-font-size: 20;
+    -fx-font-size: 30;
 }
 
 .text-field {

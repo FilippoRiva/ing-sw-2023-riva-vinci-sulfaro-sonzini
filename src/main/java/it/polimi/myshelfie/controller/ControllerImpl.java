@@ -179,10 +179,6 @@ public class ControllerImpl implements Controller {
                 lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
             } catch (InvalidParameterException | LobbyFullException e) {
                 clientExceptionsNotifiers.get(client).notifyException(e);
-                try {
-                    client.send(new NetworkMessage(ViewType.INIT));
-                } catch (RemoteException ignored) {
-                }
                 return null;
             }
         } else {

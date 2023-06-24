@@ -185,7 +185,10 @@ public class GamePanelController {
                     livingRoomController.updateLivingRoom(vm.getLivingRoomDiff());
                 }
                 if(vm.isMyTurn()){
-                    Animations.timer(this::actionView,1000);
+                    Animations.timer(()->{
+                        if(vm.getGameModelView()==null) return; //checking if we have been disconnected from the game while waiting
+                        this.actionView();
+                    },1000);
                     Platform.runLater(()->confirmButton.setText("Confirm Draw"));
                     confirmButton.setOnMousePressed((event)-> {
                         if(livingRoomController.chosenTiles.size()==0){
@@ -248,7 +251,10 @@ public class GamePanelController {
                     rightBookshelfController.loadNewTiles();
                     rightBookshelfController.setActive(false);
                     tileSorterController.resetAll();
-                    Animations.timer(this::spectatorView,1000);
+                    Animations.timer(()->{
+                        if(vm.getGameModelView()==null) return; //checking if we have been disconnected from the game while waiting
+                        this.spectatorView();
+                    },1000);
                 } else {
                     leftBookshelfController.loadNewTiles();
                 }

@@ -55,7 +55,7 @@
             <Insets top="30.0" />
          </padding>
       </VBox>
-        <Label fx:id="joinErrorLabel" alignment="CENTER_RIGHT" cache="true" prefHeight="70.0" prefWidth="300.0" styleClass="error" text="error" textFill="RED" visible="false" StackPane.alignment="BOTTOM_RIGHT">
+        <Label fx:id="joinErrorLabel" alignment="CENTER" cache="true" prefHeight="70.0" styleClass="error" text="error" visible="false" StackPane.alignment="BOTTOM_RIGHT">
          <StackPane.margin>
             <Insets bottom="20.0" right="20.0" />
          </StackPane.margin>
