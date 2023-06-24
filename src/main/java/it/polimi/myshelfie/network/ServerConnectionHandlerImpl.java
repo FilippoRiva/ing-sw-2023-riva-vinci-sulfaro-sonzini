@@ -24,6 +24,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     public final String hostName;
     private static int id = 0;
     public final int clientID;
+    private final Object lifelineSync = new Object();
     public ServerConnectionHandlerImpl(Client client, Controller controller) throws RemoteException {
         this.client = client;
         this.controller = controller;
@@ -42,7 +43,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             } catch (RemoteException e) {
                 try {
                     if(!connected) return;
-                    ServerLogger.logClientInfo(this,"Lifeline failed. Closing connection...");
+                    ServerLogger.logClientInfo(this,"RMI Lifeline failed. Closing connection...");
                     close();
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
@@ -106,10 +107,9 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public void lifeline() throws RemoteException {
         //this method blocks forever
-        Object obj = new Object();
-        synchronized (obj){
+        synchronized (lifelineSync){
             try {
-                obj.wait();
+                lifelineSync.wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

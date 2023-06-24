@@ -4,11 +4,12 @@ import it.polimi.myshelfie.view.View;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class ClientImpl extends UnicastRemoteObject implements Client {
-    View view;
+    private final View view;
+    private final Object lifelineSync = new Object();
 
     public ClientImpl(View view) throws RemoteException {
         this.view = view;
@@ -37,7 +38,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
             }
         })).start();
 
-        new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(()->{
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(()->{
             try {
                 server.send(new NetworkMessage()); //ping message
             } catch (RemoteException ignored) {
@@ -53,10 +54,9 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
     @Override
     public void lifeline() throws RemoteException {
         //this method blocks forever
-        Object obj = new Object();
-        synchronized (obj){
+        synchronized (lifelineSync){
             try {
-                obj.wait();
+                lifelineSync.wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
