@@ -46,7 +46,6 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public synchronized void setGameConfig(GameConfig gameConfig) throws InvalidParameterException{
-        //if(isLobbyFull()) throw new Exception("lobby is full");
         if(gameConfig.getNumPlayers()< players.size()) throw new InvalidParameterException("too few players");
         this.gameConfig = gameConfig;
         lobbyObservable.setChanged();
@@ -79,7 +78,6 @@ public class Game implements GameModel, LobbyModel {
      * @return true or false.
      */
     private boolean isPlayerNameValid(String playerName) {
-        //TODO define rules for available characters in playerName
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 return false;

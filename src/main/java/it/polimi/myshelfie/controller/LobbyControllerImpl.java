@@ -18,11 +18,13 @@ import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.utils.ServerLogger;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class LobbyControllerImpl implements LobbyController, ChatController{
 
@@ -59,6 +61,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     public synchronized void exitLobby(String playerName){
         if(lobbyModel.hasStarted()) {
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+            ServerLogger.log(Level.FINEST,"Exit lobby fail. Lobby has already started. Lobby name : "+lobbyName+" | Player name : "+playerName);
             return;
         }
 
@@ -66,6 +69,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         try {
             lobbyModel.removePlayer(playerName);
         } catch (InvalidParameterException e) {
+            ServerLogger.log(Level.FINEST,"Exit lobby fail. Requested user is not in this lobby. Lobby name : "+lobbyName+" | Requested player name : "+playerName);
             exceptionsNotifiersMap.get(playerName).notifyException(e);
             return;
         }
@@ -84,39 +88,46 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             }
         }).start();
         clientsMap.remove(playerName);
+        ServerLogger.log(Level.FINE,"Player left lobby. Lobby name : "+lobbyName+" | Player leaving : "+playerName);
 
         //deleting if empty
         if(lobbyModel.isLobbyEmpty()){
             controllerImpl.deleteLobby(lobbyModel.getLobbyName());
         }
-
     }
 
     @Override
     public synchronized void setConfig(String playerName, GameConfig config){
         if(!lobbyModel.isRoomOwner(playerName)){
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
+            ServerLogger.log(Level.FINEST, "Set Config fail. Not Room Owner. Lobby name : "+lobbyName+" | Player setting config : "+playerName);
             return;
         }
         if(lobbyModel.hasStarted()) {
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Lobby closed"));
+            ServerLogger.log(Level.FINEST, "Set Config fail. Lobby Closed. Lobby name : "+lobbyName+" | Player setting config : "+playerName);
             return;
         }
         try {
             lobbyModel.setGameConfig(config);
         } catch (InvalidParameterException e) {
+            ServerLogger.log(Level.FINEST, "Set Config fail. Config are not valid. Lobby name : "+lobbyName+" | Player setting config : "+playerName);
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
+        ServerLogger.log(Level.FINEST, "Player set config. Lobby name : "+lobbyName+" | Config : \n" +
+                "    Player Num : "+ config.getNumPlayers()+"\n");
     }
 
     @Override
     public synchronized void startGame(String playerName){
         if(!lobbyModel.isRoomOwner(playerName)){
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("You're not the room owner"));
+            ServerLogger.log(Level.FINEST, "Start game fail. Not Room Owner. Lobby name : "+lobbyName+" | Player starting game : "+playerName);
             return;
         }
         if(lobbyModel.hasStarted()) {
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+            ServerLogger.log(Level.FINEST, "Start game fail. Lobby Closed. Lobby name : "+lobbyName+" | Player starting game : "+playerName);
             return;
         }
 
@@ -125,16 +136,17 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             lobbyModel.initialize();
         }catch(LobbyFullException e){
             exceptionsNotifiersMap.get(playerName).notifyException(e);
+            ServerLogger.log(Level.FINEST, "Start game fail. Lobby is not full. Lobby name : "+lobbyName+" | Player starting game : "+playerName);
             return;
         }
 
         //removes lobby controllers
-        try {
-            for(ServerConnectionHandler sch : connectionHandlersMap.values()){
-                sch.setLobbyController(null);
-                sch.setChatController(null);
+        for(ServerConnectionHandler sch : connectionHandlersMap.values()){
+            try {
+            sch.setLobbyController(null);
+            sch.setChatController(null);
+            } catch (RemoteException ignored) {
             }
-        } catch (RemoteException ignored) {
         }
 
         //removing observers
@@ -144,7 +156,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
 
         //creating game controller and starting the game
         GameModel gameModel = lobbyModel.getGameModel();
-        GameControllerImpl gameController = new GameControllerImpl(controllerImpl, gameModel,gameModel.getChatModel());
+        GameControllerImpl gameController = new GameControllerImpl(controllerImpl, gameModel,gameModel.getChatModel(),lobbyName);
         gameController.init(new HashMap<>(clientsMap), new HashMap<>(connectionHandlersMap), new HashMap<>(exceptionsNotifiersMap));
 
         //setting each client's views to GAME
@@ -156,6 +168,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
                 }
             }).start();
         }
+        ServerLogger.log(Level.FINE,"Game start. Lobby name : "+lobbyName+" | Players : "+clientsMap.keySet());
     }
 
     @Override
@@ -171,9 +184,12 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     public synchronized void addMessage(String playerName, Message message){
         if(lobbyModel.hasStarted()) {
             exceptionsNotifiersMap.get(playerName).notifyException(new Exception("lobby closed"));
+            ServerLogger.log(Level.FINEST, "Add message fail. Lobby Closed. Lobby name : "+lobbyName+" | Player chatting : "+playerName);
         }
         if(message.getMessage().isEmpty()) return;
         chatModel.addMessage(message);
+        ServerLogger.log(Level.FINEST,"Player sent chat message. Lobby name : "+lobbyName+" | Player chatting : " +playerName +
+                " | Message : "+message.getSender()+"->"+message.getReceiver()+" :: "+message.getMessage());
     }
 
     @Override

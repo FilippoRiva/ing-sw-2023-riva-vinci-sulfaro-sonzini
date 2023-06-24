@@ -4,6 +4,7 @@ module ingsw.myshelfie {
     requires javafx.fxml;
     requires java.rmi;
     requires java.desktop;
+    requires java.logging;
 
     //making network accessible to java-rmi
     exports it.polimi.myshelfie;
@@ -17,6 +18,9 @@ module ingsw.myshelfie {
     exports it.polimi.myshelfie.view;
     exports it.polimi.myshelfie.view.graphical;
     exports it.polimi.myshelfie.view.events;
+    exports it.polimi.myshelfie.model.interfaces;
+    exports it.polimi.myshelfie.utils;
+    exports it.polimi.myshelfie.model.goals;
 
     //making graphical UI open for javafx
     opens it.polimi.myshelfie.view.graphical.controllers;

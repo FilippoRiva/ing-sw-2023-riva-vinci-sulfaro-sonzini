@@ -33,4 +33,9 @@ public class ItemTile implements Serializable {
         tile = (ItemTile)obj;
         return this.type.equals(tile.getType());
     }
+
+    @Override
+    public String toString(){
+        return type.toString()+" : "+id;
+    }
 }

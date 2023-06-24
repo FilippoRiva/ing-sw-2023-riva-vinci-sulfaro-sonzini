@@ -163,7 +163,8 @@ public class ClientApp {
         ClientImpl client = new ClientImpl(viewManager);
         client.handshake(serverStub);
         new Thread(() -> {
-            while (true) {
+            boolean running = true;
+            while (running) {
                 try {
                     serverStub.receive(client);
                 } catch (RemoteException e) {
@@ -176,6 +177,7 @@ public class ClientApp {
                     //receiving different class versions
                 } catch (SocketException e){
                     System.err.println("Lost server connection. Disconnecting....");
+                    running = false;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

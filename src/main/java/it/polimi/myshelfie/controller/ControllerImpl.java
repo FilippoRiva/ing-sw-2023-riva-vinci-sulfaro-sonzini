@@ -16,11 +16,13 @@ import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.utils.ServerLogger;
 import it.polimi.myshelfie.view.ViewType;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class ControllerImpl implements Controller {
     private final Map<String, LobbyControllerImpl> lobbiesControllers;
@@ -122,6 +124,7 @@ public class ControllerImpl implements Controller {
             lobbyModel = model.addLobby(lobbyName);
         } catch (LobbyExistenceException e) {
             clientExceptionsNotifiers.get(client).notifyException(e);
+            ServerLogger.log(Level.FINEST,"Failed lobby creation. Lobby name not available : "+lobbyName);
             return null;
         }
 
@@ -130,6 +133,12 @@ public class ControllerImpl implements Controller {
         try {
             lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
         } catch (InvalidParameterException | LobbyFullException e) {
+            ServerLogger.log(Level.FINEST,"Failed lobby creation. Player name not accepted : "+playerName);
+            try {
+                model.removeLobby(lobbyName);
+            } catch (LobbyExistenceException ex) {
+                throw new RuntimeException(ex);
+            }
             clientExceptionsNotifiers.get(client).notifyException(e);
             return null;
         }
@@ -145,6 +154,7 @@ public class ControllerImpl implements Controller {
 
         clientHasJoinedMap.replace(client,true);
 
+        ServerLogger.log(Level.FINE,"Lobby creation. Lobby name : "+lobbyName+" | Room owner player name : "+playerName);
         return lobbyController;
     }
 
@@ -179,15 +189,20 @@ public class ControllerImpl implements Controller {
 
         //joining lobby using lobby controller if lobby exists
         LobbyControllerImpl lobbyController = lobbiesControllers.get(lobbyName);
-        if (lobbyController != null) {
-            try {
-                lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
-            } catch (InvalidParameterException | LobbyFullException e) {
-                clientExceptionsNotifiers.get(client).notifyException(e);
-                return null;
-            }
-        } else {
+        if (lobbyController == null) {
             clientExceptionsNotifiers.get(client).notifyException(new LobbyExistenceException(false, lobbyName));
+            ServerLogger.log(Level.FINEST,"Player join failed since the requested lobby doesn't exists. Lobby name : "+lobbyName+" | Player name : "+playerName);
+            return null;
+        }
+        try {
+            lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
+        } catch (InvalidParameterException e) {
+            ServerLogger.log(Level.FINEST,"Player join failed: Player name not valid. Lobby name : "+lobbyName+" | Requeste player name : "+playerName);
+            clientExceptionsNotifiers.get(client).notifyException(e);
+            return null;
+        } catch (LobbyFullException e){
+            ServerLogger.log(Level.FINEST,"Player join failed since the requested lobby is full. Lobby name : "+lobbyName);
+            clientExceptionsNotifiers.get(client).notifyException(e);
             return null;
         }
 
@@ -201,6 +216,7 @@ public class ControllerImpl implements Controller {
 
         clientHasJoinedMap.replace(client,true);
 
+        ServerLogger.log(Level.FINE,"Player joined lobby. Lobby name : "+lobbyName+" | Player joining : "+playerName);
         return lobbyController;
     }
     @Override
@@ -226,6 +242,7 @@ public class ControllerImpl implements Controller {
         } catch (LobbyExistenceException e) {
             throw new RuntimeException(e);
         }
+        ServerLogger.log(Level.FINE,"Empty lobby deletion. Lobby name : "+lobbyName);
     }
 
     public void clientHasLeft(Client client) {

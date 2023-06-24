@@ -20,6 +20,7 @@ import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
 import it.polimi.myshelfie.network.ServerConnectionHandler;
 import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.utils.ServerLogger;
 import it.polimi.myshelfie.view.ViewType;
 
 
@@ -27,6 +28,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class GameControllerImpl implements GameController, ChatController{
 
@@ -35,20 +37,26 @@ public class GameControllerImpl implements GameController, ChatController{
     private final ControllerImpl controller;
     private Map<String,Client> clientsMap;
     private Map<String,ClientExceptionsNotifier> exceptionsNotifiersMap;
+    private Map<String,ServerConnectionHandler> connectionHandlersMap;
     private Map<String, Observer<ChatEvent, PlayerChatModelView>> chatObserverMap;
     private final Map<String, Observer<GameEvent, GameModelView>> gameObserverMap;
+    private final String gameName;
+    private boolean closed;
 
     /**
      * Constructor for the GameControllerImpl class.
      * @param gameModel the model associated to the game.
      * @param chatModel the model associated to the game chat.
+     * @param gameName the name of the game.
      */
-    public GameControllerImpl(ControllerImpl controller, GameModel gameModel, ChatModel chatModel){
+    public GameControllerImpl(ControllerImpl controller, GameModel gameModel, ChatModel chatModel,String gameName){
         this.controller = controller;
         this.gameModel = gameModel;
         this.chatModel = chatModel;
+        this.gameName = gameName;
         this.clientsMap = new HashMap<>();
         this.exceptionsNotifiersMap = new HashMap<>();
+        this.connectionHandlersMap = new HashMap<>();
         this.gameObserverMap = new HashMap<>();
         this.chatObserverMap = new HashMap<>();
     }
@@ -63,6 +71,7 @@ public class GameControllerImpl implements GameController, ChatController{
                         Map<String, ClientExceptionsNotifier> notifiersMap){
         this.clientsMap = clientsMap;
         this.exceptionsNotifiersMap = notifiersMap;
+        this.connectionHandlersMap = connectionHandlersMap;
         this.chatObserverMap = new HashMap<>();
         for(ServerConnectionHandler sch : connectionHandlersMap.values()){
             try {
@@ -72,44 +81,66 @@ public class GameControllerImpl implements GameController, ChatController{
                 throw new RuntimeException(e);
             }
         }
+        closed = false;
         gameModel.setState(GameState.FIRST_DRAW);
     }
 
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) {
+        if(closed) {
+            ServerLogger.log(Level.FINEST,"Player draw fail. Game Closed. Game name : "+gameName+" | Player drawing : "+playerName);
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Game Closed"));
+            return;
+        }
         GameState currentGameState = gameModel.getState();
         if(currentGameState != GameState.DRAW && currentGameState != GameState.LAST_DRAW) return;
         try {
             gameModel.drawTiles(positions, playerName);
+            ServerLogger.log(Level.FINEST,"Player draws. Game name : "+gameName+" | Player drawing : "+playerName + " | Drawn positions : "+positions);
             if(gameModel.getState()==GameState.DRAW) gameModel.setState(GameState.ORGANIZE);
             else gameModel.setState(GameState.LAST_ORGANIZE);
         } catch (InvalidParameterException e) {
+            ServerLogger.log(Level.FINEST,"Player draw fail. Game name : "+gameName+" | Player drawing : "+playerName + " | Drawn positions : "+positions);
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
     }
 
     @Override
     public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
+        if(closed) {
+            ServerLogger.log(Level.FINEST,"Player organize fail. Game Closed. Game name : "+gameName+" | Player drawing : "+playerName);
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Game Closed"));
+            return;
+        }
         GameState currentGameState = gameModel.getState();
         if(currentGameState != GameState.ORGANIZE && currentGameState != GameState.LAST_ORGANIZE) return;
         try {
             gameModel.orderChosenTiles(orderedTiles, playerName);
             if(currentGameState==GameState.ORGANIZE) gameModel.setState(GameState.INSERT);
             else gameModel.setState(GameState.LAST_INSERT);
+            ServerLogger.log(Level.FINEST,"Player organizes. Game name : "+gameName+" | Player organizing : "+playerName+" | Organized tiles : "+orderedTiles);
         } catch (InvalidParameterException e) {
+            ServerLogger.log(Level.FINEST,"Player organize fail. Game name : "+gameName+" | Player organizing : "+playerName+" | Organized tiles : "+orderedTiles);
             exceptionsNotifiersMap.get(playerName).notifyException(e);
         }
     }
 
     @Override
     public synchronized void insertTiles(String playerName, int column) {
+        if(closed) {
+            ServerLogger.log(Level.FINEST,"Player insert fail. Game Closed. Game name : "+gameName+" | Player drawing : "+playerName);
+            exceptionsNotifiersMap.get(playerName).notifyException(new Exception("Game Closed"));
+            return;
+        }
         GameState currentGameState = gameModel.getState();
         if(currentGameState != GameState.INSERT && currentGameState != GameState.LAST_INSERT) return;
         try {
             gameModel.insertTiles(playerName, column);
             if(currentGameState == GameState.INSERT) gameModel.setState(GameState.COUNTING_POINTS);
             else gameModel.setState(GameState.LAST_COUNTING_POINTS);
+            ServerLogger.log(Level.FINEST,"Player inserts. Game name : "+gameName+" | Player organizing : "+playerName+" | Chosen column : "+column);
         } catch (InvalidParameterException | FullColumnException e) {
+            ServerLogger.log(Level.FINEST,"Player insert fail. Game name : "+gameName+" | Player organizing : "+playerName+" | Chosen column : "+column);
             exceptionsNotifiersMap.get(playerName).notifyException(e);
             return;
         }
@@ -155,6 +186,8 @@ public class GameControllerImpl implements GameController, ChatController{
                 c.send(new NetworkMessage(ViewType.WIN));
             } catch (RemoteException ignored) {}
         }
+        closed = true;
+        ServerLogger.log(Level.FINE,"Game ended. Game name : "+gameName);
     }
     @Override
     public synchronized void addGameObserver(String playerName, Observer<GameEvent, GameModelView>networkGameObserver) {
@@ -169,11 +202,14 @@ public class GameControllerImpl implements GameController, ChatController{
             return;
         }
         clientsMap.remove(disconnectedPlayerName);
+        connectionHandlersMap.remove(disconnectedPlayerName);
         //notifying non disconnected clients
         for(String player : clientsMap.keySet()){
             new Thread(()->{
                 try {
                     exceptionsNotifiersMap.get(player).notifyException(new DisconnectionException(disconnectedPlayerName));
+                    connectionHandlersMap.get(player).setGameController(null);
+                    connectionHandlersMap.get(player).setChatController(null);
                     clientsMap.get(player).send(new NetworkMessage(ViewType.DISCONNECTION));
                 } catch (RemoteException ignored) {
                 }
@@ -183,11 +219,24 @@ public class GameControllerImpl implements GameController, ChatController{
         //removing observers
         gameModel.removeGameObservers();
         chatModel.removeChatObservers();
+        closed = true;
+        ServerLogger.log(Level.FINE, "Game shutdown after disconnection. Game name : "+gameName+" | Player disconnected : "+disconnectedPlayerName);
     }
 
     @Override
     public synchronized void leaveEndGame(String username, boolean fromDisconnection) {
+        if(gameModel.getState()!=GameState.WIN){
+            ServerLogger.log(Level.FINEST,"Player leave end game fail. Not in end game. Game name : "+gameName+" | Player name : "+username);
+            exceptionsNotifiersMap.get(username).notifyException(new Exception("Not in end game"));
+            return;
+        }
         if(!fromDisconnection){
+            try {
+                connectionHandlersMap.get(username).setGameController(null);
+                connectionHandlersMap.get(username).setChatController(null);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
             Client client = clientsMap.get(username);
             new Thread(()->{
                 try {
@@ -202,10 +251,14 @@ public class GameControllerImpl implements GameController, ChatController{
         chatObserverMap.remove(chatObserverMap.get(username));
         controller.clientHasLeft(clientsMap.get(username));
         clientsMap.remove(username);
+        if(!fromDisconnection) ServerLogger.log(Level.FINE, "Player left end game. Game name : "+gameName+" | Player disconnected : "+username);
+        else ServerLogger.log(Level.FINE, "Player disconnected from end game. Game name : "+gameName+" | Player disconnected : "+username);
     }
 
     @Override
     public synchronized void addMessage(String playerName, Message message){
+        ServerLogger.log(Level.FINEST,"Player sent game chat message. Game name : "+gameName+" | Player chatting : " +playerName +
+                " | Message : "+message.getSender()+"->"+message.getReceiver()+" :: "+message.getMessage());
         chatModel.addMessage(message);
     }
 

@@ -5,6 +5,7 @@ import it.polimi.myshelfie.controller.interfaces.Controller;
 import it.polimi.myshelfie.controller.interfaces.GameController;
 import it.polimi.myshelfie.controller.interfaces.LobbyController;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+import it.polimi.myshelfie.utils.ServerLogger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -33,7 +34,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
     public void start() throws RemoteException {
         client.handshake(this);
-        System.out.println(hostName +" | ID : "+clientID+" connected");
+        ServerLogger.logClientInfo(this,"Connected");
         //RMI disconnection detection
         new Thread(()->{
             try {
@@ -41,7 +42,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             } catch (RemoteException e) {
                 try {
                     if(!connected) return;
-                    System.out.println(hostName +" | ID : "+clientID+" Closing connection...");
+                    ServerLogger.logClientInfo(this,"Lifeline failed. Closing connection...");
                     close();
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
@@ -122,7 +123,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         if(gameController!=null) gameController.disconnectFromGame(playerName);
         else if(lobbyController!=null) lobbyController.exitLobby(playerName);
         connected = false;
-        System.out.println(hostName +" | ID : "+clientID+" Disconnected");
+        ServerLogger.logClientInfo(this,"Disconnected");
     }
 
     @Override
@@ -130,12 +131,13 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         if(!connected) throw new RemoteException();
         this.timeOutTimer.cancel();
         this.timeOutTimer = new Timer();
+        ServerConnectionHandlerImpl connectionHandler = this;
         this.timeOutTimer.schedule(new TimerTask() {
             @Override
             public void run() {
             try {
                 if(!connected) return;
-                System.out.println(hostName +" | ID : "+clientID+" timed out. Closing Connection...");
+                ServerLogger.logClientInfo(connectionHandler,"Timed Out, Closing Connection...");
                 close();
             } catch (RemoteException ignored) {
             }

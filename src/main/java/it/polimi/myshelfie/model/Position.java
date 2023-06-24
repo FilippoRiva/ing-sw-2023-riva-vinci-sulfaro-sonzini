@@ -82,4 +82,9 @@ public class Position implements Serializable{
         if(maxX == minX && maxY-minY+1 != sortedPositions.size()) return true; //vertical line but not consecutive
         return maxY == minY && maxX - minX + 1 != sortedPositions.size(); //horizontal line but not consecutive
     }
+
+    @Override
+    public String toString(){
+        return "["+this.getX()+","+this.getY()+"]";
+    }
 }
