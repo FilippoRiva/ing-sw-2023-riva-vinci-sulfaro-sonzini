@@ -41,6 +41,7 @@ public class GameController{
         gameOverlay.setVisible(true);
         //gameOverlay.setMouseTransparent(true);
         gameOverlayController.initialize(this);
+        //gameOverlayController.setKeyListeners();
         gamePanelController.initialize(this);
         endGameController.initialize(this);
         CustomBindings.bindSize(backgroundImage,stage.widthProperty(),stage.heightProperty());
@@ -51,8 +52,6 @@ public class GameController{
         //default visible panels
         endGame.setVisible(false);
         endGame.setMouseTransparent(true);
-        //gameOverlay.setVisible(true); //TODO
-        //gameOverlay.setMouseTransparent(false);
         gamePanel.setVisible(true);
         gamePanel.setMouseTransparent(false);
         //AutoPlayer Activation
@@ -62,21 +61,25 @@ public class GameController{
         gamePanelController.setState(viewManager.getGameModelView().getCurrentState());
         gamePanelController.leftBookshelfController.loadLeft();
         gamePanelController.rightBookshelfController.loadRight();
-        gamePanelController.livingRoomController.reloadGrid();
+        gamePanelController.livingRoomController.loadGrid();
         gameOverlayController.gameStart();
         setKeyListeners(GraphicalUI.stage);
     }
 
     private void setKeyListeners(Stage stage){
         stage.getScene().setOnKeyPressed((keyEvent)->{});
-        gamePanelController.livingRoomController.reloadGrid();
+        gamePanelController.livingRoomController.loadGrid();
     }
 
     public void win() {
     }
 
     public void update() {
-        gamePanelController.setState(viewManager.getCurrentStateDiff()); //this reloads game panel elements
+        GameState currentState = viewManager.getCurrentStateDiff();
+
+        gamePanelController.setState(currentState); //this reloads game panel elements
+        if(currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
+            gameOverlayController.startTurn();
         if(viewManager.getCurrentStateDiff()== GameState.WIN){
             Animations.timer(()->{
                 gameOverlay.setMouseTransparent(true);
@@ -92,6 +95,7 @@ public class GameController{
     }
 
     public void updateChat() {
+        gameOverlayController.chatController.addChatMessage();
     }
 
     public void displayError(String message) {
