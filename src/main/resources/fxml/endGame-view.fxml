@@ -21,7 +21,7 @@
             <VBox alignment="CENTER" spacing="50.0">
                <children>
                     <Label fx:id="lobbyNameLabel" alignment="CENTER" prefHeight="71.0" text="Lobby Name" textAlignment="CENTER" />
-                  <HBox alignment="BOTTOM_CENTER">
+                  <HBox alignment="BOTTOM_CENTER" spacing="10.0">
                      <children>
                         <StackPane>
                            <children>
@@ -30,7 +30,7 @@
                                     <Image url="@../images/endGame/silverPodium.png" />
                                  </image>
                                  <viewport>
-                                    <Rectangle2D height="570.0" minX="135.0" width="369.0" />
+                                    <Rectangle2D />
                                  </viewport>
                               </ImageView>
                                 <Label fx:id="player2" alignment="CENTER" prefHeight="42.0" prefWidth="163.0" style="-fx-font-size: 30; -fx-text-fill: white;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
@@ -51,7 +51,7 @@
                                     <Image url="@../images/endGame/goldPodium.png" />
                                  </image>
                                  <viewport>
-                                    <Rectangle2D height="605.0" minX="180.0" minY="47.0" width="369.0" />
+                                    <Rectangle2D />
                                  </viewport>
                               </ImageView>
                                 <Label fx:id="player1" alignment="CENTER" prefHeight="42.0" prefWidth="163.0" style="-fx-font-size: 30; -fx-text-fill: white;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
@@ -72,7 +72,7 @@
                                     <Image url="@../images/endGame/bronzePodium.png" />
                                  </image>
                                  <viewport>
-                                    <Rectangle2D height="475.0" minX="85.0" width="369.0" />
+                                    <Rectangle2D />
                                  </viewport>
                               </ImageView>
                                 <Label fx:id="player3" alignment="CENTER" prefHeight="42.0" prefWidth="163.0" style="-fx-font-size: 30; -fx-text-fill: white;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
