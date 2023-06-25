@@ -1,34 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController">
+<StackPane fx:id="fullStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController">
    <children>
-      <HBox AnchorPane.topAnchor="0.0">
+      <VBox fx:id="playersListVbox" StackPane.alignment="TOP_LEFT">
+         <StackPane.margin>
+            <Insets left="10.0" top="10.0" />
+         </StackPane.margin>
+      </VBox>
+      <Label fx:id="playingLabel" text="Playing" StackPane.alignment="TOP_CENTER">
+         <StackPane.margin>
+            <Insets top="20.0" />
+         </StackPane.margin>
+      </Label>
+      <HBox fx:id="commonGoalsHBox" alignment="BOTTOM_CENTER" spacing="20.0" StackPane.alignment="BOTTOM_CENTER">
          <children>
-            <VBox fx:id="scoresVbox" alignment="TOP_CENTER">
+            <StackPane>
                <children>
-                  <Label text="Scores" VBox.vgrow="ALWAYS" />
+                  <ImageView fx:id="commonGoal1" pickOnBounds="true" preserveRatio="true" />
+                  <StackPane fx:id="tokens1" mouseTransparent="true" />
                </children>
-            </VBox>
-            <Region prefHeight="200.0" prefWidth="200.0" />
-            <Label text="Label" />
-            <Region />
+            </StackPane>
+            <StackPane>
+               <children>
+                  <ImageView fx:id="commonGoal2" pickOnBounds="true" preserveRatio="true" />
+                  <StackPane fx:id="tokens2" mouseTransparent="true" />
+               </children>
+            </StackPane>
          </children>
+         <StackPane.margin>
+            <Insets bottom="10.0" />
+         </StackPane.margin>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0">
-         <children>
-            <fx:include fx:id="chatPane" source="chat-view.fxml" />
-            <ImageView fx:id="commonGoal1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="commonGoal2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="personalGoal" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </HBox>
+      <ImageView fx:id="personalGoal" onMouseEntered="#showPersonalGoal" onMouseExited="#hidePersonalGoal" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+         <StackPane.margin>
+            <Insets left="20.0" />
+         </StackPane.margin>
+      </ImageView>
+      <fx:include fx:id="chat" source="chat-view.fxml" StackPane.alignment="BOTTOM_RIGHT" />
    </children>
-</AnchorPane>
+</StackPane>

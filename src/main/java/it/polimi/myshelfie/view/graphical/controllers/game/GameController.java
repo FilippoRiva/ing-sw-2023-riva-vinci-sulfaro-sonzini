@@ -18,7 +18,7 @@ public class GameController{
     @FXML
     protected AnchorPane endGame;
     @FXML
-    protected AnchorPane gameOverlay;
+    protected StackPane gameOverlay;
     @FXML
     protected AnchorPane gamePanel;
     @FXML
@@ -38,8 +38,8 @@ public class GameController{
         Stage stage = GraphicalUI.stage;
         endGame.setVisible(false);
         endGame.setMouseTransparent(true);
-        gameOverlay.setVisible(false);
-        gameOverlay.setMouseTransparent(true);
+        gameOverlay.setVisible(true);
+        //gameOverlay.setMouseTransparent(true);
         gameOverlayController.initialize(this);
         gamePanelController.customInitialize();
         endGameController.customInitialize();
@@ -51,8 +51,6 @@ public class GameController{
         //default visible panels
         endGame.setVisible(false);
         endGame.setMouseTransparent(true);
-        //gameOverlay.setVisible(true); //TODO
-        //gameOverlay.setMouseTransparent(false);
         gamePanel.setVisible(true);
         gamePanel.setMouseTransparent(false);
         //AutoPlayer Activation
@@ -63,6 +61,7 @@ public class GameController{
         gamePanelController.leftBookshelfController.loadLeft();
         gamePanelController.rightBookshelfController.loadRight();
         gamePanelController.livingRoomController.loadGrid();
+        gameOverlayController.gameStart();
         setKeyListeners(GraphicalUI.stage);
     }
 
@@ -74,7 +73,11 @@ public class GameController{
     }
 
     public void update() {
-        gamePanelController.setState(viewManager.getCurrentStateDiff()); //this reloads game panel elements
+        GameState currentState = viewManager.getCurrentStateDiff();
+
+        gamePanelController.setState(currentState); //this reloads game panel elements
+        if(currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
+            gameOverlayController.startTurn();
         if(viewManager.getCurrentStateDiff()== GameState.WIN){
             Animations.timer(()->{
                 gameOverlay.setMouseTransparent(true);
@@ -90,6 +93,7 @@ public class GameController{
     }
 
     public void updateChat() {
+        gameOverlayController.chatController.addChatMessage();
     }
 
     public void displayError(String message) {
