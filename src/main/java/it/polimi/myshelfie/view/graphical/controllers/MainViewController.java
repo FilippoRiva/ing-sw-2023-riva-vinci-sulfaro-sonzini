@@ -162,7 +162,7 @@ public class MainViewController implements Initializable {
 
     private void setKeyListener(){
         GraphicalUI.stage.getScene().addEventFilter(KeyEvent.KEY_PRESSED,(KeyEvent keyEvent)->{
-            System.out.println("Pressed : "+keyEvent.getText());
+            //System.out.println("Pressed : "+keyEvent.getText());
             switch (currentState){
                 case INIT -> preGameController.homeController.processKeyEvent(keyEvent);
                 case JOIN -> preGameController.joinController.processKeyEvent(keyEvent);

@@ -76,7 +76,6 @@ public class GameOverlayController {
 
     public void gameStart() {
         chatController.initGameOverlay(this);
-        if(chatController.isChatVisible()) chatController.setChatVisible(true);
 
         List<CommonGoalModelView> commonGoals = viewManager.getGameModelView().getCommonGoals();
         int idPersonalGoal = viewManager.getGameModelView().getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getId();
