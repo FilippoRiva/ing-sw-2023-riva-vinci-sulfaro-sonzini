@@ -228,7 +228,6 @@ public class BookshelfController {
     }
 
     public void addToken(Token token,boolean visible){
-        int stackSize = commonGoalTokensStack.getChildren().size()-1;
         TokenImageView tokenImage = new TokenImageView(token);
         Animation animation;
         if(visible){
@@ -242,8 +241,8 @@ public class BookshelfController {
         tokenImage.setPreserveRatio(true);
         CustomBindings.bindSize(tokenImage,stage.widthProperty().divide(25),stage.heightProperty().divide(15));
         CustomBindings.bindTranslate(tokenImage,
-                tokenImage.fitWidthProperty().divide(2).multiply(stackSize),
-                tokenImage.fitWidthProperty().divide(2).multiply(stackSize));
+                tokenImage.fitWidthProperty().divide(2).multiply(tokenStack.size()),
+                tokenImage.fitWidthProperty().divide(2).multiply(tokenStack.size()));
         Platform.runLater(()-> {
             commonGoalTokensStack.getChildren().add(tokenImage);
             animation.play();
@@ -327,6 +326,7 @@ public class BookshelfController {
     }
 
     public void loadTokens() {
+        if(left && !playerName.getText().equals(viewManager.getLastPlayer())) return;
         List<Token> newTokens = viewManager.getLastPlayerTokenDiff();
         for(Token t : newTokens){
             addToken(t,true);
