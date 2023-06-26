@@ -363,12 +363,11 @@ public class ViewManager extends View {
     }
 
     private void resetBuffer(){
+        this.oldGameModelView = fullGameModelView;
         this.fullGameModelView = null;
         this.gameDifferences = null;
-        this.oldGameModelView = null;
         this.lobbyModelView = null;
         this.playerChatModelView = null;
-        this.disconnectedClientExceptionsNotifierView = null;
     }
 
     @Override
@@ -382,7 +381,7 @@ public class ViewManager extends View {
                         } catch (InterruptedException ignored) {
                         }
                     }
-                    resetBuffer();
+                    this.resetBuffer();
                 }
                 case LOBBY -> {
                     while (lobbyModelView == null) { //waits until lobbyModelView != null
@@ -415,6 +414,7 @@ public class ViewManager extends View {
                         } catch (InterruptedException ignored) {
                         }
                     }
+                    this.resetBuffer();
                 }
             }
             this.viewType = viewType;
@@ -555,7 +555,8 @@ public class ViewManager extends View {
      * @return the list of the players that have changed their points compared to the last game update.
      */
     public synchronized List<PlayerModelView> getPlayersPointsDiff(){
-        return gameDifferences.getPlayers().stream().filter(x->x.getPoints()!=-1).toList();
+        if(gameDifferences!=null) return gameDifferences.getPlayers().stream().filter(x->x.getPoints()!=-1).toList();
+        return new ArrayList<>();
     }
 
     /**
@@ -571,8 +572,8 @@ public class ViewManager extends View {
      * @return the tokens that the last player has earned in the last game update
      */
     public synchronized List<Token> getLastPlayerTokenDiff(){
-        if(oldGameModelView==null) return new ArrayList<>();
-        return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTokens();
+        if(oldGameModelView!=null && gameDifferences!=null) return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTokens();
+        return new ArrayList<>();
     }
 
     /**
@@ -583,18 +584,23 @@ public class ViewManager extends View {
     }
 
     public synchronized List<ItemTile> getCurrentPlayerInsertedTiles(){
-        return oldGameModelView.getCurrentPlayer().getTakenTiles();
+        if(oldGameModelView!=null)return oldGameModelView.getCurrentPlayer().getTakenTiles();
+        return new ArrayList<>();
     }
 
     public synchronized boolean hasCurrentPlayerInsertedTiles(){
-        return fullGameModelView.getCurrentPlayer().getTakenTiles().size()< oldGameModelView.getCurrentPlayer().getTakenTiles().size();
+        if(fullGameModelView!=null && oldGameModelView!=null) return fullGameModelView.getCurrentPlayer().getTakenTiles().size()< oldGameModelView.getCurrentPlayer().getTakenTiles().size();
+        return false;
     }
 
     public synchronized boolean isMyTurn(){
-        return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+        if(fullGameModelView!=null) return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+        else if(oldGameModelView!=null) return oldGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+        else return false;
     }
 
     public synchronized boolean areChosenTilesInvalid(List<Position> chosenTiles){
+        if(fullGameModelView==null) return false;
         if(chosenTiles.size()==0) return true;
         for(Position p : chosenTiles){
             if(!fullGameModelView.atLeastOneSideFree(p)) return true;
@@ -603,6 +609,7 @@ public class ViewManager extends View {
     }
 
     public boolean isThereEnoughBookshelfSpace(List<Position> tryChosenTiles) {
+        if(fullGameModelView==null) return false;
         ItemTile[][] bookshelf = fullGameModelView.getCurrentPlayer().getBookshelf();
         int width = bookshelf[0].length;
         for(int i = 0; i< width; i++){
@@ -623,6 +630,7 @@ public class ViewManager extends View {
     }
 
     public synchronized List<PlayerModelView> getPlayersOrderedByScores(){
+        if(fullGameModelView==null) return new ArrayList<>();
         return fullGameModelView.getPlayers().stream().sorted((x,y)->{
             if(x.getPoints()==y.getPoints()) return 0;
             else return x.getPoints()>=y.getPoints() ? -1:1 ;
