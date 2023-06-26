@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * This class allows to exit a lobby, add players to it, start the game if the player is the room owner and add observers.
+ * It allows to exit a lobby, add players to it, start the game if the player is the room owner and add observers.
  */
 public class LobbyControllerImpl implements LobbyController, ChatController{
 
@@ -208,9 +208,9 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
     /**
      * Adds a player to the game.
      * @param client represents the player.
-     * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
-     * @param exceptionsNotifier is the client exception notifier of this client.
-     * @param playerName is the name of the player that must be added to the lobby.
+     * @param connectionHandler the ServerConnectionHandler used for the player's connection.
+     * @param exceptionsNotifier the client exception notifier of this client.
+     * @param playerName the name of the player that must be added to the lobby.
      * @throws InvalidParameterException if one of the parameter passed is not valid.
      * @throws LobbyFullException if the lobby is full.
      */

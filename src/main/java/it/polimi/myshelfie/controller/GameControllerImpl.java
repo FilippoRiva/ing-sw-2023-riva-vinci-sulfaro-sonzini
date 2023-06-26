@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * This class allows to do the basic moves of the game, disconnect from a game, add the observers and is responsible for signaling the end turn and end game.
+ * It allows to do the basic moves of the game, disconnect from a game, add the observers and is responsible for signaling the end turn and end game.
  */
 public class GameControllerImpl implements GameController, ChatController{
 
@@ -65,7 +65,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     /**
-     * This method initializes the attributes of the GameControllerImpl class.
+     * Initializes the attributes of the GameControllerImpl class.
      * @param clientsMap the list of clients and their players.
      * @param connectionHandlersMap the list of connection handlers.
      * @param notifiersMap the list of the exceptions notifiers.
@@ -151,9 +151,9 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     /**
-     * This method process the end turn: it checks if the player achieved a common goal; checks if the living room is refillable;
+     * Processes the end turn: it checks if the player achieved a common goal; checks if the living room is refillable;
      * sets the next turn.
-     * @param playerName is the current player that has finished its turn.
+     * @param playerName the current player that has finished its turn.
      */
     private void endTurn(String playerName){
         gameModel.checkCommonGoal(playerName);
@@ -182,7 +182,7 @@ public class GameControllerImpl implements GameController, ChatController{
     }
 
     /**
-     * this method sets the end game state WIN
+     * Sets the end game state WIN.
      */
     private void endGame() {
         gameModel.calculateWinResults();

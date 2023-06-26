@@ -11,7 +11,7 @@ import it.polimi.myshelfie.utils.Observer;
 public interface ChatController {
     /**
      * Adds a message to the chat.
-     * @param message is a message written by a player and sent to one or more players.
+     * @param message the message written by a player and sent to one or more players.
      *
      */
     void addMessage(String playerName, Message message);

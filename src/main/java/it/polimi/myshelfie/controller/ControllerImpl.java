@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- *This class has a list of LobbiesControllers and Clients.
+ *It has a list of LobbiesControllers and Clients.
  *It allows to create or delete a lobby, add a client, join a lobby and connect the correct client who joined it and quit.
  */
 public class ControllerImpl implements Controller {
@@ -46,7 +46,7 @@ public class ControllerImpl implements Controller {
     }
 
     /**
-     * this method sets the model.
+     * Sets the model.
      * @param model is the model to set.
      */
     public void setModel(Model model){
@@ -166,10 +166,10 @@ public class ControllerImpl implements Controller {
      * Connects the client to a pre-existing lobby.
      * If the lobby doesn't exist it notifies the Client's ClientExceptionNotifier.
      *
-     * @param client is the client representing the player who's connecting.
-     * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
-     * @param playerName is the name of the player that wants to join this lobby.
-     * @param lobbyName is the name of the joined lobby.
+     * @param client the client representing the player who's connecting.
+     * @param connectionHandler the ServerConnectionHandler used for the player's connection.
+     * @param playerName the name of the player that wants to join this lobby.
+     * @param lobbyName the name of the joined lobby.
      * @return null if connection fails, the lobbyController otherwise
      */
     @Override
@@ -236,7 +236,7 @@ public class ControllerImpl implements Controller {
 
     /**
      * Removes a lobby from the lobby list.
-     * @param lobbyName is the name of the lobby that must be deleted.
+     * @param lobbyName the name of the lobby that must be deleted.
      */
     protected synchronized void deleteLobby(String lobbyName){
         if(!lobbiesControllers.containsKey(lobbyName)) return;
@@ -250,7 +250,7 @@ public class ControllerImpl implements Controller {
     }
 
     /**
-     * this method signals in the client list that one has left by changing its associated boolean to false.
+     * Signals in the client list that one has left by changing its associated boolean to false.
      * @param client the client who's left.
      */
     public void clientHasLeft(Client client) {
