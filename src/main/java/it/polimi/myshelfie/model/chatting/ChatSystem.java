@@ -88,6 +88,6 @@ public class ChatSystem implements ChatModel {
      * @param player is the name of a new player that has to be added to this chat system.
      */
     public void addPlayerToChat(String player){
-        playerChats.put(player,new PlayerChat(player));
+        playerChats.put(player,new PlayerChat());
     }
 }

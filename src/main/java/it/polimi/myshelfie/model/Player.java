@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Player {
     private final String name;
-    private ArrayList<EarnedPoint> earnedPoints;
+    private final ArrayList<EarnedPoint> earnedPoints;
     private final ArrayList<Token> obtainedTokens;
     private List<PersonalGoal> personalGoals;
     private Bookshelf bookshelf;
@@ -55,9 +55,6 @@ public class Player {
         return earnedPoints;
     }
 
-    public int getPoints(){
-        return earnedPoints.stream().mapToInt(EarnedPoint::getValue).sum();
-    }
     /**
      * @return the player name.
      */

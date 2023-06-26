@@ -26,7 +26,7 @@ public class Game implements GameModel, LobbyModel {
     private final ChatSystem chatSystem;
     private List<CommonGoal> commonGoals;
     private LivingRoom livingRoom;
-    private String lobbyName;
+    private final String lobbyName;
     private final ArrayList<Player> players;
     private String roomOwner;
 
@@ -46,7 +46,6 @@ public class Game implements GameModel, LobbyModel {
 
     @Override
     public synchronized void setGameConfig(GameConfig gameConfig) throws InvalidParameterException{
-        //if(isLobbyFull()) throw new Exception("lobby is full");
         if(gameConfig.getNumPlayers()< players.size()) throw new InvalidParameterException("too few players");
         this.gameConfig = gameConfig;
         lobbyObservable.setChanged();
@@ -79,7 +78,6 @@ public class Game implements GameModel, LobbyModel {
      * @return true or false.
      */
     private boolean isPlayerNameValid(String playerName) {
-        //TODO define rules for available characters in playerName
         for(Player p : players){
             if(p.getName().equals(playerName)){
                 return false;
@@ -235,36 +233,13 @@ public class Game implements GameModel, LobbyModel {
             if(!livingRoom.atLeastOneSideFree(p)) return false;
         }
 
-        return aligned(positions);
-    }
-
-    private boolean aligned(List<Position> positions){
-        if(positions.size()==1) return true;
-        int maxIndex = positions.size()-1;
-
-        //Should not affect the initial order for GUI
-        List<Position> sortedPositions = new ArrayList<>();
-        for(Position p : positions){
-            sortedPositions.add(new Position(p));
-        }
-
-        sortedPositions.sort(Comparator.comparingInt(Position::getX));
-        int maxX = sortedPositions.get(maxIndex).getX();
-        int minX = sortedPositions.get(0).getX();
-
-        sortedPositions.sort(Comparator.comparingInt(Position::getY));
-        int maxY = sortedPositions.get(maxIndex).getY();
-        int minY = sortedPositions.get(0).getY();
-
-        if(maxX != minX && maxY != minY) return false; //not in a line
-        if(maxX == minX && maxY-minY+1 != sortedPositions.size()) return false; //vertical line but not consecutive
-        return !(maxY == minY && maxX-minX+1 !=sortedPositions.size()); //horizontal line but not consecutive
+        return !Position.arePositionsMisaligned(positions);
     }
 
     @Override
     public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
         if(!playerName.equals(currentPlayer.getName())) throw new InvalidParameterException("player playing in the wrong turn");
-        if(orderedTiles.size()==0) { //keeping the order
+        if(orderedTiles==null || orderedTiles.size()==0) { //keeping the order
             return;
         }
         for(Player player : players) {
@@ -341,11 +316,6 @@ public class Game implements GameModel, LobbyModel {
     public GameModel getGameModel() {
         if(!hasStarted()) return null; //lobby has not been initialized
         return this;
-    }
-
-    @Override
-    public synchronized void setRoomOwner(String owner) {
-        this.roomOwner = owner;
     }
 
     /**

@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.pregame;
 
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.graphical.Animations;
@@ -29,8 +29,8 @@ public class HomeController {
         Effects.applyShadow(joinButton);
         Effects.applyShadow(createButton);
 
-        Animations.applyButtonAnimation(joinButton);
-        Animations.applyButtonAnimation(createButton);
+        Animations.applyHoverScaling(joinButton);
+        Animations.applyHoverScaling(createButton);
     }
     @FXML
     protected void onCreateChoice() {

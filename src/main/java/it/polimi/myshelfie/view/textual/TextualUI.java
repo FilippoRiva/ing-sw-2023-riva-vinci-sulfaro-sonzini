@@ -30,7 +30,7 @@ public class TextualUI implements UI {
      * this update is called when the buffer receives a new update from the server
      * It switches over the ViewUpdate event and updates the part of the view referring to that data
      *
-     * @param evt the ViewUpdate event passed by the ViewBuffer
+     * @param evt the ViewUpdate event passed by the viewManager
      */
     @Override
     public void update(ViewUpdate evt, Object unused) {

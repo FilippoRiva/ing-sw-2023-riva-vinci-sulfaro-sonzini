@@ -14,26 +14,14 @@
     -fx-opacity: 1;
 }
 
-.crash-button{
-    -fx-background-color: grey;
-    -fx-text-fill: black;
-    -fx-font-family: "Kristen ITC";
-    -fx-font-size: 20;
-    -fx-font-weight :bold;
-}
-
-.crash-label{
-    -fx-font-family: "Arial";
-    -fx-text-fill: red;
-}
-
 .label {
     -fx-font-family: "Kristen ITC";
     -fx-font-size: 40;
 }
 .error {
+    -fx-font-family: "Kristen ITC";
     -fx-text-fill: red;
-    -fx-font-size: 20;
+    -fx-font-size: 30;
 }
 
 .text-field {
@@ -89,7 +77,7 @@
 }
 
 .thEndGame {
-    -fx-font-family: "Arial Black";
+    -fx-font-family: "Kristen ITC";
     -fx-font-size: 15;
     -fx-font-weight: bold;
 }
@@ -105,4 +93,18 @@
 
 .choice-box > .label {
     -fx-font-size: 10;
+}
+
+.bookshelfPlayerName {
+    -fx-font-size: 35;
+}
+
+.confirmButtonLabel {
+    -fx-font-size: 15;
+}
+
+.darkWoodArrowButton {
+    -fx-background-image: url('../images/darkWoodArrow.png');
+    -fx-background-size: 70px;
+    -fx-background-position: center;
 }

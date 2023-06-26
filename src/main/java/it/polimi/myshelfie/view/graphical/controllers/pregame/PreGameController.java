@@ -1,4 +1,4 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.pregame;
 
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
@@ -36,19 +36,21 @@ public class PreGameController implements Initializable {
     @FXML
     ImageView logo;
     @FXML
+    Button exitButton;
+    @FXML
     protected ProgressIndicator progress;
     @FXML
     protected Button chatButton;
     @FXML
     protected Label notificationDot;
     @FXML
-    HomeController homeController;
+    public HomeController homeController;
     @FXML
-    JoinController joinController;
+    public JoinController joinController;
     @FXML
-    CreateController createController;
+    public CreateController createController;
     @FXML
-    LobbyController lobbyController;
+    public LobbyController lobbyController;
 
     InternalViewState page;
     StackPane lastSlideUp;
@@ -65,8 +67,9 @@ public class PreGameController implements Initializable {
         createController.initialize(banner,this);
         lobbyController.initialize(banner,this);
 
-        Animations.applyButtonAnimation(backButton);
-        Animations.applyButtonAnimation(chatButton);
+        Animations.applyHoverScaling(backButton);
+        Animations.applyHoverScaling(chatButton);
+        Animations.applyHoverScaling(exitButton);
 
         changePage(InternalViewState.INIT);
     }
@@ -77,7 +80,7 @@ public class PreGameController implements Initializable {
     public void stopLoading(){
         Platform.runLater(() -> progress.setVisible(false));
     }
-    protected void changePage(InternalViewState page){
+    public void changePage(InternalViewState page){
         if(page==this.page) return; //avoiding forced animations
         stopLoading();
         switch (page){
@@ -109,6 +112,7 @@ public class PreGameController implements Initializable {
                     notificationDot.setVisible(true);
                     notificationDot.setOpacity(0);
                 }
+                showButton(exitButton);
                 homeController.setKeyListeners();
             }
             case JOIN -> {
@@ -116,12 +120,14 @@ public class PreGameController implements Initializable {
                 showPane(join);
                 lastSlideUp = join;
                 showButton(backButton);
+                hideButton(exitButton);
                 joinController.setKeyListeners();
             }
             case CREATE -> {
                 showPane(create);
                 lastSlideUp = create;
                 showButton(backButton);
+                hideButton(exitButton);
                 createController.setKeyListeners();
             }
             case LOBBY -> {
@@ -137,8 +143,8 @@ public class PreGameController implements Initializable {
     }
 
     private void dualHidePane(StackPane pane, StackPane secondPane){
-        TranslateTransition tt = Animations.getSlideDownTransition(pane);
-        TranslateTransition tt2 = Animations.getSlideDownTransition(secondPane);
+        TranslateTransition tt = Animations.getSlideToBottom(pane);
+        TranslateTransition tt2 = Animations.getSlideToBottom(secondPane);
         tt.setOnFinished((finish)->{
             pane.setVisible(false);
             pane.setMouseTransparent(true);
@@ -152,7 +158,7 @@ public class PreGameController implements Initializable {
     }
     private void hidePane(StackPane pane){
         pane.setTranslateY(pane.getHeight());
-        TranslateTransition tt = Animations.getSlideDownTransition(pane);
+        TranslateTransition tt = Animations.getSlideToBottom(pane);
         tt.setOnFinished((finish)->{
             pane.setVisible(false);
             pane.setMouseTransparent(true);
@@ -163,7 +169,7 @@ public class PreGameController implements Initializable {
         pane.setTranslateY(pane.getHeight());
         pane.setVisible(true);
         pane.setMouseTransparent(false);
-        TranslateTransition tt = Animations.getSlideUpTransition(pane);
+        TranslateTransition tt = Animations.getSlideFromBottom(pane);
         tt.play();
     }
 
@@ -184,6 +190,11 @@ public class PreGameController implements Initializable {
             ViewManager.getInstance().exitRequest();
         }
         GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+    }
+
+    @FXML
+    public void onExitButtonClicked() {
+        System.exit(0);
     }
 
     public void displayError(String errorMessage){
@@ -231,6 +242,7 @@ public class PreGameController implements Initializable {
     }
 
     public void notifyNewMessage() {
+        lobbyController.chatController.addChatMessage();
         if(lobbyController.chatController.isChatVisible()) return;
         int prev = Integer.parseInt(notificationDot.getText());
         if(prev==0) {

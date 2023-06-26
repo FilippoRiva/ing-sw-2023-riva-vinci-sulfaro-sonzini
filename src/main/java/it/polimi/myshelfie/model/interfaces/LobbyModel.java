@@ -58,12 +58,6 @@ public interface LobbyModel {
     String getLobbyName();
 
     /**
-     * Set the room owner.
-     * @param owner is the name of the player who's the owner.
-     */
-    void setRoomOwner(String owner);
-
-    /**
      * Add a lobby observer.
      * @param obs is the observer to add.
      */

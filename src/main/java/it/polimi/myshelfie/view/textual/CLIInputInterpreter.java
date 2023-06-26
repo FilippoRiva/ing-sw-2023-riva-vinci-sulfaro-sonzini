@@ -24,9 +24,9 @@ public class CLIInputInterpreter {
     private final List<String> inputParameters;
 
     /**
-     * creates a CLIInputInterpreter that given an input string it interprets it, updates the view, and tells the viewBuffer
+     * creates a CLIInputInterpreter that given an input string it interprets it, updates the view, and tells the viewManager
      * to notify its observers.
-     * how a string is interpreted depends on how the UI and the ViewBuffer are set
+     * how a string is interpreted depends on how the UI and the viewManager are set
      * @param UI the UI this interpreter should look at to interpret user input
      */
     public CLIInputInterpreter(TextualUI UI, List<String> inputParameters){
@@ -95,12 +95,12 @@ public class CLIInputInterpreter {
                         case "chat" -> UI.setInternalViewState(InternalViewState.CHAT);
                         case "lobby" -> UI.setInternalViewState(InternalViewState.LOBBY);
                         case "+" -> {
-                            if (!viewManager.addPlayer()) {
+                            if (viewManager.addPlayer()) {
                                 UI.wrongInput();
                             }
                         }
                         case "-" -> {
-                            if (!viewManager.removePlayer()) {
+                            if (viewManager.removePlayer()) {
                                 UI.wrongInput();
                             }
                         }

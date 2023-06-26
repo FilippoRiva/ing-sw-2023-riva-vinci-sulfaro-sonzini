@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class EarnedPoint implements Serializable {
 
-    private PointType type;
-    private int value;
+    private final PointType type;
+    private final int value;
 
     public EarnedPoint(PointType type, int value) {
         this.type = type;

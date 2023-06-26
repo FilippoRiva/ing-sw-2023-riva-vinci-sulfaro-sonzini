@@ -16,7 +16,7 @@ public class NetworkInterfaceProvider {
         System.out.println("--------------------------------------------------------");
         System.out.println("You have not provided your own IP.\n"+
                 "Please provide your IP or press enter to use a random active network interface : ");
-        String input = "";
+        String input;
         try {
             input = new BufferedReader(new InputStreamReader(System.in)).readLine();
             if (!input.equals("") && !InetAddress.getByName(input).isReachable(1000)) {

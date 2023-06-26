@@ -10,29 +10,29 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.CreateController">
+<StackPane cache="true" cacheHint="SPEED" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.pregame.CreateController">
    <children>
-        <ImageView fx:id="backgroundClear" cache="true" cacheHint="SPEED" pickOnBounds="true">
+        <ImageView fx:id="backgroundClear" pickOnBounds="true">
             <Image url="@../images/lightWood.jpg" />
         </ImageView>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                    <Label prefHeight="90.0" prefWidth="400.0" text="Room name" textFill="#302f2f" />
-                    <TextField fx:id="lobbyNameField" prefHeight="90.0" prefWidth="600.0" promptText="Room name" />
+                    <Label cache="true" prefHeight="90.0" prefWidth="400.0" text="Room name" textFill="#302f2f" />
+                    <TextField fx:id="lobbyNameField" cache="true" cacheHint="SCALE" prefHeight="90.0" prefWidth="600.0" promptText="Room name" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                    <Label prefHeight="90.0" prefWidth="400.0" text="Player name" textFill="#302f2f" />
-                    <TextField fx:id="playerNameField" prefHeight="90.0" prefWidth="600.0" promptText="Player name" />
+                    <Label cache="true" prefHeight="90.0" prefWidth="400.0" text="Player name" textFill="#302f2f" />
+                    <TextField fx:id="playerNameField" cache="true" cacheHint="SCALE" prefHeight="90.0" prefWidth="600.0" promptText="Player name" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="CENTER" cache="true" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                <children>
-                    <Label fx:id="createErrorLabel" prefHeight="90.0" prefWidth="300.0" styleClass="error" text="error" textFill="RED" visible="false" />
-                  <Button fx:id="createButton" maxHeight="70.0" maxWidth="300.0" minHeight="90.0" minWidth="300.0" mnemonicParsing="false" onMouseClicked="#onCreateMouseClicked" prefHeight="70.0" prefWidth="300.0" styleClass="myButton" text="Create">
+                    <Label fx:id="createErrorLabel" cache="true" cacheHint="SPEED" prefHeight="90.0" prefWidth="300.0" styleClass="error" text="error" textFill="RED" visible="false" />
+                  <Button fx:id="createButton" cache="true" cacheHint="SCALE" maxHeight="70.0" maxWidth="300.0" minHeight="90.0" minWidth="300.0" mnemonicParsing="false" onMousePressed="#onCreateMouseClicked" prefHeight="70.0" prefWidth="300.0" styleClass="myButton" text="Create">
       </Button>
                </children>
                <VBox.margin>

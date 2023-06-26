@@ -4,9 +4,7 @@ import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalTwoLines extends CommonGoal{
-    private final int id = 5;
     /**
-     *
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 2 rows with all ItemTiles different, false otherwise
      *
@@ -26,7 +24,7 @@ public class CommonGoalTwoLines extends CommonGoal{
 
     @Override
     public int getId() {
-        return id;
+        return 5;
     }
 
     @Override

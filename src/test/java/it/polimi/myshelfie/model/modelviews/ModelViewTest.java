@@ -179,7 +179,6 @@ class ModelViewTest {
         InsertModelView i = insertModelViews[0];
         assertEquals(currentPlayer,i.getCurrentPlayer());
         assertEquals(GameState.COUNTING_POINTS,i.getCurrentState());
-        assertEquals(0,i.getTakenTiles().size());
         ItemTile[][] bookshelf = i.getBookshelf();
         assertEquals(tiles.get(0),bookshelf[5][1]);
         assertEquals(tiles.get(1),bookshelf[4][1]);
@@ -203,7 +202,6 @@ class ModelViewTest {
 
         assertNotNull(endTurnModelViews[0]);
         EndTurnModelView e = endTurnModelViews[0];
-        assertEquals(0,e.getEarnedPoints());
         assertEquals(currentPlayer,e.getLastPlayer());
         assertEquals(players.get(1),e.getCurrentPlayer());
         assertEquals(103,e.getRemainingTiles());

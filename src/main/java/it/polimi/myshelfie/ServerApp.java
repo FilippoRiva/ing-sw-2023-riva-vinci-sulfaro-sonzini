@@ -7,6 +7,7 @@ import it.polimi.myshelfie.network.ClientSkeleton;
 import it.polimi.myshelfie.network.ServerConnectionHandlerImpl;
 import it.polimi.myshelfie.network.ServerImpl;
 import it.polimi.myshelfie.utils.NetworkInterfaceProvider;
+import it.polimi.myshelfie.utils.ServerLogger;
 
 import java.io.IOException;
 import java.io.InvalidClassException;
@@ -14,10 +15,12 @@ import java.net.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.*;
 
 
 public class ServerApp {
     public static void main (String[] args){
+        ServerLogger.initialize();
         String serverIP = "";
         for(int i = 0; i < args.length; i++){
             if(args[i].equals("--rmi")){
@@ -73,6 +76,7 @@ public class ServerApp {
             throw new RuntimeException(e);
         }
         System.out.println("RMI server up and running");
+        System.out.println("--------------------------------------------------------");
     }
 
     public static void startSocket(Controller controller) {
@@ -92,32 +96,31 @@ public class ServerApp {
                                 clientSkeleton.receive(serverConnectionHandler);
                             }
                         } catch (InvalidClassException ignored){
-                            System.err.println("Receiving unknown messages from client.");
+                            ServerLogger.logClientInfo(serverConnectionHandler,"Receiving unknown messages from client. Forcing Disconnection");
                         } catch (IOException e) {
-                            assert serverConnectionHandler != null;
-                            System.out.println(serverConnectionHandler.hostName + " | ID : " + serverConnectionHandler.clientID + " Closing Socket");
+                            ServerLogger.log(Level.FINER,"Socket receive failed from "+socket.getInetAddress().getHostAddress());
                         } finally {
                             try {
                                 assert serverConnectionHandler != null;
                                 serverConnectionHandler.close();
                             } catch (RemoteException ignored) {
-                                System.out.println(serverConnectionHandler.hostName+" | ID : "+serverConnectionHandler.clientID+"Unable to close a Connection Handler after disconnection");
+                                ServerLogger.log(Level.WARNING,"Unable to close \""+serverConnectionHandler.hostName+" | ID : "+serverConnectionHandler.clientID+"\" Connection Handler after disconnection");
                             }
-                            System.out.println(serverConnectionHandler.hostName + " | ID : " + serverConnectionHandler.clientID + " Socket Closed");
+                            ServerLogger.logClientInfo(serverConnectionHandler,"Socket Closed");
                             try {
                                 socket.close();
                             } catch (IOException e) {
-                                System.out.println("Cannot close socket");
+                                ServerLogger.log(Level.WARNING,"Cannot close socket \""+serverConnectionHandler.hostName+"\"");
                             }
                         }
                     }).start();
                 } catch (IOException e){ //caught from ServerSocket accept
-                    System.out.println("Socket server failed");
+                    ServerLogger.log(Level.SEVERE,"Socket server failed");
                     running = false;
                 }
             }
         } catch (IOException e) { //caught from ServerSocket constructor
-            System.out.println("Unable to start socket server. The requested socket is already being used");
+            ServerLogger.log(Level.WARNING, "Unable to start socket server. The requested socket is already being used");
         }
     }
 }

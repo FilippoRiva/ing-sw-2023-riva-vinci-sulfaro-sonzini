@@ -1,13 +1,14 @@
 package it.polimi.myshelfie.view.graphical;
 
 
+import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.Region;
 
 public class Effects {
-    public static void applyShadow(Region region){
+    public static void applyShadow(Node node){
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(30);
-        region.setEffect(dropShadow);
+        node.setEffect(dropShadow);
+        node.setPickOnBounds(!node.isPickOnBounds());
     }
 }

@@ -1,36 +1,41 @@
-package it.polimi.myshelfie.view.graphical.controllers;
+package it.polimi.myshelfie.view.graphical.controllers.game;
 
 import it.polimi.myshelfie.model.EarnedPoint;
 import it.polimi.myshelfie.model.PointType;
 import it.polimi.myshelfie.model.Token;
-import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class EndGameController implements Initializable {
+public class EndGameController{
+    @FXML
+    protected ImageView secondPodiumImage;
+    @FXML
+    protected ImageView firstPodiumImage;
+    @FXML
+    protected ImageView thirdPodiumImage;
     @FXML
     protected Label lobbyNameLabel;
     @FXML
     protected GridPane detailsGrid;
     @FXML
     protected GridPane scoreboardGrid;
+    @FXML
+    protected StackPane detailsStack;
     @FXML
     protected Label player1;
     @FXML
@@ -45,18 +50,25 @@ public class EndGameController implements Initializable {
     protected Label points3;
     @FXML
     protected Button detailsButton;
+    @FXML
+    protected HBox mainHBox;
     Label[] pointsPodium;
     Label[] playersPodium;
     ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        FullGameModelView fullGameModelView = viewManager.getGameModelView();
+    public void customInitialize() {
+        CustomBindings.bindSize(mainHBox,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
+        CustomBindings.bindSize(firstPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+        CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+        CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+
+        playersPodium = new Label[]{player1, player2, player3};
+        pointsPodium = new Label[]{points1, points2, points3};
     }
 
-    public void setKeyListeners(Scene scene) {
+    public void setKeyListeners() {
+        Scene scene = GraphicalUI.stage.getScene();
         scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()){
                 case ESCAPE -> onBackArrowClick();
@@ -118,7 +130,7 @@ public class EndGameController implements Initializable {
     private Label createLabel(int value){
         Label label = new Label(String.valueOf(value));
         label.setAlignment(Pos.CENTER);
-        label.setStyle("-fx-font-size: 10");
+        label.setStyle("-fx-font-size: 20; -fx-text-fill: white");
 
         return label;
     }
@@ -145,15 +157,9 @@ public class EndGameController implements Initializable {
 
     public void update() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        FullGameModelView fullGameModelView = viewManager.getGameModelView();
-        playersPodium = new Label[]{player1, player2, player3};
-        pointsPodium = new Label[]{points1, points2, points3};
 
         //order players for taken points
-        List<PlayerModelView> players = fullGameModelView.getPlayers().stream().sorted((x,y)->{
-            if(x.getPoints()==y.getPoints()) return 0;
-            else return x.getPoints()>=y.getPoints() ? -1:1 ;
-        }).toList();
+        List<PlayerModelView> players = viewManager.getPlayersOrderedByScores();
 
         numPlayers = players.size();
 
@@ -172,5 +178,9 @@ public class EndGameController implements Initializable {
         }
 
         Platform.runLater(()->lobbyNameLabel.setText(lobbyModelView.getName()));
+    }
+
+    public void reset() {
+        //TODO
     }
 }

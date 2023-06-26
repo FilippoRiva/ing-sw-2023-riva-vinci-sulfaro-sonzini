@@ -5,13 +5,10 @@ import it.polimi.myshelfie.model.GameState;
 import it.polimi.myshelfie.model.ItemTile;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class InsertModelView implements Serializable, GameModelView {
     private final String currentPlayer;
     private final GameState currentState;
-    //TODO rimuovere queste tiles perchè sono sempre vuote e farle togliere alla view quando arriva questo messaggio
-    final private List<ItemTile> takenTiles;
     private final ItemTile[][] bookshelf;
 
 
@@ -20,14 +17,12 @@ public class InsertModelView implements Serializable, GameModelView {
         this.currentPlayer = game.getCurrentPlayer();
         this.currentState = game.getState();
         this.bookshelf = game.getPlayer(currentPlayer).getBookshelf().getBookshelfItems();
-        this.takenTiles = game.getPlayer(currentPlayer).getTakenTiles();
     }
 
     public String getCurrentPlayer() { return currentPlayer; }
 
     public GameState getCurrentState() { return currentState; }
 
-    public List<ItemTile> getTakenTiles() { return takenTiles; }
 
     public ItemTile[][] getBookshelf() { return bookshelf; }
 }

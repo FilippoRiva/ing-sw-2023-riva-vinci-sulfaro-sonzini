@@ -4,14 +4,18 @@ import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
-import it.polimi.myshelfie.view.graphical.GraphicalUI;
+import it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
@@ -35,12 +39,13 @@ public class ChatController implements Initializable {
     protected ImageView messagesBackgroundImage;
     @FXML
     protected StackPane chat;
-    ViewManager viewBuffer = ViewManager.getInstance();
+    ViewManager viewManager = ViewManager.getInstance();
     boolean chatIsOpen = false;
+    private GameOverlayController gameOverlayController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        CustomBindings.bindSize(chatScroll, GraphicalUI.stage.widthProperty().divide(3).subtract(20),null);
+        CustomBindings.bindSize(chatScroll, backgroundImage.fitWidthProperty().subtract(20),null);
         CustomBindings.bindSize(messagesVBox,chatScroll.minWidthProperty().subtract(20),null);
         CustomBindings.bindSize(backgroundImage,chat.minWidthProperty(),chat.minHeightProperty());
         CustomBindings.bindSize(messagesBackgroundImage,chatScroll.minWidthProperty(),chat.minHeightProperty().subtract(180));
@@ -49,7 +54,7 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    protected void setChatVisible(boolean value) {
+    public void setChatVisible(boolean value) {
         if(value){
             chatIsOpen = true;
             messageText.requestFocus();
@@ -62,18 +67,18 @@ public class ChatController implements Initializable {
         }
     }
     @FXML
-    protected void sendMessage() {
+    public void sendMessage() {
         String receiver;
         if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
         else receiver = receiverChoice.getValue();
 
         Message message = new Message(ViewManager.getUsername(), receiver, messageText.getText());
         Platform.runLater(() -> messageText.clear());
-        viewBuffer.sendChatMessage(message);
+        viewManager.sendChatMessage(message);
     }
 
-    protected void updateChoiceBox() {
-        List<String> players = new ArrayList<>(viewBuffer.getLobbyModelView().getPlayers());
+    public void updateChoiceBox() {
+        List<String> players = new ArrayList<>(viewManager.getLobbyModelView().getPlayers());
         players.remove(ViewManager.getUsername());
         players.add("Everyone");
 
@@ -85,10 +90,12 @@ public class ChatController implements Initializable {
     }
 
     public void addChatMessage() {
-        Message message = viewBuffer.getPlayerChatModelView().getLastMessage();
+        Message message = viewManager.getPlayerChatModelView().getLastMessage();
 
         //create default messagePane
         HBox messageBox = new HBox();
+        messageBox.setCache(true);
+        messageBox.setCacheHint(CacheHint.SPEED);
         Region emptySpace = new Region();
         HBox.setHgrow(emptySpace, Priority.ALWAYS);
         VBox singleMessageVBox = new VBox();
@@ -139,5 +146,15 @@ public class ChatController implements Initializable {
 
     public void reset() {
         Platform.runLater(()->messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));
+    }
+
+
+    public void toggleChat() {
+        if(gameOverlayController != null) gameOverlayController.toggleChatVisible();
+    }
+
+    public void initGameOverlay(GameOverlayController gameOverlayController) {
+        this.gameOverlayController = gameOverlayController;
+        updateChoiceBox();
     }
 }
