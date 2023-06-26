@@ -176,7 +176,7 @@ public class GamePanelController {
     public void setState(GameState state) {
         switch (state){
             case DRAW,LAST_DRAW -> {
-                if(vm.getLastPlayer().equals(ViewManager.getUsername())){
+                if(vm.getPreviousPlayer().equals(ViewManager.getUsername())){
                     rightBookshelfController.loadTokens();
                 } else {
                     leftBookshelfController.loadTokens();

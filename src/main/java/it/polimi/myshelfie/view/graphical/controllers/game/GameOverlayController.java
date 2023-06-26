@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.components.TokenImageView;
@@ -24,6 +25,8 @@ import java.util.List;
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 
 public class GameOverlayController {
+    @FXML
+    protected Label messageLabel;
     @FXML
     protected Label playingLabel;
     @FXML
@@ -57,6 +60,7 @@ public class GameOverlayController {
         CustomBindings.bindSize(fullStackPane, stage.widthProperty(), stage.heightProperty());
         fullStackPane.setPickOnBounds(false);
 
+        messageLabel.setMaxWidth(stage.getWidth()/3);
         CustomBindings.bindSize(playersListVbox, null, stage.heightProperty().divide(5));
 
         CustomBindings.bindSize(personalGoal, null, stage.heightProperty().divide(5).multiply(3));
@@ -72,6 +76,7 @@ public class GameOverlayController {
 
     public void gameStart() {
         chatController.initGameOverlay(this);
+        if(chatController.isChatVisible()) chatController.setChatVisible(true);
 
         List<CommonGoalModelView> commonGoals = viewManager.getGameModelView().getCommonGoals();
         int idPersonalGoal = viewManager.getGameModelView().getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getId();
@@ -88,8 +93,11 @@ public class GameOverlayController {
         tokens2.setTranslateX(commonGoal2.getFitHeight()/913*321);
         Platform.runLater(() -> {
             playingLabel.setText(viewManager.getGameModelView().getCurrentPlayerName());
+            int i = 1;
             for(PlayerModelView player : viewManager.getGameModelView().getPlayers()){
-                playersListVbox.getChildren().add(new Label(player.getName()));
+                Label label = new Label(i + ") " + player.getName());
+                playersListVbox.getChildren().add(label);
+                i++;
             }
 
             for (Token token : commonGoals.get(0).getTokens()) {
@@ -132,19 +140,24 @@ public class GameOverlayController {
 //    }
 
     public void startTurn() {
-        //tokens update
-        List<CommonGoalModelView> commonGoalModelViews = viewManager.getCommonGoalDiff();
-        if(!commonGoalModelViews.isEmpty()){
-            for(CommonGoalModelView common : commonGoalModelViews){
+        List<Token> tokens = viewManager.getLastPlayerTokenDiff();
+        if(!tokens.isEmpty()){
+            for(Token token : tokens){
                 Platform.runLater(() -> {
-                    if (common.getTokens().get(common.getTokens().size() - 1).getRomanNumeral() == 1)
+                    if (token.getRomanNumeral() == 0) {
+                        messageLabel.setText("Start last round");
+                    } else if (token.getRomanNumeral() == 1) {
                         tokens1.getChildren().remove(tokens1.getChildren().size() - 1);
-                    else
+                        messageLabel.setText("Took the token of the first common goal");
+                    } else if (token.getRomanNumeral() == 2) {
                         tokens2.getChildren().remove(tokens2.getChildren().size() - 1);
+                        messageLabel.setText("Took the token of the second common goal");
+                    }
+                    Animations.fadeIn(messageLabel).play();
+                    Animations.timer(() -> Animations.fadeOut(messageLabel).play(), 3000);
                 });
             }
         }
-
         Platform.runLater(() -> playingLabel.setText(viewManager.getCurrentPlayerDiff()));
     }
     @FXML
@@ -174,5 +187,8 @@ public class GameOverlayController {
     }
 
     public void reset() {
+        messageLabel.setText(null);
+        tokens1.getChildren().removeAll();
+        tokens2.getChildren().removeAll();
     }
 }

@@ -479,7 +479,7 @@ public class ViewManager extends View {
      *
      * @return the username of the player that was playing in the last game update
      */
-    public synchronized String getLastPlayer(){
+    public synchronized String getPreviousPlayer(){
         if(oldGameModelView==null) return "";
         return oldGameModelView.getCurrentPlayerName();
     }
