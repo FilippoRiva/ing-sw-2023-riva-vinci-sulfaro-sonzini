@@ -11,10 +11,10 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -65,37 +65,6 @@ public class LobbyController {
         Animations.applyHoverScaling(startButton);
 
         this.preGameController = preGameController;
-    }
-
-    public void setKeyListeners() {
-        Scene scene = GraphicalUI.stage.getScene();
-        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()){
-                case ENTER -> {
-                    if(chatController.isChatVisible()) chatController.sendMessage();
-                    else if (lobbyModelView.isRoomOwner(ViewManager.getUsername()) &&
-                            lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
-                        onStartMouseClicked();
-                }
-                case C -> {
-                    if(!chatController.isChatVisible()) preGameController.toggleChatVisible();
-                }
-                case ESCAPE -> {
-                    if(chatController.isChatVisible()) preGameController.toggleChatVisible();
-                    else {
-                        ViewManager.getInstance().exitRequest();
-                        GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
-                    }
-                }
-                case PLUS -> {
-                    if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMousePlusClicked();
-                }
-                case MINUS -> {
-                    if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMouseMinusClicked();
-                }
-            }
-        });
     }
 
     public void refresh(){
@@ -193,7 +162,39 @@ public class LobbyController {
         Platform.runLater(()->{
             lobbyNameLabel.setText("lobby");
             playersVBox.getChildren().clear();
+            startButton.setDisable(true);
         });
         chatController.reset();
+    }
+
+    public void processKeyEvent(KeyEvent keyEvent) {
+        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
+        switch (keyEvent.getCode()){
+            case ENTER -> {
+                if(chatController.isChatVisible()) chatController.sendMessage();
+                else if (lobbyModelView.isRoomOwner(ViewManager.getUsername()) &&
+                        lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
+                    onStartMouseClicked();
+            }
+            case C -> {
+                if(!chatController.isChatVisible()) preGameController.toggleChatVisible();
+            }
+            case ESCAPE -> {
+                if(chatController.isChatVisible()) preGameController.toggleChatVisible();
+                else {
+                    ViewManager.getInstance().exitRequest();
+                    GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+                }
+            }
+            case PLUS -> {
+                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMousePlusClicked();
+            }
+            case MINUS -> {
+                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMouseMinusClicked();
+            }
+            case S -> {
+                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) viewManager.startRequest();
+            }
+        }
     }
 }

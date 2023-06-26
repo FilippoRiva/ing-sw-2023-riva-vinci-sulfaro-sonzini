@@ -49,12 +49,12 @@ public class GameOverlayController {
     protected ImageView personalGoal;
 
     @FXML
-    protected ChatController chatController;
+    public ChatController chatController;
 
     ViewManager viewManager = ViewManager.getInstance();
     Stage stage;
 
-    public void initialize(GameController gameController){
+    public void customInitialize(){
         stage = GraphicalUI.stage;
 
         CustomBindings.bindSize(fullStackPane, stage.widthProperty(), stage.heightProperty());
@@ -121,37 +121,19 @@ public class GameOverlayController {
         return tokenImageView;
     }
 
-//    public void setKeyListeners() {
-//        Scene scene = GraphicalUI.stage.getScene();
-//
-//        scene.setOnKeyPressed(keyEvent -> {
-//            switch (keyEvent.getCode()){
-//                case ENTER -> {
-//                    if(chatController.isChatVisible()) chatController.sendMessage();
-//                }
-//                case C -> {
-//                    if(!chatController.isChatVisible()) toggleChatVisible();
-//                }
-//                case ESCAPE -> {
-//                    if(chatController.isChatVisible()) toggleChatVisible();
-//                }
-//            }
-//        });
-//    }
-
     public void startTurn() {
         List<Token> tokens = viewManager.getLastPlayerTokenDiff();
         if(!tokens.isEmpty()){
             for(Token token : tokens){
                 Platform.runLater(() -> {
                     if (token.getRomanNumeral() == 0) {
-                        messageLabel.setText("Start last round");
+                        messageLabel.setText("Last round");
                     } else if (token.getRomanNumeral() == 1) {
                         tokens1.getChildren().remove(tokens1.getChildren().size() - 1);
-                        messageLabel.setText("Took the token of the first common goal");
+                        messageLabel.setText("Earned a token from the first common goal");
                     } else if (token.getRomanNumeral() == 2) {
                         tokens2.getChildren().remove(tokens2.getChildren().size() - 1);
-                        messageLabel.setText("Took the token of the second common goal");
+                        messageLabel.setText("Earned a token from the second common goal");
                     }
                     Animations.fadeIn(messageLabel).play();
                     Animations.timer(() -> Animations.fadeOut(messageLabel).play(), 3000);
@@ -180,15 +162,13 @@ public class GameOverlayController {
         chat.setTranslateY(0);
         chatController.setChatVisible(true);
         //reset notificationCounter
-//        if(notificationDot.getText().equals("0")) return;
-//        Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));
-//        a.setOnFinished((evt)-> Platform.runLater(()->notificationDot.setText("0")));
-//        a.play();
     }
 
     public void reset() {
         messageLabel.setText(null);
-        tokens1.getChildren().removeAll();
-        tokens2.getChildren().removeAll();
+        tokens1.getChildren().removeAll(tokens1.getChildren());
+        tokens2.getChildren().removeAll(tokens2.getChildren());
+        playersListVbox.getChildren().removeAll(playersListVbox.getChildren());
+        chatController.reset();
     }
 }

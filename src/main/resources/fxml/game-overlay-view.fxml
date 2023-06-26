@@ -9,17 +9,17 @@
 
 <StackPane fx:id="fullStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController">
    <children>
-      <VBox fx:id="playersListVbox" fillWidth="false" StackPane.alignment="TOP_LEFT">
+      <VBox fx:id="playersListVbox" fillWidth="false" mouseTransparent="true" StackPane.alignment="TOP_LEFT">
          <StackPane.margin>
             <Insets left="10.0" top="10.0" />
          </StackPane.margin>
       </VBox>
-      <Label fx:id="playingLabel" text="Playing" StackPane.alignment="TOP_CENTER">
+      <Label fx:id="playingLabel" mouseTransparent="true" text="Playing" StackPane.alignment="TOP_CENTER">
          <StackPane.margin>
             <Insets top="20.0" />
          </StackPane.margin>
       </Label>
-      <Label fx:id="messageLabel" wrapText="true" StackPane.alignment="TOP_RIGHT">
+      <Label fx:id="messageLabel" mouseTransparent="true" wrapText="true" StackPane.alignment="TOP_RIGHT">
          <StackPane.margin>
             <Insets right="10.0" top="10.0" />
          </StackPane.margin>

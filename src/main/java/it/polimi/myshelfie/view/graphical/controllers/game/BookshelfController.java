@@ -67,9 +67,6 @@ public class BookshelfController {
     @FXML
     protected Label column5Insert;
     private Label[] columnInserts;
-    private List<TokenImageView> tokenStack;
-    private int currentPlayerPos;
-    private final ViewManager viewManager = ViewManager.getInstance();
     private final float bookshelfImageWidth = 1413;
     private final float bookshelfImageHeight = 1410;
     private final float tileImageSize = 168;
@@ -86,11 +83,14 @@ public class BookshelfController {
     private final float gridYTranslateToBookshelfHeight = bookshelfTranslationY/bookshelfImageHeight;
     private final float gridWidthToBookshelfWidth = gridWidth/bookshelfImageWidth;
     private final float gridHeightToBookshelfHeight = gridHeight /bookshelfImageHeight;
+    private final ViewManager viewManager = ViewManager.getInstance();
     private boolean left;
+    private List<TokenImageView> tokenStack;
+    private int currentPlayerPos;
     private TileImageView[][] gridImages = new TileImageView[6][5];
-    protected Stage stage = GraphicalUI.stage;
 
     public void initialize(boolean left){
+        Stage stage = GraphicalUI.stage;
 
         this.columnInserts = new Label[]{column1Insert,column2Insert,column3Insert,column4Insert,column5Insert};
         this.left = left;
@@ -239,7 +239,9 @@ public class BookshelfController {
             animation = new TranslateTransition(Duration.millis(0));
         }
         tokenImage.setPreserveRatio(true);
-        CustomBindings.bindSize(tokenImage,stage.widthProperty().divide(25),stage.heightProperty().divide(15));
+        CustomBindings.bindSize(tokenImage,
+                GraphicalUI.stage.widthProperty().divide(25),
+                GraphicalUI.stage.heightProperty().divide(15));
         CustomBindings.bindTranslate(tokenImage,
                 tokenImage.fitWidthProperty().divide(2).multiply(tokenStack.size()),
                 tokenImage.fitWidthProperty().divide(2).multiply(tokenStack.size()));
@@ -326,7 +328,7 @@ public class BookshelfController {
     }
 
     public void loadTokens() {
-        if(left && !playerName.getText().equals(viewManager.getLastPlayer())) return;
+        if(left && !playerName.getText().equals(viewManager.getPreviousPlayer())) return;
         List<Token> newTokens = viewManager.getLastPlayerTokenDiff();
         for(Token t : newTokens){
             addToken(t,true);
@@ -334,6 +336,12 @@ public class BookshelfController {
     }
 
     public void reset() {
+        //resetting state variables
+        tokenStack.clear();
         currentPlayerPos = -1;
+        this.gridImages = new TileImageView[6][5];
+
+        //resetting visual elements
+        setActive(false);
     }
 }

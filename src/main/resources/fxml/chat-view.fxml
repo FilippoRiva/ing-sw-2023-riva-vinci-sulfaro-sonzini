@@ -19,6 +19,11 @@
             <Image url="@../images/darkWood.jpg" />
          </image>
       </ImageView>
+       <Label fx:id="notificationDot" cache="true"  alignment="CENTER" cacheHint="SCALE" layoutX="70.0" layoutY="4.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: AntiqueWhite; -fx-background-radius: 100; -fx-font-size: 15;" text="0" textAlignment="CENTER" visible="false" StackPane.alignment="TOP_LEFT">
+           <StackPane.margin>
+               <Insets left="20.0" top="20.0" />
+           </StackPane.margin>
+       </Label>
       <VBox alignment="CENTER">
          <children>
              <Label alignment="CENTER" onMousePressed="#toggleChat" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" text="CHAT" textFill="#faebd2" VBox.vgrow="NEVER">

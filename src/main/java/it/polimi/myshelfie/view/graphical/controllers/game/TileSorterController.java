@@ -203,6 +203,7 @@ public class TileSorterController {
             });
             a.play();
         }
+        setActive(false);
     }
 
     /**

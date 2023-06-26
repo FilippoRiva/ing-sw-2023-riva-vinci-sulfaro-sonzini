@@ -113,7 +113,6 @@ public class PreGameController implements Initializable {
                     notificationDot.setOpacity(0);
                 }
                 showButton(exitButton);
-                homeController.setKeyListeners();
             }
             case JOIN -> {
                 joinController.updateListLobbies();
@@ -121,14 +120,12 @@ public class PreGameController implements Initializable {
                 lastSlideUp = join;
                 showButton(backButton);
                 hideButton(exitButton);
-                joinController.setKeyListeners();
             }
             case CREATE -> {
                 showPane(create);
                 lastSlideUp = create;
                 showButton(backButton);
                 hideButton(exitButton);
-                createController.setKeyListeners();
             }
             case LOBBY -> {
                 lobbyController.refresh();
@@ -136,7 +133,6 @@ public class PreGameController implements Initializable {
                 showButton(chatButton);
                 moveLabel(notificationDot);
                 backButton.setVisible(true);
-                lobbyController.setKeyListeners();
             }
         }
         this.page = page;

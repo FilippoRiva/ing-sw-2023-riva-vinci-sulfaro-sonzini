@@ -8,11 +8,11 @@ import it.polimi.myshelfie.view.graphical.Effects;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 
 public class CreateController {
     @FXML
@@ -50,20 +50,17 @@ public class CreateController {
         }
     }
 
-    public void setKeyListeners() {
-        Scene scene = GraphicalUI.stage.getScene();
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()){
-                case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
-                case ENTER -> this.onCreateMouseClicked();
-            }
-        });
-    }
-
     public void reset() {
         Platform.runLater(()->{
             lobbyNameField.clear();
             playerNameField.clear();
         });
+    }
+
+    public void processKeyEvent(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()){
+            case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+            case ENTER -> this.onCreateMouseClicked();
+        }
     }
 }

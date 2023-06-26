@@ -124,34 +124,15 @@ public class LivingRoomController {
         }
         this.imagesLivingRoom = imagesLivingRoom;
         Platform.runLater(()->{
-            Animation[][] animationMatrix = new Animation[imagesLivingRoom.length][imagesLivingRoom[0].length];
             tilesGrid.getChildren().removeAll(tilesGrid.getChildren());
             for(int i = 0; i< imagesLivingRoom.length; i++){
                 for(int j = 0; j<imagesLivingRoom[0].length; j++){
                     tilesGrid.add(imagesLivingRoom[i][j],i,j);
                     if(imagesLivingRoom[i][j].getTile()!=null){
-                        animationMatrix[i][j] = (Animations.tileRotateIn(imagesLivingRoom[i][j], Duration.millis(100)));
-                    } else {
-                        animationMatrix[i][j] = new TranslateTransition(Duration.millis(0));
+                        Animations.tileRotateIn(imagesLivingRoom[i][j], Duration.millis(100)).play();
                     }
                 }
             }
-            List<ParallelTransition> animationLines = new ArrayList<>();
-            for(int line = 1; line<=imagesLivingRoom.length*2-1; line++){
-                int initColumn = Math.max(0,line-imagesLivingRoom.length);
-                int count = Math.min(Math.min(line, imagesLivingRoom.length-initColumn),imagesLivingRoom.length);
-                List<Animation> animationLine = new ArrayList<>();
-                for(int j = 0; j < count; j++){
-                    animationLine.add(animationMatrix[Math.min(animationMatrix.length,line)-j-1][initColumn+j]);
-                }
-                ParallelTransition pt = new ParallelTransition(animationLine.toArray(Animation[]::new));
-                animationLines.add(pt);
-            }
-            for(int line = 0; line < animationLines.size()-1; line++){
-                int finalLine = line;
-                animationLines.get(line).setOnFinished((evt)->animationLines.get(finalLine +1).play());
-            }
-            animationLines.get(0).play();
         });
     }
 
@@ -248,6 +229,7 @@ public class LivingRoomController {
 
     public void reset() {
         resetChoice();
+        setActive(false);
         imagesLivingRoom = new TileImageView[9][9];
     }
 }
