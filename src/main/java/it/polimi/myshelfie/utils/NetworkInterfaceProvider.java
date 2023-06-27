@@ -10,8 +10,18 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
 
+
+/**
+ * Represents the network interface provider.
+ */
 public class NetworkInterfaceProvider {
     //returns the first active network interface he's able to find. otherwise it returns localhost
+
+    /**
+     * Checks the network interfaces.
+     *
+     * @return the first active network interface he's able to find. Otherwise, it returns localhost.
+     */
     public static String getInterfaceHostName() {
         System.out.println("--------------------------------------------------------");
         System.out.println("You have not provided your own IP.\n" +

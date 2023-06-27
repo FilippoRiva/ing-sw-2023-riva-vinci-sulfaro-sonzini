@@ -11,6 +11,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
+/**
+ * Represents the Server Connection Handler implementation for Socket connection.
+ */
 public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     final String ip;
     final int port;
@@ -20,6 +23,13 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     private final ObjectInputStream ois;
     private final Socket socket;
 
+    /**
+     * Constructor
+     *
+     * @param ip   the ip.
+     * @param port the port.
+     * @throws RemoteException
+     */
     public ServerConnectionHandlerStub(String ip, int port) throws RemoteException {
         this.ip = ip;
         this.port = port;
@@ -71,6 +81,12 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         //not needed in socket implementation
     }
 
+    /**
+     * Used to receive messages.
+     *
+     * @param client the client.
+     * @throws IOException
+     */
     public void receive(ClientImpl client) throws IOException {
         synchronized (receiveLock) {
             try {
