@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierView> implements ClientExceptionsNotifier {
-    List<Exception> exceptionList = new ArrayList<>();
+    final List<Exception> exceptionList = new ArrayList<>();
 
     @Override
     public void notifyException(DisconnectionException exception){

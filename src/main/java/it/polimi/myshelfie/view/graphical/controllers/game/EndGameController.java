@@ -57,7 +57,7 @@ public class EndGameController{
     protected HBox mainHBox;
     Label[] pointsPodium;
     Label[] playersPodium;
-    ViewManager viewManager = ViewManager.getInstance();
+    final ViewManager viewManager = ViewManager.getInstance();
     private int numPlayers;
 
     public void customInitialize() {

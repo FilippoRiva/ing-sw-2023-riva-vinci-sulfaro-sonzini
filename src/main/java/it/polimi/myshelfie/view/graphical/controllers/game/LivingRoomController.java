@@ -39,9 +39,9 @@ public class LivingRoomController {
     private static final double gridSpacing = 0;
     private static final double livingRoomSizeToTileSize = livingRoomImageSize/tileSize;
     private static final double gridSpacingToLivingRoomSize = gridSpacing/livingRoomImageSize;
-    private static final double gridTraslateXToLivingRoomSize = gridTranslateX/livingRoomImageSize;
+    private static final double gridTranslateXToLivingRoomSize = gridTranslateX/livingRoomImageSize;
     private static final double gridTranslateYToLivingRoomSize = gridTranslateY/livingRoomImageSize;
-    ViewManager viewManager = ViewManager.getInstance();
+    final ViewManager viewManager = ViewManager.getInstance();
     private DoubleBinding tileSizeBinding;
     protected DoubleBinding tileHeightProperty;
     public List<Position> chosenTiles;
@@ -75,7 +75,7 @@ public class LivingRoomController {
         }
         Binding<Number> gridSize = this.tileSizeBinding.multiply(9).add(tilesGrid.vgapProperty().multiply(7));
         CustomBindings.bindSize(tilesGrid,gridSize,gridSize);
-        tilesGrid.translateXProperty().bind(livingRoomImage.fitWidthProperty().multiply(gridTraslateXToLivingRoomSize));
+        tilesGrid.translateXProperty().bind(livingRoomImage.fitWidthProperty().multiply(gridTranslateXToLivingRoomSize));
         tilesGrid.translateYProperty().bind(livingRoomImage.fitHeightProperty().multiply(gridTranslateYToLivingRoomSize));
     }
 

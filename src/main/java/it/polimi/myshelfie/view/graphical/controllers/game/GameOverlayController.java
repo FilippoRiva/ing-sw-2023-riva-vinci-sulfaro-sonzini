@@ -51,7 +51,7 @@ public class GameOverlayController {
     @FXML
     public ChatController chatController;
 
-    ViewManager viewManager = ViewManager.getInstance();
+    final ViewManager viewManager = ViewManager.getInstance();
     Stage stage;
 
     public void customInitialize(){

@@ -43,7 +43,7 @@ public class ChatController implements Initializable {
     protected StackPane chat;
     @FXML
     protected Label notificationDot;
-    ViewManager viewManager = ViewManager.getInstance();
+    final ViewManager viewManager = ViewManager.getInstance();
     boolean chatIsOpen = false;
     private GameOverlayController gameOverlayController;
 

@@ -61,8 +61,10 @@ public class ServerApp {
     }
     public static void startRMI(ServerImpl server){
         Registry registry;
+        final int port = 1099;
+
         try {
-            registry = LocateRegistry.createRegistry(1099);
+            registry = LocateRegistry.createRegistry(port);
         } catch (RemoteException e){
             try {
                 registry = LocateRegistry.getRegistry();
@@ -80,7 +82,9 @@ public class ServerApp {
     }
 
     public static void startSocket(Controller controller) {
-        try (ServerSocket serverSocket = new ServerSocket(54321)) {
+        final int port = 54321;
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Socket server up and running");
             boolean running = true;
             while (running) {

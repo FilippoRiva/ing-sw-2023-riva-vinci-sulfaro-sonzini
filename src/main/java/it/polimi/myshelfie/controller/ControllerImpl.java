@@ -197,7 +197,7 @@ public class ControllerImpl implements Controller {
         try {
             lobbyController.addPlayer(client,connectionHandler,clientExceptionsNotifiers.get(client),playerName);
         } catch (InvalidParameterException e) {
-            ServerLogger.log(Level.FINEST,"Player join failed: Player name not valid. Lobby name : "+lobbyName+" | Requeste player name : "+playerName);
+            ServerLogger.log(Level.FINEST,"Player join failed: Player name not valid. Lobby name : "+lobbyName+" | Request player name : "+playerName);
             clientExceptionsNotifiers.get(client).notifyException(e);
             return null;
         } catch (LobbyFullException e){

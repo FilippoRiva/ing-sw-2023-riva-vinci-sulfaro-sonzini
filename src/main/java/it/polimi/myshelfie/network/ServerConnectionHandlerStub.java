@@ -12,8 +12,8 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 
 public class ServerConnectionHandlerStub implements ServerConnectionHandler {
-    String ip;
-    int port;
+    final String ip;
+    final int port;
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
 

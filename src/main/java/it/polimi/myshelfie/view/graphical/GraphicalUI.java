@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class GraphicalUI extends Application implements UI {
-    ViewManager viewManager = ViewManager.getInstance();
+    final ViewManager viewManager = ViewManager.getInstance();
     public static Stage stage;
     public static MainViewController mainViewController;
 

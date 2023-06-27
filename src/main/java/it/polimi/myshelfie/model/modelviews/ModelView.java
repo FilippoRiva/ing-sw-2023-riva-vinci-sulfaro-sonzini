@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ModelView implements Serializable {
-    List<String> lobbies;
-    Map<String, Integer> maxSizeMap;
-    Map<String, Integer> currentSizeMap;
+    final List<String> lobbies;
+    final Map<String, Integer> maxSizeMap;
+    final Map<String, Integer> currentSizeMap;
     public ModelView(ModelImpl model){
         this.lobbies = model.getLobbies();
         this.maxSizeMap = new HashMap<>();

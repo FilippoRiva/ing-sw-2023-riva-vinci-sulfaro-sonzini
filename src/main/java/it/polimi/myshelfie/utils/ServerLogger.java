@@ -37,7 +37,7 @@ public class ServerLogger {
     }
 
     /**
-     * Logs a message to System.out if the Level is equal or higher than the set one.
+     * Logs a message to System out if the Level is equal or higher than the set one.
      * @param level the level
      * @param message the message
      */

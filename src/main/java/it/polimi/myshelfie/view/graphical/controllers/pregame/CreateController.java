@@ -26,7 +26,7 @@ public class CreateController {
     @FXML
     protected Label createErrorLabel;
     PreGameController preGameController;
-    ViewManager viewManager = ViewManager.getInstance();
+    final ViewManager viewManager = ViewManager.getInstance();
 
     public void initialize(ImageView banner,PreGameController preGameController){
         CustomBindings.bindLowerPreGamePane(backgroundClear,banner);

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Terminal {
     private final PrintStream out;
-    public boolean ANSI_ON;
+    public final boolean ANSI_ON;
     public final int WIDTH = 63;
     public final int SCREEN_HEIGHT = 33;
     public final int INPUT_HEIGHT = 3;

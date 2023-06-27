@@ -21,7 +21,7 @@ import java.util.*;
 public class ClientApp {
     static String serverIP = "localhost";
     static String clientIP = "";
-    static int registryPort = 1099;
+    static final int registryPort = 1099;
 
     public static void main(String[] args) {
         for(int i = 0; i <args.length; i++){
@@ -77,31 +77,13 @@ public class ClientApp {
         while (networkChoice == -1) {
             System.out.println("--------------------------------------------------------");
             System.out.print("> Choose between socket(1) and RMI(2) : ");
-            try {
-                networkChoice = Integer.parseInt(scanner.nextLine());
-                if (!(networkChoice == 1 || networkChoice == 2)) {
-                    networkChoice = -1;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-            if (networkChoice == -1) {
-                System.out.println("   !! Not a valid choice");
-            }
+            networkChoice = getChoice(scanner);
         }
 
         while (viewChoice == -1) {
             System.out.println("--------------------------------------------------------");
             System.out.print("> Choose between CLI(1) and Graphical UI(2) : ");
-            try {
-                viewChoice = Integer.parseInt(scanner.nextLine());
-                if (!(viewChoice == 1 || viewChoice == 2)) {
-                    viewChoice = -1;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-            if (viewChoice == -1) {
-                System.out.println("   !! Not a valid choice");
-            }
+            viewChoice = getChoice(scanner);
         }
 
         ViewManager viewManager = ViewManager.getInstance();
@@ -141,6 +123,21 @@ public class ClientApp {
         viewManager.addUI(view);
         view.startUI();
     }
+
+    private static int getChoice(Scanner scanner) {
+        int networkChoice;
+        try {
+            networkChoice = Integer.parseInt(scanner.nextLine());
+            if (!(networkChoice == 1 || networkChoice == 2)) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ignored) {
+            System.out.println("   !! Not a valid choice");
+            return -1;
+        }
+        return networkChoice;
+    }
+
     private static void startRMIConnection (ViewManager viewManager) throws RemoteException {
         if (clientIP.equals("")) { //automatic client ip retrieval
             clientIP = NetworkInterfaceProvider.getInterfaceHostName();
