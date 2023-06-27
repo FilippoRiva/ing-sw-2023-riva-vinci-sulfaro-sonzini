@@ -72,6 +72,7 @@ public class GameController{
         if(currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
             gameOverlayController.startTurn();
         if(viewManager.getCurrentStateDiff()== GameState.WIN){
+            gameOverlayController.startTurn();
             Animations.timer(()->{
                 gameOverlay.setMouseTransparent(true);
                 gamePanel.setMouseTransparent(true);

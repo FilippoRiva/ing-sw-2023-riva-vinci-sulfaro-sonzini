@@ -60,7 +60,7 @@
             <Insets left="75.0" top="95.0" />
          </StackPane.margin>
       </Label>
-      <Button fx:id="exitButton" cache="true" cacheHint="SCALE" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onExitButtonClicked" styleClass="arrow" StackPane.alignment="TOP_RIGHT">
+      <Button fx:id="exitButton" cache="true" cacheHint="SCALE" minHeight="70.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#onExitButtonClicked" styleClass="exit" StackPane.alignment="TOP_RIGHT">
          <StackPane.margin>
             <Insets right="20.0" top="20.0" />
          </StackPane.margin>

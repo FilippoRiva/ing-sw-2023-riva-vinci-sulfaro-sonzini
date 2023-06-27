@@ -108,3 +108,10 @@
     -fx-background-size: 70px;
     -fx-background-position: center;
 }
+
+.exit {
+    -fx-background-image: url('../images/exit.png');
+    -fx-background-size: 70;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}

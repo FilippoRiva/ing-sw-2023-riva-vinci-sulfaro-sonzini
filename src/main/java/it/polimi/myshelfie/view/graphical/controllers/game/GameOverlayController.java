@@ -141,6 +141,7 @@ public class GameOverlayController {
         }
         Platform.runLater(() -> playingLabel.setText(viewManager.getCurrentPlayerDiff()));
     }
+
     @FXML
     protected void showPersonalGoal() {
         personalGoal.setTranslateY(0);
