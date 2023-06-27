@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Used to generate common goals.
+ */
 public class CommonGoalDefaultsFactory {
 
     /**
-     * @param playerNum is the number of players in this game.
+     * Generate a list of common goals.
+     * @param playerNum is the number of players in the game.
      * @return a list containing random common goals with Tokens already stacked on top.
+     * @throws InvalidParameterException if the number of players is not valid (smaller than 2).
      */
     public static List<CommonGoal> getGoals(int playerNum, int commonGoalNum) throws InvalidParameterException{
         if(playerNum<2) throw new InvalidParameterException("invalid player number");
@@ -71,6 +76,11 @@ public class CommonGoalDefaultsFactory {
         return result;
     }
 
+    /**
+     * Generates a list of random integers.
+     * @param num how many integers are required.
+     * @return a list of random integers.
+     */
     private static List<Integer> generateDistinctRandomIntegers(int num) {
         List<Integer> result = new ArrayList<>();
         for(int i = 0; i<12; i++) result.add(i);
@@ -79,6 +89,11 @@ public class CommonGoalDefaultsFactory {
         return result;
     }
 
+    /**
+     * Generate a common goal given the id.
+     * @param id the id of the common goal.
+     * @return the common goal with the given id.
+     */
     private static CommonGoal generateGoal(int id){
         switch (id){
             case 0 -> {

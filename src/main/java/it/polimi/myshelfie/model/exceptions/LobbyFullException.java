@@ -1,5 +1,8 @@
 package it.polimi.myshelfie.model.exceptions;
 
+/**
+ * Represents the exception thrown when a lobby is full.
+ */
 public class LobbyFullException extends Exception{
 
     private final String message;

@@ -21,8 +21,8 @@ public class ViewManager extends View {
     private final Observable<ViewUpdate, Object> UINotifier;
     private static ViewManager viewManager;
     private ModelView modelView;
-    private ClientExceptionsNotifierView clientExceptionsNotifierView;
-    private ClientExceptionsNotifierView disconnectedClientExceptionsNotifierView;
+    private ClientExceptionsNotifierModelView clientExceptionsNotifierView;
+    private ClientExceptionsNotifierModelView disconnectedClientExceptionsNotifierView;
     private PlayerChatModelView playerChatModelView;
     private LobbyModelView lobbyModelView;
     private FullGameModelView fullGameModelView;
@@ -204,7 +204,7 @@ public class ViewManager extends View {
     }
 
     @Override
-    public void setExceptionView(ClientExceptionsNotifierView exceptionView, ExceptionEvent evt) {
+    public void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt) {
         synchronized (sync){
             if(evt == ExceptionEvent.NEW_EXCEPTION) {
                 this.clientExceptionsNotifierView = exceptionView;
@@ -436,11 +436,11 @@ public class ViewManager extends View {
         return modelView;
     }
 
-    public synchronized ClientExceptionsNotifierView getClientExceptionsNotifierView() {
+    public synchronized ClientExceptionsNotifierModelView getClientExceptionsNotifierView() {
         return clientExceptionsNotifierView;
     }
 
-    public synchronized ClientExceptionsNotifierView getDisconnectedClientExceptionsNotifierView(){
+    public synchronized ClientExceptionsNotifierModelView getDisconnectedClientExceptionsNotifierView(){
         return disconnectedClientExceptionsNotifierView;
     }
 

@@ -6,11 +6,19 @@ import it.polimi.myshelfie.model.Game;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represents the lobby model view.
+ */
 public class LobbyModelView implements Serializable {
     private final String name;
     private final List<String> players;
     private final String roomOwner;
     private final GameConfig gameConfig;
+
+    /**
+     * Constructor.
+     * @param game the game of this lobby.
+     */
     public LobbyModelView(Game game){
         this.players = game.getPlayersNames();
         this.roomOwner = game.getRoomOwner();
@@ -49,5 +57,11 @@ public class LobbyModelView implements Serializable {
     public String getName(){
         return name;
     }
+
+    /**
+     * Checks whether the player is the room owner.
+     * @param username the player to check.
+     * @return true if he's the roomowner, false otherwise.
+     */
     public boolean isRoomOwner(String username) { return roomOwner.equals(username);}
 }

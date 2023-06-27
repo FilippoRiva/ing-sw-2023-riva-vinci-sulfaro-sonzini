@@ -7,16 +7,28 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the common goal model view.
+ */
 public class CommonGoalModelView implements Serializable {
     private final List<Token> tokens;
     private final int id;
     private final String description;
+
+    /**
+     * Default Constructor.
+     * @param commonGoal the common goal I want the model view.
+     */
     public CommonGoalModelView(CommonGoal commonGoal){
         this.tokens = commonGoal.getTokens();
         this.id = commonGoal.getId();
         this.description = commonGoal.getDescription();
     }
 
+    /**
+     * Constructor.
+     * @param toCopy the common model view to copy.
+     */
     public CommonGoalModelView(CommonGoalModelView toCopy){
         this.tokens = new ArrayList<>(toCopy.tokens);
         this.id = toCopy.id;
@@ -47,6 +59,10 @@ public class CommonGoalModelView implements Serializable {
         return description;
     }
 
+    /**
+     * Modifies the attribute "tokens". It changes it with the difference between this one and the one to confront.
+     * @param theNewOne the common goal to confronts.
+     */
     public void diff(CommonGoalModelView theNewOne){
         this.tokens.removeAll(theNewOne.tokens);
     }

@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalTwoColumns extends CommonGoal{
     /**
-     *
+     * Checks theh common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 2 columns with all ItemTiles different, false otherwise
      *

@@ -6,18 +6,18 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 import java.util.Random;
 
+/**
+ * Represents the n x m personal goal matrix.
+ */
 public class PersonalGoal {
-    /**
-     * The n x m personal goal matrix
-     */
     private final ItemTile[][] goal;
     private final int width;
     private final int height;
     private final int id;
 
     /**
-     * The default constructor for PersonalGoal
-     * @param personalGoalDefault the PersonalGoalDefault type for this personalGoal
+     * The default constructor for PersonalGoal.
+     * @param personalGoalDefault the PersonalGoalDefault type for this personalGoal.
      */
     public PersonalGoal(PersonalGoalDefaults personalGoalDefault){
         this.id = personalGoalDefault.getId();
@@ -27,12 +27,12 @@ public class PersonalGoal {
     }
 
     /**
-     * The personal Goal constructor when the size of the board is not 5x6
-     * The height must greater equal than it's width
-     * @param width board width
-     * @param height board height
+     * The personal Goal constructor when the size of the board is not 5x6.
+     * The height must greater equal than its width.
+     * @param width board width.
+     * @param height board height.
      * @param personalGoalRatio percentage of cells with non-empty tiles to be generated
-     * @throws Exception if the size of the bookshelf isn't a valid size
+     * @throws Exception if the size of the bookshelf isn't a valid size.
      */
     public PersonalGoal(int width,int height,int id,double personalGoalRatio) throws Exception{
         this.width = width;
@@ -53,9 +53,9 @@ public class PersonalGoal {
     }
 
     /**
-     * Used to calculate the points that a certain player has earned on this particular personal goal
-     * @param bookshelfItems the player's bookshelfItems
-     * @return the points to be gained by the player
+     * Used to calculate the points that a certain player has earned on this particular personal goal.
+     * @param bookshelfItems the player's bookshelfItems.
+     * @return the points to be gained by the player.
      */
     public int achievedPoints(ItemTile[][] bookshelfItems){
         int verifiedCount = 0;

@@ -4,6 +4,10 @@ import it.polimi.myshelfie.model.goals.PersonalGoal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the player.
+ * It has a name and everything he needs to play: a bookshelf, a personal goal and also the points and tokens earned during the game and the taken tiles in every turn.
+ */
 public class Player {
     private final String name;
     private final ArrayList<EarnedPoint> earnedPoints;
@@ -12,7 +16,10 @@ public class Player {
     private Bookshelf bookshelf;
     private List<ItemTile> takenTiles;
 
-
+    /**
+     * Constructor.
+     * @param name the playerName.
+     */
     public Player(String name){
         this.name = name;
         this.earnedPoints = new ArrayList<>();
@@ -22,7 +29,7 @@ public class Player {
 
     /**
      * Assigns the personal goal to the player.
-     * @param personalGoals is the list of the player's personal goals.
+     * @param personalGoals the list of the player's personal goals.
      */
     public void setPersonalGoals(List<PersonalGoal> personalGoals) {
         this.personalGoals = new ArrayList<>(personalGoals);
@@ -30,7 +37,7 @@ public class Player {
 
     /**
      * Assigns the bookshelf to the player.
-     * @param bookshelf is the player's bookshelf.
+     * @param bookshelf the player's bookshelf.
      */
     public void setBookshelf(Bookshelf bookshelf){
         this.bookshelf = bookshelf;
@@ -38,7 +45,7 @@ public class Player {
 
     /**
      * Adds the token obtained from a common goal to the player who completed it.
-     * @param token is the token obtained from a completed common goal.
+     * @param token the token obtained from a completed common goal.
      */
     public void addObtainedToken(Token token){
         if(token == null) return;
@@ -47,6 +54,10 @@ public class Player {
         else addEarnedPoints(new EarnedPoint(PointType.COMMON, token.getValue()));
     }
 
+    /**
+     * Adds the earned points during the turn.
+     * @param p the points earned.
+     */
     public void addEarnedPoints(EarnedPoint p){
         earnedPoints.add(p);
     }
@@ -105,6 +116,9 @@ public class Player {
     }
 
 
+    /**
+     * Resets the taken tiles in every turn.
+     */
     public void clearTakenTiles() {
         this.takenTiles = new ArrayList<>();
     }

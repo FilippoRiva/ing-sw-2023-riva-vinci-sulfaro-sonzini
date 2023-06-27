@@ -3,11 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
-
+/**
+ * The default personal goals out of the "My Shelfie" box.
+ */
 public enum PersonalGoalDefaults{
-    /**
-     * The default PersonalGoals out of the "my Shelfie" box
-     */
     FIRST(new ItemTile[][]{
             new ItemTile[]{new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0)},
             new ItemTile[]{new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.EMPTY,0) , new ItemTile(ItemTileType.CAT,0)},
@@ -128,6 +127,11 @@ public enum PersonalGoalDefaults{
         return id;
     }
 
+    /**
+     * Constructor.
+     * @param goal the matrix of item tiles.
+     * @param id the id of the personal goal.
+     */
     PersonalGoalDefaults(ItemTile[][] goal,int id){
         this.goal = goal;
         this.id = id;

@@ -10,7 +10,7 @@ import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
-import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
+import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+/**
+ *It has a list of LobbiesControllers and Clients.
+ *It allows to create or delete a lobby, add a client, join a lobby and connect the correct client who joined it and quit.
+ */
 public class ControllerImpl implements Controller {
     private final Map<String, LobbyControllerImpl> lobbiesControllers;
     private final Map<Client, ClientExceptionsNotifier> clientExceptionsNotifiers;
@@ -57,7 +61,7 @@ public class ControllerImpl implements Controller {
      */
     @Override
     public synchronized void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver,
-                                       Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver) throws InvalidParameterException{
+                                       Observer<ExceptionEvent, ClientExceptionsNotifierModelView> networkExceptionsObserver) throws InvalidParameterException{
         if(clientExceptionsNotifiers.containsKey(client)) {
             throw new InvalidParameterException("Client already exists");
         }
@@ -162,10 +166,10 @@ public class ControllerImpl implements Controller {
      * Connects the client to a pre-existing lobby.
      * If the lobby doesn't exist it notifies the Client's ClientExceptionNotifier.
      *
-     * @param client is the client representing the player who's connecting.
-     * @param connectionHandler is the ServerConnectionHandler used for the player's connection.
-     * @param playerName is the name of the player that wants to join this lobby.
-     * @param lobbyName is the name of the joined lobby.
+     * @param client the client representing the player who's connecting.
+     * @param connectionHandler the ServerConnectionHandler used for the player's connection.
+     * @param playerName the name of the player that wants to join this lobby.
+     * @param lobbyName the name of the joined lobby.
      * @return null if connection fails, the lobbyController otherwise
      */
     @Override
@@ -232,7 +236,7 @@ public class ControllerImpl implements Controller {
 
     /**
      * Removes a lobby from the lobby list.
-     * @param lobbyName is the name of the lobby that must be deleted.
+     * @param lobbyName the name of the lobby that must be deleted.
      */
     protected synchronized void deleteLobby(String lobbyName){
         if(!lobbiesControllers.containsKey(lobbyName)) return;
@@ -245,6 +249,10 @@ public class ControllerImpl implements Controller {
         ServerLogger.log(Level.FINE,"Empty lobby deletion. Lobby name : "+lobbyName);
     }
 
+    /**
+     * Signals in the client list that one has left by changing its associated boolean to false.
+     * @param client the client who's left.
+     */
     public void clientHasLeft(Client client) {
         clientHasJoinedMap.replace(client, false);
     }

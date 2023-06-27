@@ -15,11 +15,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Represents the available lobbies that can be joined.
+ * It contains a list with all the lobbies created and it can add and remove them from the list.
+ */
 public class ModelImpl extends Observable<ModelEvent, ModelView> implements Model {
     private final HashMap<String, Game> lobbiesModel = new HashMap<>();
 
+    /**
+     * Notifies periodically every client about new lobbies (used to notify config and player changes).
+     */
     public ModelImpl(){
-        //notifies periodically every client about new lobbies (used to notify config and player changes)
         new Thread(()->{
             ScheduledExecutorService ex = Executors.newScheduledThreadPool(1);
             ex.scheduleAtFixedRate(()->{
@@ -30,8 +36,8 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
     }
 
     /**
-     * Add a lobby to the list of lobbies.
-     * @param lobbyName is the name of the lobby you want to add.
+     * Adds a lobby to the list of lobbies.
+     * @param lobbyName the name of the lobby you want to add.
      * @return the lobby model associated to this specific lobby.
      * @throws LobbyExistenceException if the name of the lobby you want to add already exists.
      */
@@ -48,7 +54,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
 
     /**
      * Removes a lobby from the list of lobbies.
-     * @param lobbyName is the name of the lobby you want to remove.
+     * @param lobbyName the name of the lobby you want to remove.
      * @throws LobbyExistenceException if the name of the lobby you want to remove does not exist.
      */
     @Override

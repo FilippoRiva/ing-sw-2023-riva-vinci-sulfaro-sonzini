@@ -3,7 +3,7 @@ package it.polimi.myshelfie.model;
 import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.model.exceptions.DisconnectionException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
-import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
+import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
 import it.polimi.myshelfie.utils.Observer;
 import org.junit.jupiter.api.Test;
 
@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClientExceptionsNotifierImplTest {
     @Test
     public void modelClientExceptionNotifierTest(){
-        final ClientExceptionsNotifierView[] view = new ClientExceptionsNotifierView[1];
+        final ClientExceptionsNotifierModelView[] view = new ClientExceptionsNotifierModelView[1];
         final ExceptionEvent[] event = new ExceptionEvent[1];
         ClientExceptionsNotifier interfaceCen = new ModelImpl().getNewClientExceptionNotifier();
         ClientExceptionsNotifierImpl cen = (ClientExceptionsNotifierImpl) interfaceCen;
-        Observer<ExceptionEvent, ClientExceptionsNotifierView> obs = (evt, clientExceptionsNotifierView) -> {
+        Observer<ExceptionEvent, ClientExceptionsNotifierModelView> obs = (evt, clientExceptionsNotifierView) -> {
             view[0] = clientExceptionsNotifierView;
             event[0] = evt;
         };

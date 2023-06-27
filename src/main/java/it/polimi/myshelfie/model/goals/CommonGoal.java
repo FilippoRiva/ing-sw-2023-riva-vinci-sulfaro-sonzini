@@ -8,6 +8,9 @@ import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * Represents a generic common goal. It has a description, a stack of token and methods to handle them.
+ */
 public abstract class CommonGoal {
     private final Stack<Token> tokens = new Stack<>();
 
@@ -25,7 +28,7 @@ public abstract class CommonGoal {
     public abstract int getId();
 
     /**
-     * Returns which token is on the top of the stack.
+     * Checks which token is on the top of the stack.
      * @return the token on the top of the stack on a common goal.
      * @throws EmptyStackException if there are no tokens.
      */
@@ -35,7 +38,7 @@ public abstract class CommonGoal {
 
     /**
      * Adds a token on the stack.
-     * @param token is the token to insert on the top of the stack.
+     * @param token the token to insert on the top of the stack.
      */
     public void pushToken(Token token){
         tokens.push(token);

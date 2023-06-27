@@ -5,23 +5,26 @@ import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.utils.Observer;
 
+/**
+ * Represents a controller for the lobby.
+ */
 public interface LobbyController {
 
     /**
      * Allows a player to exit the lobby he joined.
-     * @param playerName is the name of the player that leaves the lobby.
+     * @param playerName the name of the player that leaves the lobby.
      */
     void exitLobby(String playerName);
 
     /**
      * Allows the room owner to set the game settings.
-     * @param config are the game's settings.
+     * @param config the game's settings.
      */
     void setConfig(String playerName,GameConfig config);
 
     /**
      * Allows the room owner to start the game when ready.
-     * @param playerName is the name of the player that can start the game.
+     * @param playerName the name of the player that can start the game.
      */
     void startGame(String playerName);
 

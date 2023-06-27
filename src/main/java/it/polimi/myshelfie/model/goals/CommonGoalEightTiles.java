@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class CommonGoalEightTiles extends CommonGoal{
     /**
-     *
+     * Checks the common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if 8 elements has the same ItemTile value, false otherwise
      *

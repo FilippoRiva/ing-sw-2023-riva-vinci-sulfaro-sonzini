@@ -17,6 +17,10 @@ import it.polimi.myshelfie.utils.Observer;
 
 import java.util.*;
 
+/**
+ * Represents and entire game: it has all the settings, a name, the players, the living room, the common goals and the chat system.
+ *
+ */
 public class Game implements GameModel, LobbyModel {
     private GameConfig gameConfig;
     private final it.polimi.myshelfie.utils.Observable<LobbyEvent, LobbyModelView> lobbyObservable;
@@ -31,6 +35,10 @@ public class Game implements GameModel, LobbyModel {
     private String roomOwner;
 
 
+    /**
+     * Constructor.
+     * @param roomName the name of the game.
+     */
     public Game(String roomName){
         this.lobbyObservable = new it.polimi.myshelfie.utils.Observable<>();
         this.gameObservable = new it.polimi.myshelfie.utils.Observable<>();
@@ -65,17 +73,17 @@ public class Game implements GameModel, LobbyModel {
 
 
     /**
-     * Returns true when the number of the players that wants to play is grater than the param NumPlayers set in the game config.
-     * @return true or false.
+     * Checks if the lobby is full.
+     * @return true when the number of the players that wants to play is grater than the param NumPlayers set in the game config, false otherwise.
      */
     private boolean isLobbyFull() {
         return players.size() == gameConfig.getNumPlayers();
     }
 
     /**
-     * Returns true if the chosen username is already taken by another player.
+     * Checks if the player name is valid.
      * @param playerName is the username the player choose to play with.
-     * @return true or false.
+     * @return true if the chosen username is already taken by another player, false otherwise.
      */
     private boolean isPlayerNameValid(String playerName) {
         for(Player p : players){
@@ -137,10 +145,10 @@ public class Game implements GameModel, LobbyModel {
 
     /**
      * Return the list of personal goals that have to be assigned to every player.
-     * @param numOfPlayers is the number of the players in the game.
-     * @param numOfPersonalGoal is the number of the personal goals assigned to every player.
+     * @param numOfPlayers the number of the players in the game.
+     * @param numOfPersonalGoal the number of the personal goals assigned to every player.
      * @return the list of personal goals that have to be assigned to every player in the game.
-     * @throws Exception ??
+     * @throws Exception if the number of personal goals per player is not valid.
      */
     private List<PersonalGoal> generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal) throws Exception {
         return PersonalGoalFactory.getDistinctPersonalGoals(numOfPersonalGoal,gameConfig.getBookshelfDimension(),numOfPlayers,gameConfig.getPersonalGoalRatio());
@@ -289,8 +297,8 @@ public class Game implements GameModel, LobbyModel {
     }
 
     /**
-     * When a player completes a common goal, he obtained the token on the top of its stack, and
-     * the points on the token are added to the points of the player.
+     * Adds a token when a player completes a common goal.
+     * The one added is on the top of the stack, and the points on the token are added to the points of the player.
      * @param playerName is the name of the player that obtained the token.
      * @param token is the token obtained.
      */
@@ -331,6 +339,11 @@ public class Game implements GameModel, LobbyModel {
     public String getCurrentPlayer() {
         return currentPlayer.getName();
     }
+
+    /**
+     *
+     * @return the name of the last player who played.
+     */
     public String getLastPlayer() {
         int index = players.indexOf(currentPlayer);
         if (index==0) {
@@ -350,9 +363,9 @@ public class Game implements GameModel, LobbyModel {
 
 
     /**
-     * Return true if the bookshelf of the selected player is full.
+     * Checks whether the bookshelf is full.
      * @param playerName is the name of the player whose bookshelf has to be controlled.
-     * @return true of false.
+     * @return true if the bookshelf is full, false otherwise.
      */
     @Override
     public synchronized boolean isBookshelfFull(String playerName){
@@ -360,9 +373,9 @@ public class Game implements GameModel, LobbyModel {
     }
 
     /**
-     * Return true if the player playing is the last one of that turn.
+     * Checks whether the player playing is the last one of that turn.
      * @param playerName is the name of the player that has to be controlled.
-     * @return true or false.
+     * @return true if the player playing is the last one of that turn, false otherwise.
      */
     @Override
     public synchronized boolean isLastPlayer(String playerName){

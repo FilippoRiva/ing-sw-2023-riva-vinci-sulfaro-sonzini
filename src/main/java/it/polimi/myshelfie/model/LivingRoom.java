@@ -5,6 +5,10 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 import java.util.*;
 
+/**
+ * Represents the board of the game.
+ * It has a bag of tiles, a grid with all the tiles that can be drawn, a size and the number of players playing, because the number of tiles on the board depends on it.
+ */
 public class LivingRoom {
     private final Stack<ItemTile> bag;
     private final ItemTile[][] table;
@@ -66,6 +70,9 @@ public class LivingRoom {
         initializeValidPositions();
     }
 
+    /**
+     * Initializes the valid positions of the living room.
+     */
     private void initializeValidPositions() {
         int wingSize = offset-1;
         if(size>9) {
@@ -181,6 +188,10 @@ public class LivingRoom {
 
     }
 
+    /**
+     * Flips a matrix horizontally.
+     * @param matrix the matrix to flip.
+     */
     private void flipHorizontal(boolean[][] matrix){
         int size = matrix.length;
         for(int x=0; x<size/2; x++){
@@ -192,6 +203,10 @@ public class LivingRoom {
         }
     }
 
+    /**
+     * Flips a matrix vertically.
+     * @param matrix the matrix to flip.
+     */
     private void flipVertical(boolean[][] matrix){
         int size;
         size = matrix.length;
@@ -205,6 +220,11 @@ public class LivingRoom {
     }
 
 
+    /**
+     * Sets valid positions.
+     * @param x the x coordinate.
+     * @param y the y coordinate.
+     */
     private void setValid(int x, int y){
         validPositions[x+offset][offset-y] = true;
     }
@@ -279,6 +299,11 @@ public class LivingRoom {
         return true;
     }
 
+    /**
+     * Checks whether a position is valid, given the position.
+     * @param p the position to check.
+     * @return true if the position is valid, false otherwise.
+     */
     public boolean isValid(Position p) {
         int x = p.getX();
         int y = p.getY();
@@ -289,14 +314,30 @@ public class LivingRoom {
         return isValid(x, y);
     }
 
+    /**
+     * Checks whether a position is valid, given the coordinates
+     * @param x the x coordinate.
+     * @param y the y coordinate.
+     * @return true if the coordinates are valid, false otherwise.
+     */
     private boolean isValid(int x,int y){
         return validPositions[x+offset][offset-y];
     }
 
+    /**
+     * Check whether a position is empty.
+     * @param p the position to check.
+     * @return true if the position is empty, false otherwise.
+     */
     public boolean emptyPosition(Position p) {
         return getTile(p.getX(), p.getY()).getType().equals(ItemTileType.EMPTY);
     }
 
+    /**
+     * Checks if a tile can be drawn, so whether it has at least one side free.
+     * @param p the position to check.
+     * @return true if it's drawable, false otherwise.
+     */
     public boolean atLeastOneSideFree(Position p){
         int x = p.getX();
         int y = p.getY();

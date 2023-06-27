@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalFourLines extends CommonGoal{
     /**
-     *
+     * Checks the common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 4 lines with at most 3 different type of ItemTile, false otherwise
      *
@@ -22,6 +22,13 @@ public class CommonGoalFourLines extends CommonGoal{
         }
         return row_count>=4;
     }
+
+    /**
+     * Checks the single row in the bookshelf.
+     * @param row the row to check.
+     * @param width the lenght of the row.
+     * @return false if there's an empty position, true otherwise.
+     */
     private boolean checkRow(ItemTile[] row, int width){
         int maxNumber = 3;
         boolean found;

@@ -2,6 +2,10 @@ package it.polimi.myshelfie.model;
 
 import java.io.Serializable;
 
+/**
+ * Represents a specific tile.
+ * It has a type and also an id, because there are 3 different images for every type of tile.
+ */
 public class ItemTile implements Serializable {
     private final ItemTileType type;
     private final int id;

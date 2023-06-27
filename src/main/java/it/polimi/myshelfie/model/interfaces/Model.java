@@ -6,6 +6,9 @@ import it.polimi.myshelfie.utils.Observer;
 
 import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
 
+/**
+ * Represents the model's interface.
+ */
 public interface Model {
     /**
      * Adds a lobbyName to this list.
@@ -16,7 +19,7 @@ public interface Model {
 
     /**
      * Removes a lobby from the list and notifies the observers.
-     * @param lobbyName is the name of the lobby.
+     * @param lobbyName the name of the lobby.
      * @throws LobbyExistenceException if the lobby that has to be removed does not exist.
      */
     void removeLobby(String lobbyName) throws LobbyExistenceException;
@@ -28,14 +31,14 @@ public interface Model {
     void addModelObserver(Observer<ModelEvent, ModelView> obs);
 
     /**
-     * Removes a Model Observer
-      * @param obs the observer to remove
+     * Removes a Model Observer.
+     * @param obs the observer to remove.
      */
     void removeModelObserver(Observer<ModelEvent, ModelView> obs);
 
     /**
      *
-     * @return the model view
+     * @return the model view.
      */
     ModelView getModelView();
 
