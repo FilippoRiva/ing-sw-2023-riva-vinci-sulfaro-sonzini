@@ -3,6 +3,7 @@ package it.polimi.myshelfie.view.graphical.controllers.game;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 import it.polimi.myshelfie.model.Position;
+import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
@@ -26,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class LivingRoomController {
+    @FXML
+    ImageView endToken;
     @FXML
     StackPane mainStack;
     @FXML
@@ -51,7 +54,6 @@ public class LivingRoomController {
     private TileImageView[][] imagesLivingRoom;
 
     public void initialize(GamePanelController gamePanelController, DoubleBinding tileSizeBinding){
-
         this.gamePanelController = gamePanelController;
         this.active = false;
 
@@ -60,6 +62,10 @@ public class LivingRoomController {
 
         this.tileSizeBinding = tileSizeBinding.multiply(1.5);
         CustomBindings.bindSize(livingRoomImage,this.tileSizeBinding.multiply(livingRoomSizeToTileSize),this.tileSizeBinding.multiply(livingRoomSizeToTileSize));
+        CustomBindings.bindSize(endToken, livingRoomImage.fitWidthProperty().divide(2965).multiply(325), null);
+        endToken.setTranslateY(livingRoomImage.getFitHeight()/2965*740);
+        endToken.setTranslateX(livingRoomImage.getFitWidth()/2965*1070);
+
         CustomBindings.bindSize(mainStack,livingRoomImage.fitWidthProperty(),livingRoomImage.fitHeightProperty());
         tilesGrid.vgapProperty().bind(livingRoomImage.fitHeightProperty().multiply(gridSpacingToLivingRoomSize));
         tilesGrid.hgapProperty().bind(livingRoomImage.fitWidthProperty().multiply(gridSpacingToLivingRoomSize));
@@ -231,5 +237,12 @@ public class LivingRoomController {
         resetChoice();
         setActive(false);
         imagesLivingRoom = new TileImageView[9][9];
+        endToken.setVisible(true);
+    }
+
+    public void checkEndToken() {
+        List<Token> newTokens = viewManager.getLastPlayerTokenDiff();
+
+        if(newTokens.contains(Token.ENDGAME)) endToken.setVisible(false);
     }
 }

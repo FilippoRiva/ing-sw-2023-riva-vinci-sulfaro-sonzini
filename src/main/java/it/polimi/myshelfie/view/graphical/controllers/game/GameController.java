@@ -75,6 +75,7 @@ public class GameController{
             gameOverlayController.startTurn();
         if(viewManager.getCurrentStateDiff()== GameState.WIN){
             gameOverlayController.startTurn();
+            gamePanelController.livingRoomController.checkEndToken();
             Animations.timer(()->{
                 gameOverlay.setMouseTransparent(true);
                 gameOverlay.setVisible(false);

@@ -110,7 +110,7 @@ public class GameOverlayController {
         personalGoal.setTranslateY(stage.getHeight()/5*3 - 70);
 
         chat.setTranslateX(-20);
-        chat.setTranslateY(stage.getHeight()/15*8 - 100);
+        chat.setTranslateY(stage.getHeight()/15*8 - 80);
     }
 
     private TokenImageView getTokenImageView(Token token) {
@@ -154,7 +154,7 @@ public class GameOverlayController {
 
     public void toggleChatVisible() {
         if(chatController.isChatVisible()){
-            chat.setTranslateY(stage.getHeight()/15*8 - 100);
+            chat.setTranslateY(stage.getHeight()/15*8 - 80);
             chatController.setChatVisible(false);
             return;
         }

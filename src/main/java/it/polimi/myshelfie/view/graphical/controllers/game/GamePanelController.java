@@ -192,6 +192,7 @@ public class GamePanelController {
                     Platform.runLater(()->confirmButton.setText("Confirm Draw"));
                     confirmButton.setOnMousePressed((event)->draw());
                 }
+                livingRoomController.checkEndToken();
             }
             case ORGANIZE,LAST_ORGANIZE -> {
                 livingRoomController.updateLivingRoom(vm.getLivingRoomDiff());

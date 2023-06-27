@@ -38,5 +38,10 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
+      <ImageView fx:id="endToken" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/game/tokens/1.jpg" />
+         </image>
+      </ImageView>
    </children>
 </StackPane>
