@@ -16,9 +16,12 @@
     <children>
       <HBox fx:id="mainHBox" alignment="CENTER">
          <children>
-            <VBox alignment="CENTER" spacing="50.0">
+            <VBox alignment="CENTER" spacing="10.0">
                <children>
-                    <Label fx:id="lobbyNameLabel" alignment="CENTER" text="Lobby Name" textAlignment="CENTER" />
+                    <Label fx:id="lobbyNameLabel" alignment="CENTER" text="Lobby Name" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets bottom="30.0" top="20.0" />
+                     </VBox.margin></Label>
                   <HBox alignment="BOTTOM_CENTER" spacing="10.0">
                      <children>
                         <StackPane>
@@ -85,28 +88,26 @@
                            </children>
                         </StackPane>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER" spacing="30.0">
+                  <StackPane fx:id="detailsStack">
                      <children>
-                        <StackPane fx:id="detailsStack">
-                           <children>
-                              <GridPane fx:id="scoreboardGrid">
+                        <GridPane fx:id="scoreboardGrid" hgap="500.0" StackPane.alignment="CENTER">
                               </GridPane>
-                              <GridPane fx:id="detailsGrid" hgap="50.0" visible="false">
+                        <GridPane fx:id="detailsGrid" hgap="50.0" visible="false" StackPane.alignment="CENTER">
                               </GridPane>
-                           </children>
-                        </StackPane>
-                          <Button fx:id="detailsButton" mnemonicParsing="false" onMousePressed="#changeViewDetail" text="Details &gt;">
-                           <HBox.margin>
-                              <Insets top="30.0" />
-                           </HBox.margin>
-                        </Button>
                      </children>
-                  </HBox>
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin>
+                  </StackPane>
                </children>
             </VBox>
          </children>
       </HBox>
+        <Button fx:id="detailsButton" mnemonicParsing="false" onMousePressed="#changeViewDetail" text="Details &gt;" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="40.0" />
       <Button layoutX="59.0" layoutY="58.0" mnemonicParsing="false" onMousePressed="#onBackArrowClick" prefHeight="77.0" prefWidth="86.0" styleClass="arrow" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
     </children>
 </AnchorPane>

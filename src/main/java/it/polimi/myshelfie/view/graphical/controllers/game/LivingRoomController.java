@@ -130,7 +130,7 @@ public class LivingRoomController {
         }
         this.imagesLivingRoom = imagesLivingRoom;
         Platform.runLater(()->{
-            tilesGrid.getChildren().removeAll(tilesGrid.getChildren());
+            tilesGrid.getChildren().clear();
             for(int i = 0; i< imagesLivingRoom.length; i++){
                 for(int j = 0; j<imagesLivingRoom[0].length; j++){
                     tilesGrid.add(imagesLivingRoom[i][j],i,j);

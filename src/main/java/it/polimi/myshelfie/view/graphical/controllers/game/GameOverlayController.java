@@ -167,9 +167,9 @@ public class GameOverlayController {
     public void reset() {
         Platform.runLater(()->{
             messageLabel.setText(null);
-            tokens1.getChildren().removeAll(tokens1.getChildren());
-            tokens2.getChildren().removeAll(tokens2.getChildren());
-            playersListVbox.getChildren().removeAll(playersListVbox.getChildren());
+            tokens1.getChildren().clear();
+            tokens2.getChildren().clear();
+            playersListVbox.getChildren().clear();
         });
         chatController.reset();
     }

@@ -143,7 +143,7 @@ public class BookshelfController {
             nextButton.setOpacity(0);
             prevButton.setOnMousePressed((event)->prevBookshelf());
             nextButton.setOnMousePressed((event)->nextBookshelf(false));
-            topHBox.getChildren().removeAll(topHBox.getChildren());
+            topHBox.getChildren().clear();
             currentPlayerPos = 0;
         }
 
@@ -206,7 +206,7 @@ public class BookshelfController {
         gridImages = bookshelf;
         boolean firstPlayer = ViewManager.getInstance().getGameModelView().getFirstPlayer().equals(player);
         Platform.runLater(()->{
-            bookshelfGrid.getChildren().removeAll(bookshelfGrid.getChildren());
+            bookshelfGrid.getChildren().clear();
             commonGoalTokensStack.getChildren().removeAll(tokenStack);
             tokenStack.clear();
             for(Token t : player.getTokens()){
