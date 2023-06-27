@@ -76,12 +76,15 @@ public class GameControllerImpl implements GameController, ChatController{
         this.exceptionsNotifiersMap = notifiersMap;
         this.connectionHandlersMap = connectionHandlersMap;
         this.chatObserverMap = new HashMap<>();
-        for(ServerConnectionHandler sch : connectionHandlersMap.values()){
+        for(String player : connectionHandlersMap.keySet()){
+            ServerConnectionHandler sch = connectionHandlersMap.get(player);
             try {
                 sch.setGameController(this);
                 sch.setChatController(this);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException e) { //disconnection during init
+                closed = false;
+                gameModel.setState(GameState.FIRST_DRAW);
+                disconnectFromGame(player);
             }
         }
         closed = false;
@@ -240,8 +243,7 @@ public class GameControllerImpl implements GameController, ChatController{
             try {
                 connectionHandlersMap.get(username).setGameController(null);
                 connectionHandlersMap.get(username).setChatController(null);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
             }
             Client client = clientsMap.get(username);
             new Thread(()->{
