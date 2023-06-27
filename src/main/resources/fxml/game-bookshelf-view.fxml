@@ -15,89 +15,84 @@
 
 <BorderPane fx:id="mainBorderPane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.BookshelfController">
    <top>
-      <HBox fx:id="topHBox" alignment="TOP_CENTER" BorderPane.alignment="CENTER">
-         <children>
-            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column1Insert" rotate="90"/>
-            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column2Insert" rotate="90"/>
-            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column3Insert" rotate="90"/>
-            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column4Insert" rotate="90"/>
-            <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column5Insert" rotate="90"/>
-         </children>
-      </HBox>
+       <HBox fx:id="topHBox" alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+           <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column1Insert"
+                  rotate="90"/>
+           <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column2Insert"
+                  rotate="90"/>
+           <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column3Insert"
+                  rotate="90"/>
+           <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column4Insert"
+                  rotate="90"/>
+           <Label cache="true" cacheHint="SCALE_AND_ROTATE" styleClass="darkWoodArrowButton" fx:id="column5Insert"
+                  rotate="90"/>
+       </HBox>
    </top>
    <center>
-      <StackPane fx:id="gridStack" BorderPane.alignment="CENTER">
-         <children>
-            <GridPane fx:id="bookshelfGrid" alignment="CENTER" gridLinesVisible="true" StackPane.alignment="CENTER">
-              <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" />
-                  <ColumnConstraints hgrow="SOMETIMES" />
-                  <ColumnConstraints hgrow="SOMETIMES" />
-                <ColumnConstraints hgrow="SOMETIMES" />
-                <ColumnConstraints hgrow="SOMETIMES" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-              </rowConstraints>
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-            </GridPane>
-            <ImageView fx:id="bookshelfImage" cache="true" cacheHint="SPEED" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-               <image>
-                  <Image url="@../images/game/boards/bookshelf_orth_corrected.png" />
-               </image>
-            </ImageView>
-         </children>
-      </StackPane>
+       <StackPane fx:id="gridStack" BorderPane.alignment="CENTER">
+           <GridPane fx:id="bookshelfGrid" alignment="CENTER" gridLinesVisible="true" StackPane.alignment="CENTER">
+               <columnConstraints>
+                   <ColumnConstraints hgrow="SOMETIMES"/>
+                   <ColumnConstraints hgrow="SOMETIMES"/>
+                   <ColumnConstraints hgrow="SOMETIMES"/>
+                   <ColumnConstraints hgrow="SOMETIMES"/>
+                   <ColumnConstraints hgrow="SOMETIMES"/>
+               </columnConstraints>
+               <rowConstraints>
+                   <RowConstraints vgrow="SOMETIMES"/>
+                   <RowConstraints vgrow="SOMETIMES"/>
+                   <RowConstraints vgrow="SOMETIMES"/>
+                   <RowConstraints vgrow="SOMETIMES"/>
+                   <RowConstraints vgrow="SOMETIMES"/>
+                   <RowConstraints vgrow="SOMETIMES"/>
+               </rowConstraints>
+              <StackPane.margin>
+                  <Insets/>
+              </StackPane.margin>
+           </GridPane>
+           <ImageView fx:id="bookshelfImage" cache="true" cacheHint="SPEED" mouseTransparent="true"
+                      pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+               <Image url="@../images/game/boards/bookshelf_orth_corrected.png"/>
+           </ImageView>
+       </StackPane>
    </center>
    <bottom>
-      <HBox fx:id="bottomHBox" alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
-          <BorderPane.margin>
-              <Insets top="20.0" />
-          </BorderPane.margin>
-         <children>
-            <ImageView fx:id="chair" cache="true" cacheHint="SPEED" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/game/chair.png" />
-               </image></ImageView>
-            <Label fx:id="playerName" cache="true" cacheHint="SPEED" styleClass="bookshelfPlayerName" text="PlayerName">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <StackPane fx:id="commonGoalTokensStack" />
-         </children>
-         <padding>
-            <Insets bottom="20.0" top="20.0" />
-         </padding>
-      </HBox>
+       <HBox fx:id="bottomHBox" alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets top="20.0"/>
+           </BorderPane.margin>
+           <padding>
+               <Insets bottom="20.0" top="20.0"/>
+           </padding>
+           <ImageView fx:id="chair" cache="true" cacheHint="SPEED" pickOnBounds="true" preserveRatio="true">
+               <Image url="@../images/game/chair.png"/>
+           </ImageView>
+           <Label fx:id="playerName" cache="true" cacheHint="SPEED" styleClass="bookshelfPlayerName" text="PlayerName">
+              <font>
+                  <Font size="20.0"/>
+              </font>
+           </Label>
+           <StackPane fx:id="commonGoalTokensStack"/>
+       </HBox>
    </bottom>
    <left>
-      <StackPane fx:id="leftStack" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="prevButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&lt;" StackPane.alignment="CENTER">
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </Button>
-         </children>
-      </StackPane>
+       <StackPane fx:id="leftStack" BorderPane.alignment="CENTER">
+           <Button fx:id="prevButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0"
+                   mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&lt;" StackPane.alignment="CENTER">
+              <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+              </padding>
+           </Button>
+       </StackPane>
    </left>
    <right>
-      <StackPane fx:id="rightStack" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="nextButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&gt;" StackPane.alignment="CENTER">
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </Button>
-         </children>
-      </StackPane>
+       <StackPane fx:id="rightStack" BorderPane.alignment="CENTER">
+           <Button fx:id="nextButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0"
+                   mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="&gt;" StackPane.alignment="CENTER">
+              <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+              </padding>
+           </Button>
+       </StackPane>
    </right>
 </BorderPane>

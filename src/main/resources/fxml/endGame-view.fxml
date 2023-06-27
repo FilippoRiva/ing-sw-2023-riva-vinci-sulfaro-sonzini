@@ -12,102 +12,96 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.EndGameController">
-    <children>
-      <HBox fx:id="mainHBox" alignment="CENTER">
-         <children>
-            <VBox alignment="CENTER" spacing="10.0">
-               <children>
-                    <Label fx:id="lobbyNameLabel" alignment="CENTER" text="Lobby Name" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets bottom="30.0" top="20.0" />
-                     </VBox.margin></Label>
-                  <HBox alignment="BOTTOM_CENTER" spacing="10.0">
-                     <children>
-                        <StackPane>
-                           <children>
-                              <ImageView fx:id="secondPodiumImage" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
-                                 <image>
-                                    <Image url="@../images/endGame/silverPodium.png" />
-                                 </image>
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                                <Label fx:id="player2" alignment="CENTER" style="-fx-font-size: 30; -fx-text-fill: white;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
-                                 <StackPane.margin>
-                                    <Insets bottom="230.0" />
-                                 </StackPane.margin></Label>
-                                <Label fx:id="points2" alignment="CENTER" textFill="WHITE" StackPane.alignment="BOTTOM_CENTER">
-                                 <StackPane.margin>
-                                    <Insets bottom="20.0" />
-                                 </StackPane.margin>
-                              </Label>
-                           </children>
-                        </StackPane>
-                        <StackPane>
-                           <children>
-                              <ImageView fx:id="firstPodiumImage" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
-                                 <image>
-                                    <Image url="@../images/endGame/goldPodium.png" />
-                                 </image>
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                                <Label fx:id="player1" alignment="CENTER" style="-fx-font-size: 30; -fx-text-fill: white;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
-                                 <StackPane.margin>
-                                    <Insets bottom="300.0" />
-                                 </StackPane.margin></Label>
-                                <Label fx:id="points1" alignment="CENTER" textFill="WHITE" StackPane.alignment="BOTTOM_CENTER">
-                                 <StackPane.margin>
-                                    <Insets bottom="20.0" />
-                                 </StackPane.margin>
-                              </Label>
-                           </children>
-                        </StackPane>
-                        <StackPane fx:id="thirdPodiumStack">
-                           <children>
-                              <ImageView fx:id="thirdPodiumImage" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
-                                 <image>
-                                    <Image url="@../images/endGame/bronzePodium.png" />
-                                 </image>
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                                <Label fx:id="player3" alignment="CENTER" style="-fx-font-size: 30; -fx-text-fill: white;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
-                                 <StackPane.margin>
-                                    <Insets bottom="110.0" />
-                                 </StackPane.margin></Label>
-                                <Label fx:id="points3" alignment="CENTER" textFill="WHITE" StackPane.alignment="BOTTOM_CENTER">
-                                 <StackPane.margin>
-                                    <Insets bottom="20.0" />
-                                 </StackPane.margin>
-                              </Label>
-                           </children>
-                        </StackPane>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="30.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <StackPane fx:id="detailsStack">
-                     <children>
-                        <GridPane fx:id="scoreboardGrid" hgap="500.0" StackPane.alignment="CENTER">
-                              </GridPane>
-                        <GridPane fx:id="detailsGrid" hgap="50.0" visible="false" StackPane.alignment="CENTER">
-                              </GridPane>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="30.0" />
-                     </VBox.margin>
-                  </StackPane>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-        <Button fx:id="detailsButton" mnemonicParsing="false" onMousePressed="#changeViewDetail" text="Details &gt;" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-      <Button layoutX="59.0" layoutY="58.0" mnemonicParsing="false" onMousePressed="#onBackArrowClick" prefHeight="77.0" prefWidth="86.0" styleClass="arrow" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
-    </children>
+<AnchorPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.EndGameController">
+    <HBox fx:id="mainHBox" alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10.0">
+            <Label fx:id="lobbyNameLabel" alignment="CENTER" text="Lobby Name" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets bottom="30.0" top="20.0"/>
+                </VBox.margin>
+            </Label>
+            <HBox alignment="BOTTOM_CENTER" spacing="10.0">
+                <VBox.margin>
+                    <Insets bottom="30.0"/>
+                </VBox.margin>
+                <StackPane>
+                    <ImageView fx:id="secondPodiumImage" pickOnBounds="true" preserveRatio="true"
+                               StackPane.alignment="BOTTOM_CENTER">
+                        <viewport>
+                            <Rectangle2D/>
+                        </viewport>
+                        <Image url="@../images/endGame/silverPodium.png"/>
+                    </ImageView>
+                    <Label fx:id="player2" alignment="CENTER" style="-fx-font-size: 30; -fx-text-fill: white;"
+                           textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
+                        <StackPane.margin>
+                            <Insets bottom="230.0"/>
+                        </StackPane.margin>
+                    </Label>
+                    <Label fx:id="points2" alignment="CENTER" textFill="WHITE"
+                           StackPane.alignment="BOTTOM_CENTER">
+                        <StackPane.margin>
+                            <Insets bottom="20.0"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
+                <StackPane>
+                    <ImageView fx:id="firstPodiumImage" pickOnBounds="true" preserveRatio="true"
+                               StackPane.alignment="BOTTOM_CENTER">
+                        <viewport>
+                            <Rectangle2D/>
+                        </viewport>
+                        <Image url="@../images/endGame/goldPodium.png"/>
+                    </ImageView>
+                    <Label fx:id="player1" alignment="CENTER" style="-fx-font-size: 30; -fx-text-fill: white;"
+                           textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
+                        <StackPane.margin>
+                            <Insets bottom="300.0"/>
+                        </StackPane.margin>
+                    </Label>
+                    <Label fx:id="points1" alignment="CENTER" textFill="WHITE"
+                           StackPane.alignment="BOTTOM_CENTER">
+                        <StackPane.margin>
+                            <Insets bottom="20.0"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
+                <StackPane fx:id="thirdPodiumStack">
+                    <ImageView fx:id="thirdPodiumImage" pickOnBounds="true" preserveRatio="true"
+                               StackPane.alignment="BOTTOM_CENTER">
+                        <viewport>
+                            <Rectangle2D/>
+                        </viewport>
+                        <Image url="@../images/endGame/bronzePodium.png"/>
+                    </ImageView>
+                    <Label fx:id="player3" alignment="CENTER" style="-fx-font-size: 30; -fx-text-fill: white;"
+                           textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER">
+                        <StackPane.margin>
+                            <Insets bottom="110.0"/>
+                        </StackPane.margin>
+                    </Label>
+                    <Label fx:id="points3" alignment="CENTER" textFill="WHITE"
+                           StackPane.alignment="BOTTOM_CENTER">
+                        <StackPane.margin>
+                            <Insets bottom="20.0"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
+            </HBox>
+            <StackPane fx:id="detailsStack">
+                <VBox.margin>
+                    <Insets bottom="30.0"/>
+                </VBox.margin>
+                <GridPane fx:id="scoreboardGrid" hgap="500.0" StackPane.alignment="CENTER">
+                </GridPane>
+                <GridPane fx:id="detailsGrid" hgap="50.0" visible="false" StackPane.alignment="CENTER">
+                </GridPane>
+            </StackPane>
+        </VBox>
+    </HBox>
+    <Button fx:id="detailsButton" mnemonicParsing="false" onMousePressed="#changeViewDetail" text="Details &gt;"
+            AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="40.0"/>
+    <Button layoutX="59.0" layoutY="58.0" mnemonicParsing="false" onMousePressed="#onBackArrowClick" prefHeight="77.0"
+            prefWidth="86.0" styleClass="arrow" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0"/>
 </AnchorPane>

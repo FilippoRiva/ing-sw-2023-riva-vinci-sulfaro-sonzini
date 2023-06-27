@@ -7,47 +7,41 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="fullStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController">
-   <children>
-      <VBox fx:id="playersListVbox" fillWidth="false" mouseTransparent="true" StackPane.alignment="TOP_LEFT">
-         <StackPane.margin>
-            <Insets left="10.0" top="10.0" />
-         </StackPane.margin>
-      </VBox>
-      <Label fx:id="playingLabel" mouseTransparent="true" text="Playing" StackPane.alignment="TOP_CENTER">
-         <StackPane.margin>
-            <Insets top="20.0" />
-         </StackPane.margin>
-      </Label>
-      <Label fx:id="messageLabel" mouseTransparent="true" wrapText="true" StackPane.alignment="TOP_RIGHT">
-         <StackPane.margin>
-            <Insets right="10.0" top="10.0" />
-         </StackPane.margin>
-      </Label>
-      <HBox fx:id="commonGoalsHBox" alignment="BOTTOM_CENTER" spacing="20.0" StackPane.alignment="BOTTOM_CENTER">
-         <children>
-            <StackPane>
-               <children>
-                  <ImageView fx:id="commonGoal1" pickOnBounds="true" preserveRatio="true" />
-                  <StackPane fx:id="tokens1" mouseTransparent="true" />
-               </children>
-            </StackPane>
-            <StackPane>
-               <children>
-                  <ImageView fx:id="commonGoal2" pickOnBounds="true" preserveRatio="true" />
-                  <StackPane fx:id="tokens2" mouseTransparent="true" />
-               </children>
-            </StackPane>
-         </children>
-         <StackPane.margin>
-            <Insets bottom="10.0" />
-         </StackPane.margin>
-      </HBox>
-      <ImageView fx:id="personalGoal" onMouseEntered="#showPersonalGoal" onMouseExited="#hidePersonalGoal" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
-         <StackPane.margin>
-            <Insets left="20.0" />
-         </StackPane.margin>
-      </ImageView>
-      <fx:include fx:id="chat" source="chat-view.fxml" StackPane.alignment="BOTTOM_RIGHT" />
-   </children>
+<StackPane fx:id="fullStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController">
+    <VBox fx:id="playersListVbox" fillWidth="false" mouseTransparent="true" StackPane.alignment="TOP_LEFT">
+        <StackPane.margin>
+          <Insets left="10.0" top="10.0"/>
+        </StackPane.margin>
+    </VBox>
+    <Label fx:id="playingLabel" mouseTransparent="true" text="Playing" StackPane.alignment="TOP_CENTER">
+        <StackPane.margin>
+          <Insets top="20.0"/>
+        </StackPane.margin>
+    </Label>
+    <Label fx:id="messageLabel" mouseTransparent="true" wrapText="true" StackPane.alignment="TOP_RIGHT">
+        <StackPane.margin>
+          <Insets right="10.0" top="10.0"/>
+        </StackPane.margin>
+    </Label>
+    <HBox fx:id="commonGoalsHBox" alignment="BOTTOM_CENTER" spacing="20.0" StackPane.alignment="BOTTOM_CENTER">
+        <StackPane.margin>
+            <Insets bottom="10.0"/>
+        </StackPane.margin>
+        <StackPane>
+            <ImageView fx:id="commonGoal1" pickOnBounds="true" preserveRatio="true"/>
+            <StackPane fx:id="tokens1" mouseTransparent="true"/>
+        </StackPane>
+        <StackPane>
+            <ImageView fx:id="commonGoal2" pickOnBounds="true" preserveRatio="true"/>
+            <StackPane fx:id="tokens2" mouseTransparent="true"/>
+        </StackPane>
+    </HBox>
+    <ImageView fx:id="personalGoal" onMouseEntered="#showPersonalGoal" onMouseExited="#hidePersonalGoal"
+               pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+        <StackPane.margin>
+          <Insets left="20.0"/>
+        </StackPane.margin>
+    </ImageView>
+    <fx:include fx:id="chat" source="chat-view.fxml" StackPane.alignment="BOTTOM_RIGHT"/>
 </StackPane>
