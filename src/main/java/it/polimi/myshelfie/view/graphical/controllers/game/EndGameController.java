@@ -13,11 +13,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
@@ -61,20 +64,10 @@ public class EndGameController{
         CustomBindings.bindSize(mainHBox,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
         CustomBindings.bindSize(firstPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
         CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
-        CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+        CustomBindings.bindSize(thirdPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
 
         playersPodium = new Label[]{player1, player2, player3};
         pointsPodium = new Label[]{points1, points2, points3};
-    }
-
-    public void setKeyListeners() {
-        Scene scene = GraphicalUI.stage.getScene();
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()){
-                case ESCAPE -> onBackArrowClick();
-                case ENTER -> changeViewDetail();
-            }
-        });
     }
 
     private void addRowScoreboard(PlayerModelView player, int position){
@@ -182,5 +175,12 @@ public class EndGameController{
 
     public void reset() {
         //TODO
+    }
+
+    public void processKeyEvent(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()){
+            case ESCAPE -> onBackArrowClick();
+            case ENTER -> changeViewDetail();
+        }
     }
 }

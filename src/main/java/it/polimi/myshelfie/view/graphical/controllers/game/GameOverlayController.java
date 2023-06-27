@@ -5,6 +5,7 @@ import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import it.polimi.myshelfie.view.graphical.components.TokenImageView;
@@ -24,6 +25,8 @@ import java.util.List;
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 
 public class GameOverlayController {
+    @FXML
+    protected Label messageLabel;
     @FXML
     protected Label playingLabel;
     @FXML
@@ -46,17 +49,18 @@ public class GameOverlayController {
     protected ImageView personalGoal;
 
     @FXML
-    protected ChatController chatController;
+    public ChatController chatController;
 
     ViewManager viewManager = ViewManager.getInstance();
     Stage stage;
 
-    public void initialize(GameController gameController){
+    public void customInitialize(){
         stage = GraphicalUI.stage;
 
         CustomBindings.bindSize(fullStackPane, stage.widthProperty(), stage.heightProperty());
         fullStackPane.setPickOnBounds(false);
 
+        messageLabel.setMaxWidth(stage.getWidth()/3);
         CustomBindings.bindSize(playersListVbox, null, stage.heightProperty().divide(5));
 
         CustomBindings.bindSize(personalGoal, null, stage.heightProperty().divide(5).multiply(3));
@@ -88,8 +92,11 @@ public class GameOverlayController {
         tokens2.setTranslateX(commonGoal2.getFitHeight()/913*321);
         Platform.runLater(() -> {
             playingLabel.setText(viewManager.getGameModelView().getCurrentPlayerName());
+            int i = 1;
             for(PlayerModelView player : viewManager.getGameModelView().getPlayers()){
-                playersListVbox.getChildren().add(new Label(player.getName()));
+                Label label = new Label(i + ") " + player.getName());
+                playersListVbox.getChildren().add(label);
+                i++;
             }
 
             for (Token token : commonGoals.get(0).getTokens()) {
@@ -113,38 +120,25 @@ public class GameOverlayController {
         return tokenImageView;
     }
 
-//    public void setKeyListeners() {
-//        Scene scene = GraphicalUI.stage.getScene();
-//
-//        scene.setOnKeyPressed(keyEvent -> {
-//            switch (keyEvent.getCode()){
-//                case ENTER -> {
-//                    if(chatController.isChatVisible()) chatController.sendMessage();
-//                }
-//                case C -> {
-//                    if(!chatController.isChatVisible()) toggleChatVisible();
-//                }
-//                case ESCAPE -> {
-//                    if(chatController.isChatVisible()) toggleChatVisible();
-//                }
-//            }
-//        });
-//    }
-
     public void startTurn() {
-        //tokens update
-        List<CommonGoalModelView> commonGoalModelViews = viewManager.getCommonGoalDiff();
-        if(!commonGoalModelViews.isEmpty()){
-            for(CommonGoalModelView common : commonGoalModelViews){
+        List<Token> tokens = viewManager.getLastPlayerTokenDiff();
+        if(!tokens.isEmpty()){
+            for(Token token : tokens){
                 Platform.runLater(() -> {
-                    if (common.getTokens().get(common.getTokens().size() - 1).getRomanNumeral() == 1)
+                    if (token.getRomanNumeral() == 0) {
+                        messageLabel.setText("Last round");
+                    } else if (token.getRomanNumeral() == 1) {
                         tokens1.getChildren().remove(tokens1.getChildren().size() - 1);
-                    else
+                        messageLabel.setText("Earned a token from the first common goal");
+                    } else if (token.getRomanNumeral() == 2) {
                         tokens2.getChildren().remove(tokens2.getChildren().size() - 1);
+                        messageLabel.setText("Earned a token from the second common goal");
+                    }
+                    Animations.fadeIn(messageLabel).play();
+                    Animations.timer(() -> Animations.fadeOut(messageLabel).play(), 3000);
                 });
             }
         }
-
         Platform.runLater(() -> playingLabel.setText(viewManager.getCurrentPlayerDiff()));
     }
     @FXML
@@ -167,12 +161,13 @@ public class GameOverlayController {
         chat.setTranslateY(0);
         chatController.setChatVisible(true);
         //reset notificationCounter
-//        if(notificationDot.getText().equals("0")) return;
-//        Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));
-//        a.setOnFinished((evt)-> Platform.runLater(()->notificationDot.setText("0")));
-//        a.play();
     }
 
     public void reset() {
+        messageLabel.setText(null);
+        tokens1.getChildren().removeAll(tokens1.getChildren());
+        tokens2.getChildren().removeAll(tokens2.getChildren());
+        playersListVbox.getChildren().removeAll(playersListVbox.getChildren());
+        chatController.reset();
     }
 }

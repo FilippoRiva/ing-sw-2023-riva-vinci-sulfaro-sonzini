@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -63,6 +64,8 @@ public class MainViewController implements Initializable {
         game.setMouseTransparent(true);
 
         Animations.applyHoverScaling(errorButton);
+
+        this.setKeyListener();
     }
 
     /**
@@ -96,7 +99,6 @@ public class MainViewController implements Initializable {
                 game.setMouseTransparent(false);
                 game.setVisible(true);
             }
-            case WIN -> gameController.win();
             case DISCONNECTION -> showErrorPane(viewManager.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
             case STOPPED -> showErrorPane("You have been disconnected. Try reconnecting later");
         }
@@ -122,11 +124,12 @@ public class MainViewController implements Initializable {
     public void onErrorButtonMouseClicked(){
         criticalErrorPane.setMouseTransparent(true);
         criticalErrorPane.setVisible(false);
-        if(currentState==InternalViewState.STOPPED){
+        if(currentState==InternalViewState.DISCONNECTION){
+            gameController.reset();
+            changeView(InternalViewState.INIT);
+        } else if(currentState==InternalViewState.STOPPED){
             GraphicalUI.stage.hide();
             System.exit(0);
-        } else {
-            changeView(InternalViewState.INIT);
         }
     }
 
@@ -155,6 +158,20 @@ public class MainViewController implements Initializable {
     public void chatUpdate() {
         if(currentState == InternalViewState.GAME) gameController.updateChat();
         else preGameController.notifyNewMessage();
+    }
+
+    private void setKeyListener(){
+        GraphicalUI.stage.getScene().addEventFilter(KeyEvent.KEY_PRESSED,(KeyEvent keyEvent)->{
+            //System.out.println("Pressed : "+keyEvent.getText());
+            switch (currentState){
+                case INIT -> preGameController.homeController.processKeyEvent(keyEvent);
+                case JOIN -> preGameController.joinController.processKeyEvent(keyEvent);
+                case CREATE -> preGameController.createController.processKeyEvent(keyEvent);
+                case LOBBY -> preGameController.lobbyController.processKeyEvent(keyEvent);
+                case GAME -> gameController.processKeyPress(keyEvent);
+                case WIN ->  gameController.endGameController.processKeyEvent(keyEvent);
+            }
+        });
     }
 
 }

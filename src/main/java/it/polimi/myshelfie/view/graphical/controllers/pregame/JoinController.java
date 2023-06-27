@@ -12,12 +12,12 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
@@ -59,19 +59,10 @@ public class JoinController {
         this.preGameController = preGameController;
     }
 
-    public void setKeyListeners() {
-        Scene scene = GraphicalUI.stage.getScene();
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()){
-                case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
-                case ENTER -> onJoinMouseClicked();
-            }
-        });
-    }
-
     @FXML
     protected void onJoinMouseClicked() {
         String playerName = playerNameField.getText();
+        if(selected==null) return;
         if (playerName.isEmpty()) {
             Animations.emptyFieldError(playerNameField).play();
         }else {
@@ -139,6 +130,16 @@ public class JoinController {
 
     public void reset() {
         this.selected = null;
-        Platform.runLater(()->playerNameField.clear());
+        Platform.runLater(()->{
+            joinButton.setDisable(true);
+            playerNameField.clear();
+        });
+    }
+
+    public void processKeyEvent(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()){
+            case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
+            case ENTER -> preGameController.joinController.onJoinMouseClicked();
+        }
     }
 }

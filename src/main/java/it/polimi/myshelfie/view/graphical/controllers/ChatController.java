@@ -3,8 +3,10 @@ package it.polimi.myshelfie.view.graphical.controllers;
 import it.polimi.myshelfie.model.chatting.Message;
 import it.polimi.myshelfie.model.chatting.Messages;
 import it.polimi.myshelfie.view.ViewManager;
+import it.polimi.myshelfie.view.graphical.Animations;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController;
+import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,6 +41,8 @@ public class ChatController implements Initializable {
     protected ImageView messagesBackgroundImage;
     @FXML
     protected StackPane chat;
+    @FXML
+    protected Label notificationDot;
     ViewManager viewManager = ViewManager.getInstance();
     boolean chatIsOpen = false;
     private GameOverlayController gameOverlayController;
@@ -51,11 +55,14 @@ public class ChatController implements Initializable {
         CustomBindings.bindSize(messagesBackgroundImage,chatScroll.minWidthProperty(),chat.minHeightProperty().subtract(180));
         messagesVBox.heightProperty().addListener(observable -> chatScroll.setVvalue(1D));
         receiverChoice.setValue("Everyone");
+        notificationDot.setVisible(true);
+        notificationDot.setOpacity(0);
     }
 
     @FXML
-    public void setChatVisible(boolean value) {
-        if(value){
+    public void setChatVisible(boolean visible) {
+        if(visible){
+            resetNotificationDot();
             chatIsOpen = true;
             messageText.requestFocus();
             Platform.runLater(() -> {
@@ -107,7 +114,8 @@ public class ChatController implements Initializable {
 
         //create default textLabel
         Label userLabel = new Label(message.getSender());
-        userLabel.setStyle("-fx-font-size: 13; -fx-text-fill: DarkGoldenRod; -fx-label-padding: 0 0 0 10");
+        if(message.getReceiver().equals(Messages.toEveryOne))userLabel.setStyle("-fx-font-size: 13; -fx-label-padding: 0 0 0 10");
+        else userLabel.setStyle("-fx-font-size: 13; -fx-text-fill:MidnightBlue; -fx-label-padding: 0 0 0 10");
         Label textLabel = new Label(message.getMessage());
         textLabel.setStyle("-fx-font-size: 20; -fx-label-padding: 0 0 0 10; -fx-wrap-text: true");
         Label timeLabel = new Label(message.getTimeHHmm());
@@ -119,9 +127,11 @@ public class ChatController implements Initializable {
         CustomBindings.bindSize(singleMessageVBox,textLabel);
 
         if(message.getSender().equals(ViewManager.getUsername())){
-            singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20");
+            if(message.getReceiver().equals(Messages.toEveryOne)) singleMessageVBox.setStyle("-fx-background-color: NavajoWhite ; -fx-background-radius: 20 0 20 20");
+            else singleMessageVBox.setStyle("-fx-background-color: NavajoWhite  ; -fx-background-radius: 20 0 20 20");
         } else {
-            singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 0 20 20 20");
+            if(message.getReceiver().equals(Messages.toEveryOne)) singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20");
+            else singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 0 20 20 20");
         }
 
         if(!message.getReceiver().equals(Messages.toEveryOne)) {
@@ -138,6 +148,26 @@ public class ChatController implements Initializable {
             if(messages.size() > 100) messages.remove(0);
             messages.add(messageBox);
         });
+
+        updateNotificationDot();
+    }
+
+    private void updateNotificationDot(){
+        if(!isChatVisible()) {
+            int prev = Integer.parseInt(notificationDot.getText());
+            if(prev==0) {
+                Animations.popFadeIn(notificationDot).play();
+            }
+            int newValue = prev+1;
+            Platform.runLater(()->notificationDot.setText(String.valueOf(newValue)));
+        }
+    }
+
+    private void resetNotificationDot(){
+        if(notificationDot.getText().equals("0")) return;
+        Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));
+        a.setOnFinished((evt)-> Platform.runLater(()->notificationDot.setText("0")));
+        a.play();
     }
 
     public boolean isChatVisible() {

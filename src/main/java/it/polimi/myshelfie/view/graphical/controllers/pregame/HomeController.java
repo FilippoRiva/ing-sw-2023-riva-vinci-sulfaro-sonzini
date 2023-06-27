@@ -6,10 +6,10 @@ import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.Effects;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class HomeController {
@@ -41,13 +41,10 @@ public class HomeController {
         GraphicalUI.mainViewController.changeView(InternalViewState.JOIN);
     }
 
-    public void setKeyListeners() {
-        Scene scene = GraphicalUI.stage.getScene();
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()){
-                case C -> onCreateChoice();
-                case J -> onJoinChoice();
-            }
-        });
+    public void processKeyEvent(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()){
+            case C -> onCreateChoice();
+            case J -> onJoinChoice();
+        }
     }
 }

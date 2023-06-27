@@ -50,23 +50,18 @@ public class GamePanelController {
     @FXML
     TileSorterController tileSorterController;
 
-    public void reset() {
-        leftBookshelfController.reset();
-        rightBookshelfController.reset();
-        livingRoomController.reset();
-        tileSorterController.resetAll();
-    }
-
     private enum PanelState {ACTION, SPECTATE}
     private PanelState state;
     private final ViewManager vm = ViewManager.getInstance();
     public void customInitialize(){
-        Stage stage = GraphicalUI.stage;
-        CustomBindings.bindSize(panelHBox,stage.widthProperty(),stage.heightProperty());
+        //sub controllers initialization
         leftBookshelfController.initialize(true);
         rightBookshelfController.initialize(false);
         livingRoomController.initialize(this,leftBookshelfController.tileWidthProperty());
         tileSorterController.initialize(leftBookshelfController.tileWidthProperty());
+        //bindings
+        Stage stage = GraphicalUI.stage;
+        CustomBindings.bindSize(panelHBox,stage.widthProperty(),stage.heightProperty());
         tileSorter.translateXProperty().bind(livingRoomController.livingRoomImage.fitWidthProperty().divide(10.5));
         confirmButton.translateXProperty().bind(tileSorter.translateXProperty());
         confirmButton.translateYProperty().bind(livingRoomController.livingRoomImage.fitHeightProperty().divide(3));
@@ -74,14 +69,19 @@ public class GamePanelController {
         confirmButtonLabel.translateYProperty().bind(confirmButton.translateYProperty().add(20).add(confirmButton.heightProperty()));
         confirmButtonLabel.setFont(new Font(10));
         actionSwitch.translateYProperty().bind(stage.heightProperty().divide(2));
-        actionSwitch.setOpacity(0);
         panelHBox.spacingProperty().bind(stage.widthProperty().divide(40));
+
+        //Visual elements settings
+        actionSwitch.setOpacity(0);
         tileSorter.setOpacity(0);
         confirmButton.setOpacity(0);
         confirmButton.setMouseTransparent(true);
+        actionSwitch.setRotate(-180);
 
+        //Effects
         Effects.applyShadow(confirmButton);
 
+        //Animations
         Animations.applyHoverScaling(confirmButton);
         Animations.applyHoverScaling(actionSwitch);
 
@@ -176,7 +176,7 @@ public class GamePanelController {
     public void setState(GameState state) {
         switch (state){
             case DRAW,LAST_DRAW -> {
-                if(vm.getLastPlayer().equals(ViewManager.getUsername())){
+                if(vm.getPreviousPlayer().equals(ViewManager.getUsername())){
                     rightBookshelfController.loadTokens();
                 } else {
                     leftBookshelfController.loadTokens();
@@ -190,21 +190,7 @@ public class GamePanelController {
                         this.actionView();
                     },1000);
                     Platform.runLater(()->confirmButton.setText("Confirm Draw"));
-                    confirmButton.setOnMousePressed((event)-> {
-                        if(livingRoomController.chosenTiles.size()==0){
-                            Animations.nodeError(confirmButton,1).play();
-                            showConfirmError("Choose some tiles first");
-                        } else if(vm.areChosenTilesInvalid(livingRoomController.chosenTiles)){
-                            Animations.nodeError(confirmButton,1).play(); //not valid positions
-                            showConfirmError("Tiles are not valid");
-                        } else if(Position.arePositionsMisaligned(livingRoomController.chosenTiles)){
-                            Animations.nodeError(confirmButton,1).play(); //not aligned
-                            showConfirmError("Tiles are not aligned");
-                        } else {
-                            vm.drawRequest(livingRoomController.chosenTiles);
-
-                        }
-                    });
+                    confirmButton.setOnMousePressed((event)->draw());
                 }
             }
             case ORGANIZE,LAST_ORGANIZE -> {
@@ -225,15 +211,7 @@ public class GamePanelController {
                             out.play();
                         });
                         tileSorterController.setActive(true);
-                        confirmButton.setOnMousePressed((event)->{
-                            List<ItemTile> orderedTiles = tileSorterController.getOrderedTiles();
-                            if(orderedTiles.size()==0 || orderedTiles.size()==vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()){
-                                vm.organizeRequest(tileSorterController.getOrderedTiles());
-                            } else {
-                                Animations.nodeError(confirmButton,1).play();
-                                showConfirmError("Order every tile first");
-                            }
-                        });
+                        confirmButton.setOnMousePressed((event)->organize());
                     }
                 }
             }
@@ -266,11 +244,53 @@ public class GamePanelController {
         }
     }
 
-    public void showConfirmError(String message){
+    protected void draw(){
+        if(livingRoomController.chosenTiles.size()==0){
+            Animations.nodeError(confirmButton,1).play();
+            showConfirmError("Choose some tiles first");
+        } else if(vm.areChosenTilesInvalid(livingRoomController.chosenTiles)){
+            Animations.nodeError(confirmButton,1).play(); //not valid positions
+            showConfirmError("Tiles are not valid");
+        } else if(Position.arePositionsMisaligned(livingRoomController.chosenTiles)){
+            Animations.nodeError(confirmButton,1).play(); //not aligned
+            showConfirmError("Tiles are not aligned");
+        } else {
+            vm.drawRequest(livingRoomController.chosenTiles);
+        }
+    }
+
+    protected void organize(){
+        List<ItemTile> orderedTiles = tileSorterController.getOrderedTiles();
+        if(orderedTiles.size()==0 || orderedTiles.size()==vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()){
+            vm.organizeRequest(tileSorterController.getOrderedTiles());
+        } else {
+            Animations.nodeError(confirmButton,1).play();
+            showConfirmError("Order every tile first");
+        }
+    }
+
+    protected void showConfirmError(String message){
         Platform.runLater(()->{
             confirmButtonLabel.setText(message);
             Animations.fadeIn(confirmButtonLabel).play();
             Animations.timer(()-> Animations.fadeOut(confirmButtonLabel).play(),2000);
         });
+    }
+
+    protected void reset() {
+        //sub controllers reset
+        leftBookshelfController.reset();
+        rightBookshelfController.reset();
+        livingRoomController.reset();
+        tileSorterController.resetAll();
+
+        //resetting translations
+        if(state==PanelState.ACTION) spectatorView();
+
+        //resetting elements visibility
+        actionSwitch.setOpacity(0);
+        tileSorter.setOpacity(0);
+        confirmButton.setOpacity(0);
+        confirmButton.setMouseTransparent(true);
     }
 }
