@@ -75,6 +75,7 @@ public class ChatController implements Initializable {
     }
     @FXML
     public void sendMessage() {
+        if(messageText.getText().replace(" ","").equals("")) return;
         String receiver;
         if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
         else receiver = receiverChoice.getValue();
@@ -176,6 +177,7 @@ public class ChatController implements Initializable {
 
     public void reset() {
         Platform.runLater(()->messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));
+        resetNotificationDot();
     }
 
 

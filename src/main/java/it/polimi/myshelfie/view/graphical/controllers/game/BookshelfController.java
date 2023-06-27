@@ -336,8 +336,13 @@ public class BookshelfController {
     }
 
     public void reset() {
+        //resetting tokens images
+        Platform.runLater(()->{
+            commonGoalTokensStack.getChildren().removeAll(tokenStack);
+            tokenStack.clear();
+        });
+
         //resetting state variables
-        tokenStack.clear();
         currentPlayerPos = -1;
         this.gridImages = new TileImageView[6][5];
 

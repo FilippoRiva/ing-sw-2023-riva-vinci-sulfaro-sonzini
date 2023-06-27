@@ -165,10 +165,12 @@ public class GameOverlayController {
     }
 
     public void reset() {
-        messageLabel.setText(null);
-        tokens1.getChildren().removeAll(tokens1.getChildren());
-        tokens2.getChildren().removeAll(tokens2.getChildren());
-        playersListVbox.getChildren().removeAll(playersListVbox.getChildren());
+        Platform.runLater(()->{
+            messageLabel.setText(null);
+            tokens1.getChildren().removeAll(tokens1.getChildren());
+            tokens2.getChildren().removeAll(tokens2.getChildren());
+            playersListVbox.getChildren().removeAll(playersListVbox.getChildren());
+        });
         chatController.reset();
     }
 }

@@ -54,6 +54,8 @@ public class GameController{
         endGame.setMouseTransparent(true);
         gamePanel.setVisible(true);
         gamePanel.setMouseTransparent(false);
+        gameOverlay.setMouseTransparent(false);
+        gameOverlay.setVisible(true);
         //AutoPlayer Activation
         if(ViewManager.getInstance().getLobbyModelView().getName().equals("test") &&
                 ViewManager.getUsername().startsWith("bot")) ViewManager.getInstance().startAutoPlayer();
@@ -75,8 +77,8 @@ public class GameController{
             gameOverlayController.startTurn();
             Animations.timer(()->{
                 gameOverlay.setMouseTransparent(true);
-                gamePanel.setMouseTransparent(true);
                 gameOverlay.setVisible(false);
+                gamePanel.setMouseTransparent(true);
                 gamePanel.setVisible(false);
                 endGameController.update();
                 endGame.setVisible(true);

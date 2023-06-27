@@ -5,7 +5,6 @@ import it.polimi.myshelfie.model.PointType;
 import it.polimi.myshelfie.model.Token;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.PlayerModelView;
-import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
@@ -22,6 +21,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EndGameController{
@@ -55,16 +56,21 @@ public class EndGameController{
     protected Button detailsButton;
     @FXML
     protected HBox mainHBox;
-    Label[] pointsPodium;
-    Label[] playersPodium;
-    final ViewManager viewManager = ViewManager.getInstance();
-    private int numPlayers;
+    private Label[] pointsPodium;
+    private Label[] playersPodium;
+    private final ViewManager viewManager = ViewManager.getInstance();
+    private final List<Label> scoreboardGridLabels = new ArrayList<>();
+    private final List<Label> detailedGridLabels = new ArrayList<>();
 
     public void customInitialize() {
         CustomBindings.bindSize(mainHBox,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
         CustomBindings.bindSize(firstPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
         CustomBindings.bindSize(secondPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
         CustomBindings.bindSize(thirdPodiumImage,GraphicalUI.stage.widthProperty().divide(5),null);
+        addColumn(detailsGrid,0,
+                new Label(), createLabel("End Token"),
+                createLabel("Common Goals"),createLabel("PersonalGoal"),
+                createLabel("Adjacent Tiles"), createLabel("Tot"));
 
         playersPodium = new Label[]{player1, player2, player3};
         pointsPodium = new Label[]{points1, points2, points3};
@@ -75,18 +81,18 @@ public class EndGameController{
         nameLabel.setStyle("-fx-font-size: 25");
         Label pointsLabel = new Label(String.valueOf(player.getPoints()));
         pointsLabel.setStyle("-fx-font-size: 25");
+        scoreboardGridLabels.add(nameLabel);
+        scoreboardGridLabels.add(pointsLabel);
 
-        Platform.runLater(()->scoreboardGrid.addRow(position, nameLabel, pointsLabel));
+        Platform.runLater(()-> addRow(scoreboardGrid,position, nameLabel, pointsLabel));
     }
 
-    private void addColumnDetail(PlayerModelView player, int position){
+    private void addColumnDetail(PlayerModelView player, int position, int numPlayers){
         List<Token> takenTokens = player.getTokens();
         List<EarnedPoint> earnedPoints= player.getEarnedPoints();
         List<Integer> tokenRomanNumeral = takenTokens.stream().map(Token::getRomanNumeral).toList();
 
-
         Label nameLabel = new Label(player.getName());
-        //TODO style for the nameLabel
         nameLabel.setStyle("-fx-font-size: 18");
         Label firstToken = createLabel(tokenRomanNumeral.contains(0) ? 1 : 0);
         int common1 = tokenRomanNumeral.contains(1) ?
@@ -107,8 +113,10 @@ public class EndGameController{
         //columnConstraints.setPercentWidth((double) (724) /numPlayers);
         columnConstraints.setPrefWidth((double) (683 - 200) /numPlayers);
         columnConstraints.setHalignment(HPos.CENTER);
+        Label[] labels = {nameLabel,firstToken,common,personal,adjacent,tot};
         detailsGrid.getColumnConstraints().add(columnConstraints);
-        Platform.runLater(()->detailsGrid.addColumn(position+1, nameLabel, firstToken, common, personal, adjacent, tot));
+        detailedGridLabels.addAll(Arrays.asList(labels));
+        Platform.runLater(()-> addColumn(detailsGrid,position+1, nameLabel, firstToken, common, personal, adjacent, tot));
         /*
         End token:		1pt
         Common goal 1:	8pt
@@ -122,9 +130,18 @@ public class EndGameController{
 
     private Label createLabel(int value){
         Label label = new Label(String.valueOf(value));
-        label.setAlignment(Pos.CENTER);
-        label.setStyle("-fx-font-size: 20; -fx-text-fill: white");
+        return setLabelStyle(label,15);
+    }
 
+    private Label createLabel(String text){
+        Label label = new Label(text);
+        return setLabelStyle(label,13);
+    }
+
+    private Label setLabelStyle(Label label, int fontSize){
+        label.setAlignment(Pos.CENTER);
+        String style = "-fx-font-size: "+fontSize+"; -fx-text-fill: black";
+        label.setStyle(style);
         return label;
     }
 
@@ -145,7 +162,6 @@ public class EndGameController{
     @FXML
     protected void onBackArrowClick(){
         viewManager.exitRequest();
-        GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
     }
 
     public void update() {
@@ -154,7 +170,7 @@ public class EndGameController{
         //order players for taken points
         List<PlayerModelView> players = viewManager.getPlayersOrderedByScores();
 
-        numPlayers = players.size();
+        int numPlayers = players.size();
 
         for (int i = 0; i < numPlayers; i++) {
             if(i < 3) {
@@ -167,20 +183,37 @@ public class EndGameController{
             }
             PlayerModelView player = players.get(i);
             addRowScoreboard(player, i);
-            addColumnDetail(player, i);
+            addColumnDetail(player, i,numPlayers);
         }
 
         Platform.runLater(()->lobbyNameLabel.setText(lobbyModelView.getName()));
     }
 
     public void reset() {
-        //TODO
+        Platform.runLater(()->{
+            detailsGrid.getChildren().removeAll(detailedGridLabels);
+            scoreboardGrid.getChildren().removeAll(scoreboardGridLabels);
+            detailedGridLabels.clear();
+            scoreboardGridLabels.clear();
+        });
     }
 
     public void processKeyEvent(KeyEvent keyEvent) {
         switch (keyEvent.getCode()){
             case ESCAPE -> onBackArrowClick();
             case ENTER -> changeViewDetail();
+        }
+    }
+
+    private void addColumn(GridPane grid, int column,Label ... labels){
+        for(int i = 0; i < labels.length; i++){
+            grid.add(labels[i],column,i);
+        }
+    }
+
+    private void addRow(GridPane grid, int row,Label ... labels){
+        for(int i = 0; i < labels.length; i++){
+            grid.add(labels[i],i,row);
         }
     }
 }
