@@ -10,6 +10,7 @@ import it.polimi.myshelfie.view.textual.TextualUI;
 
 import java.io.IOException;
 import java.io.InvalidClassException;
+import java.io.StreamCorruptedException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.rmi.NotBoundException;
@@ -170,8 +171,10 @@ public class ClientApp {
                     } catch (RemoteException ignored) {
                     }
                     break;
+                } catch (StreamCorruptedException e){
+                    System.err.println("The stream has been reset by the server");
                 } catch (InvalidClassException ignored) {
-                    //receiving different class versions
+                    System.out.println("Receiving Unrecognized Classes");
                 } catch (SocketException e){
                     System.err.println("Lost server connection. Disconnecting....");
                     running = false;

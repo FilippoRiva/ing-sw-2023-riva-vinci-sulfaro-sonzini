@@ -63,7 +63,7 @@ public class Player {
     }
 
     public ArrayList<EarnedPoint> getEarnedPoints() {
-        return earnedPoints;
+        return new ArrayList<>(earnedPoints);
     }
 
     /**

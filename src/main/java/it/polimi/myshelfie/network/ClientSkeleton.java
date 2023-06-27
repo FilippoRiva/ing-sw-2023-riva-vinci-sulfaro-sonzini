@@ -28,7 +28,7 @@ public class ClientSkeleton implements Client{
 
     @Override
     public String getHostName() {
-        return socket.getInetAddress().getHostName();
+        return socket.getInetAddress().getHostAddress();
     }
 
     @Override
@@ -51,6 +51,7 @@ public class ClientSkeleton implements Client{
             } catch (IOException e) {
                 throw new RemoteException("Cannot send network message", e);
             }
+            sendLock.notifyAll();
         }
     }
 
@@ -67,6 +68,7 @@ public class ClientSkeleton implements Client{
             } catch (ClassNotFoundException ignored) {
                 //ignoring out of date messages
             }
+            receiveLock.notifyAll();
         }
     }
 }
