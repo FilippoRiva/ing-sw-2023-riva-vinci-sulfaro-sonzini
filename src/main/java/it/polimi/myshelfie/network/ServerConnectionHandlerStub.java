@@ -14,9 +14,10 @@ import java.rmi.RemoteException;
 public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     final String ip;
     final int port;
+    final Object receiveLock = new Object();
+    final Object sendLock = new Object();
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
-
     private final Socket socket;
 
     public ServerConnectionHandlerStub(String ip, int port) throws RemoteException {
@@ -40,13 +41,9 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
-    final Object receiveLock = new Object();
-
-    final Object sendLock = new Object();
-
     @Override
     public void send(NetworkMessage networkMessage) throws RemoteException {
-        synchronized (sendLock){
+        synchronized (sendLock) {
             try {
                 oos.writeObject(networkMessage);
                 oos.flush();
@@ -75,7 +72,7 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     }
 
     public void receive(ClientImpl client) throws IOException {
-        synchronized (receiveLock){
+        synchronized (receiveLock) {
             try {
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 client.send(message);

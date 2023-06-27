@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 public class CreateController {
+    final ViewManager viewManager = ViewManager.getInstance();
     @FXML
     protected TextField lobbyNameField;
     @FXML
@@ -26,10 +27,9 @@ public class CreateController {
     @FXML
     protected Label createErrorLabel;
     PreGameController preGameController;
-    final ViewManager viewManager = ViewManager.getInstance();
 
-    public void initialize(ImageView banner,PreGameController preGameController){
-        CustomBindings.bindLowerPreGamePane(backgroundClear,banner);
+    public void initialize(ImageView banner, PreGameController preGameController) {
+        CustomBindings.bindLowerPreGamePane(backgroundClear, banner);
         Animations.applyHoverScaling(createButton);
         Effects.applyShadow(createButton);
         this.preGameController = preGameController;
@@ -51,14 +51,14 @@ public class CreateController {
     }
 
     public void reset() {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             lobbyNameField.clear();
             playerNameField.clear();
         });
     }
 
     public void processKeyEvent(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()){
+        switch (keyEvent.getCode()) {
             case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
             case ENTER -> this.onCreateMouseClicked();
         }

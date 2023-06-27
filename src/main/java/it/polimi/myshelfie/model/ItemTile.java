@@ -9,13 +9,15 @@ import java.io.Serializable;
 public class ItemTile implements Serializable {
     private final ItemTileType type;
     private final int id;
-    public ItemTile(ItemTileType type, int id){
+
+    public ItemTile(ItemTileType type, int id) {
         this.type = type;
         this.id = id;
     }
 
     /**
      * id is used to identify a certain ItemTile of a specific ItemTileType.
+     *
      * @return the number of the tile.
      */
     public int getId() {
@@ -23,7 +25,6 @@ public class ItemTile implements Serializable {
     }
 
     /**
-     *
      * @return the type of the ItemTile.
      */
     public ItemTileType getType() {
@@ -32,14 +33,14 @@ public class ItemTile implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj==null || obj.getClass()!=getClass()) return false;
+        if (obj == null || obj.getClass() != getClass()) return false;
         ItemTile tile;
-        tile = (ItemTile)obj;
+        tile = (ItemTile) obj;
         return this.type.equals(tile.getType());
     }
 
     @Override
-    public String toString(){
-        return type.toString()+" : "+id;
+    public String toString() {
+        return type.toString() + " : " + id;
     }
 }

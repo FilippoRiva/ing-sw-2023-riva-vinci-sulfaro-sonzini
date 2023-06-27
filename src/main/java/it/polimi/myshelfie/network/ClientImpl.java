@@ -16,13 +16,13 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
     }
 
     @Override
-    public String getHostName() throws RemoteException{
+    public String getHostName() throws RemoteException {
         return System.getProperty("java.rmi.server.hostname");
     }
 
     @Override
     public void handshake(ServerConnectionHandler server) throws RemoteException {
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 server.lifeline();
             } catch (RemoteException e) {
@@ -30,31 +30,31 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
             }
         }).start();
 
-        new Thread(()-> view.addObserver( (evt,message)->{ //adding view observer
-            if(evt==null) return;
+        new Thread(() -> view.addObserver((evt, message) -> { //adding view observer
+            if (evt == null) return;
             try {
                 server.send(message);
             } catch (RemoteException ignored) {
             }
         })).start();
 
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(()->{
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
             try {
                 server.send(new NetworkMessage()); //ping message
             } catch (RemoteException ignored) {
             }
-        },1,5, TimeUnit.SECONDS);
+        }, 1, 5, TimeUnit.SECONDS);
     }
 
     @Override
-    public synchronized void send(NetworkMessage networkMessage) throws RemoteException{
+    public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
         networkMessage.clientExecute(view);
     }
 
     @Override
     public void lifeline() throws RemoteException {
         //this method blocks forever
-        synchronized (lifelineSync){
+        synchronized (lifelineSync) {
             try {
                 lifelineSync.wait();
             } catch (InterruptedException e) {

@@ -17,9 +17,10 @@ public class CommonGoalModelView implements Serializable {
 
     /**
      * Default Constructor.
+     *
      * @param commonGoal the common goal I want the model view.
      */
-    public CommonGoalModelView(CommonGoal commonGoal){
+    public CommonGoalModelView(CommonGoal commonGoal) {
         this.tokens = commonGoal.getTokens();
         this.id = commonGoal.getId();
         this.description = commonGoal.getDescription();
@@ -27,43 +28,42 @@ public class CommonGoalModelView implements Serializable {
 
     /**
      * Constructor.
+     *
      * @param toCopy the common model view to copy.
      */
-    public CommonGoalModelView(CommonGoalModelView toCopy){
+    public CommonGoalModelView(CommonGoalModelView toCopy) {
         this.tokens = new ArrayList<>(toCopy.tokens);
         this.id = toCopy.id;
         this.description = toCopy.description;
     }
 
     /**
-     *
      * @return the list of tokens on the common goal.
      */
-    public List<Token> getTokens(){
+    public List<Token> getTokens() {
         return tokens;
     }
 
     /**
-     *
      * @return the id of that common goal.
      */
-    public int getId(){
+    public int getId() {
         return id;
     }
 
     /**
-     *
      * @return the description of that common goal.
      */
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
     /**
      * Modifies the attribute "tokens". It changes it with the difference between this one and the one to confront.
+     *
      * @param theNewOne the common goal to confronts.
      */
-    public void diff(CommonGoalModelView theNewOne){
+    public void diff(CommonGoalModelView theNewOne) {
         this.tokens.removeAll(theNewOne.tokens);
     }
 }

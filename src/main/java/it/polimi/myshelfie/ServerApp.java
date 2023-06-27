@@ -11,21 +11,23 @@ import it.polimi.myshelfie.utils.ServerLogger;
 
 import java.io.IOException;
 import java.io.InvalidClassException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.*;
+import java.util.logging.Level;
 
 
 public class ServerApp {
-    public static void main (String[] args){
+    public static void main(String[] args) {
         ServerLogger.initialize();
         String serverIP = "";
-        for(int i = 0; i < args.length; i++){
-            if(args[i].equals("--rmi")){
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("--rmi")) {
                 i++;
-                if(i==args.length){
+                if (i == args.length) {
                     System.out.println("Please insert rmi parameter");
                     return;
                 }
@@ -42,11 +44,11 @@ public class ServerApp {
                 }
             }
         }
-        if(serverIP.equals("")){
+        if (serverIP.equals("")) {
             serverIP = NetworkInterfaceProvider.getInterfaceHostName();
         }
-        System.out.println("Server starting up over : "+serverIP);
-        System.setProperty("java.rmi.server.hostname",serverIP);
+        System.out.println("Server starting up over : " + serverIP);
+        System.setProperty("java.rmi.server.hostname", serverIP);
         ControllerImpl controller = new ControllerImpl();
         ModelImpl model = new ModelImpl();
         controller.setModel(model);
@@ -56,16 +58,17 @@ public class ServerApp {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        new Thread(()->startRMI(server)).start();
-        new Thread(()->startSocket(controller)).start();
+        new Thread(() -> startRMI(server)).start();
+        new Thread(() -> startSocket(controller)).start();
     }
-    public static void startRMI(ServerImpl server){
+
+    public static void startRMI(ServerImpl server) {
         Registry registry;
         final int port = 1099;
 
         try {
             registry = LocateRegistry.createRegistry(port);
-        } catch (RemoteException e){
+        } catch (RemoteException e) {
             try {
                 registry = LocateRegistry.getRegistry();
             } catch (RemoteException ex) {
@@ -73,7 +76,7 @@ public class ServerApp {
             }
         }
         try {
-            registry.rebind("server",server);
+            registry.rebind("server", server);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +91,7 @@ public class ServerApp {
             System.out.println("Socket server up and running");
             boolean running = true;
             while (running) {
-                try{
+                try {
                     Socket socket = serverSocket.accept();
                     new Thread(() -> {
                         ServerConnectionHandlerImpl serverConnectionHandler = null;
@@ -99,27 +102,27 @@ public class ServerApp {
                             while (true) {
                                 clientSkeleton.receive(serverConnectionHandler);
                             }
-                        } catch (InvalidClassException ignored){
-                            ServerLogger.logClientInfo(serverConnectionHandler,"Receiving unknown messages from client. Forcing Disconnection");
+                        } catch (InvalidClassException ignored) {
+                            ServerLogger.logClientInfo(serverConnectionHandler, "Receiving unknown messages from client. Forcing Disconnection");
                         } catch (IOException e) {
-                            ServerLogger.log(Level.FINER,"Socket receive failed from "+socket.getInetAddress().getHostAddress());
+                            ServerLogger.log(Level.FINER, "Socket receive failed from " + socket.getInetAddress().getHostAddress());
                         } finally {
                             try {
                                 assert serverConnectionHandler != null;
                                 serverConnectionHandler.close();
                             } catch (RemoteException ignored) {
-                                ServerLogger.log(Level.WARNING,"Unable to close \""+serverConnectionHandler.hostName+" | ID : "+serverConnectionHandler.clientID+"\" Connection Handler after disconnection");
+                                ServerLogger.log(Level.WARNING, "Unable to close \"" + serverConnectionHandler.hostName + " | ID : " + serverConnectionHandler.clientID + "\" Connection Handler after disconnection");
                             }
-                            ServerLogger.logClientInfo(serverConnectionHandler,"Socket Closed");
+                            ServerLogger.logClientInfo(serverConnectionHandler, "Socket Closed");
                             try {
                                 socket.close();
                             } catch (IOException e) {
-                                ServerLogger.log(Level.WARNING,"Cannot close socket \""+serverConnectionHandler.hostName+"\"");
+                                ServerLogger.log(Level.WARNING, "Cannot close socket \"" + serverConnectionHandler.hostName + "\"");
                             }
                         }
                     }).start();
-                } catch (IOException e){ //caught from ServerSocket accept
-                    ServerLogger.log(Level.SEVERE,"Socket server failed");
+                } catch (IOException e) { //caught from ServerSocket accept
+                    ServerLogger.log(Level.SEVERE, "Socket server failed");
                     running = false;
                 }
             }

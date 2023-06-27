@@ -9,9 +9,11 @@ import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import it.polimi.myshelfie.model.modelviews.LobbyModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class AutoPlayer implements UI{
+public class AutoPlayer implements UI {
     private final ViewManager viewManager;
     private boolean owner;
     private String username;
@@ -19,7 +21,7 @@ public class AutoPlayer implements UI{
     private boolean joined;
     private boolean finished;
 
-    public AutoPlayer(){
+    public AutoPlayer() {
         this.viewManager = ViewManager.getInstance();
         viewManager.addUI(this);
         joined = false;
@@ -29,28 +31,28 @@ public class AutoPlayer implements UI{
     public synchronized void preGameStart(int numPlayers) throws InvalidParameterException {
         this.numPlayers = numPlayers;
         ModelView modelView = viewManager.getModelView();
-        if(!modelView.getLobbies().contains("test")){
-            username="bot"+String.valueOf(System.currentTimeMillis()).substring(8);
+        if (!modelView.getLobbies().contains("test")) {
+            username = "bot" + String.valueOf(System.currentTimeMillis()).substring(8);
             ViewManager.setUsername(username);
             owner = true;
-            this.update(ViewUpdate.VIEW_TYPE_UPDATE,null);
-        } else if(modelView.getMaxSize("test")==numPlayers){
-            username = "bot"+String.valueOf(System.currentTimeMillis()).substring(8);
+            this.update(ViewUpdate.VIEW_TYPE_UPDATE, null);
+        } else if (modelView.getMaxSize("test") == numPlayers) {
+            username = "bot" + String.valueOf(System.currentTimeMillis()).substring(8);
             ViewManager.setUsername(username);
             owner = false;
-            this.update(ViewUpdate.MODEL_UPDATE,null);
+            this.update(ViewUpdate.MODEL_UPDATE, null);
         } else {
-            throw new InvalidParameterException("no test lobby with "+numPlayers+" size");
+            throw new InvalidParameterException("no test lobby with " + numPlayers + " size");
         }
     }
 
-    public synchronized void postGameStart(){
+    public synchronized void postGameStart() {
         this.username = ViewManager.getUsername();
     }
 
     @Override
     public synchronized void update(ViewUpdate evt, Object unused) {
-        if(finished) return;
+        if (finished) return;
         ViewType vt = viewManager.getViewType();
         try {
             switch (evt) {
@@ -75,32 +77,32 @@ public class AutoPlayer implements UI{
                     }
                 }
                 case VIEW_TYPE_UPDATE -> {
-                    if ( vt == ViewType.LOBBY) {
+                    if (vt == ViewType.LOBBY) {
                         if (owner) {
                             viewManager.configRequest(new GameConfig(numPlayers));
                         }
-                    } else if (vt == ViewType.INIT){
-                        if(owner) {
-                            if(!joined && !ViewManager.getInstance().getModelView().getLobbies().contains("test")) {
-                                ViewManager.getInstance().createRequest("test",username);
+                    } else if (vt == ViewType.INIT) {
+                        if (owner) {
+                            if (!joined && !ViewManager.getInstance().getModelView().getLobbies().contains("test")) {
+                                ViewManager.getInstance().createRequest("test", username);
                                 joined = true;
                             }
                         }
-                    } else if(vt == ViewType.GAME){
-                        this.update(ViewUpdate.GAME_UPDATE,null);
+                    } else if (vt == ViewType.GAME) {
+                        this.update(ViewUpdate.GAME_UPDATE, null);
                     }
                 }
                 case MODEL_UPDATE -> {
-                    if(!owner){
-                        if(!joined && ViewManager.getInstance().getModelView().getLobbies().contains("test") && ViewManager.getInstance().getModelView().getMaxSize("test")==numPlayers) {
-                            ViewManager.getInstance().joinRequest("test",username);
+                    if (!owner) {
+                        if (!joined && ViewManager.getInstance().getModelView().getLobbies().contains("test") && ViewManager.getInstance().getModelView().getMaxSize("test") == numPlayers) {
+                            ViewManager.getInstance().joinRequest("test", username);
                             joined = true;
                         }
                     }
 
                 }
             }
-        } catch (InvalidParameterException ignored){
+        } catch (InvalidParameterException ignored) {
         }
     }
 
@@ -108,9 +110,9 @@ public class AutoPlayer implements UI{
         ItemTile[][] bookshelf = gmv.getCurrentPlayer().getBookshelf();
         int maxDepth = 3;
         boolean finish = false;
-        for(int y = 2 ; y >= 0; y--){
-            if(finish) break;
-            for(int x = 0 ; x < bookshelf[0].length; x++){
+        for (int y = 2; y >= 0; y--) {
+            if (finish) break;
+            for (int x = 0; x < bookshelf[0].length; x++) {
                 if (bookshelf[y][x].getType() == ItemTileType.EMPTY) {
                     maxDepth = y + 1;
                     finish = true;
@@ -119,16 +121,16 @@ public class AutoPlayer implements UI{
             }
         }
         finish = false;
-        for(int y = 4;y>=-4;y--){
-            for(int x = -4; x<=4;x++){
-                ItemTile tile = gmv.getTile(x,y);
-                if(tile!=null && tile.getType()!= ItemTileType.EMPTY){
+        for (int y = 4; y >= -4; y--) {
+            for (int x = -4; x <= 4; x++) {
+                ItemTile tile = gmv.getTile(x, y);
+                if (tile != null && tile.getType() != ItemTileType.EMPTY) {
                     List<Position> positions = new ArrayList<>();
-                    positions.add(new Position(x,y));
-                    if(maxDepth>1 && gmv.getTile(x+1,y)!=null && gmv.getTile(x+1,y).getType() != ItemTileType.EMPTY){
-                        positions.add(new Position(x+1,y));
-                        if(maxDepth>2 && gmv.getTile(x+2,y)!=null && gmv.getTile(x+2,y).getType() != ItemTileType.EMPTY){
-                            positions.add(new Position(x+2,y));
+                    positions.add(new Position(x, y));
+                    if (maxDepth > 1 && gmv.getTile(x + 1, y) != null && gmv.getTile(x + 1, y).getType() != ItemTileType.EMPTY) {
+                        positions.add(new Position(x + 1, y));
+                        if (maxDepth > 2 && gmv.getTile(x + 2, y) != null && gmv.getTile(x + 2, y).getType() != ItemTileType.EMPTY) {
+                            positions.add(new Position(x + 2, y));
                         }
                     }
                     viewManager.drawRequest(positions);
@@ -136,7 +138,7 @@ public class AutoPlayer implements UI{
                     break;
                 }
             }
-            if(finish) break;
+            if (finish) break;
         }
     }
 
@@ -147,10 +149,10 @@ public class AutoPlayer implements UI{
 
     private synchronized void insert(FullGameModelView gmv) throws InvalidParameterException {
         ItemTile[][] bookshelf = gmv.getCurrentPlayer().getBookshelf();
-        int depth = gmv.getCurrentPlayer().getTakenTiles().size()-1;
+        int depth = gmv.getCurrentPlayer().getTakenTiles().size() - 1;
         ArrayList<Integer> availableColumns = new ArrayList<>();
-        for(int x = 0; x < bookshelf[0].length; x++){
-            if(bookshelf[depth][x].getType() == ItemTileType.EMPTY) availableColumns.add(x);
+        for (int x = 0; x < bookshelf[0].length; x++) {
+            if (bookshelf[depth][x].getType() == ItemTileType.EMPTY) availableColumns.add(x);
         }
         Collections.shuffle(availableColumns);
         viewManager.insertRequest(availableColumns.get(0));

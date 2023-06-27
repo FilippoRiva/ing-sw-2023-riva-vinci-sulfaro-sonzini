@@ -24,15 +24,16 @@ public class EndTurnModelView implements Serializable, GameModelView {
 
     /**
      * Constructor.
+     *
      * @param game the game in process.
      */
     public EndTurnModelView(Game game) {
         this.lastPlayer = game.getLastPlayer();
-        this.earnedPoints=game.getPlayer(lastPlayer).getEarnedPoints();
+        this.earnedPoints = game.getPlayer(lastPlayer).getEarnedPoints();
         this.playerTokens = game.getPlayer(lastPlayer).getObtainedTokens();
         List<CommonGoal> actualCommonGoals = game.getCommonGoals();
         this.commonGoals = new ArrayList<>();
-        for(CommonGoal c : actualCommonGoals) {
+        for (CommonGoal c : actualCommonGoals) {
             commonGoals.add(new CommonGoalModelView(c));
         }
         this.livingRoom = game.getLivingRoom();
@@ -43,52 +44,58 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
-     *
      * @return the last player.
      */
-    public String getLastPlayer() { return lastPlayer; }
+    public String getLastPlayer() {
+        return lastPlayer;
+    }
 
     /**
-     *
      * @return the list of earned points.
      */
-    public ArrayList<EarnedPoint> getEarnedPoints(){
+    public ArrayList<EarnedPoint> getEarnedPoints() {
         return earnedPoints;
     }
 
     /**
-     *
      * @return the list of the player tokens.
      */
-    public List<Token> getPlayerTokens() { return playerTokens; }
+    public List<Token> getPlayerTokens() {
+        return playerTokens;
+    }
 
     /**
-     *
      * @return the list of common goal.
      */
-    public List<CommonGoalModelView> getCommonGoals() { return commonGoals; }
+    public List<CommonGoalModelView> getCommonGoals() {
+        return commonGoals;
+    }
 
     /**
-     *
      * @return the living room.
      */
-    public ItemTile[][] getLivingRoom() { return livingRoom; }
+    public ItemTile[][] getLivingRoom() {
+        return livingRoom;
+    }
 
     /**
-     *
      * @return how many tiles remained on the board.
      */
-    public int getRemainingTiles() { return remainingTiles; }
+    public int getRemainingTiles() {
+        return remainingTiles;
+    }
 
     /**
-     *
      * @return the current state.
      */
-    public GameState getCurrentState() { return currentState; }
+    public GameState getCurrentState() {
+        return currentState;
+    }
 
     /**
-     *
      * @return the current player.
      */
-    public String getCurrentPlayer() { return currentPlayer; }
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
 }

@@ -17,6 +17,7 @@ public class InsertModelView implements Serializable, GameModelView {
 
     /**
      * Constructor.
+     *
      * @param game the game where the insert move was made.
      */
     public InsertModelView(Game game) {
@@ -26,21 +27,24 @@ public class InsertModelView implements Serializable, GameModelView {
     }
 
     /**
-     *
      * @return the current player.
      */
-    public String getCurrentPlayer() { return currentPlayer; }
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     /**
-     *
      * @return the current state.
      */
-    public GameState getCurrentState() { return currentState; }
+    public GameState getCurrentState() {
+        return currentState;
+    }
 
 
     /**
-     *
      * @return the bookshelf.
      */
-    public ItemTile[][] getBookshelf() { return bookshelf; }
+    public ItemTile[][] getBookshelf() {
+        return bookshelf;
+    }
 }

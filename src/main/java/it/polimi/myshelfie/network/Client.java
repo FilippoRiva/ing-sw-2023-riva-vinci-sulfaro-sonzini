@@ -5,7 +5,10 @@ import java.rmi.RemoteException;
 
 public interface Client extends Remote {
     String getHostName() throws RemoteException;
+
     void handshake(ServerConnectionHandler server) throws RemoteException;
+
     void send(NetworkMessage networkMessage) throws RemoteException;
+
     void lifeline() throws RemoteException;
 }

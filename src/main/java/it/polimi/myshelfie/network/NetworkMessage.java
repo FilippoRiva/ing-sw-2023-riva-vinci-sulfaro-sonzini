@@ -20,40 +20,36 @@ import java.util.List;
 public class NetworkMessage implements Serializable {
     static final long serialVersionUID = 1L;
     MessageType messageType;
+    Object event;
     private SerializableConsumer<View> clientFunction = (x -> {
         throw new RuntimeException("Not Implemented");
     });
     private SerializableConsumer<ControllerGroup> serverFunction = (x -> {
         throw new RuntimeException("Not Implemented");
     });
-    Object event;
-
-    //CLIENT TO SERVER MESSAGES
-    public void clientExecute(View view){
-        clientFunction.accept(view);
-    }
 
     public NetworkMessage(ViewEvent evt, String playerName, String lobby) throws InvalidParameterException {
-        if((evt!=ViewEvent.JOIN_REQUEST && evt!=ViewEvent.CREATE_REQUEST)|| playerName==null || lobby == null ) throw new InvalidParameterException("wrong event");
+        if ((evt != ViewEvent.JOIN_REQUEST && evt != ViewEvent.CREATE_REQUEST) || playerName == null || lobby == null)
+            throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)-> new Thread(()->{
+        this.serverFunction = ((controllers) -> new Thread(() -> {
             Client client = controllers.getClient();
             ServerConnectionHandlerImpl connectionHandler = controllers.getServerConnectionHandler();
             LobbyController lobbyController;
             connectionHandler.setPlayerName(playerName);
-            if(evt==ViewEvent.JOIN_REQUEST){
+            if (evt == ViewEvent.JOIN_REQUEST) {
                 lobbyController = controllers.getController().joinLobby(client, connectionHandler, playerName, lobby);
             } else {
                 lobbyController = controllers.getController().createLobby(client, connectionHandler, playerName, lobby);
             }
-            if(lobbyController==null) {
+            if (lobbyController == null) {
                 connectionHandler.setPlayerName("");
                 return;
             }
-            lobbyController.addLobbyObserver(playerName,((event,lobbyModelView)-> new Thread(()->{
+            lobbyController.addLobbyObserver(playerName, ((event, lobbyModelView) -> new Thread(() -> {
                 try {
-                    client.send(new NetworkMessage(event,lobbyModelView));
+                    client.send(new NetworkMessage(event, lobbyModelView));
                 } catch (RemoteException ignored) {
                 }
             }).start()));
@@ -62,45 +58,44 @@ public class NetworkMessage implements Serializable {
     }
 
     public NetworkMessage(ViewEvent evt, GameConfig gameConfig) throws InvalidParameterException {
-        if(evt != ViewEvent.CONFIG_REQUEST) throw new InvalidParameterException("wrong event");
+        if (evt != ViewEvent.CONFIG_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)->{
-            if(controllers.getLobbyController()==null) return;
-            new Thread(()->controllers.getLobbyController().setConfig(controllers.getUsername(), gameConfig)).start();
+        this.serverFunction = ((controllers) -> {
+            if (controllers.getLobbyController() == null) return;
+            new Thread(() -> controllers.getLobbyController().setConfig(controllers.getUsername(), gameConfig)).start();
         });
     }
 
-    public NetworkMessage(ViewEvent evt, Message message) throws InvalidParameterException{
-        if(evt!=ViewEvent.MESSAGE_SEND) throw new InvalidParameterException("wrong event");
+    public NetworkMessage(ViewEvent evt, Message message) throws InvalidParameterException {
+        if (evt != ViewEvent.MESSAGE_SEND) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)->{
-            if(controllers.getChatController()==null) return;
-            new Thread(()->controllers.getChatController().addMessage(
+        this.serverFunction = ((controllers) -> {
+            if (controllers.getChatController() == null) return;
+            new Thread(() -> controllers.getChatController().addMessage(
                     controllers.getUsername(), message)).start();
         });
     }
 
     public NetworkMessage(ViewEvent evt) throws InvalidParameterException {
-        if(evt!=ViewEvent.START_REQUEST && evt!= ViewEvent.EXIT_REQUEST) throw new InvalidParameterException("wrong event");
+        if (evt != ViewEvent.START_REQUEST && evt != ViewEvent.EXIT_REQUEST)
+            throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)-> new Thread(()->{
-            if(evt == ViewEvent.START_REQUEST) { //starting lobby
-                if(controllers.getLobbyController()==null) return;
+        this.serverFunction = ((controllers) -> new Thread(() -> {
+            if (evt == ViewEvent.START_REQUEST) { //starting lobby
+                if (controllers.getLobbyController() == null) return;
                 controllers.getLobbyController().startGame(controllers.getUsername());
-            }
-            else {
-                if(controllers.getGameController()!=null) { //leaving game
-                    controllers.getGameController().leaveEndGame(controllers.getUsername(),false);
+            } else {
+                if (controllers.getGameController() != null) { //leaving game
+                    controllers.getGameController().leaveEndGame(controllers.getUsername(), false);
                     try {
                         controllers.getServerConnectionHandler().setGameController(null);
                         controllers.getServerConnectionHandler().setChatController(null);
                     } catch (RemoteException ignored) {
                     }
-                }
-                else if(controllers.getLobbyController()!=null){ //leaving lobby
+                } else if (controllers.getLobbyController() != null) { //leaving lobby
                     controllers.getLobbyController().exitLobby(controllers.getUsername());
                     controllers.getServerConnectionHandler().setPlayerName("");
                     controllers.getServerConnectionHandler().setLobbyController(null);
@@ -114,13 +109,14 @@ public class NetworkMessage implements Serializable {
     }
 
     public NetworkMessage(ViewEvent evt, List<?> positionsOrOrderedTiles) throws InvalidParameterException {
-        if(evt!=ViewEvent.DRAW_REQUEST && evt!=ViewEvent.ORGANIZE_REQUEST) throw new InvalidParameterException("wrong event");
+        if (evt != ViewEvent.DRAW_REQUEST && evt != ViewEvent.ORGANIZE_REQUEST)
+            throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)->{
-            if(controllers.getGameController()==null) return;
-            new Thread(()->{
-                if(evt == ViewEvent.DRAW_REQUEST)
+        this.serverFunction = ((controllers) -> {
+            if (controllers.getGameController() == null) return;
+            new Thread(() -> {
+                if (evt == ViewEvent.DRAW_REQUEST)
                     controllers.getGameController().drawTiles((List<Position>) positionsOrOrderedTiles,
                             controllers.getUsername());
                 else
@@ -131,35 +127,32 @@ public class NetworkMessage implements Serializable {
     }
 
     public NetworkMessage(ViewEvent evt, int column) throws InvalidParameterException {
-        if(evt!=ViewEvent.INSERT_REQUEST) throw new InvalidParameterException("wrong event");
+        if (evt != ViewEvent.INSERT_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
         this.event = evt;
-        this.serverFunction = ((controllers)->{
-            if(controllers.getGameController()==null) return;
-            new Thread(()->controllers.getGameController().insertTiles(controllers.getUsername(),column)).start();
+        this.serverFunction = ((controllers) -> {
+            if (controllers.getGameController() == null) return;
+            new Thread(() -> controllers.getGameController().insertTiles(controllers.getUsername(), column)).start();
         });
     }
 
-    //SERVER TO CLIENT MESSAGES
-    public void serverExecute(ControllerGroup controllers){
-        serverFunction.accept(controllers);
-    }
-
-    public NetworkMessage(ViewType viewType){
+    public NetworkMessage(ViewType viewType) {
         this.messageType = MessageType.SELECT_VIEW_MESSAGE;
         this.event = null;
-        this.clientFunction = ((view)-> new Thread(()->view.setView(viewType)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setView(viewType)).start());
     }
-    public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView){
+
+    public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView) {
         this.messageType = MessageType.LOBBY_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)-> new Thread(()->view.setLobbyModelView(lobbyModelView)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setLobbyModelView(lobbyModelView)).start());
     }
-    public NetworkMessage(GameEvent evt, GameModelView gameModelView){
+
+    public NetworkMessage(GameEvent evt, GameModelView gameModelView) {
         this.messageType = MessageType.GAME_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)-> new Thread(()->{
-            switch (evt){
+        this.clientFunction = ((view) -> new Thread(() -> {
+            switch (evt) {
                 case GAME_START, WIN -> view.setGameModelView((FullGameModelView) gameModelView);
                 case DRAW -> view.updateDrawView((DrawModelView) gameModelView);
                 case ORGANIZE -> view.updateOrganizeView((OrganizeModelView) gameModelView);
@@ -169,32 +162,44 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
-    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierView){
+    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierView) {
         this.messageType = MessageType.EXCEPTION_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)-> new Thread(()->view.setExceptionView(exceptionsNotifierView,evt)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setExceptionView(exceptionsNotifierView, evt)).start());
     }
-    public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView){
+
+    public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView) {
         this.messageType = MessageType.CHAT_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)-> new Thread(()->view.setChatView(chatModelView)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setChatView(chatModelView)).start());
     }
 
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
         this.messageType = MessageType.MODEL_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view)-> new Thread(()->view.setModelView(modelView)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setModelView(modelView)).start());
     }
 
-    public NetworkMessage(){
+    public NetworkMessage() {
         this.messageType = MessageType.PING;
-        this.clientFunction = ((view)-> {});
-        this.serverFunction = ((controllersGroup)-> new Thread(()->{
+        this.clientFunction = ((view) -> {
+        });
+        this.serverFunction = ((controllersGroup) -> new Thread(() -> {
             try {
                 controllersGroup.getServerConnectionHandler().ping();
-            } catch (RemoteException ignored){
+            } catch (RemoteException ignored) {
             }
         }).start());
+    }
+
+    //CLIENT TO SERVER MESSAGES
+    public void clientExecute(View view) {
+        clientFunction.accept(view);
+    }
+
+    //SERVER TO CLIENT MESSAGES
+    public void serverExecute(ControllerGroup controllers) {
+        serverFunction.accept(controllers);
     }
 
     public MessageType getMessageType() {

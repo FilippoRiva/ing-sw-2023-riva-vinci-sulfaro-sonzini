@@ -9,28 +9,30 @@ public abstract class ScreenPage {
     final protected Terminal t;
     final protected ViewManager viewManager;
     final protected List<String> inputParameters;
-    public ScreenPage(Terminal t, List<String> inputParameters){
+
+    public ScreenPage(Terminal t, List<String> inputParameters) {
         this.t = t;
         this.viewManager = ViewManager.getInstance();
         this.inputParameters = inputParameters;
     }
+
     public abstract void render();
 
-    public void printBorder(){
+    public void printBorder() {
         t.printDivider(0);
         t.printDivider(40);
         t.printDivider(t.INPUT_LINE);
-        t.printDivider(t.INPUT_LINE+t.INPUT_HEIGHT-1);
-        t.printVerticalDivider(0,0,40);
-        t.printVerticalDivider(0,63,40);
-        if(!t.ANSI_ON) return;
-        t.print("┌",0,0);
-        t.print("┐",0,63);
-        t.print("└",40,0);
-        t.print("┘",40,63);
-        t.print("├",t.INPUT_LINE,0);
-        t.print("├",t.INPUT_LINE+2,0);
-        t.print("┤",t.INPUT_LINE,t.WIDTH);
-        t.print("┤",t.INPUT_LINE,t.WIDTH);
+        t.printDivider(t.INPUT_LINE + t.INPUT_HEIGHT - 1);
+        t.printVerticalDivider(0, 0, 40);
+        t.printVerticalDivider(0, 63, 40);
+        if (!t.ANSI_ON) return;
+        t.print("┌", 0, 0);
+        t.print("┐", 0, 63);
+        t.print("└", 40, 0);
+        t.print("┘", 40, 63);
+        t.print("├", t.INPUT_LINE, 0);
+        t.print("├", t.INPUT_LINE + 2, 0);
+        t.print("┤", t.INPUT_LINE, t.WIDTH);
+        t.print("┤", t.INPUT_LINE, t.WIDTH);
     }
 }

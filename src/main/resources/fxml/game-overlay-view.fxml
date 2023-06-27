@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<StackPane fx:id="fullStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+<?import javafx.scene.layout.*?>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="fullStackPane" xmlns="http://javafx.com/javafx/19"
            fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController">
     <VBox fx:id="playersListVbox" fillWidth="false" mouseTransparent="true" StackPane.alignment="TOP_LEFT">
         <StackPane.margin>
-          <Insets left="10.0" top="10.0"/>
+            <Insets left="10.0" top="10.0"/>
         </StackPane.margin>
     </VBox>
     <Label fx:id="playingLabel" mouseTransparent="true" text="Playing" StackPane.alignment="TOP_CENTER">
         <StackPane.margin>
-          <Insets top="20.0"/>
+            <Insets top="20.0"/>
         </StackPane.margin>
     </Label>
     <Label fx:id="messageLabel" mouseTransparent="true" wrapText="true" StackPane.alignment="TOP_RIGHT">
         <StackPane.margin>
-          <Insets right="10.0" top="10.0"/>
+            <Insets right="10.0" top="10.0"/>
         </StackPane.margin>
     </Label>
     <HBox fx:id="commonGoalsHBox" alignment="BOTTOM_CENTER" spacing="20.0" StackPane.alignment="BOTTOM_CENTER">
@@ -40,7 +37,7 @@
     <ImageView fx:id="personalGoal" onMouseEntered="#showPersonalGoal" onMouseExited="#hidePersonalGoal"
                pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
         <StackPane.margin>
-          <Insets left="20.0"/>
+            <Insets left="20.0"/>
         </StackPane.margin>
     </ImageView>
     <fx:include fx:id="chat" source="chat-view.fxml" StackPane.alignment="BOTTOM_RIGHT"/>

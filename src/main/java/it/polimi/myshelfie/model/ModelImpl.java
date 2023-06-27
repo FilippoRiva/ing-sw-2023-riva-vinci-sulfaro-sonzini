@@ -1,11 +1,11 @@
 package it.polimi.myshelfie.model;
 
+import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
-import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
+import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.modelviews.ModelView;
-import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -26,25 +26,26 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
     /**
      * Notifies periodically every client about new lobbies (used to notify config and player changes).
      */
-    public ModelImpl(){
-        new Thread(()->{
+    public ModelImpl() {
+        new Thread(() -> {
             ScheduledExecutorService ex = Executors.newScheduledThreadPool(1);
-            ex.scheduleAtFixedRate(()->{
+            ex.scheduleAtFixedRate(() -> {
                 setChanged();
                 notifyObservers(new ModelView(this));
-            },0,10, TimeUnit.SECONDS);
+            }, 0, 10, TimeUnit.SECONDS);
         }).start();
     }
 
     /**
      * Adds a lobby to the list of lobbies.
+     *
      * @param lobbyName the name of the lobby you want to add.
      * @return the lobby model associated to this specific lobby.
      * @throws LobbyExistenceException if the name of the lobby you want to add already exists.
      */
     @Override
     public synchronized LobbyModel addLobby(String lobbyName) throws LobbyExistenceException {
-        if(lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(true, lobbyName);
+        if (lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(true, lobbyName);
 
         Game lobbyModel = new Game(lobbyName);
         lobbiesModel.put(lobbyName, lobbyModel);
@@ -55,12 +56,13 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
 
     /**
      * Removes a lobby from the list of lobbies.
+     *
      * @param lobbyName the name of the lobby you want to remove.
      * @throws LobbyExistenceException if the name of the lobby you want to remove does not exist.
      */
     @Override
     public synchronized void removeLobby(String lobbyName) throws LobbyExistenceException {
-        if(!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(false, lobbyName);
+        if (!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(false, lobbyName);
         lobbiesModel.remove(lobbyName);
         setChanged();
         notifyObservers(ModelEvent.LOBBY_REMOVE, new ModelView(this));
@@ -86,7 +88,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
     /**
      * @return the list of lobby names.
      */
-    public List<String> getLobbies(){
+    public List<String> getLobbies() {
         return new ArrayList<>(lobbiesModel.keySet().stream().toList());
     }
 

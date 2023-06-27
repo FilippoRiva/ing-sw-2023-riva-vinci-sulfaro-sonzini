@@ -17,17 +17,19 @@ public class ModelView implements Serializable {
 
     /**
      * Constructor.
+     *
      * @param model the model implementation I want the model view.
      */
-    public ModelView(ModelImpl model){
+    public ModelView(ModelImpl model) {
         this.lobbies = model.getLobbies();
         this.maxSizeMap = new HashMap<>();
         this.currentSizeMap = new HashMap<>();
-        for(String lobby : lobbies){
-            this.maxSizeMap.put(lobby,model.getLobbyMaxSize(lobby));
-            this.currentSizeMap.put(lobby,Math.max(1,model.getLobbyCurrentSize(lobby)));
+        for (String lobby : lobbies) {
+            this.maxSizeMap.put(lobby, model.getLobbyMaxSize(lobby));
+            this.currentSizeMap.put(lobby, Math.max(1, model.getLobbyCurrentSize(lobby)));
         }
     }
+
     /**
      * @return the list with the lobby names.
      */
@@ -36,36 +38,32 @@ public class ModelView implements Serializable {
     }
 
     /**
-     *
      * @param lobby the name of the lobby.
      * @return the max lobby size.
      */
-    public int getMaxSize(String lobby){
+    public int getMaxSize(String lobby) {
         return maxSizeMap.get(lobby);
     }
 
     /**
-     *
      * @param lobby the name of the lobby.
      * @return the current lobby size.
      */
-    public int getCurrentSize(String lobby){
+    public int getCurrentSize(String lobby) {
         return currentSizeMap.get(lobby);
     }
 
     /**
-     *
      * @return the list of lobbies with their max dimension.
      */
-    public Map<String, Integer> getMaxSizeMap(){
+    public Map<String, Integer> getMaxSizeMap() {
         return maxSizeMap;
     }
 
     /**
-     *
      * @return the list of lobbies with their current dimension.
      */
-    public Map<String, Integer> getCurrentSizeMap(){
+    public Map<String, Integer> getCurrentSizeMap() {
         return currentSizeMap;
     }
 }

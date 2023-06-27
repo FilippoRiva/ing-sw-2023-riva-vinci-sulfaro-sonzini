@@ -15,7 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LobbyController {
+    private final ViewManager viewManager = ViewManager.getInstance();
     @FXML
     protected Label lobbyNameLabel;
     @FXML
@@ -45,28 +49,27 @@ public class LobbyController {
     protected StackPane chat;
     @FXML
     protected ChatController chatController;
-    private final ViewManager viewManager = ViewManager.getInstance();
     private PreGameController preGameController;
 
-    public void initialize(ImageView homeBanner,PreGameController preGameController){
+    public void initialize(ImageView homeBanner, PreGameController preGameController) {
         Stage stage = GraphicalUI.stage;
         DoubleBinding maxHeight = stage.heightProperty().divide(3).multiply(2);
 
-        CustomBindings.bindSize(scrollImage,stage.widthProperty().divide(3).multiply(2),maxHeight.divide(1.5));
-        CustomBindings.bindSize(chat,stage.widthProperty().divide(3),maxHeight.divide(5).multiply(4));
+        CustomBindings.bindSize(scrollImage, stage.widthProperty().divide(3).multiply(2), maxHeight.divide(1.5));
+        CustomBindings.bindSize(chat, stage.widthProperty().divide(3), maxHeight.divide(5).multiply(4));
         chat.setTranslateX(-60);
 
         Effects.applyShadow(startButton);
 
-        CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
+        CustomBindings.bindLowerPreGamePane(clearBackground, homeBanner);
 
         Animations.applyHoverScaling(startButton);
 
         this.preGameController = preGameController;
     }
 
-    public void refresh(){
-        Platform.runLater(()-> lobbyNameLabel.setText(viewManager.getLobbyModelView().getName()));
+    public void refresh() {
+        Platform.runLater(() -> lobbyNameLabel.setText(viewManager.getLobbyModelView().getName()));
         updateListPlayers();
     }
 
@@ -77,19 +80,19 @@ public class LobbyController {
 
     @FXML
     protected void onMouseMinusClicked() {
-        if(viewManager.removePlayer()) {
-            Animations.nodeError(minusButton,6).play();
+        if (viewManager.removePlayer()) {
+            Animations.nodeError(minusButton, 6).play();
         }
     }
 
     @FXML
     protected void onMousePlusClicked() {
-        if(viewManager.addPlayer()) {
-            Animations.nodeError(plusButton,6).play();
+        if (viewManager.addPlayer()) {
+            Animations.nodeError(plusButton, 6).play();
         }
     }
 
-    public void updateListPlayers(){
+    public void updateListPlayers() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         //generates the nodes to add;
         Task<List<Node>> task = new Task<>() {
@@ -98,12 +101,12 @@ public class LobbyController {
                 List<Node> playersNodes = new ArrayList<>();
                 List<String> playersIn = lobbyModelView.getPlayers();
 
-                for(String player : playersIn){
+                for (String player : playersIn) {
                     Label label = new Label(player);
                     label.setTextFill(Color.WHITE);
                     label.setTextAlignment(TextAlignment.LEFT);
 
-                    if(lobbyModelView.isRoomOwner(player)) {
+                    if (lobbyModelView.isRoomOwner(player)) {
                         ImageView image = new ImageView(Images.getImage("crown.png"));
                         image.setPreserveRatio(true);
                         image.setFitWidth(30);
@@ -113,19 +116,18 @@ public class LobbyController {
                         hBox.setAlignment(Pos.CENTER);
                         HBox.setHgrow(label, Priority.ALWAYS);
                         playersNodes.add(hBox);
-                    }
-                    else if(player.equals(ViewManager.getUsername())) {
+                    } else if (player.equals(ViewManager.getUsername())) {
                         label.setTextFill(Color.rgb(218, 106, 45));
                     }
 
-                    if(!lobbyModelView.isRoomOwner(player))
+                    if (!lobbyModelView.isRoomOwner(player))
                         playersNodes.add(label);
                 }
                 return playersNodes;
             }
         };
 
-        task.setOnSucceeded((event)->{
+        task.setOnSucceeded((event) -> {
             int currentPlayersIn = lobbyModelView.getPlayers().size();
             int maxNumPlayers = lobbyModelView.getGameConfig().getNumPlayers();
             List<Node> playersNodes;
@@ -139,11 +141,11 @@ public class LobbyController {
             Platform.runLater(() -> {
                 playersVBox.getChildren().clear();
                 playersVBox.getChildren().addAll(finalPlayersNodes);
-                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())){
+                if (lobbyModelView.isRoomOwner(ViewManager.getUsername())) {
                     minusButton.setDisable(false);
                     plusButton.setDisable(false);
                     startButton.setDisable(currentPlayersIn != maxNumPlayers);
-                }else{
+                } else {
                     minusButton.setDisable(true);
                     plusButton.setDisable(true);
                     startButton.setDisable(true);
@@ -157,7 +159,7 @@ public class LobbyController {
     }
 
     public void reset() {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             lobbyNameLabel.setText("lobby");
             playersVBox.getChildren().clear();
             startButton.setDisable(true);
@@ -167,31 +169,31 @@ public class LobbyController {
 
     public void processKeyEvent(KeyEvent keyEvent) {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        switch (keyEvent.getCode()){
+        switch (keyEvent.getCode()) {
             case ENTER -> {
-                if(chatController.isChatVisible()) chatController.sendMessage();
+                if (chatController.isChatVisible()) chatController.sendMessage();
                 else if (lobbyModelView.isRoomOwner(ViewManager.getUsername()) &&
                         lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
                     onStartMouseClicked();
             }
             case C -> {
-                if(!chatController.isChatVisible()) preGameController.toggleChatVisible();
+                if (!chatController.isChatVisible()) preGameController.toggleChatVisible();
             }
             case ESCAPE -> {
-                if(chatController.isChatVisible()) preGameController.toggleChatVisible();
+                if (chatController.isChatVisible()) preGameController.toggleChatVisible();
                 else {
                     ViewManager.getInstance().exitRequest();
                     GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
                 }
             }
             case PLUS -> {
-                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMousePlusClicked();
+                if (lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMousePlusClicked();
             }
             case MINUS -> {
-                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMouseMinusClicked();
+                if (lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMouseMinusClicked();
             }
             case S -> {
-                if(lobbyModelView.isRoomOwner(ViewManager.getUsername())) viewManager.startRequest();
+                if (lobbyModelView.isRoomOwner(ViewManager.getUsername())) viewManager.startRequest();
             }
         }
     }

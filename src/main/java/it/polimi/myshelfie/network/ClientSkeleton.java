@@ -6,7 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
-public class ClientSkeleton implements Client{
+public class ClientSkeleton implements Client {
+    final Object sendLock = new Object();
+    final Object receiveLock = new Object();
     private final Socket socket;
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
@@ -35,11 +37,6 @@ public class ClientSkeleton implements Client{
     public void handshake(ServerConnectionHandler server) throws RemoteException {
         //not needed in socket programming
     }
-
-    final Object sendLock = new Object();
-
-    final Object receiveLock = new Object();
-
 
     @Override
     public void send(NetworkMessage networkMessage) throws RemoteException {

@@ -3,7 +3,6 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
-
 import java.util.Random;
 
 /**
@@ -17,9 +16,10 @@ public class PersonalGoal {
 
     /**
      * The default constructor for PersonalGoal.
+     *
      * @param personalGoalDefault the PersonalGoalDefault type for this personalGoal.
      */
-    public PersonalGoal(PersonalGoalDefaults personalGoalDefault){
+    public PersonalGoal(PersonalGoalDefaults personalGoalDefault) {
         this.id = personalGoalDefault.getId();
         this.width = 5;
         this.height = 6;
@@ -29,44 +29,46 @@ public class PersonalGoal {
     /**
      * The personal Goal constructor when the size of the board is not 5x6.
      * The height must greater equal than its width.
-     * @param width board width.
-     * @param height board height.
+     *
+     * @param width             board width.
+     * @param height            board height.
      * @param personalGoalRatio percentage of cells with non-empty tiles to be generated
      * @throws Exception if the size of the bookshelf isn't a valid size.
      */
-    public PersonalGoal(int width,int height,int id,double personalGoalRatio) throws Exception{
+    public PersonalGoal(int width, int height, int id, double personalGoalRatio) throws Exception {
         this.width = width;
         this.height = height;
         this.id = id;
-        if(width == 5 && height == 6) throw new Exception("This Constructor should be used only when " +
+        if (width == 5 && height == 6) throw new Exception("This Constructor should be used only when " +
                 "the size of the bookshelf isn't the default one");
-        if(width>height) throw new Exception("Height must be greater equal than width");
+        if (width > height) throw new Exception("Height must be greater equal than width");
         goal = new ItemTile[height][width];
         Random rand = new Random();
-        for(int x = 0; x<width; x++){
-            for(int y = 0; y<height; y++){
-                if(rand.nextDouble()>=1-personalGoalRatio){
-                    goal[y][x] = new ItemTile(ItemTileType.random(),rand.nextInt(3));
-                }else goal[y][x] = new ItemTile(ItemTileType.EMPTY, rand.nextInt(3));
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (rand.nextDouble() >= 1 - personalGoalRatio) {
+                    goal[y][x] = new ItemTile(ItemTileType.random(), rand.nextInt(3));
+                } else goal[y][x] = new ItemTile(ItemTileType.EMPTY, rand.nextInt(3));
             }
         }
     }
 
     /**
      * Used to calculate the points that a certain player has earned on this particular personal goal.
+     *
      * @param bookshelfItems the player's bookshelfItems.
      * @return the points to be gained by the player.
      */
-    public int achievedPoints(ItemTile[][] bookshelfItems){
+    public int achievedPoints(ItemTile[][] bookshelfItems) {
         int verifiedCount = 0;
-        for(int x = 0; x < width; x++){
-            for(int y = 0; y < height; y++){
-                if(goal[y][x].getType()!= ItemTileType.EMPTY) {
-                    if(bookshelfItems[y][x].getType()==goal[y][x].getType()) verifiedCount++;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (goal[y][x].getType() != ItemTileType.EMPTY) {
+                    if (bookshelfItems[y][x].getType() == goal[y][x].getType()) verifiedCount++;
                 }
             }
         }
-        return switch (verifiedCount){
+        return switch (verifiedCount) {
             case 0 -> 0;
             case 1 -> 1;
             case 2 -> 2;
@@ -74,27 +76,25 @@ public class PersonalGoal {
             case 4 -> 6;
             case 5 -> 9;
             case 6 -> 12;
-            default ->  12 + (verifiedCount-6)*3; // each tile match after 6 gives 3 points
+            default -> 12 + (verifiedCount - 6) * 3; // each tile match after 6 gives 3 points
         };
     }
 
     /**
-     *
      * @return a copy of the personal goal.
      */
     public ItemTile[][] getGoal() {
         ItemTile[][] returnValue = new ItemTile[height][width];
-        for(int y = 0; y < height; y++){
+        for (int y = 0; y < height; y++) {
             System.arraycopy(goal[y], 0, returnValue[y], 0, width);
         }
         return returnValue;
     }
 
     /**
-     *
      * @return the id of the personal goal.
      */
-    public int getId(){
+    public int getId() {
         return id;
     }
 }

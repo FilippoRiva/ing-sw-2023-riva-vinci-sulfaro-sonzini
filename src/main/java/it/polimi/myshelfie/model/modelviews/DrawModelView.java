@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Represents the draw move model view.
  */
-public class DrawModelView  implements Serializable, GameModelView {
+public class DrawModelView implements Serializable, GameModelView {
     private final String currentPlayer;
     private final GameState currentState;
     private final ItemTile[][] livingRoom;
@@ -18,6 +18,7 @@ public class DrawModelView  implements Serializable, GameModelView {
 
     /**
      * Constructor.
+     *
      * @param game the game where the move was made.
      */
     public DrawModelView(Game game) {
@@ -29,26 +30,30 @@ public class DrawModelView  implements Serializable, GameModelView {
     }
 
     /**
-     *
      * @return the player playing.
      */
-    public String getCurrentPlayer() { return currentPlayer; }
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     /**
-     *
      * @return the current state.
      */
-    public GameState getCurrentState() { return currentState; }
+    public GameState getCurrentState() {
+        return currentState;
+    }
 
     /**
-     *
      * @return the living room.
      */
-    public ItemTile[][] getLivingRoom() { return livingRoom; }
+    public ItemTile[][] getLivingRoom() {
+        return livingRoom;
+    }
 
     /**
-     *
      * @return the taken tiles in the draw move.
      */
-    public List<ItemTile> getTakenTiles() { return takenTiles; }
+    public List<ItemTile> getTakenTiles() {
+        return takenTiles;
+    }
 }

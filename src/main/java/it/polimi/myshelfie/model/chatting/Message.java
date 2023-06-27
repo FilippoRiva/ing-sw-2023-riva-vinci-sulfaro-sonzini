@@ -15,23 +15,23 @@ public class Message implements Serializable {
 
     /**
      * Constructor
-     * @param sender who sent the message.
+     *
+     * @param sender   who sent the message.
      * @param receiver who received a message.
-     * @param message the text message.
+     * @param message  the text message.
      */
-    public Message(String sender,String receiver, String message){
-        if(sender == null) this.sender = Messages.fromNobody;
+    public Message(String sender, String receiver, String message) {
+        if (sender == null) this.sender = Messages.fromNobody;
         else this.sender = sender;
-        if(receiver == null) this.receiver = Messages.toEveryOne;
+        if (receiver == null) this.receiver = Messages.toEveryOne;
         else this.receiver = receiver;
-        if(message == null) this.message = Messages.emptyMessage;
+        if (message == null) this.message = Messages.emptyMessage;
         else this.message = message;
 
         time = LocalTime.now();
     }
 
     /**
-     *
      * @return the sender's name.
      */
     public String getSender() {
@@ -39,7 +39,6 @@ public class Message implements Serializable {
     }
 
     /**
-     *
      * @return the receiver's name.
      */
     public String getReceiver() {
@@ -47,7 +46,6 @@ public class Message implements Serializable {
     }
 
     /**
-     *
      * @return the text message String.
      */
 
@@ -56,32 +54,30 @@ public class Message implements Serializable {
     }
 
     /**
-     *
      * @return the local time.
      */
-    public LocalTime getTime() { return time; }
+    public LocalTime getTime() {
+        return time;
+    }
 
     /**
-     *
      * @return the current hour.
      */
-    public int getHour(){
+    public int getHour() {
         return time.getHour();
     }
 
     /**
-     *
      * @return the current minute.
      */
-    public int getMinute(){
+    public int getMinute() {
         return time.getMinute();
     }
 
     /**
-     *
      * @return the current hour and minute.
      */
-    public String getTimeHHmm(){
+    public String getTimeHHmm() {
         return time.toString().substring(0, 5);
     }
 }

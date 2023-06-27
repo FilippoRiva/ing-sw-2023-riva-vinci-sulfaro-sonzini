@@ -13,9 +13,9 @@ class ExceptionsTest {
         assertNotNull(exc.getMessage());
         DisconnectionException discExc = new DisconnectionException("Player");
         assertNotNull(discExc.getMessage());
-        LobbyExistenceException lobbyExc = new LobbyExistenceException(true,"Lobby");
+        LobbyExistenceException lobbyExc = new LobbyExistenceException(true, "Lobby");
         assertNotNull(lobbyExc.getMessage());
-        lobbyExc = new LobbyExistenceException(false,"Lobby");
+        lobbyExc = new LobbyExistenceException(false, "Lobby");
         assertNotNull(lobbyExc.getMessage());
         InvalidParameterException invalidParameterException = new InvalidParameterException("message");
         assertNotNull(invalidParameterException.getMessage());

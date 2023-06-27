@@ -55,10 +55,10 @@ public class TileSorterController {
     private List<TileImageView> orderedTiles;
     private List<Label> activeDots;
 
-    public void initialize(NumberBinding tileSize){
+    public void initialize(NumberBinding tileSize) {
         this.orderedTiles = new ArrayList<>();
         this.tiles = new TileImageView[]{bottom, middle, top};
-        this.choiceDots = new Label[]{bottomChoiceDot,midChoiceDot,topChoiceDot};
+        this.choiceDots = new Label[]{bottomChoiceDot, midChoiceDot, topChoiceDot};
         this.activeDots = new ArrayList<>();
         tileSize = tileSize.multiply(1.5);
         tilesVBox.spacingProperty().bind(tileSize.divide(2));
@@ -66,14 +66,14 @@ public class TileSorterController {
             tile.setTile(new ItemTile(ItemTileType.CAT, 0), 0);
             CustomBindings.bindSize(tile, tileSize, tileSize);
         }
-        for(Label l : choiceDots){
+        for (Label l : choiceDots) {
             l.translateYProperty().bind(Bindings.negate(tileSize.divide(4)));
             l.setScaleX(0);
             l.setScaleY(0);
         }
         CustomBindings.bindSize(backgroundImage,
-                Bindings.add(tileSize,40),
-                Bindings.multiply(tileSize,3).add(tilesVBox.spacingProperty().multiply(2)).add(40));
+                Bindings.add(tileSize, 40),
+                Bindings.multiply(tileSize, 3).add(tilesVBox.spacingProperty().multiply(2)).add(40));
         CustomBindings.bindSize(tilesVBox,
                 backgroundImage.fitWidthProperty(),
                 backgroundImage.fitHeightProperty());
@@ -81,8 +81,8 @@ public class TileSorterController {
         active = false;
     }
 
-    public Point2D getPosition(int tileIndex){
-        return switch (tileIndex){
+    public Point2D getPosition(int tileIndex) {
+        return switch (tileIndex) {
             case 1 -> getPosition(bottom);
             case 2 -> getPosition(middle);
             case 3 -> getPosition(top);
@@ -90,30 +90,30 @@ public class TileSorterController {
         };
     }
 
-    private Point2D getPosition(TileImageView tile){
+    private Point2D getPosition(TileImageView tile) {
         return CustomBindings.getAbsolutePosition(tile);
     }
 
     public void loadTiles() {
         List<ItemTile> drawnTiles = ViewManager.getInstance().getGameModelView().getPlayer(ViewManager.getUsername()).getTakenTiles();
-        for(int i = 0; i < drawnTiles.size(); i++){
+        for (int i = 0; i < drawnTiles.size(); i++) {
             TileImageView tile = tiles[i];
-            tile.setTile(drawnTiles.get(i),1);
+            tile.setTile(drawnTiles.get(i), 1);
             int finalI = i;
-            tile.setOnMousePressed((mouseEvent)->{
-                if(!active) return;
-                if(orderedTiles.contains(tile)){
+            tile.setOnMousePressed((mouseEvent) -> {
+                if (!active) return;
+                if (orderedTiles.contains(tile)) {
                     orderedTiles.remove(tile);
                     tile.setEffect(null);
                     Animation hideAnimation = Animations.reverse(Animations.popFadeIn(choiceDots[finalI]));
                     activeDots.remove(choiceDots[finalI]);
-                    hideAnimation.setOnFinished((evt)-> Platform.runLater(()->choiceDots[finalI].setText("-1")));
+                    hideAnimation.setOnFinished((evt) -> Platform.runLater(() -> choiceDots[finalI].setText("-1")));
                     hideAnimation.play();
                     fixChoiceDots(Integer.parseInt(choiceDots[finalI].getText()));
                 } else {
                     orderedTiles.add(tile);
                     tile.setEffect(new Glow());
-                    Platform.runLater(()->choiceDots[finalI].setText(String.valueOf(orderedTiles.size())));
+                    Platform.runLater(() -> choiceDots[finalI].setText(String.valueOf(orderedTiles.size())));
                     Animations.popFadeIn(choiceDots[finalI]).play();
                     activeDots.add(choiceDots[finalI]);
                 }
@@ -122,29 +122,31 @@ public class TileSorterController {
     }
 
     private synchronized void fixChoiceDots(int removedPosition) {
-        if(removedPosition == activeDots.size()+1) return; //we removed the top element
-        for(Label choiceDot : activeDots){
+        if (removedPosition == activeDots.size() + 1) return; //we removed the top element
+        for (Label choiceDot : activeDots) {
             int currentIndex = Integer.parseInt(choiceDot.getText());
-            if(currentIndex>removedPosition) Platform.runLater(()->choiceDot.setText(String.valueOf(currentIndex-1)));
+            if (currentIndex > removedPosition)
+                Platform.runLater(() -> choiceDot.setText(String.valueOf(currentIndex - 1)));
         }
     }
 
     /**
      * Returns the chosen ordered tiles. If the player confirm without selecting any tile it returns an empty ItemTile List
+     *
      * @return the list of the ItemTile chosen by the player
      */
-    public synchronized List<ItemTile> getOrderedTiles(){
-        Map<Integer,ItemTile> orderedTiles = new HashMap<>();
-        for(int i = 0; i < tiles.length; i++){
+    public synchronized List<ItemTile> getOrderedTiles() {
+        Map<Integer, ItemTile> orderedTiles = new HashMap<>();
+        for (int i = 0; i < tiles.length; i++) {
             int index = Integer.parseInt(choiceDots[i].getText());
-            if(index!=-1){
-                orderedTiles.put(index,tiles[i].getTile());
+            if (index != -1) {
+                orderedTiles.put(index, tiles[i].getTile());
             }
         }
         List<ItemTile> result = new ArrayList<>();
-        for(int i = 0; i < activeDots.size(); i++){
-            if(orderedTiles.containsKey(i+1)){
-                result.add(orderedTiles.get(i+1));
+        for (int i = 0; i < activeDots.size(); i++) {
+            if (orderedTiles.containsKey(i + 1)) {
+                result.add(orderedTiles.get(i + 1));
             }
         }
         return result;
@@ -154,31 +156,31 @@ public class TileSorterController {
     /**
      * Corrects the ordering of the tiles given the new order in the ViewManager
      */
-    public void fixOrdering(){
+    public void fixOrdering() {
         List<Animation> orderingAnimations = new ArrayList<>();
         List<ItemTile> orderedTiles = ViewManager.getInstance().getGameModelView().getCurrentPlayer().getTakenTiles();
         ArrayList<TileImageView> tilesCopy = new ArrayList<>(Arrays.stream(tiles).toList());
-        for(int i = 0; i <orderedTiles.size(); i++){
+        for (int i = 0; i < orderedTiles.size(); i++) {
             ItemTile tile = orderedTiles.get(i);
-            for(TileImageView tileImage : tilesCopy){
-                if(tileImage.getTile().getType() == tile.getType() && tileImage.getTile().getId() == tile.getId()){
+            for (TileImageView tileImage : tilesCopy) {
+                if (tileImage.getTile().getType() == tile.getType() && tileImage.getTile().getId() == tile.getId()) {
                     tileImage.setEffect(null);
-                    orderingAnimations.add(Animations.fixTranslateTo(tileImage,getPosition(i+1)));
+                    orderingAnimations.add(Animations.fixTranslateTo(tileImage, getPosition(i + 1)));
                     tilesCopy.remove(tileImage);
                     break;
                 }
             }
         }
-        for(Animation a : orderingAnimations) a.play();
+        for (Animation a : orderingAnimations) a.play();
     }
 
     /**
      * Hides active dots and resets their numbers afterward
      */
-    public synchronized void resetDots(){
-        for(Label l : activeDots){
+    public synchronized void resetDots() {
+        for (Label l : activeDots) {
             Animation hideAnimation = Animations.popFadeOut(l);
-            hideAnimation.setOnFinished((evt)-> Platform.runLater(()->l.setText("-1")));
+            hideAnimation.setOnFinished((evt) -> Platform.runLater(() -> l.setText("-1")));
             hideAnimation.play();
         }
     }
@@ -187,16 +189,16 @@ public class TileSorterController {
      * Completely reset the component emptying the orderedTiles list, resetting the active Dots,
      * rotating out the TileImageView and erasing translations afterward
      */
-    public synchronized void resetAll(){
+    public synchronized void resetAll() {
         orderedTiles.clear();
         activeDots.clear();
-        for(TileImageView t : tiles){
+        for (TileImageView t : tiles) {
             Animation a = Animations.tileRotateOut(t, Duration.millis(200));
-            a.setOnFinished((evt)->{
+            a.setOnFinished((evt) -> {
                 Animation an = Animations.eraseTranslation(t);
-                an.setOnFinished((ev)-> Platform.runLater(()->{
-                    t.setTile(new ItemTile(ItemTileType.EMPTY,0),0);
-                    Animations.tileRotateIn(t,Duration.millis(200)).play();
+                an.setOnFinished((ev) -> Platform.runLater(() -> {
+                    t.setTile(new ItemTile(ItemTileType.EMPTY, 0), 0);
+                    Animations.tileRotateIn(t, Duration.millis(200)).play();
                     t.setMouseTransparent(false);
                 }));
                 an.play();
@@ -208,9 +210,10 @@ public class TileSorterController {
 
     /**
      * Enable the ability to choose tile ordering
+     *
      * @param active the active boolean
      */
-    public void setActive(boolean active){
+    public void setActive(boolean active) {
         this.active = active;
     }
 }

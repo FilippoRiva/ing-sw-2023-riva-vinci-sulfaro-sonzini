@@ -7,11 +7,12 @@ import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
 import it.polimi.myshelfie.utils.Observer;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ClientExceptionsNotifierImplTest {
     @Test
-    public void modelClientExceptionNotifierTest(){
+    public void modelClientExceptionNotifierTest() {
         final ClientExceptionsNotifierModelView[] view = new ClientExceptionsNotifierModelView[1];
         final ExceptionEvent[] event = new ExceptionEvent[1];
         ClientExceptionsNotifier interfaceCen = new ModelImpl().getNewClientExceptionNotifier();
@@ -24,8 +25,8 @@ class ClientExceptionsNotifierImplTest {
         cen.addExceptionsObserver(obs);
         cen.notifyException(e);
         assertEquals(view[0].getLastException(), cen.getClientExceptionNotifierView().getLastException());
-        assertEquals(event[0],ExceptionEvent.NEW_EXCEPTION);
-        assertEquals(cen.getLastException(),e);
+        assertEquals(event[0], ExceptionEvent.NEW_EXCEPTION);
+        assertEquals(cen.getLastException(), e);
 
         view[0] = null;
         event[0] = null;

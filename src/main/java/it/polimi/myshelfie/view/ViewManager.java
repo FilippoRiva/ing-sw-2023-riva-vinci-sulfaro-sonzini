@@ -8,9 +8,9 @@ import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.network.NetworkMessage;
-import it.polimi.myshelfie.view.events.ViewEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.view.events.ViewEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +18,10 @@ import java.util.List;
 
 
 public class ViewManager extends View {
-    private final Observable<ViewUpdate, Object> UINotifier;
+    public static String username;
     private static ViewManager viewManager;
+    private final Observable<ViewUpdate, Object> UINotifier;
+    private final Object sync;
     private ModelView modelView;
     private ClientExceptionsNotifierModelView clientExceptionsNotifierView;
     private ClientExceptionsNotifierModelView disconnectedClientExceptionsNotifierView;
@@ -28,8 +30,12 @@ public class ViewManager extends View {
     private FullGameModelView fullGameModelView;
     private FullGameModelView gameDifferences;
     private FullGameModelView oldGameModelView;
-    private final Object sync;
     private ViewType viewType;
+
+    public ViewManager() {
+        this.UINotifier = new Observable<>();
+        this.sync = new Object();
+    }
 
     public static String getUsername() {
         return username;
@@ -39,45 +45,40 @@ public class ViewManager extends View {
         ViewManager.username = username;
     }
 
-    public static String username;
-    public ViewManager(){
-        this.UINotifier = new Observable<>();
-        this.sync = new Object();
-    }
-
-    public static ViewManager getInstance(){
-        if(viewManager ==null){
+    public static ViewManager getInstance() {
+        if (viewManager == null) {
             ViewManager.viewManager = new ViewManager();
         }
         return viewManager;
     }
 
-    private synchronized void sendMessage(NetworkMessage networkMessage){
-        if(networkMessage == null) return;
+    private synchronized void sendMessage(NetworkMessage networkMessage) {
+        if (networkMessage == null) return;
         setChanged();
         notifyObservers((ViewEvent) networkMessage.getEvent(), networkMessage);
     }
 
-    public void configRequest(GameConfig config){
+    public void configRequest(GameConfig config) {
         synchronized (this) {
             try {
-                viewManager.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
-            } catch (InvalidParameterException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-    public void joinRequest(String lobby, String playerName){
-        synchronized (this) {
-            try {
-                sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST,playerName,lobby));
+                viewManager.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, config));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void createRequest(String lobby, String playerName){
+    public void joinRequest(String lobby, String playerName) {
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST, playerName, lobby));
+            } catch (InvalidParameterException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void createRequest(String lobby, String playerName) {
         synchronized (this) {
             try {
                 sendMessage(new NetworkMessage(ViewEvent.CREATE_REQUEST, playerName, lobby));
@@ -96,7 +97,7 @@ public class ViewManager extends View {
     }
 
     public void startRequest() {
-        synchronized (this){
+        synchronized (this) {
             try {
                 sendMessage(new NetworkMessage(ViewEvent.START_REQUEST));
             } catch (InvalidParameterException e) {
@@ -106,39 +107,39 @@ public class ViewManager extends View {
     }
 
     public void drawRequest(List<Position> positions) {
-        synchronized (this){
+        synchronized (this) {
             try {
-                sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST,positions));
+                sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST, positions));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void organizeRequest(List<ItemTile> orderedTiles){
-        synchronized (this){
-            try{
-                sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST,orderedTiles));
+    public void organizeRequest(List<ItemTile> orderedTiles) {
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST, orderedTiles));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void insertRequest(int column){
-        synchronized (this){
-            try{
-                sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST,column));
+    public void insertRequest(int column) {
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST, column));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendChatMessage(Message message){
-        synchronized (this){
-            try{
-                sendMessage(new NetworkMessage(ViewEvent.MESSAGE_SEND,message));
+    public void sendChatMessage(Message message) {
+        synchronized (this) {
+            try {
+                sendMessage(new NetworkMessage(ViewEvent.MESSAGE_SEND, message));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
@@ -146,22 +147,21 @@ public class ViewManager extends View {
     }
 
     /**
-     *
      * @return true if remove player fails
      */
     public boolean removePlayer() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
-        if(currentSize==2) return true;
+        int currentSize = lobbyModelView.getGameConfig().getNumPlayers();
+        if (currentSize == 2) return true;
         GameConfig config;
         try {
-            config = new GameConfig(currentSize-1);
+            config = new GameConfig(currentSize - 1);
         } catch (InvalidParameterException ignored) {
             return true;
         }
         synchronized (this) {
             try {
-                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, config));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
@@ -170,22 +170,21 @@ public class ViewManager extends View {
     }
 
     /**
-     *
      * @return true if addPlayer fails
      */
     public boolean addPlayer() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
-        int currentSize =  lobbyModelView.getGameConfig().getNumPlayers();
-        if(currentSize==4) return true;
+        int currentSize = lobbyModelView.getGameConfig().getNumPlayers();
+        if (currentSize == 4) return true;
         GameConfig config;
         try {
-            config = new GameConfig(currentSize+1);
+            config = new GameConfig(currentSize + 1);
         } catch (InvalidParameterException e) {
             return true;
         }
         synchronized (this) {
             try {
-                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST,config));
+                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, config));
             } catch (InvalidParameterException e) {
                 throw new RuntimeException(e);
             }
@@ -194,31 +193,20 @@ public class ViewManager extends View {
     }
 
     @Override
-    public void setModelView(ModelView modelView) {
-        synchronized (sync) {
-            this.modelView = modelView;
-            UINotifier.setChanged();
-            UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE, null);
-            sync.notifyAll();
-        }
-    }
-
-    @Override
     public void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt) {
-        synchronized (sync){
-            if(evt == ExceptionEvent.NEW_EXCEPTION) {
+        synchronized (sync) {
+            if (evt == ExceptionEvent.NEW_EXCEPTION) {
                 this.clientExceptionsNotifierView = exceptionView;
                 UINotifier.setChanged();
                 UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);
-            }
-            else this.disconnectedClientExceptionsNotifierView = exceptionView;
+            } else this.disconnectedClientExceptionsNotifierView = exceptionView;
             sync.notifyAll();
         }
     }
 
     @Override
     public void setChatView(PlayerChatModelView chatView) {
-        synchronized (sync){
+        synchronized (sync) {
             this.playerChatModelView = chatView;
             UINotifier.setChanged();
             UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE, null);
@@ -227,38 +215,10 @@ public class ViewManager extends View {
     }
 
     @Override
-    public void setLobbyModelView(LobbyModelView lobbyModelView) {
-        synchronized (sync){
-            this.lobbyModelView = lobbyModelView;
-            UINotifier.setChanged();
-            UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE, null);
-            sync.notifyAll();
-        }
-    }
-
-    @Override
-    public void setGameModelView(FullGameModelView theNewOne) {
-        synchronized (sync) {
-            if (this.fullGameModelView != null) {
-                this.oldGameModelView = new FullGameModelView(fullGameModelView);
-                FullGameModelView copy = new FullGameModelView(fullGameModelView);
-                this.fullGameModelView = theNewOne;
-                copy.diff(this.fullGameModelView);
-                this.gameDifferences = copy;
-            } else {
-                this.fullGameModelView = theNewOne;
-            }
-            UINotifier.setChanged();
-            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
-            sync.notifyAll();
-        }
-    }
-
-    @Override
     public void updateDrawView(DrawModelView drawModelView) {
-        synchronized (sync){
+        synchronized (sync) {
             GameState currentState = fullGameModelView.getCurrentState();
-            while(currentState != GameState.DRAW && currentState != GameState.LAST_DRAW){
+            while (currentState != GameState.DRAW && currentState != GameState.LAST_DRAW) {
                 try {
                     sync.wait();
                 } catch (InterruptedException ignored) {
@@ -273,7 +233,7 @@ public class ViewManager extends View {
 
             fullGameModelView = updateCopy;
             diffCopy.diff(this.fullGameModelView);
-            this.gameDifferences= diffCopy;
+            this.gameDifferences = diffCopy;
 
             UINotifier.setChanged();
             UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
@@ -283,9 +243,9 @@ public class ViewManager extends View {
 
     @Override
     public void updateOrganizeView(OrganizeModelView changes) {
-        synchronized (sync){
+        synchronized (sync) {
             GameState currentState = fullGameModelView.getCurrentState();
-            while(currentState != GameState.ORGANIZE && currentState != GameState.LAST_ORGANIZE){
+            while (currentState != GameState.ORGANIZE && currentState != GameState.LAST_ORGANIZE) {
                 try {
                     sync.wait();
                 } catch (InterruptedException ignored) {
@@ -300,7 +260,7 @@ public class ViewManager extends View {
 
             fullGameModelView = updateCopy;
             diffCopy.diff(this.fullGameModelView);
-            this.gameDifferences= diffCopy;
+            this.gameDifferences = diffCopy;
 
             UINotifier.setChanged();
             UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
@@ -312,7 +272,7 @@ public class ViewManager extends View {
     public void updateInsertView(InsertModelView changes) {
         synchronized (sync) {
             GameState currentState = fullGameModelView.getCurrentState();
-            while(currentState != GameState.INSERT && currentState != GameState.LAST_INSERT){
+            while (currentState != GameState.INSERT && currentState != GameState.LAST_INSERT) {
                 try {
                     sync.wait();
                 } catch (InterruptedException ignored) {
@@ -337,9 +297,9 @@ public class ViewManager extends View {
 
     @Override
     public void updateTurnView(EndTurnModelView endTurnModelView) {
-        synchronized (sync){
+        synchronized (sync) {
             GameState currentState = fullGameModelView.getCurrentState();
-            while(currentState != GameState.COUNTING_POINTS && currentState != GameState.LAST_COUNTING_POINTS){
+            while (currentState != GameState.COUNTING_POINTS && currentState != GameState.LAST_COUNTING_POINTS) {
                 try {
                     sync.wait();
                 } catch (InterruptedException ignored) {
@@ -362,7 +322,7 @@ public class ViewManager extends View {
         }
     }
 
-    private void resetBuffer(){
+    private void resetBuffer() {
         this.oldGameModelView = fullGameModelView;
         this.fullGameModelView = null;
         this.gameDifferences = null;
@@ -408,7 +368,7 @@ public class ViewManager extends View {
                     }
                 }
                 case DISCONNECTION -> {
-                    while(disconnectedClientExceptionsNotifierView == null){
+                    while (disconnectedClientExceptionsNotifierView == null) {
                         try {
                             sync.wait();
                         } catch (InterruptedException ignored) {
@@ -428,7 +388,7 @@ public class ViewManager extends View {
         UINotifier.addObserver(o);
     }
 
-    public synchronized void removeUI(Observer<ViewUpdate, Object> o ){
+    public synchronized void removeUI(Observer<ViewUpdate, Object> o) {
         UINotifier.deleteObserver(o);
     }
 
@@ -436,11 +396,21 @@ public class ViewManager extends View {
         return modelView;
     }
 
+    @Override
+    public void setModelView(ModelView modelView) {
+        synchronized (sync) {
+            this.modelView = modelView;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
     public synchronized ClientExceptionsNotifierModelView getClientExceptionsNotifierView() {
         return clientExceptionsNotifierView;
     }
 
-    public synchronized ClientExceptionsNotifierModelView getDisconnectedClientExceptionsNotifierView(){
+    public synchronized ClientExceptionsNotifierModelView getDisconnectedClientExceptionsNotifierView() {
         return disconnectedClientExceptionsNotifierView;
     }
 
@@ -452,8 +422,36 @@ public class ViewManager extends View {
         return lobbyModelView;
     }
 
+    @Override
+    public void setLobbyModelView(LobbyModelView lobbyModelView) {
+        synchronized (sync) {
+            this.lobbyModelView = lobbyModelView;
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE, null);
+            sync.notifyAll();
+        }
+    }
+
     public synchronized FullGameModelView getGameModelView() {
         return fullGameModelView;
+    }
+
+    @Override
+    public void setGameModelView(FullGameModelView theNewOne) {
+        synchronized (sync) {
+            if (this.fullGameModelView != null) {
+                this.oldGameModelView = new FullGameModelView(fullGameModelView);
+                FullGameModelView copy = new FullGameModelView(fullGameModelView);
+                this.fullGameModelView = theNewOne;
+                copy.diff(this.fullGameModelView);
+                this.gameDifferences = copy;
+            } else {
+                this.fullGameModelView = theNewOne;
+            }
+            UINotifier.setChanged();
+            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);
+            sync.notifyAll();
+        }
     }
 
     public synchronized ViewType getViewType() {
@@ -461,59 +459,58 @@ public class ViewManager extends View {
     }
 
     /**
-     *
      * @return if the current player/turn has changed in the last game update
      */
-    public synchronized boolean isCurrentPlayerDiff(){
-        return gameDifferences.getCurrentPlayerName()!=null;
+    public synchronized boolean isCurrentPlayerDiff() {
+        return gameDifferences.getCurrentPlayerName() != null;
     }
+
     /**
-     *
      * @return the username of the player that is currently the new current player
      */
-    public synchronized String getCurrentPlayerDiff(){
+    public synchronized String getCurrentPlayerDiff() {
         return gameDifferences.getCurrentPlayerName();
     }
 
     /**
-     *
      * @return the username of the player that was playing in the last game update
      */
-    public synchronized String getPreviousPlayer(){
-        if(oldGameModelView==null) return "";
+    public synchronized String getPreviousPlayer() {
+        if (oldGameModelView == null) return "";
         return oldGameModelView.getCurrentPlayerName();
     }
 
     /**
      * @return if the state have changed since the last game update
      */
-    public synchronized boolean isCurrentStateDiff(){
-        return gameDifferences.getCurrentState()!=null;
+    public synchronized boolean isCurrentStateDiff() {
+        return gameDifferences.getCurrentState() != null;
     }
 
     /**
      * @return the new state if the state has changed, otherwise it returns null
      */
-    public synchronized GameState getCurrentStateDiff(){
-        if(gameDifferences==null) return GameState.DRAW; //first turn
+    public synchronized GameState getCurrentStateDiff() {
+        if (gameDifferences == null) return GameState.DRAW; //first turn
         return gameDifferences.getCurrentState();
     }
 
     /**
      * @return the state previous to the one received in the last game update
      */
-    public synchronized GameState getLastState(){
+    public synchronized GameState getLastState() {
         return oldGameModelView.getCurrentState();
     }
 
     /**
      * @return if remaining tiles have changed since the last game update
      */
-    public synchronized boolean isRemainingTilesDiff(){
-        if(gameDifferences==null) return false;
-        return gameDifferences.getRemainingTiles()!=-1;
+    public synchronized boolean isRemainingTilesDiff() {
+        if (gameDifferences == null) return false;
+        return gameDifferences.getRemainingTiles() != -1;
     }
-    public synchronized int getRemainingTilesDiff(){
+
+    public synchronized int getRemainingTilesDiff() {
         return gameDifferences.getRemainingTiles();
     }
 
@@ -525,14 +522,14 @@ public class ViewManager extends View {
      *
      * @return a map from Positions to ItemTiles that have changed from the previous game update
      */
-    public synchronized HashMap<Position,ItemTile> getLivingRoomDiff(){
-        if(gameDifferences==null) return null;
-        HashMap<Position,ItemTile> result = new HashMap<>();
+    public synchronized HashMap<Position, ItemTile> getLivingRoomDiff() {
+        if (gameDifferences == null) return null;
+        HashMap<Position, ItemTile> result = new HashMap<>();
         ItemTile[][] diffLivingRoom = gameDifferences.getLivingRoom();
-        for(int i = 0; i<diffLivingRoom.length; i++){
-            for(int j = 0; j<diffLivingRoom[0].length; j++){
-                if(diffLivingRoom[i][j]!=null){
-                    result.put(new Position(j,i),diffLivingRoom[i][j]);
+        for (int i = 0; i < diffLivingRoom.length; i++) {
+            for (int j = 0; j < diffLivingRoom[0].length; j++) {
+                if (diffLivingRoom[i][j] != null) {
+                    result.put(new Position(j, i), diffLivingRoom[i][j]);
                 }
             }
         }
@@ -546,80 +543,82 @@ public class ViewManager extends View {
      *
      * @return a list of the commonGoals that have changed from the previous game update
      */
-    public synchronized List<CommonGoalModelView> getCommonGoalDiff(){
-        return gameDifferences.getCommonGoals().stream().filter(x->x.getTokens().size()!=0).toList();
+    public synchronized List<CommonGoalModelView> getCommonGoalDiff() {
+        return gameDifferences.getCommonGoals().stream().filter(x -> x.getTokens().size() != 0).toList();
     }
 
     /**
      * The returned PlayerModelView's points are the new points of those players.
+     *
      * @return the list of the players that have changed their points compared to the last game update.
      */
-    public synchronized List<PlayerModelView> getPlayersPointsDiff(){
-        if(gameDifferences!=null) return gameDifferences.getPlayers().stream().filter(x->x.getPoints()!=-1).toList();
+    public synchronized List<PlayerModelView> getPlayersPointsDiff() {
+        if (gameDifferences != null)
+            return gameDifferences.getPlayers().stream().filter(x -> x.getPoints() != -1).toList();
         return new ArrayList<>();
     }
 
     /**
-     *
      * @return the new points of the player if they have changed, otherwise returns -1
      */
-    public synchronized int getLastPlayerPointsDiff(){
+    public synchronized int getLastPlayerPointsDiff() {
         return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getPoints();
     }
 
     /**
-     *
      * @return the tokens that the last player has earned in the last game update
      */
-    public synchronized List<Token> getLastPlayerTokenDiff(){
-        if(oldGameModelView!=null && gameDifferences!=null) return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTokens();
+    public synchronized List<Token> getLastPlayerTokenDiff() {
+        if (oldGameModelView != null && gameDifferences != null)
+            return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTokens();
         return new ArrayList<>();
     }
 
     /**
      * @return the last player taken tiles that have been added in the last game update
      */
-    public synchronized List<ItemTile> getCurrentPlayerTakenTilesDiff(){
+    public synchronized List<ItemTile> getCurrentPlayerTakenTilesDiff() {
         return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTakenTiles();
     }
 
-    public synchronized List<ItemTile> getCurrentPlayerInsertedTiles(){
-        if(oldGameModelView!=null)return oldGameModelView.getCurrentPlayer().getTakenTiles();
+    public synchronized List<ItemTile> getCurrentPlayerInsertedTiles() {
+        if (oldGameModelView != null) return oldGameModelView.getCurrentPlayer().getTakenTiles();
         return new ArrayList<>();
     }
 
-    public synchronized boolean hasCurrentPlayerInsertedTiles(){
-        if(fullGameModelView!=null && oldGameModelView!=null) return fullGameModelView.getCurrentPlayer().getTakenTiles().size()< oldGameModelView.getCurrentPlayer().getTakenTiles().size();
+    public synchronized boolean hasCurrentPlayerInsertedTiles() {
+        if (fullGameModelView != null && oldGameModelView != null)
+            return fullGameModelView.getCurrentPlayer().getTakenTiles().size() < oldGameModelView.getCurrentPlayer().getTakenTiles().size();
         return false;
     }
 
-    public synchronized boolean isMyTurn(){
-        if(fullGameModelView!=null) return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
-        else if(oldGameModelView!=null) return oldGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+    public synchronized boolean isMyTurn() {
+        if (fullGameModelView != null) return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
+        else if (oldGameModelView != null) return oldGameModelView.getCurrentPlayerName().equals(ViewManager.username);
         else return false;
     }
 
-    public synchronized boolean areChosenTilesInvalid(List<Position> chosenTiles){
-        if(fullGameModelView==null) return false;
-        if(chosenTiles.size()==0) return true;
-        for(Position p : chosenTiles){
-            if(!fullGameModelView.atLeastOneSideFree(p)) return true;
+    public synchronized boolean areChosenTilesInvalid(List<Position> chosenTiles) {
+        if (fullGameModelView == null) return false;
+        if (chosenTiles.size() == 0) return true;
+        for (Position p : chosenTiles) {
+            if (!fullGameModelView.atLeastOneSideFree(p)) return true;
         }
         return false;
     }
 
     public boolean isThereEnoughBookshelfSpace(List<Position> tryChosenTiles) {
-        if(fullGameModelView==null) return false;
+        if (fullGameModelView == null) return false;
         ItemTile[][] bookshelf = fullGameModelView.getCurrentPlayer().getBookshelf();
         int width = bookshelf[0].length;
-        for(int i = 0; i< width; i++){
-            if(bookshelf[tryChosenTiles.size()-1][i].getType()==ItemTileType.EMPTY) return true;
+        for (int i = 0; i < width; i++) {
+            if (bookshelf[tryChosenTiles.size() - 1][i].getType() == ItemTileType.EMPTY) return true;
         }
         return false;
     }
 
-    public synchronized int getCurrentPlayerInsertedColumnPosition(){
-        if(!hasCurrentPlayerInsertedTiles()) return -1;
+    public synchronized int getCurrentPlayerInsertedColumnPosition() {
+        if (!hasCurrentPlayerInsertedTiles()) return -1;
         ItemTile[][] bookshelf = gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getBookshelf();
         for (ItemTile[] itemTiles : bookshelf) {
             for (int j = 0; j < bookshelf[0].length; j++) {
@@ -629,15 +628,15 @@ public class ViewManager extends View {
         return -1;
     }
 
-    public synchronized List<PlayerModelView> getPlayersOrderedByScores(){
-        if(fullGameModelView==null) return new ArrayList<>();
-        return fullGameModelView.getPlayers().stream().sorted((x,y)->{
-            if(x.getPoints()==y.getPoints()) return 0;
-            else return x.getPoints()>=y.getPoints() ? -1:1 ;
+    public synchronized List<PlayerModelView> getPlayersOrderedByScores() {
+        if (fullGameModelView == null) return new ArrayList<>();
+        return fullGameModelView.getPlayers().stream().sorted((x, y) -> {
+            if (x.getPoints() == y.getPoints()) return 0;
+            else return x.getPoints() >= y.getPoints() ? -1 : 1;
         }).toList();
     }
 
-    public synchronized PlayerModelView getWinner(){
+    public synchronized PlayerModelView getWinner() {
         return getPlayersOrderedByScores().get(0);
     }
 
@@ -648,9 +647,10 @@ public class ViewManager extends View {
         } catch (InvalidParameterException ignored) {
         }
     }
-    public void startAutoPlayer(){
+
+    public void startAutoPlayer() {
         AutoPlayer a = new AutoPlayer();
-        if(fullGameModelView!=null){
+        if (fullGameModelView != null) {
             a.postGameStart();
         } else {
             try {
@@ -662,8 +662,8 @@ public class ViewManager extends View {
 
     @Override
     public void stopUI() {
-        for(Observer<ViewUpdate,Object> o : UINotifier.getObservers()){
-            ((UI)o).stopUI();
+        for (Observer<ViewUpdate, Object> o : UINotifier.getObservers()) {
+            ((UI) o).stopUI();
         }
         UINotifier.deleteObservers();
         this.resetBuffer();

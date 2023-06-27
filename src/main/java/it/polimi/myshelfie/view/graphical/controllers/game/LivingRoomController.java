@@ -27,6 +27,18 @@ import java.util.HashMap;
 import java.util.List;
 
 public class LivingRoomController {
+    private static final double livingRoomImageSize = 2964;
+    private static final double gridTranslateX = 121;
+    private static final double gridTranslateY = 133;
+    private static final double tileSize = 298.5;
+    private static final double gridSpacing = 0;
+    private static final double livingRoomSizeToTileSize = livingRoomImageSize / tileSize;
+    private static final double gridSpacingToLivingRoomSize = gridSpacing / livingRoomImageSize;
+    private static final double gridTranslateXToLivingRoomSize = gridTranslateX / livingRoomImageSize;
+    private static final double gridTranslateYToLivingRoomSize = gridTranslateY / livingRoomImageSize;
+    final ViewManager viewManager = ViewManager.getInstance();
+    public List<Position> chosenTiles;
+    protected DoubleBinding tileHeightProperty;
     @FXML
     ImageView endToken;
     @FXML
@@ -35,25 +47,13 @@ public class LivingRoomController {
     ImageView livingRoomImage;
     @FXML
     GridPane tilesGrid;
-    private static final double livingRoomImageSize = 2964;
-    private static final double gridTranslateX = 121;
-    private static final double gridTranslateY = 133;
-    private static final double tileSize = 298.5;
-    private static final double gridSpacing = 0;
-    private static final double livingRoomSizeToTileSize = livingRoomImageSize/tileSize;
-    private static final double gridSpacingToLivingRoomSize = gridSpacing/livingRoomImageSize;
-    private static final double gridTranslateXToLivingRoomSize = gridTranslateX/livingRoomImageSize;
-    private static final double gridTranslateYToLivingRoomSize = gridTranslateY/livingRoomImageSize;
-    final ViewManager viewManager = ViewManager.getInstance();
     private DoubleBinding tileSizeBinding;
-    protected DoubleBinding tileHeightProperty;
-    public List<Position> chosenTiles;
     private List<TileImageView> chosenTilesImages;
     private boolean active;
     private GamePanelController gamePanelController;
     private TileImageView[][] imagesLivingRoom;
 
-    public void initialize(GamePanelController gamePanelController, DoubleBinding tileSizeBinding){
+    public void initialize(GamePanelController gamePanelController, DoubleBinding tileSizeBinding) {
         this.gamePanelController = gamePanelController;
         this.active = false;
 
@@ -61,31 +61,31 @@ public class LivingRoomController {
         this.chosenTilesImages = new ArrayList<>();
 
         this.tileSizeBinding = tileSizeBinding.multiply(1.5);
-        CustomBindings.bindSize(livingRoomImage,this.tileSizeBinding.multiply(livingRoomSizeToTileSize),this.tileSizeBinding.multiply(livingRoomSizeToTileSize));
+        CustomBindings.bindSize(livingRoomImage, this.tileSizeBinding.multiply(livingRoomSizeToTileSize), this.tileSizeBinding.multiply(livingRoomSizeToTileSize));
         CustomBindings.bindSize(endToken, livingRoomImage.fitWidthProperty().divide(2965).multiply(325), null);
-        endToken.setTranslateY(livingRoomImage.getFitHeight()/2965*740);
-        endToken.setTranslateX(livingRoomImage.getFitWidth()/2965*1070);
+        endToken.setTranslateY(livingRoomImage.getFitHeight() / 2965 * 740);
+        endToken.setTranslateX(livingRoomImage.getFitWidth() / 2965 * 1070);
 
-        CustomBindings.bindSize(mainStack,livingRoomImage.fitWidthProperty(),livingRoomImage.fitHeightProperty());
+        CustomBindings.bindSize(mainStack, livingRoomImage.fitWidthProperty(), livingRoomImage.fitHeightProperty());
         tilesGrid.vgapProperty().bind(livingRoomImage.fitHeightProperty().multiply(gridSpacingToLivingRoomSize));
         tilesGrid.hgapProperty().bind(livingRoomImage.fitWidthProperty().multiply(gridSpacingToLivingRoomSize));
-        for(ColumnConstraints columnConstraints : tilesGrid.getColumnConstraints()){
+        for (ColumnConstraints columnConstraints : tilesGrid.getColumnConstraints()) {
             columnConstraints.minWidthProperty().bind(this.tileSizeBinding);
             columnConstraints.maxWidthProperty().bind(columnConstraints.minWidthProperty());
             columnConstraints.maxWidthProperty().bind(columnConstraints.minWidthProperty());
         }
-        for(RowConstraints rowConstraints : tilesGrid.getRowConstraints()){
+        for (RowConstraints rowConstraints : tilesGrid.getRowConstraints()) {
             rowConstraints.minHeightProperty().bind(this.tileSizeBinding);
             rowConstraints.maxHeightProperty().bind(rowConstraints.minHeightProperty());
             rowConstraints.prefHeightProperty().bind(rowConstraints.minHeightProperty());
         }
         Binding<Number> gridSize = this.tileSizeBinding.multiply(9).add(tilesGrid.vgapProperty().multiply(7));
-        CustomBindings.bindSize(tilesGrid,gridSize,gridSize);
+        CustomBindings.bindSize(tilesGrid, gridSize, gridSize);
         tilesGrid.translateXProperty().bind(livingRoomImage.fitWidthProperty().multiply(gridTranslateXToLivingRoomSize));
         tilesGrid.translateYProperty().bind(livingRoomImage.fitHeightProperty().multiply(gridTranslateYToLivingRoomSize));
     }
 
-    public void loadGrid(){
+    public void loadGrid() {
         ItemTile[][] livingRoom = viewManager.getGameModelView().getLivingRoom();
         TileImageView[][] imagesLivingRoom = TileImageView.convertMatrix(livingRoom);
         for (int i = 0; i < imagesLivingRoom.length; i++) {
@@ -93,32 +93,32 @@ public class LivingRoomController {
                 TileImageView tile = imagesLivingRoom[i][j];
                 tile.setPreserveRatio(true);
                 tile.setVisible(false);
-                CustomBindings.bindSize(tile, this.tileSizeBinding,this.tileHeightProperty);
+                CustomBindings.bindSize(tile, this.tileSizeBinding, this.tileHeightProperty);
                 final boolean[] selected = {false};
-                final Position[] position = {new Position(i,j).centered(9)};
+                final Position[] position = {new Position(i, j).centered(9)};
                 tile.setOnMousePressed((mouseEvent -> {
-                    if(!this.active) return;
-                    if(chosenTiles.size()==3 && !selected[0]) return; //not allowing selection for more than 3 tiles
+                    if (!this.active) return;
+                    if (chosenTiles.size() == 3 && !selected[0]) return; //not allowing selection for more than 3 tiles
                     selected[0] = !selected[0];
-                    if(selected[0]){ //selected
+                    if (selected[0]) { //selected
                         List<Position> tryChosenTiles = new ArrayList<>(chosenTiles);
                         tryChosenTiles.add(position[0]);
-                        if(Position.arePositionsMisaligned(tryChosenTiles)){
-                            Animations.nodeError(tile,3).play();
+                        if (Position.arePositionsMisaligned(tryChosenTiles)) {
+                            Animations.nodeError(tile, 3).play();
                             gamePanelController.showConfirmError("Misaligned position");
                             return;
-                        } else if(viewManager.areChosenTilesInvalid(tryChosenTiles)){
-                            Animations.nodeError(tile,3).play();
+                        } else if (viewManager.areChosenTilesInvalid(tryChosenTiles)) {
+                            Animations.nodeError(tile, 3).play();
                             gamePanelController.showConfirmError("No side free");
                             return;
-                        } else if(!viewManager.isThereEnoughBookshelfSpace(tryChosenTiles)){
-                            Animations.nodeError(tile,3).play();
+                        } else if (!viewManager.isThereEnoughBookshelfSpace(tryChosenTiles)) {
+                            Animations.nodeError(tile, 3).play();
                             gamePanelController.showConfirmError("Not enough bookshelf space");
                             return;
                         }
                         this.chosenTiles.add(position[0]);
                         this.chosenTilesImages.add(tile);
-                        Animations.translateTo(tile,gamePanelController.tileSorterController.getPosition(chosenTiles.size())).play();
+                        Animations.translateTo(tile, gamePanelController.tileSorterController.getPosition(chosenTiles.size())).play();
                     } else { //de-selection
                         this.chosenTiles.remove(position[0]);
                         this.chosenTilesImages.remove(tile);
@@ -129,12 +129,12 @@ public class LivingRoomController {
             }
         }
         this.imagesLivingRoom = imagesLivingRoom;
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             tilesGrid.getChildren().clear();
-            for(int i = 0; i< imagesLivingRoom.length; i++){
-                for(int j = 0; j<imagesLivingRoom[0].length; j++){
-                    tilesGrid.add(imagesLivingRoom[i][j],i,j);
-                    if(imagesLivingRoom[i][j].getTile()!=null){
+            for (int i = 0; i < imagesLivingRoom.length; i++) {
+                for (int j = 0; j < imagesLivingRoom[0].length; j++) {
+                    tilesGrid.add(imagesLivingRoom[i][j], i, j);
+                    if (imagesLivingRoom[i][j].getTile() != null) {
                         Animations.tileRotateIn(imagesLivingRoom[i][j], Duration.millis(100)).play();
                     }
                 }
@@ -142,52 +142,54 @@ public class LivingRoomController {
         });
     }
 
-    public void updateLivingRoom(HashMap<Position,ItemTile> livingRoomDiff){
-        if(livingRoomDiff==null) return;
-        for(Position pos : livingRoomDiff.keySet()){
+    public void updateLivingRoom(HashMap<Position, ItemTile> livingRoomDiff) {
+        if (livingRoomDiff == null) return;
+        for (Position pos : livingRoomDiff.keySet()) {
             ItemTile changedTile = livingRoomDiff.get(pos);
             TileImageView changedTileImage = imagesLivingRoom[pos.getY()][pos.getX()];
-            if(changedTile.getType()==ItemTileType.EMPTY){
-                if(!ViewManager.getInstance().isMyTurn()) Animations.tileRotateOut(changedTileImage,Duration.millis(200)).play();
+            if (changedTile.getType() == ItemTileType.EMPTY) {
+                if (!ViewManager.getInstance().isMyTurn())
+                    Animations.tileRotateOut(changedTileImage, Duration.millis(200)).play();
                 else {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         tilesGrid.getChildren().remove(changedTileImage);
-                        tilesGrid.add(new TileImageView(new ItemTile(ItemTileType.EMPTY,0)),pos.getX(),pos.getY());
+                        tilesGrid.add(new TileImageView(new ItemTile(ItemTileType.EMPTY, 0)), pos.getX(), pos.getY());
                     });
                 }
             } else {
                 Position centeredPos = pos.centeredMatrix(9);
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     tilesGrid.getChildren().remove(changedTileImage);
                     TileImageView newImage = new TileImageView(changedTile);
-                    CustomBindings.bindSize(newImage,tileSizeBinding,tileSizeBinding);
+                    CustomBindings.bindSize(newImage, tileSizeBinding, tileSizeBinding);
                     newImage.setVisible(false);
                     final boolean[] selected = {false};
                     imagesLivingRoom[pos.getY()][pos.getX()] = newImage;
-                    tilesGrid.add(newImage,pos.getY(),pos.getX());
+                    tilesGrid.add(newImage, pos.getY(), pos.getX());
                     newImage.setOnMousePressed(mouseEvent -> {
-                        if(!this.active) return;
-                        if(chosenTiles.size()==3 && !selected[0]) return; //not allowing selection for more than 3 tiles
+                        if (!this.active) return;
+                        if (chosenTiles.size() == 3 && !selected[0])
+                            return; //not allowing selection for more than 3 tiles
                         selected[0] = !selected[0];
-                        if(selected[0]){ //selected
+                        if (selected[0]) { //selected
                             List<Position> tryChosenTiles = new ArrayList<>(chosenTiles);
                             tryChosenTiles.add(centeredPos);
-                            if(Position.arePositionsMisaligned(tryChosenTiles)){
-                                Animations.nodeError(newImage,3).play();
+                            if (Position.arePositionsMisaligned(tryChosenTiles)) {
+                                Animations.nodeError(newImage, 3).play();
                                 gamePanelController.showConfirmError("Misaligned position");
                                 return;
-                            } else if(viewManager.areChosenTilesInvalid(tryChosenTiles)){
-                                Animations.nodeError(newImage,3).play();
+                            } else if (viewManager.areChosenTilesInvalid(tryChosenTiles)) {
+                                Animations.nodeError(newImage, 3).play();
                                 gamePanelController.showConfirmError("No side free");
                                 return;
-                            } else if(!viewManager.isThereEnoughBookshelfSpace(tryChosenTiles)){
-                                Animations.nodeError(newImage,3).play();
+                            } else if (!viewManager.isThereEnoughBookshelfSpace(tryChosenTiles)) {
+                                Animations.nodeError(newImage, 3).play();
                                 gamePanelController.showConfirmError("Not enough bookshelf space");
                                 return;
                             }
                             this.chosenTiles.add(centeredPos);
                             this.chosenTilesImages.add(newImage);
-                            Animations.translateTo(newImage,gamePanelController.tileSorterController.getPosition(chosenTiles.size())).play();
+                            Animations.translateTo(newImage, gamePanelController.tileSorterController.getPosition(chosenTiles.size())).play();
                         } else { //de-selection
                             this.chosenTiles.remove(centeredPos);
                             this.chosenTilesImages.remove(newImage);
@@ -195,41 +197,42 @@ public class LivingRoomController {
                             fixChosenTileTranslations();
                         }
                     });
-                    Animations.tileRotateIn(newImage,Duration.millis(200)).play();
+                    Animations.tileRotateIn(newImage, Duration.millis(200)).play();
                 });
             }
         }
     }
-    public Animation resetChosenTileTranslations(){
+
+    public Animation resetChosenTileTranslations() {
         ParallelTransition pt = new ParallelTransition();
-        for(TileImageView t : chosenTilesImages){
-            pt = new ParallelTransition(pt,Animations.eraseTranslation(t));
+        for (TileImageView t : chosenTilesImages) {
+            pt = new ParallelTransition(pt, Animations.eraseTranslation(t));
         }
         return pt;
     }
 
-    public Animation setChosenTileTranslations(){
-        for(int i = 0; i < chosenTilesImages.size()-1; i++){
-            Animations.translateTo(chosenTilesImages.get(i),gamePanelController.tileSorterController.getPosition(i+1)).play();
+    public Animation setChosenTileTranslations() {
+        for (int i = 0; i < chosenTilesImages.size() - 1; i++) {
+            Animations.translateTo(chosenTilesImages.get(i), gamePanelController.tileSorterController.getPosition(i + 1)).play();
         }
-        if(chosenTilesImages.size()==0) return new TranslateTransition(Duration.millis(0));
-        return Animations.translateTo(chosenTilesImages.get(chosenTilesImages.size()-1),gamePanelController.tileSorterController.getPosition(chosenTiles.size()));
+        if (chosenTilesImages.size() == 0) return new TranslateTransition(Duration.millis(0));
+        return Animations.translateTo(chosenTilesImages.get(chosenTilesImages.size() - 1), gamePanelController.tileSorterController.getPosition(chosenTiles.size()));
     }
 
-    public void fixChosenTileTranslations(){
-        for(int i = 0; i < chosenTilesImages.size(); i++){
+    public void fixChosenTileTranslations() {
+        for (int i = 0; i < chosenTilesImages.size(); i++) {
             TileImageView tile = chosenTilesImages.get(i);
-            Animation animation = Animations.fixTranslateTo(tile,gamePanelController.tileSorterController.getPosition(i+1));
+            Animation animation = Animations.fixTranslateTo(tile, gamePanelController.tileSorterController.getPosition(i + 1));
             animation.play();
         }
     }
 
-    public void resetChoice(){
+    public void resetChoice() {
         chosenTiles.clear();
         chosenTilesImages.clear();
     }
 
-    public void setActive(boolean active){
+    public void setActive(boolean active) {
         this.active = active;
     }
 
@@ -243,6 +246,6 @@ public class LivingRoomController {
     public void checkEndToken() {
         List<Token> newTokens = viewManager.getLastPlayerTokenDiff();
 
-        if(newTokens.contains(Token.ENDGAME)) endToken.setVisible(false);
+        if (newTokens.contains(Token.ENDGAME)) endToken.setVisible(false);
     }
 }

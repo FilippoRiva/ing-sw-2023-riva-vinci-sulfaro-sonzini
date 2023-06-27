@@ -5,7 +5,7 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
-public class InitPage extends ScreenPage{
+public class InitPage extends ScreenPage {
 
     public InitPage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
@@ -14,15 +14,15 @@ public class InitPage extends ScreenPage{
     @Override
     public void render() {
         ModelView modelView = viewManager.getModelView();
-        if(modelView == null) return;
+        if (modelView == null) return;
         t.clearScreen();
         t.printTitle();
         if (modelView.getLobbies().size() != 0) {
-            t.centerPrint("1. create",20);
-            t.centerPrint("2. join",21);
+            t.centerPrint("1. create", 20);
+            t.centerPrint("2. join", 21);
             t.printAction("close, 1, 2");
         } else {
-            t.centerPrint("1. create",20);
+            t.centerPrint("1. create", 20);
             t.printAction("close, 1");
         }
         printBorder();
