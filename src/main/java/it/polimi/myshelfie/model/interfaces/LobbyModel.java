@@ -7,11 +7,14 @@ import it.polimi.myshelfie.utils.Observer;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 
+/**
+ * Represents the lobby's interface.
+ */
 public interface LobbyModel {
 
     /**
-     * Initializes game with the GameConfig that have been previously set.
-     * If no custom GameConfig is set the default one is used.
+     * Initializes the game with the GameConfig that have been previously set.
+     * If no custom GameConfig is set, the default one is used.
      * Notifies every view on the lobby.
      */
     void initialize() throws LobbyFullException;
@@ -24,18 +27,20 @@ public interface LobbyModel {
     /**
      * Adds a player to the lobby.
      * @param playerName is the name of the new player that has to be added to the game.
+     * @throws LobbyFullException if the lobby is full.
+     * @throws InvalidParameterException if the username is not valid.
      */
     void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException;
 
     /**
-     * Removes a player form the lobby.
+     * Removes a player from the lobby.
      * @param playerName is the name of the player that has to be removed from the game.
      */
     void removePlayer(String playerName) throws InvalidParameterException;
 
     /**
-     * Return true if the lobby is empty.
-     * @return true or false.
+     * Checks whether the lobby is empty.
+     * @return true if the lobby is full, false otherwise.
      */
     boolean isLobbyEmpty();
 
@@ -58,14 +63,14 @@ public interface LobbyModel {
     String getLobbyName();
 
     /**
-     * Add a lobby observer.
-     * @param obs is the observer to add.
+     * Adds a lobby observer.
+     * @param obs the observer to add.
      */
     void addLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs);
 
     /**
-     * Removes a lobby observer
-     * @param obs the observer to remove
+     * Removes a lobby observer.
+     * @param obs the observer to remove.
      */
     void removeLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs);
 
@@ -81,9 +86,21 @@ public interface LobbyModel {
      */
     String getName();
 
+    /**
+     * Checks if the player is the room owner (the one who created it).
+     * @param username the name of the player to check.
+     * @return true if the player is the room owner, false otherwise.
+     */
     boolean isRoomOwner(String username);
 
+    /**
+     * Checks whether the game has started.
+     * @return true if the game has started, false otherwise.
+     */
     boolean hasStarted();
 
+    /**
+     * Removes lobbies' observers.
+     */
     void removeLobbyObservers();
 }

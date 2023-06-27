@@ -2,7 +2,7 @@ package it.polimi.myshelfie.model;
 
 import it.polimi.myshelfie.model.exceptions.DisconnectionException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
-import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
+import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
 import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
@@ -10,37 +10,41 @@ import it.polimi.myshelfie.utils.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierView> implements ClientExceptionsNotifier {
+/**
+ * Is used to notify all the exceptions.
+ * It contains a list with all the exceptions and methods to notify them whenever one occurs.
+ */
+public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierModelView> implements ClientExceptionsNotifier {
     List<Exception> exceptionList = new ArrayList<>();
 
     @Override
     public void notifyException(DisconnectionException exception){
         exceptionList.add(exception);
         setChanged();
-        notifyObservers(ExceptionEvent.DISCONNECTION_EXCEPTION, new ClientExceptionsNotifierView(this));
+        notifyObservers(ExceptionEvent.DISCONNECTION_EXCEPTION, new ClientExceptionsNotifierModelView(this));
     }
     @Override
     public synchronized void notifyException(Exception exception) {
         exceptionList.add(exception);
         setChanged();
-        notifyObservers(ExceptionEvent.NEW_EXCEPTION, new ClientExceptionsNotifierView(this));
+        notifyObservers(ExceptionEvent.NEW_EXCEPTION, new ClientExceptionsNotifierModelView(this));
     }
 
     @Override
-    public synchronized void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
+    public synchronized void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierModelView> obs) {
         addObserver(obs);
         setChanged();
-        notifyObservers(new ClientExceptionsNotifierView(this));
+        notifyObservers(new ClientExceptionsNotifierModelView(this));
     }
 
     @Override
-    public synchronized void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierView> obs) {
+    public synchronized void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierModelView> obs) {
         deleteObserver(obs);
     }
 
     @Override
-    public synchronized ClientExceptionsNotifierView getClientExceptionNotifierView() {
-        return new ClientExceptionsNotifierView(this);
+    public synchronized ClientExceptionsNotifierModelView getClientExceptionNotifierView() {
+        return new ClientExceptionsNotifierModelView(this);
     }
 
     @Override

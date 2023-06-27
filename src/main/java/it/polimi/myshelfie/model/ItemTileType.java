@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model;
 import java.io.Serializable;
 import java.util.Random;
 
+/**
+ * Represents the 6 type of item tiles of the game, that are CAT, BOOK, GAME, FRAME, TROPHY and PLANT.
+ * There's also a seventh type, which is the EMPTY one, used to indicate an empty position.
+ */
 public enum ItemTileType implements Serializable {
     CAT("Cat"),         //Green
     BOOK("Book"),       //White
@@ -23,6 +27,10 @@ public enum ItemTileType implements Serializable {
         return ItemTileType.values()[tilePos];
     }
 
+    /**
+     * Constructor.
+     * @param name the name of the item tile type.
+     */
     ItemTileType(String name){
         this.name = name;
     }

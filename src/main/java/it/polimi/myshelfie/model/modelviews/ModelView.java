@@ -7,10 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the Model view.
+ */
 public class ModelView implements Serializable {
     List<String> lobbies;
     Map<String, Integer> maxSizeMap;
     Map<String, Integer> currentSizeMap;
+
+    /**
+     * Constructor.
+     * @param model the model implementation I want the model view.
+     */
     public ModelView(ModelImpl model){
         this.lobbies = model.getLobbies();
         this.maxSizeMap = new HashMap<>();
@@ -26,18 +34,37 @@ public class ModelView implements Serializable {
     public List<String> getLobbies() {
         return lobbies;
     }
+
+    /**
+     *
+     * @param lobby the name of the lobby.
+     * @return the max lobby size.
+     */
     public int getMaxSize(String lobby){
         return maxSizeMap.get(lobby);
     }
 
+    /**
+     *
+     * @param lobby the name of the lobby.
+     * @return the current lobby size.
+     */
     public int getCurrentSize(String lobby){
         return currentSizeMap.get(lobby);
     }
 
+    /**
+     *
+     * @return the list of lobbies with their max dimension.
+     */
     public Map<String, Integer> getMaxSizeMap(){
         return maxSizeMap;
     }
 
+    /**
+     *
+     * @return the list of lobbies with their current dimension.
+     */
     public Map<String, Integer> getCurrentSizeMap(){
         return currentSizeMap;
     }

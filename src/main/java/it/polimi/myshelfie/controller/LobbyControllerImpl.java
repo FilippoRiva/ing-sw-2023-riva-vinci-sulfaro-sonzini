@@ -211,7 +211,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
      * @param connectionHandler the ServerConnectionHandler used for the player's connection.
      * @param exceptionsNotifier the client exception notifier of this client.
      * @param playerName the name of the player that must be added to the lobby.
-     * @throws InvalidParameterException if one of the parameter passed is not valid.
+     * @throws InvalidParameterException if the playerName is not available.
      * @throws LobbyFullException if the lobby is full.
      */
     protected void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {

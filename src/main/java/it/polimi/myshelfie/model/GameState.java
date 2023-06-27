@@ -2,6 +2,9 @@ package it.polimi.myshelfie.model;
 
 import java.io.Serializable;
 
+/**
+ * Represents the possible states of the game.
+ */
 public enum GameState implements Serializable {
     LOBBY,
     FIRST_DRAW,

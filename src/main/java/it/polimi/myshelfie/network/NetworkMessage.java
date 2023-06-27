@@ -169,7 +169,7 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
-    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierView exceptionsNotifierView){
+    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierView){
         this.messageType = MessageType.EXCEPTION_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view)-> new Thread(()->view.setExceptionView(exceptionsNotifierView,evt)).start());

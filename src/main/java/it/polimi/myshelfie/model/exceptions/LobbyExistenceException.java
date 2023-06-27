@@ -1,5 +1,9 @@
 package it.polimi.myshelfie.model.exceptions;
 
+/**
+ * Represents the exception thrown when a lobby already exists.
+ */
+
 public class LobbyExistenceException extends Exception{
     private final String message;
 

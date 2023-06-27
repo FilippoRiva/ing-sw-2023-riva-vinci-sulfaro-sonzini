@@ -8,6 +8,10 @@ import it.polimi.myshelfie.utils.Observer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Represents the chat system of the game.
+ * It has a list of messages and one of players.
+ */
 public class ChatSystem implements ChatModel {
 
     private final ArrayList<Message> messages;
@@ -18,7 +22,7 @@ public class ChatSystem implements ChatModel {
     }
 
     /**
-     * Creates a Chat System.
+     * Constructor. Creates a Chat System.
      */
     public ChatSystem(){
         messages = new ArrayList<>();

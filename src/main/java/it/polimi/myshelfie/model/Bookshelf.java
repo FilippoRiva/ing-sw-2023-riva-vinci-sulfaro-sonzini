@@ -4,6 +4,9 @@ import it.polimi.myshelfie.model.exceptions.FullColumnException;
 
 import java.awt.*;
 
+/**
+ * Represents the bookshelf.
+ */
 public class Bookshelf {
     private final ItemTile[][] bookshelfItems;
     private final int width;
@@ -55,10 +58,10 @@ public class Bookshelf {
     }
 
     /**
-     * Returns true if that column is not full and can be filled with the item tiles.
+     * Checks if that column is not full and can be filled with the item tiles.
      * @param numTakenTiles is the number of tiles taken from the board in that turn.
      * @param column is the column that has to be controlled.
-     * @return true or false.
+     * @return true if the column can be filled, false otherwise.
      */
     public boolean isColumnFillable(int numTakenTiles, int column){
         return bookshelfItems[numTakenTiles-1][column].getType() == ItemTileType.EMPTY;
@@ -90,6 +93,13 @@ public class Bookshelf {
         return points;
     }
 
+    /**
+     * Checks how many adjacent tiles there are in the bookshelf.
+     * @param boolBookshelf the bookshelf to check.
+     * @param i index for the raws.
+     * @param j index for the columns.
+     * @return the number of adjacent tiles found.
+     */
     private int checkAdjacent(boolean[][] boolBookshelf, int i, int j){
         int n=0;
         boolBookshelf[i][j]=true;
@@ -109,8 +119,8 @@ public class Bookshelf {
     }
 
     /**
-     * Return true if the bookshelf is full.
-     * @return true or false.
+     * Checks whether the bookshelf is full.
+     * @return true if it's full, false otherwise.
      */
     public boolean isFull(){
         for(int i=0; i< width; i++){
@@ -119,6 +129,10 @@ public class Bookshelf {
         return true;
     }
 
+    /**
+     * Checks how many available free positions remain in a column.
+     * @return how many positions are free.
+     */
     public int columnFreeSpace(){
         int max=0, count;
         for(int i=0; i<width; i++){

@@ -7,7 +7,7 @@ public class CommonGoalStairs extends CommonGoal{
     int height;
     int width;
     /**
-     *
+     * Checks common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if I have 5 columns of height growing of decreasing, false otherwise
      *

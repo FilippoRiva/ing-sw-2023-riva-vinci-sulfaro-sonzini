@@ -10,6 +10,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the player model view.
+ */
 public class PlayerModelView implements Serializable {
     private final String name;
     private final List<PersonalGoalModelView> personalGoals;
@@ -17,19 +20,28 @@ public class PlayerModelView implements Serializable {
     private List<ItemTile> takenTiles;
     private List<Token> tokens;
     private ItemTile[][] bookshelf;
-    public PlayerModelView(Player player){
+
+    /**
+     * Default Constructor.
+     * @param player the player I want the model view.
+     */
+    public PlayerModelView(Player player) {
         this.name = player.getName();
         List<PersonalGoal> goals = player.getPersonalGoals();
         this.personalGoals = new ArrayList<>();
-        for(PersonalGoal p : goals){
+        for (PersonalGoal p : goals) {
             this.personalGoals.add(new PersonalGoalModelView(p));
         }
-        this.earnedPoints=player.getEarnedPoints();
+        this.earnedPoints = player.getEarnedPoints();
         this.tokens = player.getObtainedTokens();
         this.bookshelf = player.getBookshelf().getBookshelfItems();
         this.takenTiles = player.getTakenTiles();
     }
 
+    /**
+     * Constructor.
+     * @param toCopy the player model view to copy.
+     */
     public PlayerModelView(PlayerModelView toCopy){
         this.name = toCopy.name;
         this.personalGoals = new ArrayList<>();
@@ -98,20 +110,42 @@ public class PlayerModelView implements Serializable {
     }
 
 
+    /**
+     * Sets the taken tiles.
+     * @param takenTiles the tiles taken.
+     */
     protected void setTakenTiles(List<ItemTile> takenTiles) {
         this.takenTiles = takenTiles;
     }
 
+    /**
+     * Sets the tokens.
+     * @param tokens the player tokens.
+     */
     protected void setTokens(List<Token> tokens) {
         this.tokens = tokens;
     }
 
+    /**
+     * Sets the bookshelf.
+     * @param bookshelf the bookshelf to set.
+     */
     public void setBookshelf(ItemTile[][] bookshelf) {
         this.bookshelf = bookshelf;
     }
 
+    /**
+     * Sets the earned points.
+     * @param e the earned points.
+     */
     public void setEarnedPoints(ArrayList<EarnedPoint> e){this.earnedPoints=e;}
 
+
+    /**
+     * Modifies the attributes of this player model view, by changing them with the differences applied.
+     * It calculates the differences and re-initialize the attributes.
+     * @param p the player model view to confront.
+     */
     public void diff(PlayerModelView p) {
         if(this.getPoints()==p.getPoints()) this.earnedPoints = new ArrayList<>();
         else this.earnedPoints = p.earnedPoints;

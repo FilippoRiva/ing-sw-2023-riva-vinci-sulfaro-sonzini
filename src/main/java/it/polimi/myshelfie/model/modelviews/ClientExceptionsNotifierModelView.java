@@ -4,9 +4,17 @@ import it.polimi.myshelfie.model.ClientExceptionsNotifierImpl;
 
 import java.io.Serializable;
 
-public class ClientExceptionsNotifierView implements Serializable {
+/**
+ * Represents the client exceptions notifier model view.
+ */
+public class ClientExceptionsNotifierModelView implements Serializable {
     private final Exception lastException;
-    public ClientExceptionsNotifierView(ClientExceptionsNotifierImpl c){
+
+    /**
+     * Default constructor.
+     * @param c the last exceptions.
+     */
+    public ClientExceptionsNotifierModelView(ClientExceptionsNotifierImpl c){
         this.lastException = c.getLastException();
     }
 

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Represents the full game model view.
+ */
 public class FullGameModelView implements Serializable, GameModelView {
     private final List<PlayerModelView> players;
     private String currentPlayer;
@@ -19,6 +22,11 @@ public class FullGameModelView implements Serializable, GameModelView {
     private GameConfig gameConfig;
     private final String roomName;
 
+
+    /**
+     * Default constructor.
+     * @param game the game I want the full model view.
+     */
     public FullGameModelView(Game game){
         List<Player> actualPlayers = game.getPlayers();
         players = new ArrayList<>();
@@ -38,6 +46,10 @@ public class FullGameModelView implements Serializable, GameModelView {
         this.roomName = game.getName();
     }
 
+    /**
+     * Constructor.
+     * @param toCopy the full game model view I want to copy
+     */
     public FullGameModelView(FullGameModelView toCopy){
         this.players = new ArrayList<>();
         for(PlayerModelView p : toCopy.getPlayers()){
@@ -100,6 +112,11 @@ public class FullGameModelView implements Serializable, GameModelView {
     public String getCurrentPlayerName(){
         return currentPlayer;
     }
+
+    /**
+     *
+     * @return the player model view of the current player.
+     */
     public PlayerModelView getCurrentPlayer(){
         return players.stream().filter(x->x.getName().equals(currentPlayer)).findFirst().orElse(null);
     }
@@ -165,26 +182,53 @@ public class FullGameModelView implements Serializable, GameModelView {
         return livingRoom[x+offset][offset-y];
     }
 
+    /**
+     * Sets the current player.
+     * @param currentPlayer the player to set.
+     */
     protected void setCurrentPlayer(String currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Sets the current state.
+     * @param currentState the state to set.
+     */
     protected void setCurrentState(GameState currentState) {
         this.currentState = currentState;
     }
 
+    /**
+     * Sets the common goals.
+     * @param commonGoals the common goals to set.
+     */
     protected void setCommonGoals(List<CommonGoalModelView> commonGoals) {
         this.commonGoals = commonGoals;
     }
 
+
+    /**
+     * Sets the living room.
+     * @param livingRoom the living room to set.
+     */
     protected void setLivingRoom(ItemTile[][] livingRoom) {
         this.livingRoom = livingRoom;
     }
 
+    /**
+     * Sets the number of remaining tiles.
+     * @param remainingTiles the number  of tiles to set.
+     */
     protected void setRemainingTiles(int remainingTiles) {
         this.remainingTiles = remainingTiles;
     }
 
+
+    /**
+     * Modifies the attributes of this full game model view, by changing them with the differences applied.
+     * It calculates the differences and re-initialize the attributes.
+     * @param theNewOne the full game model view to confront.
+     */
     public void diff(FullGameModelView theNewOne){
         for(PlayerModelView p : theNewOne.players){
             Optional<PlayerModelView> player = this.players.stream().filter(x->x.getName().equals(p.getName())).findFirst();
@@ -217,17 +261,29 @@ public class FullGameModelView implements Serializable, GameModelView {
         this.gameConfig = null;
     }
 
+    /**
+     * It applies the edits to the draw model view after something changes in the game.
+     * @param drawModelView the model view to modify.
+     */
     public void applyChanges(DrawModelView drawModelView){
         this.setCurrentState(drawModelView.getCurrentState());
         this.setLivingRoom(drawModelView.getLivingRoom());
         this.getCurrentPlayer().setTakenTiles(drawModelView.getTakenTiles());
     }
 
+    /**
+     * It applies the edits to the Organize model view after something changes in the game.
+     * @param organizeModelView the model view to modify.
+     */
     public void applyChanges(OrganizeModelView organizeModelView){
         this.setCurrentState(organizeModelView.getCurrentState());
         this.getCurrentPlayer().setTakenTiles(organizeModelView.getOrderedTiles());
     }
 
+    /**
+     * * It applies the edits to the Insert model view after something changes in the game.
+     * @param insertModelView the model view to modify.
+     */
     public void applyChanges(InsertModelView insertModelView){
         this.getPlayer(insertModelView.getCurrentPlayer()).setBookshelf(insertModelView.getBookshelf());
         this.getPlayer(insertModelView.getCurrentPlayer()).setTakenTiles(new ArrayList<>());
@@ -236,6 +292,10 @@ public class FullGameModelView implements Serializable, GameModelView {
         }
     }
 
+    /**
+     * It applies the edits to the end turn model view after something changes in the game.
+     * @param endTurnModelView the model view to modify.
+     */
     public void applyChanges(EndTurnModelView endTurnModelView){
         this.setCurrentState(endTurnModelView.getCurrentState());
         this.getPlayer(endTurnModelView.getLastPlayer()).setEarnedPoints(endTurnModelView.getEarnedPoints());
@@ -246,6 +306,11 @@ public class FullGameModelView implements Serializable, GameModelView {
         this.setCurrentPlayer(endTurnModelView.getCurrentPlayer());
     }
 
+    /**
+     * Checks whether a tile has at least one side free.
+     * @param p the position of the tile to check.
+     * @return false if there are no free sides, true otherwise.
+     */
     public boolean atLeastOneSideFree(Position p) {
         int x = p.getX();
         int y = p.getY();

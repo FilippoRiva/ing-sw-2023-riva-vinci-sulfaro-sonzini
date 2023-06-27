@@ -10,7 +10,7 @@ import it.polimi.myshelfie.model.exceptions.LobbyFullException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.interfaces.Model;
 import it.polimi.myshelfie.model.interfaces.LobbyModel;
-import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierView;
+import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
 import it.polimi.myshelfie.model.modelviews.ModelView;
 import it.polimi.myshelfie.network.Client;
 import it.polimi.myshelfie.network.NetworkMessage;
@@ -61,7 +61,7 @@ public class ControllerImpl implements Controller {
      */
     @Override
     public synchronized void addClient(Client client,Observer<ModelEvent, ModelView> networkModelObserver,
-                                       Observer<ExceptionEvent, ClientExceptionsNotifierView> networkExceptionsObserver) throws InvalidParameterException{
+                                       Observer<ExceptionEvent, ClientExceptionsNotifierModelView> networkExceptionsObserver) throws InvalidParameterException{
         if(clientExceptionsNotifiers.containsKey(client)) {
             throw new InvalidParameterException("Client already exists");
         }

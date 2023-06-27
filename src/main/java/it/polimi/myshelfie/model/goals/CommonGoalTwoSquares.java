@@ -7,10 +7,9 @@ import java.util.Arrays;
 
 public class CommonGoalTwoSquares extends CommonGoal{
     /**
-     *
+     * Checks the common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 2 squares (2x2) with all ItemTiles equals, false otherwise
-     *
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {

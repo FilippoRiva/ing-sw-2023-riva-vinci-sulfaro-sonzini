@@ -7,11 +7,14 @@ import it.polimi.myshelfie.utils.Observable;
 
 import java.util.ArrayList;
 
+/**
+ * Represents the player chat. It contains a list of messages.
+ */
 public class PlayerChat extends Observable<ChatEvent, PlayerChatModelView> {
     private final ArrayList<Message> messages;
 
     /**
-     * Instantiates a new PlayerChat.
+     * Constructor. Instantiates a new PlayerChat.
      */
     public PlayerChat() {
         this.messages = new ArrayList<>();

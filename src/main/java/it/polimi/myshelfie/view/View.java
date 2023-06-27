@@ -9,7 +9,7 @@ import it.polimi.myshelfie.utils.Observable;
 public abstract class View extends Observable<ViewEvent, NetworkMessage>{
 
     public abstract void setModelView(ModelView modelView);
-    public abstract void setExceptionView(ClientExceptionsNotifierView exceptionView, ExceptionEvent evt);
+    public abstract void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt);
     public abstract void setChatView(PlayerChatModelView chatView);
     public abstract void setLobbyModelView(LobbyModelView lobbyModelView);
     public abstract void setGameModelView(FullGameModelView fullGameModelView);

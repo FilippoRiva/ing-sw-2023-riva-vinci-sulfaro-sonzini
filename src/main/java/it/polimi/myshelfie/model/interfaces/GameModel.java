@@ -11,11 +11,14 @@ import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 
 import java.util.List;
 
+/**
+ * Represents the game's interface.
+ */
 public interface GameModel {
 
     /**
      * Change the state of the game and notifies every view on the game.
-     * @param state is the new state.
+     * @param state the new state.
      */
     void setState(GameState state);
 
@@ -26,7 +29,7 @@ public interface GameModel {
 
     /**
      * Draws the tiles in the given positions from the livingRoom.
-     * @param positions are the positions of the tiles that have to be removed from the board, where the first in the list is the first one to be
+     * @param positions the positions of the tiles that have to be removed from the board, where the first in the list is the first one to be
      *                  inserted into the player's bookshelf, and the last one is the last one to be inserted.
      * @param playerName the name of the player drawing the tiles.
      * @throws InvalidParameterException if the given positions/column are/is not valid.
@@ -34,9 +37,9 @@ public interface GameModel {
     void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException;
 
     /**
-     *
-     * @param orderedTiles are the tiles taken form the board.
-     * @param playerName is the player playing.
+     * Orders the tiles drawn from the living room.
+     * @param orderedTiles the tiles taken form the board.
+     * @param playerName the player playing.
      * @throws InvalidParameterException if the player is playing in the wrong turn and if the tiles are different from
      * the ones taken in the draw move.
      */
@@ -55,34 +58,49 @@ public interface GameModel {
     /**
      * Check if the player achieved the commonGoal and add the obtained tokens to the player.
      * Has to be called at the end of a player's turn.
-     * @param playerName player playing
+     * @param playerName the player playing
      */
     void checkCommonGoal(String playerName);
 
     /**
-     * refill the livingRoom if refillable.
+     * Refills the livingRoom if refillable.
      */
     void refillLivingRoom();
 
     /**
-     * change the current player playing and notifies every view.
+     * Changes the current player playing and notifies every view.
      */
     void nextTurn();
 
     /**
-     * if last round and last player, calculates the results.
+     * If last round and last player, calculates the results.
      */
     void calculateWinResults();
 
+    /**
+     * Adds the end game token to the player who finishes first.
+     * @param playerName the name of the player who obtains the token.
+     */
     void addEndToken(String playerName);
 
+
+    /**
+     * Checks if the bookshelf is full.
+     * @param playerName the player whose bookshelf has to be checked.
+     * @return true if the bookshelf is full, false otherwise.
+     */
     boolean isBookshelfFull(String playerName);
 
+    /**
+     * Cheks whether the player playing is the last one.
+     * @param playerName the player to check.
+     * @return true if it's the last one, false otherwise.
+     */
     boolean isLastPlayer(String playerName);
 
     /**
-     * Add a game observer.
-     * @param obs is the observer to add.
+     * Adds a game observer.
+     * @param obs the observer to add.
      */
     void addGameObserver(Observer<GameEvent, GameModelView> obs);
 
@@ -110,7 +128,14 @@ public interface GameModel {
      */
     String getLobbyName();
 
+    /**
+     * Removes a game observer.
+     */
     void removeGameObservers();
 
+    /**
+     * Returns the chat model.
+     * @return a chat model.
+     */
     ChatModel getChatModel();
 }

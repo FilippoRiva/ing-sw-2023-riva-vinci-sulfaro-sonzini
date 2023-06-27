@@ -103,7 +103,7 @@ public class TextualUI implements UI {
     }
 
     public synchronized void printException(boolean disconnection) {
-        ClientExceptionsNotifierView exceptionsView;
+        ClientExceptionsNotifierModelView exceptionsView;
         if(disconnection) exceptionsView = viewManager.getDisconnectedClientExceptionsNotifierView();
         else exceptionsView = viewManager.getClientExceptionsNotifierView();
         if (exceptionsView == null) return;

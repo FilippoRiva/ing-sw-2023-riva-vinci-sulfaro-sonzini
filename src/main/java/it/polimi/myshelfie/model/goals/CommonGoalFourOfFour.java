@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalFourOfFour extends CommonGoal{
     /**
-     *
+     * Checks the common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 4 groups of 4 tiles with the same ItemTile value, false otherwise
      *

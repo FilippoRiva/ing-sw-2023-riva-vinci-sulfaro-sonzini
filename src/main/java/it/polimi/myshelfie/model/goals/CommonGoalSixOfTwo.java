@@ -5,7 +5,7 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 public class CommonGoalSixOfTwo extends CommonGoal{
     /**
-     *
+     * Checks common goal.
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 6 groups of 2 tiles with the same ItemTile value, false otherwise
      *

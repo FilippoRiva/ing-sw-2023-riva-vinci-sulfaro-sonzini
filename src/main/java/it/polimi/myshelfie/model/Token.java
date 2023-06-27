@@ -1,6 +1,9 @@
 package it.polimi.myshelfie.model;
 
 
+/**
+ * Contains all the token of the game.
+ */
 public enum Token {
     ENDGAME(1,0),
     TWO_FIRST(2,1),
@@ -31,6 +34,11 @@ public enum Token {
         return value;
     }
 
+    /**
+     * Constructor.
+     * @param value the value of the token.
+     * @param romanNumeral the roman numeral on the token.
+     */
     Token(int value, int romanNumeral){
         this.value = value;
         this.romanNumeral = romanNumeral;

@@ -8,7 +8,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Used to generate personal goals.
+ */
 public class PersonalGoalFactory {
+
+    /**
+     * Generates a list of random personal goals.
+     * @param numPersonalGoalsPerPlayer the number of personal goals are assigned to a player.
+     * @param bookshelfSize the dimension of the bookshelf.
+     * @param numPlayers the number of players playing.
+     * @param personalGoalRatio it's the filling percentage of the personal goal.
+     * @return a list of personal goals.
+     * @throws Exception if the number of personal goals per players is not valid (equals to 0).
+     */
     public static ArrayList<PersonalGoal> getDistinctPersonalGoals(int numPersonalGoalsPerPlayer, Dimension bookshelfSize, int numPlayers, double personalGoalRatio)
             throws Exception {
         if(numPersonalGoalsPerPlayer == 0) throw new InvalidParameterException("invalid personal goals per players number");
@@ -19,9 +32,9 @@ public class PersonalGoalFactory {
     }
 
     /**
-     * Generates a list of personal goals.
-     * @param numPersonalGoals the num of personal goals per player
-     * @param numPlayers the number of players
+     * Generates a list of default personal goals.
+     * @param numPersonalGoals the num of personal goals per player.
+     * @param numPlayers the number of players.
      * @return a List of (numPersonalGoals * numPlayers) personal goals
      * if numPersonalGoals == 1 the PersonalGoals are distinct.
      */
@@ -38,6 +51,15 @@ public class PersonalGoalFactory {
         return result;
     }
 
+    /**
+     * Generates a list of custom personal goals, based on the bookshelf dimension, number of player and filling percentage.
+     * @param numPersonalGoals the number of personal goals to generate.
+     * @param bookshelfSize the bookshelf dimension.
+     * @param numPlayers the numbero of players.
+     * @param personalGoalRatio the filling percentage of the personal goal.
+     * @return a list of custom personal goals.
+     * @throws Exception if the number of personal goals per player is not valid (equals to 0).
+     */
     private static ArrayList<PersonalGoal> getCustoms(int numPersonalGoals,Dimension bookshelfSize, int numPlayers,double personalGoalRatio)
             throws Exception {
         ArrayList<PersonalGoal> result = new ArrayList<>();
@@ -47,6 +69,12 @@ public class PersonalGoalFactory {
         return result;
     }
 
+    /**
+     * Generates a list of random integers.
+     * @param resultSize how many integers are required.
+     * @param maxValue the higher value in the list of integers.
+     * @return a list of random integers.
+     */
     private static java.util.List<Integer> generateDistinctRandomIntegers(int resultSize, int maxValue) {
         List<Integer> result = new ArrayList<>();
         for(int i = 0; i<maxValue; i++) result.add(i);
