@@ -27,6 +27,8 @@ import java.util.List;
 
 public class EndGameController{
     @FXML
+    protected StackPane thirdPodiumStack;
+    @FXML
     protected ImageView secondPodiumImage;
     @FXML
     protected ImageView firstPodiumImage;
@@ -171,6 +173,10 @@ public class EndGameController{
         List<PlayerModelView> players = viewManager.getPlayersOrderedByScores();
 
         int numPlayers = players.size();
+
+        if(numPlayers == 2) {
+            thirdPodiumStack.setVisible(false);
+        }
 
         for (int i = 0; i < numPlayers; i++) {
             if(i < 3) {

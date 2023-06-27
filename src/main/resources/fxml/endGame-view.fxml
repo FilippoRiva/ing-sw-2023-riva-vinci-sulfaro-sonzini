@@ -63,7 +63,7 @@
                               </Label>
                            </children>
                         </StackPane>
-                        <StackPane>
+                        <StackPane fx:id="thirdPodiumStack">
                            <children>
                               <ImageView fx:id="thirdPodiumImage" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
                                  <image>
