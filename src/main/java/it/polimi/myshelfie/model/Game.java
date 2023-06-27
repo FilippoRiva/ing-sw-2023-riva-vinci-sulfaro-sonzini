@@ -457,7 +457,7 @@ public class Game implements GameModel, LobbyModel {
      * @return a list of strings.
      */
     public List<String> getPlayersNames() {
-        return players.stream().map(Player::getName).toList();
+        return new ArrayList<>(players.stream().map(Player::getName).toList());
     }
 
     /**

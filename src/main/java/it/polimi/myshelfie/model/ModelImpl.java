@@ -9,6 +9,7 @@ import it.polimi.myshelfie.model.events.ModelEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -86,7 +87,7 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
      * @return the list of lobby names.
      */
     public List<String> getLobbies(){
-        return lobbiesModel.keySet().stream().toList();
+        return new ArrayList<>(lobbiesModel.keySet().stream().toList());
     }
 
     @Override

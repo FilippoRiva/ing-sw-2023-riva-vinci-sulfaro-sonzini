@@ -1,9 +1,12 @@
 package it.polimi.myshelfie.network;
 
 import it.polimi.myshelfie.controller.interfaces.Controller;
+import it.polimi.myshelfie.utils.ServerLogger;
 
 import java.rmi.RemoteException;
+import java.rmi.UnmarshalException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
 
 public class ServerImpl extends UnicastRemoteObject implements Server{
     private final Controller controller;
@@ -17,6 +20,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server{
             try {
                 ServerConnectionHandlerImpl s = new ServerConnectionHandlerImpl(client, controller);
                 s.start();
+            } catch (UnmarshalException e){
+                ServerLogger.log(Level.INFO,"Client trying to connect with unsupported class versions");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
