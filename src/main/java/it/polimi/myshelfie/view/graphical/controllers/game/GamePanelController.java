@@ -25,6 +25,7 @@ import javafx.util.Duration;
 import java.util.List;
 
 public class GamePanelController {
+    private final ViewManager vm = ViewManager.getInstance();
     @FXML
     HBox panelHBox;
     @FXML
@@ -49,19 +50,17 @@ public class GamePanelController {
     LivingRoomController livingRoomController;
     @FXML
     TileSorterController tileSorterController;
-
-    private enum PanelState {ACTION, SPECTATE}
     private PanelState state;
-    private final ViewManager vm = ViewManager.getInstance();
-    public void customInitialize(){
+
+    public void customInitialize() {
         //sub controllers initialization
         leftBookshelfController.initialize(true);
         rightBookshelfController.initialize(false);
-        livingRoomController.initialize(this,leftBookshelfController.tileWidthProperty());
+        livingRoomController.initialize(this, leftBookshelfController.tileWidthProperty());
         tileSorterController.initialize(leftBookshelfController.tileWidthProperty());
         //bindings
         Stage stage = GraphicalUI.stage;
-        CustomBindings.bindSize(panelHBox,stage.widthProperty(),stage.heightProperty());
+        CustomBindings.bindSize(panelHBox, stage.widthProperty(), stage.heightProperty());
         tileSorter.translateXProperty().bind(livingRoomController.livingRoomImage.fitWidthProperty().divide(10.5));
         confirmButton.translateXProperty().bind(tileSorter.translateXProperty());
         confirmButton.translateYProperty().bind(livingRoomController.livingRoomImage.fitHeightProperty().divide(3));
@@ -88,16 +87,16 @@ public class GamePanelController {
         state = PanelState.SPECTATE;
     }
 
-    private void actionView(){
-        if(state!=PanelState.SPECTATE) return;
+    private void actionView() {
+        if (state != PanelState.SPECTATE) return;
 
 
-        actionSwitch.setOnMousePressed((event)-> spectatorView());
+        actionSwitch.setOnMousePressed((event) -> spectatorView());
         actionSwitch.setMouseTransparent(true);
         Animations.fadeIn(actionSwitch).play();
-        Animations.rotateZ(actionSwitch,-180, Duration.millis(200)).play();
+        Animations.rotateZ(actionSwitch, -180, Duration.millis(200)).play();
 
-        switch (vm.getCurrentStateDiff()){
+        switch (vm.getCurrentStateDiff()) {
             case DRAW, LAST_DRAW -> livingRoomController.setActive(true);
             case ORGANIZE, LAST_ORGANIZE -> tileSorterController.setActive(true);
             case INSERT, LAST_INSERT, COUNTING_POINTS, LAST_COUNTING_POINTS -> rightBookshelfController.setActive(true);
@@ -105,25 +104,25 @@ public class GamePanelController {
 
         //Animation
         Animation translate = Animations.translateToLeft(leftBookshelf);
-        translate.setOnFinished((event)->{
+        translate.setOnFinished((event) -> {
             leftBookshelf.setVisible(false);
             leftBookshelf.setMouseTransparent(true);
         });
-        Animation translateLivingRoom = Animations.translateBy(livingRoom,leftBookshelf.getLayoutX()+livingRoomController.livingRoomImage.getFitWidth()/2-GraphicalUI.stage.getWidth()/2,0);
-        Animation scaleRightBookshelf = Animations.scale(rightBookshelf,-1,-1,0.2);
+        Animation translateLivingRoom = Animations.translateBy(livingRoom, leftBookshelf.getLayoutX() + livingRoomController.livingRoomImage.getFitWidth() / 2 - GraphicalUI.stage.getWidth() / 2, 0);
+        Animation scaleRightBookshelf = Animations.scale(rightBookshelf, -1, -1, 0.2);
         Animation fadeInTileSorter = Animations.fadeIn(tileSorter);
         Animation fadeInConfirmButton;
-        if(vm.getGameModelView().getCurrentState()!=GameState.INSERT){ //preventing fade of confirm button when in Insert state
+        if (vm.getGameModelView().getCurrentState() != GameState.INSERT) { //preventing fade of confirm button when in Insert state
             fadeInConfirmButton = Animations.fadeIn(confirmButton);
         } else {
             fadeInConfirmButton = new TranslateTransition(); //empty transition
         }
 
-        ParallelTransition toActionTransition = new ParallelTransition(translate,translateLivingRoom,scaleRightBookshelf,fadeInTileSorter,fadeInConfirmButton);
-        toActionTransition.setOnFinished((evt)->{
+        ParallelTransition toActionTransition = new ParallelTransition(translate, translateLivingRoom, scaleRightBookshelf, fadeInTileSorter, fadeInConfirmButton);
+        toActionTransition.setOnFinished((evt) -> {
             state = PanelState.ACTION;
             Animation lastTranslation = livingRoomController.setChosenTileTranslations();
-            lastTranslation.setOnFinished((evt1)->{
+            lastTranslation.setOnFinished((evt1) -> {
                 confirmButton.setMouseTransparent(false);
                 actionSwitch.setMouseTransparent(false);
             });
@@ -132,36 +131,37 @@ public class GamePanelController {
         toActionTransition.play();
     }
 
-    private void spectatorView(){
-        if(state!=PanelState.ACTION) return;
+    private void spectatorView() {
+        if (state != PanelState.ACTION) return;
 
-        actionSwitch.setOnMousePressed((event)-> actionView());
+        actionSwitch.setOnMousePressed((event) -> actionView());
         actionSwitch.setMouseTransparent(true);
-        if(!vm.isMyTurn()){
+        if (!vm.isMyTurn()) {
             Animations.fadeOut(actionSwitch).play();
         } else {
-            switch (vm.getCurrentStateDiff()){
+            switch (vm.getCurrentStateDiff()) {
                 case DRAW, LAST_DRAW -> livingRoomController.setActive(false);
                 case ORGANIZE, LAST_ORGANIZE -> tileSorterController.setActive(false);
-                case INSERT, LAST_INSERT, COUNTING_POINTS, LAST_COUNTING_POINTS -> rightBookshelfController.setActive(false);
+                case INSERT, LAST_INSERT, COUNTING_POINTS, LAST_COUNTING_POINTS ->
+                        rightBookshelfController.setActive(false);
             }
         }
 
-        Animations.rotateZ(actionSwitch,180, Duration.millis(200)).play();
+        Animations.rotateZ(actionSwitch, 180, Duration.millis(200)).play();
 
         //Animation
         leftBookshelf.setVisible(true);
         leftBookshelf.setMouseTransparent(false);
         Animation translate = Animations.translateFromLeft(leftBookshelf);
         Animation translateLivingRoom = Animations.eraseTranslation(livingRoom);
-        Animation scaleRightBookshelf = Animations.scale(rightBookshelf,rightBookshelf.getScaleX(),1,-1);
+        Animation scaleRightBookshelf = Animations.scale(rightBookshelf, rightBookshelf.getScaleX(), 1, -1);
         Animation fadeOutTileSorter = Animations.fadeOut(tileSorter);
         Animation fadeOutConfirmButton = Animations.fadeOut(confirmButton);
         Animation resetChosenTilesTranslations = livingRoomController.resetChosenTileTranslations();
 
-        ParallelTransition toSpectatorTransition = new ParallelTransition(translate,translateLivingRoom,scaleRightBookshelf,fadeOutTileSorter,fadeOutConfirmButton,
+        ParallelTransition toSpectatorTransition = new ParallelTransition(translate, translateLivingRoom, scaleRightBookshelf, fadeOutTileSorter, fadeOutConfirmButton,
                 resetChosenTilesTranslations);
-        toSpectatorTransition.setOnFinished((evt)->{
+        toSpectatorTransition.setOnFinished((evt) -> {
             state = PanelState.SPECTATE;
             confirmButton.setMouseTransparent(false);
             actionSwitch.setMouseTransparent(false);
@@ -171,53 +171,55 @@ public class GamePanelController {
 
     /**
      * Set the GamePanel State. Responsible for the update logic of sub-Controllers and the confirmButton's logic
+     *
      * @param state the new GamePanel State
      */
     public void setState(GameState state) {
-        switch (state){
-            case DRAW,LAST_DRAW -> {
-                if(vm.getPreviousPlayer().equals(ViewManager.getUsername())){
+        switch (state) {
+            case DRAW, LAST_DRAW -> {
+                if (vm.getPreviousPlayer().equals(ViewManager.getUsername())) {
                     rightBookshelfController.loadTokens();
                 } else {
                     leftBookshelfController.loadTokens();
                 }
-                if(vm.isRemainingTilesDiff()) {
+                if (vm.isRemainingTilesDiff()) {
                     livingRoomController.updateLivingRoom(vm.getLivingRoomDiff());
                 }
-                if(vm.isMyTurn()){
-                    Animations.timer(()->{
-                        if(vm.getGameModelView()==null) return; //checking if we have been disconnected from the game while waiting
+                if (vm.isMyTurn()) {
+                    Animations.timer(() -> {
+                        if (vm.getGameModelView() == null)
+                            return; //checking if we have been disconnected from the game while waiting
                         this.actionView();
-                    },1000);
-                    Platform.runLater(()->confirmButton.setText("Confirm Draw"));
-                    confirmButton.setOnMousePressed((event)->draw());
+                    }, 1000);
+                    Platform.runLater(() -> confirmButton.setText("Confirm Draw"));
+                    confirmButton.setOnMousePressed((event) -> draw());
                 }
                 livingRoomController.checkEndToken();
             }
-            case ORGANIZE,LAST_ORGANIZE -> {
+            case ORGANIZE, LAST_ORGANIZE -> {
                 livingRoomController.updateLivingRoom(vm.getLivingRoomDiff());
-                if(vm.isMyTurn()){
+                if (vm.isMyTurn()) {
                     livingRoomController.resetChoice();
                     tileSorterController.loadTiles();
                     livingRoomController.setActive(false); //disabling clickable tiles and emptying list
-                    if(vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()==1){
+                    if (vm.getGameModelView().getCurrentPlayer().getTakenTiles().size() == 1) {
                         vm.organizeRequest(vm.getGameModelView().getCurrentPlayer().getTakenTiles());
                     } else {
-                        Platform.runLater(()->{
+                        Platform.runLater(() -> {
                             Animation out = Animations.fadeOut(confirmButton);
-                            out.setOnFinished((evt)->{
+                            out.setOnFinished((evt) -> {
                                 confirmButton.setText("Confirm Organize");
                                 Animations.fadeIn(confirmButton).play();
                             });
                             out.play();
                         });
                         tileSorterController.setActive(true);
-                        confirmButton.setOnMousePressed((event)->organize());
+                        confirmButton.setOnMousePressed((event) -> organize());
                     }
                 }
             }
-            case INSERT,LAST_INSERT -> {
-                if(vm.isMyTurn()){
+            case INSERT, LAST_INSERT -> {
+                if (vm.isMyTurn()) {
                     Animations.fadeOut(confirmButton).play();
                     tileSorterController.setActive(false);
                     tileSorterController.resetDots();
@@ -225,56 +227,57 @@ public class GamePanelController {
                     rightBookshelfController.setActive(true);
                 }
             }
-            case COUNTING_POINTS,LAST_COUNTING_POINTS -> {
-                if(vm.isMyTurn()){
+            case COUNTING_POINTS, LAST_COUNTING_POINTS -> {
+                if (vm.isMyTurn()) {
                     rightBookshelfController.loadNewTiles();
                     rightBookshelfController.setActive(false);
                     tileSorterController.resetAll();
-                    Animations.timer(()->{
-                        if(vm.getGameModelView()==null) return; //checking if we have been disconnected from the game while waiting
+                    Animations.timer(() -> {
+                        if (vm.getGameModelView() == null)
+                            return; //checking if we have been disconnected from the game while waiting
                         this.spectatorView();
-                    },1000);
+                    }, 1000);
                 } else {
                     leftBookshelfController.loadNewTiles();
                 }
             }
             case WIN -> {
-                if(vm.getWinner().getName().equals(ViewManager.getUsername())) rightBookshelfController.loadTokens();
+                if (vm.getWinner().getName().equals(ViewManager.getUsername())) rightBookshelfController.loadTokens();
                 else leftBookshelfController.loadTokens();
             }
         }
     }
 
-    protected void draw(){
-        if(livingRoomController.chosenTiles.size()==0){
-            Animations.nodeError(confirmButton,1).play();
+    protected void draw() {
+        if (livingRoomController.chosenTiles.size() == 0) {
+            Animations.nodeError(confirmButton, 1).play();
             showConfirmError("Choose some tiles first");
-        } else if(vm.areChosenTilesInvalid(livingRoomController.chosenTiles)){
-            Animations.nodeError(confirmButton,1).play(); //not valid positions
+        } else if (vm.areChosenTilesInvalid(livingRoomController.chosenTiles)) {
+            Animations.nodeError(confirmButton, 1).play(); //not valid positions
             showConfirmError("Tiles are not valid");
-        } else if(Position.arePositionsMisaligned(livingRoomController.chosenTiles)){
-            Animations.nodeError(confirmButton,1).play(); //not aligned
+        } else if (Position.arePositionsMisaligned(livingRoomController.chosenTiles)) {
+            Animations.nodeError(confirmButton, 1).play(); //not aligned
             showConfirmError("Tiles are not aligned");
         } else {
             vm.drawRequest(livingRoomController.chosenTiles);
         }
     }
 
-    protected void organize(){
+    protected void organize() {
         List<ItemTile> orderedTiles = tileSorterController.getOrderedTiles();
-        if(orderedTiles.size()==0 || orderedTiles.size()==vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()){
+        if (orderedTiles.size() == 0 || orderedTiles.size() == vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()) {
             vm.organizeRequest(tileSorterController.getOrderedTiles());
         } else {
-            Animations.nodeError(confirmButton,1).play();
+            Animations.nodeError(confirmButton, 1).play();
             showConfirmError("Order every tile first");
         }
     }
 
-    protected void showConfirmError(String message){
-        Platform.runLater(()->{
+    protected void showConfirmError(String message) {
+        Platform.runLater(() -> {
             confirmButtonLabel.setText(message);
             Animations.fadeIn(confirmButtonLabel).play();
-            Animations.timer(()-> Animations.fadeOut(confirmButtonLabel).play(),2000);
+            Animations.timer(() -> Animations.fadeOut(confirmButtonLabel).play(), 2000);
         });
     }
 
@@ -286,7 +289,7 @@ public class GamePanelController {
         tileSorterController.resetAll();
 
         //resetting translations
-        if(state==PanelState.ACTION) spectatorView();
+        if (state == PanelState.ACTION) spectatorView();
 
         //resetting elements visibility
         actionSwitch.setOpacity(0);
@@ -294,4 +297,6 @@ public class GamePanelController {
         confirmButton.setOpacity(0);
         confirmButton.setMouseTransparent(true);
     }
+
+    private enum PanelState {ACTION, SPECTATE}
 }

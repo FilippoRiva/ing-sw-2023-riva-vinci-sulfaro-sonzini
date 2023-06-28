@@ -4,7 +4,7 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
-public class CreatePage extends ScreenPage{
+public class CreatePage extends ScreenPage {
     public CreatePage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
     }

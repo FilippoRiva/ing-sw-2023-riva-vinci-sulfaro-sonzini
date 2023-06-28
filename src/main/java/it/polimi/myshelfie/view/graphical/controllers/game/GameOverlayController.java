@@ -25,6 +25,9 @@ import java.util.List;
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 
 public class GameOverlayController {
+    final ViewManager viewManager = ViewManager.getInstance();
+    @FXML
+    public ChatController chatController;
     @FXML
     protected Label messageLabel;
     @FXML
@@ -47,20 +50,15 @@ public class GameOverlayController {
     protected StackPane tokens2;
     @FXML
     protected ImageView personalGoal;
-
-    @FXML
-    public ChatController chatController;
-
-    final ViewManager viewManager = ViewManager.getInstance();
     Stage stage;
 
-    public void customInitialize(){
+    public void customInitialize() {
         stage = GraphicalUI.stage;
 
         CustomBindings.bindSize(fullStackPane, stage.widthProperty(), stage.heightProperty());
         fullStackPane.setPickOnBounds(false);
 
-        messageLabel.setMaxWidth(stage.getWidth()/3);
+        messageLabel.setMaxWidth(stage.getWidth() / 3);
         CustomBindings.bindSize(playersListVbox, null, stage.heightProperty().divide(5));
 
         CustomBindings.bindSize(personalGoal, null, stage.heightProperty().divide(5).multiply(3));
@@ -80,20 +78,20 @@ public class GameOverlayController {
         List<CommonGoalModelView> commonGoals = viewManager.getGameModelView().getCommonGoals();
         int idPersonalGoal = viewManager.getGameModelView().getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getId();
 
-        personalGoal.setImage(getImage("game/personalGoals/Personal_Goals"+idPersonalGoal+".png"));
-        commonGoal1.setImage(getImage("game/commonGoals/"+(commonGoals.get(0).getId()+1)+".jpg"));
-        commonGoal2.setImage(getImage("game/commonGoals/"+(commonGoals.get(1).getId()+1)+".jpg"));
+        personalGoal.setImage(getImage("game/personalGoals/Personal_Goals" + idPersonalGoal + ".png"));
+        commonGoal1.setImage(getImage("game/commonGoals/" + (commonGoals.get(0).getId() + 1) + ".jpg"));
+        commonGoal2.setImage(getImage("game/commonGoals/" + (commonGoals.get(1).getId() + 1) + ".jpg"));
         Tooltip.install(commonGoal1, new Tooltip(commonGoals.get(0).getDescription()));
         Tooltip.install(commonGoal2, new Tooltip(commonGoals.get(1).getDescription()));
 
-        tokens1.setTranslateY(-commonGoal1.getFitHeight()/913*37);
-        tokens1.setTranslateX(commonGoal1.getFitHeight()/913*321);
-        tokens2.setTranslateY(-commonGoal2.getFitHeight()/913*37);
-        tokens2.setTranslateX(commonGoal2.getFitHeight()/913*321);
+        tokens1.setTranslateY(-commonGoal1.getFitHeight() / 913 * 37);
+        tokens1.setTranslateX(commonGoal1.getFitHeight() / 913 * 321);
+        tokens2.setTranslateY(-commonGoal2.getFitHeight() / 913 * 37);
+        tokens2.setTranslateX(commonGoal2.getFitHeight() / 913 * 321);
         Platform.runLater(() -> {
             playingLabel.setText(viewManager.getGameModelView().getCurrentPlayerName());
             int i = 1;
-            for(PlayerModelView player : viewManager.getGameModelView().getPlayers()){
+            for (PlayerModelView player : viewManager.getGameModelView().getPlayers()) {
                 Label label = new Label(i + ") " + player.getName());
                 playersListVbox.getChildren().add(label);
                 i++;
@@ -107,10 +105,10 @@ public class GameOverlayController {
             }
         });
 
-        personalGoal.setTranslateY(stage.getHeight()/5*3 - 70);
+        personalGoal.setTranslateY(stage.getHeight() / 5 * 3 - 70);
 
         chat.setTranslateX(-20);
-        chat.setTranslateY(stage.getHeight()/15*8 - 80);
+        chat.setTranslateY(stage.getHeight() / 15 * 8 - 80);
     }
 
     private TokenImageView getTokenImageView(Token token) {
@@ -122,8 +120,8 @@ public class GameOverlayController {
 
     public void startTurn() {
         List<Token> tokens = viewManager.getLastPlayerTokenDiff();
-        if(!tokens.isEmpty()){
-            for(Token token : tokens){
+        if (!tokens.isEmpty()) {
+            for (Token token : tokens) {
                 Platform.runLater(() -> {
                     if (token.getRomanNumeral() == 0) {
                         messageLabel.setText("Last round");
@@ -149,12 +147,12 @@ public class GameOverlayController {
 
     @FXML
     protected void hidePersonalGoal() {
-        personalGoal.setTranslateY(stage.getHeight()/5*3 - 70);
+        personalGoal.setTranslateY(stage.getHeight() / 5 * 3 - 70);
     }
 
     public void toggleChatVisible() {
-        if(chatController.isChatVisible()){
-            chat.setTranslateY(stage.getHeight()/15*8 - 80);
+        if (chatController.isChatVisible()) {
+            chat.setTranslateY(stage.getHeight() / 15 * 8 - 80);
             chatController.setChatVisible(false);
             return;
         }
@@ -165,11 +163,11 @@ public class GameOverlayController {
     }
 
     public void reset() {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             messageLabel.setText(null);
-            tokens1.getChildren().removeAll(tokens1.getChildren());
-            tokens2.getChildren().removeAll(tokens2.getChildren());
-            playersListVbox.getChildren().removeAll(playersListVbox.getChildren());
+            tokens1.getChildren().clear();
+            tokens2.getChildren().clear();
+            playersListVbox.getChildren().clear();
         });
         chatController.reset();
     }

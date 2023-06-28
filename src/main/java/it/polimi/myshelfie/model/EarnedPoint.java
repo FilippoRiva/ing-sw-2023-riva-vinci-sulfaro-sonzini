@@ -12,7 +12,8 @@ public class EarnedPoint implements Serializable {
 
     /**
      * Constructor.
-     * @param type the type of the point (where it comes from)
+     *
+     * @param type  the type of the point (where it comes from)
      * @param value the value of the points.
      */
     public EarnedPoint(PointType type, int value) {
@@ -21,7 +22,6 @@ public class EarnedPoint implements Serializable {
     }
 
     /**
-     *
      * @return the point type.
      */
     public PointType getType() {
@@ -29,7 +29,6 @@ public class EarnedPoint implements Serializable {
     }
 
     /**
-     *
      * @return the point value.
      */
     public int getValue() {

@@ -4,15 +4,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane fx:id="mainAnchorPane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameController">
-    <children>
-        <ImageView fx:id="backgroundImage" pickOnBounds="true">
-            <Image url="@../images/lightWood.jpg" />
-        </ImageView>
-      <fx:include fx:id="endGame" source="endGame-view.fxml" />
-      <fx:include fx:id="gamePanel" source="game-panel-view.fxml" />
-      <fx:include fx:id="gameOverlay" source="game-overlay-view.fxml" />
-        <ProgressIndicator cache="true" fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
-    </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainAnchorPane" stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx/19"
+            fx:controller="it.polimi.myshelfie.view.graphical.controllers.game.GameController">
+    <ImageView fx:id="backgroundImage" pickOnBounds="true">
+        <Image url="@../images/lightWood.jpg"/>
+    </ImageView>
+    <fx:include fx:id="endGame" source="endGame-view.fxml"/>
+    <fx:include fx:id="gamePanel" source="game-panel-view.fxml"/>
+    <fx:include fx:id="gameOverlay" source="game-overlay-view.fxml"/>
+    <ProgressIndicator cache="true" fx:id="progress" layoutX="146.0" layoutY="630.0" visible="false"
+                       AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"/>
 </AnchorPane>

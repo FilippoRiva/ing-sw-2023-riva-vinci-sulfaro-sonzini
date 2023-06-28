@@ -22,16 +22,16 @@ public class PlayerChat extends Observable<ChatEvent, PlayerChatModelView> {
 
     /**
      * Adds a message to this player's chat and triggers Observers.
+     *
      * @param message the new message to be added.
      */
-    public void addMessage (Message message){
+    public void addMessage(Message message) {
         messages.add(message);
         setChanged();
         notifyObservers(ChatEvent.NEW_MESSAGE, new PlayerChatModelView(this));
     }
 
     /**
-     *
      * @return the entire list of received messages by the player.
      */
     public ArrayList<Message> getMessages() {

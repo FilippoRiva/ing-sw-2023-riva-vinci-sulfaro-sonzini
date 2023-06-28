@@ -12,14 +12,14 @@ public class ClientExceptionsNotifierModelView implements Serializable {
 
     /**
      * Default constructor.
+     *
      * @param c the last exceptions.
      */
-    public ClientExceptionsNotifierModelView(ClientExceptionsNotifierImpl c){
+    public ClientExceptionsNotifierModelView(ClientExceptionsNotifierImpl c) {
         this.lastException = c.getLastException();
     }
 
     /**
-     *
      * @return the last exception notified.
      */
     public Exception getLastException() {

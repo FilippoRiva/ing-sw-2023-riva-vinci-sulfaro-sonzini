@@ -8,48 +8,48 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CommonGoalTwoSquaresTest {
     @Test
-    void isVerified(){
+    void isVerified() {
         CommonGoalTwoSquares twoSquaresGoal = new CommonGoalTwoSquares();
         assertNotNull(twoSquaresGoal.getDescription());
 
         ItemTile[][] bookshelf = {
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0)},
-                {new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0)},
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.CAT,0)    },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)},
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  }
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.BOOK, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)}
         };
-        assertTrue(twoSquaresGoal.isVerified(bookshelf),"5x6 verifiable bookshelf should be verified");
-
-       bookshelf = new ItemTile[][]{
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0)},
-                {new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.CAT,0)},
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.CAT,0)    },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0)},
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0)  }
-        };
-        assertTrue(twoSquaresGoal.isVerified(bookshelf),"5x6 verifiable bookshelf should be verified");
+        assertTrue(twoSquaresGoal.isVerified(bookshelf), "5x6 verifiable bookshelf should be verified");
 
         bookshelf = new ItemTile[][]{
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.CAT,0)    },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.FRAME,0), new ItemTile(ItemTileType.FRAME,0)},
-                {new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.FRAME,0)  , new ItemTile(ItemTileType.FRAME,0)},
-                {new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0)},
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.TROPHY,0), new ItemTile(ItemTileType.TROPHY,0)  }
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0)}
         };
-        assertTrue(twoSquaresGoal.isVerified(bookshelf),"5x6 verifiable bookshelf should be verified");
+        assertTrue(twoSquaresGoal.isVerified(bookshelf), "5x6 verifiable bookshelf should be verified");
 
         bookshelf = new ItemTile[][]{
-                {new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0)  },
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0)  , new ItemTile(ItemTileType.PLANT,0)},
-                {new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.PLANT,0), new ItemTile(ItemTileType.GAME,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0)},
-                {new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.EMPTY,0)    },
-                {new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.BOOK,0), new ItemTile(ItemTileType.CAT,0), new ItemTile(ItemTileType.BOOK,0)},
-                {new ItemTile(ItemTileType.TROPHY,0)  , new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.EMPTY,0), new ItemTile(ItemTileType.BOOK,0)  }
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.FRAME, 0), new ItemTile(ItemTileType.FRAME, 0)},
+                {new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.FRAME, 0), new ItemTile(ItemTileType.FRAME, 0)},
+                {new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.TROPHY, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.TROPHY, 0)}
         };
-        assertFalse(twoSquaresGoal.isVerified(bookshelf),"Only 1 square, should not be verified");
+        assertTrue(twoSquaresGoal.isVerified(bookshelf), "5x6 verifiable bookshelf should be verified");
+
+        bookshelf = new ItemTile[][]{
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.PLANT, 0)},
+                {new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.PLANT, 0), new ItemTile(ItemTileType.GAME, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.EMPTY, 0)},
+                {new ItemTile(ItemTileType.BOOK, 0), new ItemTile(ItemTileType.BOOK, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.EMPTY, 0)},
+                {new ItemTile(ItemTileType.BOOK, 0), new ItemTile(ItemTileType.BOOK, 0), new ItemTile(ItemTileType.BOOK, 0), new ItemTile(ItemTileType.CAT, 0), new ItemTile(ItemTileType.BOOK, 0)},
+                {new ItemTile(ItemTileType.TROPHY, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.EMPTY, 0), new ItemTile(ItemTileType.BOOK, 0)}
+        };
+        assertFalse(twoSquaresGoal.isVerified(bookshelf), "Only 1 square, should not be verified");
     }
 }

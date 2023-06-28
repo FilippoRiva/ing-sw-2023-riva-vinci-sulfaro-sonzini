@@ -6,7 +6,6 @@ import it.polimi.myshelfie.view.graphical.CustomBindings;
 import it.polimi.myshelfie.view.graphical.Effects;
 import it.polimi.myshelfie.view.graphical.GraphicalUI;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -19,12 +18,13 @@ public class HomeController {
     Button joinButton;
     @FXML
     Button createButton;
+
     public void initialize(ImageView homeBanner) {
         Stage stage = GraphicalUI.stage;
 
-        CustomBindings.bindLowerPreGamePane(clearBackground,homeBanner);
-        CustomBindings.bindSize(joinButton, stage.widthProperty().divide(2),stage.heightProperty().divide(5));
-        CustomBindings.bindSize(createButton, stage.widthProperty().divide(2),stage.heightProperty().divide(5));
+        CustomBindings.bindLowerPreGamePane(clearBackground, homeBanner);
+        CustomBindings.bindSize(joinButton, stage.widthProperty().divide(2), stage.heightProperty().divide(5));
+        CustomBindings.bindSize(createButton, stage.widthProperty().divide(2), stage.heightProperty().divide(5));
 
         Effects.applyShadow(joinButton);
         Effects.applyShadow(createButton);
@@ -32,17 +32,19 @@ public class HomeController {
         Animations.applyHoverScaling(joinButton);
         Animations.applyHoverScaling(createButton);
     }
+
     @FXML
     protected void onCreateChoice() {
         GraphicalUI.mainViewController.changeView(InternalViewState.CREATE);
     }
+
     @FXML
     protected void onJoinChoice() {
         GraphicalUI.mainViewController.changeView(InternalViewState.JOIN);
     }
 
     public void processKeyEvent(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()){
+        switch (keyEvent.getCode()) {
             case C -> onCreateChoice();
             case J -> onJoinChoice();
         }

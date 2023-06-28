@@ -8,53 +8,54 @@ import java.io.PrintStream;
 import java.util.List;
 
 public class Terminal {
-    private final PrintStream out;
     public final boolean ANSI_ON;
     public final int WIDTH = 63;
     public final int SCREEN_HEIGHT = 33;
     public final int INPUT_HEIGHT = 3;
-    public final int INPUT_LINE = SCREEN_HEIGHT +1;
+    public final int INPUT_LINE = SCREEN_HEIGHT + 1;
+    public final int ACTION_LINE = INPUT_LINE + INPUT_HEIGHT;
+    public final int EXCEPTION_LINE = ACTION_LINE + 1;
     public final int INPUT_COLUMN = 15;
-    public final int ACTION_LINE = INPUT_LINE+INPUT_HEIGHT;
-    public final int EXCEPTION_LINE= ACTION_LINE+1;
     public final int INFO_POS = 43;
+    private final PrintStream out;
     private final String titleColor = ANSI.PINK_FG;
     public final String[] title =
-            {       titleColor+"  __  __          _____ _          _  __ _      \n"+ANSI.RESET,
-                    titleColor+" |  \\/  |        / ____| |        | |/ _(_)     \n"+ANSI.RESET,
-                    titleColor+" | \\  / |_   _  | (___ | |__   ___| | |_ _  ___ \n"+ANSI.RESET,
-                    titleColor+" | |\\/| | | | |  \\___ \\| '_ \\ / _ \\ |  _| |/ _ \\\n"+ANSI.RESET,
-                    titleColor+" | |  | | |_| |  ____) | | | |  __/ | | | |  __/\n" +ANSI.RESET,
-                    titleColor+ " |_|  |_|\\__, | |_____/|_| |_|\\___|_|_| |_|\\___|\n"+ANSI.RESET,
-                    titleColor+"          __/ |                                 \n" +ANSI.RESET,
-                    titleColor+"         |___/                                  \n"+ANSI.RESET};
-    public Terminal(){
+            {titleColor + "  __  __          _____ _          _  __ _      \n" + ANSI.RESET,
+                    titleColor + " |  \\/  |        / ____| |        | |/ _(_)     \n" + ANSI.RESET,
+                    titleColor + " | \\  / |_   _  | (___ | |__   ___| | |_ _  ___ \n" + ANSI.RESET,
+                    titleColor + " | |\\/| | | | |  \\___ \\| '_ \\ / _ \\ |  _| |/ _ \\\n" + ANSI.RESET,
+                    titleColor + " | |  | | |_| |  ____) | | | |  __/ | | | |  __/\n" + ANSI.RESET,
+                    titleColor + " |_|  |_|\\__, | |_____/|_| |_|\\___|_|_| |_|\\___|\n" + ANSI.RESET,
+                    titleColor + "          __/ |                                 \n" + ANSI.RESET,
+                    titleColor + "         |___/                                  \n" + ANSI.RESET};
+
+    public Terminal() {
         out = System.out;
         String ANSI_ON_str = System.getenv("ANSI_ON");
-        if(ANSI_ON_str == null) ANSI_ON = false;
+        if (ANSI_ON_str == null) ANSI_ON = false;
         else ANSI_ON = ANSI_ON_str.equals("true");
-        if(ANSI_ON) {
+        if (ANSI_ON) {
             clearAll();
             clearInput();
         }
     }
 
-    public void printTitle(){
+    public void printTitle() {
         int idx = 0;
-        for(String s : title){
-            print(s,1+idx,8);
+        for (String s : title) {
+            print(s, 1 + idx, 8);
             idx++;
         }
         moveToInput();
     }
+
     public void printError(String message) {
-        if(ANSI_ON) {
-            positionCursor(EXCEPTION_LINE,1);
-            out.print(ANSI.RED_FG +message+ANSI.RESET);
-        }
-        else out.println("! "+message);
+        if (ANSI_ON) {
+            positionCursor(EXCEPTION_LINE, 1);
+            out.print(ANSI.RED_FG + message + ANSI.RESET);
+        } else out.println("! " + message);
         moveToInput();
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ignored) {
@@ -63,65 +64,70 @@ public class Terminal {
         }).start();
     }
 
-    public void printPermanentError(String message){
-        if(ANSI_ON) {
-            positionCursor(EXCEPTION_LINE,1);
-            out.print(ANSI.RED_FG +message+ANSI.RESET);
-        }
-        else out.println("! "+message);
+    public void printPermanentError(String message) {
+        if (ANSI_ON) {
+            positionCursor(EXCEPTION_LINE, 1);
+            out.print(ANSI.RED_FG + message + ANSI.RESET);
+        } else out.println("! " + message);
         moveToInput();
     }
+
     public void printAction(String s) {
-        positionCursor(ACTION_LINE,1);
+        positionCursor(ACTION_LINE, 1);
         eraseLine();
         println(s);
         moveToInput();
     }
-    private void print(String message){
+
+    private void print(String message) {
         out.print(message);
     }
-    public void print(String message,int line, int column){
-        positionCursor(line,column);
+
+    public void print(String message, int line, int column) {
+        positionCursor(line, column);
         print(message);
         moveToInput();
     }
-    private void println(String message){
+
+    private void println(String message) {
         out.println(message);
         moveToInput();
     }
-    public void println(String message,int line, int column){
-        positionCursor(line,column);
+
+    public void println(String message, int line, int column) {
+        positionCursor(line, column);
         println(message);
     }
 
-    public void centerPrint(String message, int line){
-        if(message.length()>(WIDTH-2)) message = message.substring(0,WIDTH-2);
-        positionCursor(line,WIDTH/2-message.length()/2);
+    public void centerPrint(String message, int line) {
+        if (message.length() > (WIDTH - 2)) message = message.substring(0, WIDTH - 2);
+        positionCursor(line, WIDTH / 2 - message.length() / 2);
         println(message);
     }
+
     /**
      * Used for colored messages where the actual length of the message is not the length of the string
      */
-    public void centerPrint(String message, int line,int messageLength){
-        if(messageLength>(WIDTH-2)) message = message.substring(0,WIDTH-2);
-        positionCursor(line,WIDTH/2-messageLength/2);
+    public void centerPrint(String message, int line, int messageLength) {
+        if (messageLength > (WIDTH - 2)) message = message.substring(0, WIDTH - 2);
+        positionCursor(line, WIDTH / 2 - messageLength / 2);
         println(message);
     }
 
-    public void printMessage(String message, int line, int messageLength){
-        if(messageLength>(WIDTH-2)) {
-            message = message.substring(0,WIDTH-2);
-            messageLength = WIDTH-2;
+    public void printMessage(String message, int line, int messageLength) {
+        if (messageLength > (WIDTH - 2)) {
+            message = message.substring(0, WIDTH - 2);
+            messageLength = WIDTH - 2;
         }
-        positionCursor(line,WIDTH/2-messageLength/2);
+        positionCursor(line, WIDTH / 2 - messageLength / 2);
         println(message);
     }
 
     public void printDivider(int line) {
-        positionCursor(line,0);
-        if(ANSI_ON) {
+        positionCursor(line, 0);
+        if (ANSI_ON) {
             print("█");
-            for(int i = 0; i<WIDTH-1 ; i++) {
+            for (int i = 0; i < WIDTH - 1; i++) {
                 print("─");
             }
             print("█");
@@ -129,13 +135,13 @@ public class Terminal {
         moveToInput();
     }
 
-    public void printVerticalDivider(int line, int column, int height){
-        if(ANSI_ON) {
-            positionCursor(line,column);
+    public void printVerticalDivider(int line, int column, int height) {
+        if (ANSI_ON) {
+            positionCursor(line, column);
             print("█");
             cursorDown(1);
             cursorLeft(1);
-            for(int i = 0;i<height-2;i++){
+            for (int i = 0; i < height - 2; i++) {
                 print("│");
                 cursorDown(1);
                 cursorLeft(1);
@@ -145,121 +151,121 @@ public class Terminal {
         moveToInput();
     }
 
-    public void printInInfoTable(String info,int pos){
-        println(info,pos, INFO_POS);
+    public void printInInfoTable(String info, int pos) {
+        println(info, pos, INFO_POS);
         moveToInput();
     }
 
     private void printTile(ItemTile tile) {
-        if(tile == null){
+        if (tile == null) {
             print("│   ");
         } else {
             print("│ ");
-            switch (tile.getType()){
-                case CAT -> print(ANSI.GREEN_FG+"■"+ANSI.RESET);
-                case BOOK -> print(ANSI.RESET+"■"+ANSI.RESET);
-                case GAME -> print(ANSI.YELLOW_FG+"■"+ANSI.RESET);
-                case FRAME -> print(ANSI.BLUE_FG+"■"+ANSI.RESET);
-                case TROPHY -> print(ANSI.LIGHTBLUE_FG+"■"+ANSI.RESET);
-                case PLANT -> print(ANSI.PINK_FG+"■"+ANSI.RESET);
+            switch (tile.getType()) {
+                case CAT -> print(ANSI.GREEN_FG + "■" + ANSI.RESET);
+                case BOOK -> print(ANSI.RESET + "■" + ANSI.RESET);
+                case GAME -> print(ANSI.YELLOW_FG + "■" + ANSI.RESET);
+                case FRAME -> print(ANSI.BLUE_FG + "■" + ANSI.RESET);
+                case TROPHY -> print(ANSI.LIGHTBLUE_FG + "■" + ANSI.RESET);
+                case PLANT -> print(ANSI.PINK_FG + "■" + ANSI.RESET);
                 case EMPTY -> print(" ");
             }
             print(" ");
         }
     }
 
-    public void printTakenTiles(List<ItemTile> takenTiles, int line, int column, boolean printNumbers){
-        positionCursor(line,column);
-        for(int i = takenTiles.size()-1 ; i>=0; i--){
+    public void printTakenTiles(List<ItemTile> takenTiles, int line, int column, boolean printNumbers) {
+        positionCursor(line, column);
+        for (int i = takenTiles.size() - 1; i >= 0; i--) {
             printTile(takenTiles.get(i));
-            if(printNumbers)print("| "+i);
+            if (printNumbers) print("| " + i);
             else print("|");
-            positionCursor(++line,column);
+            positionCursor(++line, column);
         }
     }
 
     public void printBookshelf(ItemTile[][] bookshelf, String currentPlayer, int line, int column) {
-        String formattedCurrentPlayer = currentPlayer.length()>10 ? currentPlayer.substring(0,9) : currentPlayer;
-        println("Bookshelf : " + formattedCurrentPlayer,line,column);
+        String formattedCurrentPlayer = currentPlayer.length() > 10 ? currentPlayer.substring(0, 9) : currentPlayer;
+        println("Bookshelf : " + formattedCurrentPlayer, line, column);
         int maxY = bookshelf.length;
         int maxX = bookshelf[0].length;
         for (int y = 0; y < maxY; y++) {
-            positionCursor( line + 1 + y,column);
+            positionCursor(line + 1 + y, column);
             for (int x = 0; x < maxX; x++) {
                 printTile(bookshelf[y][x]);
             }
             println("│");
         }
-        positionCursor(line+1+maxY,column);
+        positionCursor(line + 1 + maxY, column);
         print("└");
-        for(int i = 0; i < maxX-1; i++) print("───┴");
+        for (int i = 0; i < maxX - 1; i++) print("───┴");
         print("───┘");
-        positionCursor(line+2+maxY,column);
-        for(int i = 0; i < maxX; i++) print("  "+i+" ");
+        positionCursor(line + 2 + maxY, column);
+        for (int i = 0; i < maxX; i++) print("  " + i + " ");
     }
 
-    public void printPersonalGoal(ItemTile[][] goal,int line, int column) {
-        positionCursor(line,column);
+    public void printPersonalGoal(ItemTile[][] goal, int line, int column) {
+        positionCursor(line, column);
         println("Personal Goal :");
-        int idx=0;
+        int idx = 0;
         for (int y = goal.length - 1; y >= 0; y--) {
-            positionCursor(line+1+idx,column);
+            positionCursor(line + 1 + idx, column);
             for (int x = 0; x < goal[0].length; x++) {
                 printTile(goal[y][x]);
             }
             println("│");
             idx++;
         }
-        positionCursor(line+1+goal.length,column);
+        positionCursor(line + 1 + goal.length, column);
         print("└");
-        for(int i = 0; i < goal[0].length-1; i++) print("───┴");
+        for (int i = 0; i < goal[0].length - 1; i++) print("───┴");
         print("───┘");
         moveToInput();
     }
 
-    public void printTopToken(List<Token> tokens, int line, int column){
-        positionCursor(line,column);
-        if(tokens.size()==0) {
+    public void printTopToken(List<Token> tokens, int line, int column) {
+        positionCursor(line, column);
+        if (tokens.size() == 0) {
             print("none");
             moveToInput();
             return;
         }
-        Token token = tokens.get(tokens.size()-1);
-        print(" │ "+token.getValue()+" │ ");
+        Token token = tokens.get(tokens.size() - 1);
+        print(" │ " + token.getValue() + " │ ");
         print("\n");
         moveToInput();
     }
 
-    public void printAllTokens(List<Token> tokens,int line, int column){
-        positionCursor(line,column);
-        if(tokens.size()==0) {
+    public void printAllTokens(List<Token> tokens, int line, int column) {
+        positionCursor(line, column);
+        if (tokens.size() == 0) {
             cursorLeft(2);
             print("none");
             moveToInput();
             return;
         }
-        for(Token tok : tokens){
-            print(" │ "+tok.getValue());
+        for (Token tok : tokens) {
+            print(" │ " + tok.getValue());
         }
         print(" │ \n");
         moveToInput();
     }
 
     public void printLivingRoom(FullGameModelView fullGameModelView) {
-        int size = fullGameModelView.getLivingRoom().length*4;
-        positionCursor(1,1);
+        int size = fullGameModelView.getLivingRoom().length * 4;
+        positionCursor(1, 1);
         print("  ");
         for (int i = -4; i < 5; i++) {
             if (i < 0) print(" " + i + " ");
             if (i >= 0) print("  " + i + " ");
         }
         println("");
-        positionCursor(2,3);
+        positionCursor(2, 3);
         print("┌");
         printFirstLine(size);
         int idx = 1;
         for (int y = 4; y >= -4; y--) {
-            positionCursor(2+idx,1);
+            positionCursor(2 + idx, 1);
             if (y >= 0) print(" " + y);
             else print(String.valueOf(y));
             for (int x = -4; x <= 4; x++) {
@@ -267,12 +273,11 @@ public class Terminal {
             }
             println("│");
             idx++;
-            positionCursor(2+idx,1);
-            if(y!=-4){
+            positionCursor(2 + idx, 1);
+            if (y != -4) {
                 print("  ├");
                 printInternalLine(size);
-            }
-            else {
+            } else {
                 print("  └");
                 printLastLine(size);
             }
@@ -282,102 +287,108 @@ public class Terminal {
     }
 
     private synchronized void printFirstLine(int length) {
-        for (int i = 0; i < (length-2)/4; i++) out.print("───┬");
+        for (int i = 0; i < (length - 2) / 4; i++) out.print("───┬");
         out.print("───┐\n");
     }
+
     private synchronized void printInternalLine(int length) {
-        for (int i = 0; i < (length-2)/4; i++) out.print("───┼");
+        for (int i = 0; i < (length - 2) / 4; i++) out.print("───┼");
         out.print("───┤\n");
     }
+
     private synchronized void printLastLine(int length) {
-        for (int i = 0; i < (length-2)/4; i++) out.print("───┴");
+        for (int i = 0; i < (length - 2) / 4; i++) out.print("───┴");
         out.print("───┘\n");
     }
 
-    public void clearAll(){
+    public void clearAll() {
         out.print(ANSI.CLEAR_ALL);
     }
-    public void clearScreen(){
+
+    public void clearScreen() {
         eraseLines();
         moveToInput();
     }
 
     public synchronized void clearInput() {
-        eraseLine(INPUT_LINE+1,INPUT_COLUMN,WIDTH-INPUT_COLUMN-1);
-        if(ANSI_ON) print(">",INPUT_LINE+1,INPUT_COLUMN-1);
+        eraseLine(INPUT_LINE + 1, INPUT_COLUMN, WIDTH - INPUT_COLUMN - 1);
+        if (ANSI_ON) print(">", INPUT_LINE + 1, INPUT_COLUMN - 1);
         moveToInput();
     }
 
 
     public void clearError() {
-        positionCursor(EXCEPTION_LINE,0);
+        positionCursor(EXCEPTION_LINE, 0);
         eraseLine();
-        if(!ANSI_ON) return;
-        print("│",EXCEPTION_LINE,0);
-        print("│",EXCEPTION_LINE,WIDTH);
+        if (!ANSI_ON) return;
+        print("│", EXCEPTION_LINE, 0);
+        print("│", EXCEPTION_LINE, WIDTH);
         moveToInput();
     }
 
 
-    private void eraseLines(){
+    private void eraseLines() {
         goOnTop();
         cursorDown(0);
-        for(int i = 0; i< 34; i++){
-            eraseLine(i, 0,WIDTH);
+        for (int i = 0; i < 34; i++) {
+            eraseLine(i, 0, WIDTH);
         }
         moveToInput();
     }
 
-    private void eraseLine(){
-        if(ANSI_ON) out.print(ANSI.ERASE_LINE);
+    private void eraseLine() {
+        if (ANSI_ON) out.print(ANSI.ERASE_LINE);
     }
-    private void eraseLine(int line,int column, int width){
-        if(ANSI_ON){
+
+    private void eraseLine(int line, int column, int width) {
+        if (ANSI_ON) {
             goOnTop();
             cursorDown(line);
-            if(column == 0 && width == WIDTH) {
+            if (column == 0 && width == WIDTH) {
                 eraseLine();
                 return;
             }
             cursorRight(column);
             String blank = "";
-            for(int i =0; i<width; i++) blank = blank.concat(" ");
+            for (int i = 0; i < width; i++) blank = blank.concat(" ");
             out.print(blank);
         }
     }
 
-    private void cursorDown(int lines){
-        if(lines==0) return;
-        if(ANSI_ON){
-            for(int i = 0; i<lines; i++) out.print(ANSI.CURSOR_DOWN);
+    private void cursorDown(int lines) {
+        if (lines == 0) return;
+        if (ANSI_ON) {
+            for (int i = 0; i < lines; i++) out.print(ANSI.CURSOR_DOWN);
         }
     }
+
     private void cursorRight(int times) {
-        if(times==0) return;
-        if(ANSI_ON) {
-            out.print("\033["+times+"C");
+        if (times == 0) return;
+        if (ANSI_ON) {
+            out.print("\033[" + times + "C");
         }
     }
 
-    private void cursorLeft(int times){
-        if(times==0) return;
-        if(ANSI_ON){
-            for(int i =0; i<times;i++) out.print(ANSI.CURSOR_LEFT);
+    private void cursorLeft(int times) {
+        if (times == 0) return;
+        if (ANSI_ON) {
+            for (int i = 0; i < times; i++) out.print(ANSI.CURSOR_LEFT);
         }
     }
 
-    private void positionCursor(int line, int column){
-        if(ANSI_ON){
+    private void positionCursor(int line, int column) {
+        if (ANSI_ON) {
             goOnTop();
             cursorDown(line);
             cursorRight(column);
         }
     }
+
     private void goOnTop() {
-        if(ANSI_ON) out.print(ANSI.HOME);
+        if (ANSI_ON) out.print(ANSI.HOME);
     }
 
-    private void moveToInput(){
-        if(ANSI_ON) positionCursor(INPUT_LINE+INPUT_HEIGHT/2,INPUT_COLUMN);
+    private void moveToInput() {
+        if (ANSI_ON) positionCursor(INPUT_LINE + INPUT_HEIGHT / 2, INPUT_COLUMN);
     }
 }

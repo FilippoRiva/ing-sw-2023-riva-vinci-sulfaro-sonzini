@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainViewController implements Initializable {
+    private final ViewManager viewManager = ViewManager.getInstance();
     @FXML
     protected Button errorButton;
     @FXML
@@ -40,22 +41,22 @@ public class MainViewController implements Initializable {
     private Pane criticalErrorPane;
     @FXML
     private Label errorLabel;
-    private final ViewManager viewManager = ViewManager.getInstance();
     private InternalViewState currentState;
 
     /**
      * Initializes the view setting its sub controllers to visible/non-visible
-     * @param url the URL
+     *
+     * @param url            the URL
      * @param resourceBundle the ResourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         criticalErrorPane.setVisible(false);
-        CustomBindings.bindSize(criticalErrorPane,GraphicalUI.stage.widthProperty(),GraphicalUI.stage.heightProperty());
-        CustomBindings.bindSize(criticalErrorBackground,errorLabel.widthProperty().add(40),
+        CustomBindings.bindSize(criticalErrorPane, GraphicalUI.stage.widthProperty(), GraphicalUI.stage.heightProperty());
+        CustomBindings.bindSize(criticalErrorBackground, errorLabel.widthProperty().add(40),
                 errorLabel.heightProperty().add(200));
 
-        errorLabel.setBackground(Background.fill(Color.BLACK));
+
         currentState = InternalViewState.INIT;
 
         preGame.setVisible(true);
@@ -71,18 +72,19 @@ public class MainViewController implements Initializable {
     /**
      * Given an InternalViewState this function hides the current components and shows the view associated with that
      * internalViewState
+     *
      * @param internalViewState the internalViewState to be shown
      */
-    public void changeView(InternalViewState internalViewState){
-        switch (internalViewState){
+    public void changeView(InternalViewState internalViewState) {
+        switch (internalViewState) {
             case INIT -> { //transitions from game to init
                 preGame.setMouseTransparent(false);
                 preGame.setVisible(true);
                 game.setMouseTransparent(true);
                 game.setVisible(false);
-                if(this.currentState == InternalViewState.LOBBY){
+                if (this.currentState == InternalViewState.LOBBY) {
                     preGameController.reset();
-                } else if(this.currentState == InternalViewState.GAME || this.currentState == InternalViewState.WIN || this.currentState == InternalViewState.DISCONNECTION){
+                } else if (this.currentState == InternalViewState.GAME || this.currentState == InternalViewState.WIN || this.currentState == InternalViewState.DISCONNECTION) {
                     preGameController.reset();
                     gameController.reset();
                 }
@@ -99,7 +101,8 @@ public class MainViewController implements Initializable {
                 game.setMouseTransparent(false);
                 game.setVisible(true);
             }
-            case DISCONNECTION -> showErrorPane(viewManager.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
+            case DISCONNECTION ->
+                    showErrorPane(viewManager.getDisconnectedClientExceptionsNotifierView().getLastException().getMessage());
             case STOPPED -> showErrorPane("You have been disconnected. Try reconnecting later");
         }
         currentState = internalViewState;
@@ -107,6 +110,7 @@ public class MainViewController implements Initializable {
 
     /**
      * Shows an overlay message. Intended for critical error messages such as server disconnection or other major errors
+     *
      * @param message the message to be shown
      */
     private void showErrorPane(String message) {
@@ -121,34 +125,34 @@ public class MainViewController implements Initializable {
      * The action associated with the error overlay confirm button
      */
     @FXML
-    public void onErrorButtonMouseClicked(){
+    public void onErrorButtonMouseClicked() {
         criticalErrorPane.setMouseTransparent(true);
         criticalErrorPane.setVisible(false);
-        if(currentState==InternalViewState.DISCONNECTION){
+        if (currentState == InternalViewState.DISCONNECTION) {
             gameController.reset();
             changeView(InternalViewState.INIT);
-        } else if(currentState==InternalViewState.STOPPED){
+        } else if (currentState == InternalViewState.STOPPED) {
             GraphicalUI.stage.hide();
             System.exit(0);
         }
     }
 
     public void joinUpdate() {
-        if(currentState == InternalViewState.JOIN)
+        if (currentState == InternalViewState.JOIN)
             preGameController.joinController.updateListLobbies();
     }
 
     public void lobbyUpdate() {
-        if(currentState == InternalViewState.LOBBY && viewManager.getLobbyModelView()!=null)
+        if (currentState == InternalViewState.LOBBY && viewManager.getLobbyModelView() != null)
             preGameController.lobbyController.updateListPlayers();
     }
 
     public void gameUpdate() {
-        if(currentState == InternalViewState.GAME) gameController.update();
+        if (currentState == InternalViewState.GAME) gameController.update();
     }
 
     public void exceptionUpdate() {
-        if(currentState!=InternalViewState.GAME){
+        if (currentState != InternalViewState.GAME) {
             preGameController.displayError(viewManager.getClientExceptionsNotifierView().getLastException().getMessage());
         } else {
             gameController.displayError(viewManager.getClientExceptionsNotifierView().getLastException().getMessage());
@@ -156,19 +160,19 @@ public class MainViewController implements Initializable {
     }
 
     public void chatUpdate() {
-        if(currentState == InternalViewState.GAME) gameController.updateChat();
+        if (currentState == InternalViewState.GAME) gameController.updateChat();
         else preGameController.notifyNewMessage();
     }
 
-    private void setKeyListener(){
-        GraphicalUI.stage.getScene().addEventFilter(KeyEvent.KEY_PRESSED,(KeyEvent keyEvent)->{
-            switch (currentState){
+    private void setKeyListener() {
+        GraphicalUI.stage.getScene().addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent keyEvent) -> {
+            switch (currentState) {
                 case INIT -> preGameController.homeController.processKeyEvent(keyEvent);
                 case JOIN -> preGameController.joinController.processKeyEvent(keyEvent);
                 case CREATE -> preGameController.createController.processKeyEvent(keyEvent);
                 case LOBBY -> preGameController.lobbyController.processKeyEvent(keyEvent);
                 case GAME -> gameController.processKeyPress(keyEvent);
-                case WIN ->  gameController.endGameController.processKeyEvent(keyEvent);
+                case WIN -> gameController.endGameController.processKeyEvent(keyEvent);
             }
         });
     }

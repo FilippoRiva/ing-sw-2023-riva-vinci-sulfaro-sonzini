@@ -22,6 +22,20 @@ import java.util.ResourceBundle;
 
 public class PreGameController implements Initializable {
     @FXML
+    public HomeController homeController;
+    @FXML
+    public JoinController joinController;
+    @FXML
+    public CreateController createController;
+    @FXML
+    public LobbyController lobbyController;
+    @FXML
+    protected ProgressIndicator progress;
+    @FXML
+    protected Button chatButton;
+    @FXML
+    protected Label notificationDot;
+    @FXML
     StackPane home;
     @FXML
     StackPane create = new StackPane();
@@ -37,21 +51,6 @@ public class PreGameController implements Initializable {
     ImageView logo;
     @FXML
     Button exitButton;
-    @FXML
-    protected ProgressIndicator progress;
-    @FXML
-    protected Button chatButton;
-    @FXML
-    protected Label notificationDot;
-    @FXML
-    public HomeController homeController;
-    @FXML
-    public JoinController joinController;
-    @FXML
-    public CreateController createController;
-    @FXML
-    public LobbyController lobbyController;
-
     InternalViewState page;
     StackPane lastSlideUp;
 
@@ -60,12 +59,12 @@ public class PreGameController implements Initializable {
         Stage stage = GraphicalUI.stage;
 
         banner.fitWidthProperty().bind(stage.widthProperty());
-        CustomBindings.bindSize(logo,stage.widthProperty().divide(2),stage.heightProperty().divide(3));
+        CustomBindings.bindSize(logo, stage.widthProperty().divide(2), stage.heightProperty().divide(3));
 
         homeController.initialize(banner);
-        joinController.initialize(banner,this);
-        createController.initialize(banner,this);
-        lobbyController.initialize(banner,this);
+        joinController.initialize(banner, this);
+        createController.initialize(banner, this);
+        lobbyController.initialize(banner, this);
 
         Animations.applyHoverScaling(backButton);
         Animations.applyHoverScaling(chatButton);
@@ -74,25 +73,27 @@ public class PreGameController implements Initializable {
         changePage(InternalViewState.INIT);
     }
 
-    public void startLoading(){
+    public void startLoading() {
         Platform.runLater(() -> progress.setVisible(true));
     }
-    public void stopLoading(){
+
+    public void stopLoading() {
         Platform.runLater(() -> progress.setVisible(false));
     }
-    public void changePage(InternalViewState page){
-        if(page==this.page) return; //avoiding forced animations
+
+    public void changePage(InternalViewState page) {
+        if (page == this.page) return; //avoiding forced animations
         stopLoading();
-        switch (page){
+        switch (page) {
             case INIT -> {
-                if(this.page == InternalViewState.CREATE){
+                if (this.page == InternalViewState.CREATE) {
                     hidePane(create);
                     hideButton(backButton);
-                } else if (this.page ==InternalViewState.JOIN) {
+                } else if (this.page == InternalViewState.JOIN) {
                     hidePane(join);
                     hideButton(backButton);
-                } else if (this.page ==InternalViewState.LOBBY) {
-                    dualHidePane(lobby,lastSlideUp);
+                } else if (this.page == InternalViewState.LOBBY) {
+                    dualHidePane(lobby, lastSlideUp);
                     hideButton(backButton);
                     hideButton(chatButton);
                     hideLabel(notificationDot);
@@ -138,30 +139,32 @@ public class PreGameController implements Initializable {
         this.page = page;
     }
 
-    private void dualHidePane(StackPane pane, StackPane secondPane){
+    private void dualHidePane(StackPane pane, StackPane secondPane) {
         TranslateTransition tt = Animations.getSlideToBottom(pane);
         TranslateTransition tt2 = Animations.getSlideToBottom(secondPane);
-        tt.setOnFinished((finish)->{
+        tt.setOnFinished((finish) -> {
             pane.setVisible(false);
             pane.setMouseTransparent(true);
             tt2.play();
         });
-        tt2.setOnFinished((finish)->{
+        tt2.setOnFinished((finish) -> {
             secondPane.setVisible(false);
             secondPane.setMouseTransparent(true);
         });
         tt.play();
     }
-    private void hidePane(StackPane pane){
+
+    private void hidePane(StackPane pane) {
         pane.setTranslateY(pane.getHeight());
         TranslateTransition tt = Animations.getSlideToBottom(pane);
-        tt.setOnFinished((finish)->{
+        tt.setOnFinished((finish) -> {
             pane.setVisible(false);
             pane.setMouseTransparent(true);
         });
         tt.play();
     }
-    private void showPane(StackPane pane){
+
+    private void showPane(StackPane pane) {
         pane.setTranslateY(pane.getHeight());
         pane.setVisible(true);
         pane.setMouseTransparent(false);
@@ -169,20 +172,27 @@ public class PreGameController implements Initializable {
         tt.play();
     }
 
-    private void showButton(Button button){
+    private void showButton(Button button) {
         button.setMouseTransparent(false);
-        Animations.slideRegionFromTop(button,true).play();
+        Animations.slideRegionFromTop(button, true).play();
     }
-    private void hideButton(Button button){
+
+    private void hideButton(Button button) {
         button.setMouseTransparent(true);
         Animations.slideRegionToTop(button).play();
     }
-    private void moveLabel(Label label){Animations.slideRegionFromTop(label,false).play();}
-    private void hideLabel(Label label){Animations.slideRegionToTop(label).play();}
+
+    private void moveLabel(Label label) {
+        Animations.slideRegionFromTop(label, false).play();
+    }
+
+    private void hideLabel(Label label) {
+        Animations.slideRegionToTop(label).play();
+    }
 
     @FXML
     public void onBackArrowClicked() {
-        if(page == InternalViewState.LOBBY){
+        if (page == InternalViewState.LOBBY) {
             ViewManager.getInstance().exitRequest();
         }
         GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
@@ -193,9 +203,9 @@ public class PreGameController implements Initializable {
         System.exit(0);
     }
 
-    public void displayError(String errorMessage){
+    public void displayError(String errorMessage) {
         Label errorLabel;
-        switch (page){
+        switch (page) {
             case JOIN -> errorLabel = joinController.joinErrorLabel;
             case CREATE -> errorLabel = createController.createErrorLabel;
             default -> {
@@ -210,18 +220,18 @@ public class PreGameController implements Initializable {
         Animations.timer(() -> Platform.runLater(() -> errorLabel.setVisible(false)), 3000);
     }
 
-    public void reset(){
+    public void reset() {
         joinController.reset();
         createController.reset();
         lobbyController.reset();
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             notificationDot.setOpacity(0);
             notificationDot.setText("0");
         });
     }
 
     public void toggleChatVisible() {
-        if(lobbyController.chatController.isChatVisible()){
+        if (lobbyController.chatController.isChatVisible()) {
             lobbyController.chat.setMouseTransparent(true);
             hidePane(lobbyController.chat);
             lobbyController.chatController.setChatVisible(false);
@@ -231,20 +241,20 @@ public class PreGameController implements Initializable {
         showPane(lobbyController.chat);
         lobbyController.chatController.setChatVisible(true);
         //reset notificationCounter
-        if(notificationDot.getText().equals("0")) return;
+        if (notificationDot.getText().equals("0")) return;
         Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));
-        a.setOnFinished((evt)->Platform.runLater(()->notificationDot.setText("0")));
+        a.setOnFinished((evt) -> Platform.runLater(() -> notificationDot.setText("0")));
         a.play();
     }
 
     public void notifyNewMessage() {
         lobbyController.chatController.addChatMessage();
-        if(lobbyController.chatController.isChatVisible()) return;
+        if (lobbyController.chatController.isChatVisible()) return;
         int prev = Integer.parseInt(notificationDot.getText());
-        if(prev==0) {
+        if (prev == 0) {
             Animations.popFadeIn(notificationDot).play();
         }
-        int newValue = prev+1;
-        Platform.runLater(()->notificationDot.setText(String.valueOf(newValue)));
+        int newValue = prev + 1;
+        Platform.runLater(() -> notificationDot.setText(String.valueOf(newValue)));
     }
 }

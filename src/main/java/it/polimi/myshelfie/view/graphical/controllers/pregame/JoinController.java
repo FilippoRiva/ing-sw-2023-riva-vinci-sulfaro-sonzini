@@ -12,7 +12,10 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class JoinController {
+    final ViewManager viewManager = ViewManager.getInstance();
     @FXML
     protected TextField playerNameField;
     @FXML
@@ -39,37 +43,36 @@ public class JoinController {
     protected ScrollPane lobbiesScrollPane;
     @FXML
     protected Label joinErrorLabel;
-    private PreGameController preGameController;
-    final ViewManager viewManager = ViewManager.getInstance();
     String selected = null;
+    private PreGameController preGameController;
 
-    public void initialize(ImageView banner,PreGameController preGameController){
-        CustomBindings.bindSize(listBackgroundImage,GraphicalUI.stage.widthProperty().divide(1.5),
+    public void initialize(ImageView banner, PreGameController preGameController) {
+        CustomBindings.bindSize(listBackgroundImage, GraphicalUI.stage.widthProperty().divide(1.5),
                 GraphicalUI.stage.heightProperty().divide(6).multiply(2.5));
-        CustomBindings.bindSize(lobbiesVBox,listBackgroundImage.fitWidthProperty(),listBackgroundImage.fitHeightProperty());
-        CustomBindings.bindSize(lobbiesScrollPane,listBackgroundImage.fitWidthProperty(),listBackgroundImage.fitHeightProperty());
+        CustomBindings.bindSize(lobbiesVBox, listBackgroundImage.fitWidthProperty(), listBackgroundImage.fitHeightProperty());
+        CustomBindings.bindSize(lobbiesScrollPane, listBackgroundImage.fitWidthProperty(), listBackgroundImage.fitHeightProperty());
 
         Animations.applyHoverScaling(joinButton);
         Effects.applyShadow(joinButton);
 
-        CustomBindings.bindLowerPreGamePane(clearBackground,banner);
+        CustomBindings.bindLowerPreGamePane(clearBackground, banner);
         this.preGameController = preGameController;
     }
 
     @FXML
     protected void onJoinMouseClicked() {
         String playerName = playerNameField.getText();
-        if(selected==null) return;
+        if (selected == null) return;
         if (playerName.isEmpty()) {
             Animations.emptyFieldError(playerNameField).play();
-        }else {
+        } else {
             viewManager.joinRequest(selected, playerName);
             ViewManager.setUsername(playerName);
             preGameController.startLoading();
         }
     }
 
-    public void updateListLobbies(){
+    public void updateListLobbies() {
         //generating nodes
         Task<List<Node>> task = new Task<>() {
             @Override
@@ -77,9 +80,9 @@ public class JoinController {
                 List<Node> result = new ArrayList<>();
                 ModelView modelView = viewManager.getModelView();
                 List<String> lobbies = modelView.getLobbies();
-                for(String lobby : lobbies){
+                for (String lobby : lobbies) {
                     AnchorPane anchorPane = new AnchorPane();
-                    if(lobby.equals(selected)) anchorPane.setBackground(Background.fill(Color.rgb(218, 106, 45)));
+                    if (lobby.equals(selected)) anchorPane.setBackground(Background.fill(Color.rgb(218, 106, 45)));
 
                     anchorPane.setOnMousePressed(event -> {
                         selected = lobby;
@@ -103,14 +106,14 @@ public class JoinController {
         };
 
         //updating view
-        task.setOnSucceeded((event)->{
+        task.setOnSucceeded((event) -> {
             List<Node> anchorPanes;
             try {
                 anchorPanes = task.get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 lobbiesVBox.getChildren().clear();
                 lobbiesVBox.getChildren().addAll(anchorPanes);
             });
@@ -118,7 +121,8 @@ public class JoinController {
 
         new Thread(task).start();
     }
-    private Label generateStandardLabel(String text){
+
+    private Label generateStandardLabel(String text) {
         Label label = new Label(text);
         label.setMaxWidth(837);
         label.setTextFill(Color.WHITE);
@@ -127,14 +131,14 @@ public class JoinController {
 
     public void reset() {
         this.selected = null;
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             joinButton.setDisable(true);
             playerNameField.clear();
         });
     }
 
     public void processKeyEvent(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()){
+        switch (keyEvent.getCode()) {
             case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
             case ENTER -> preGameController.joinController.onJoinMouseClicked();
         }

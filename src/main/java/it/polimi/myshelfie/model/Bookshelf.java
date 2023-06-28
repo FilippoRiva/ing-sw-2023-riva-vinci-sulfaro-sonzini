@@ -14,30 +14,32 @@ public class Bookshelf {
 
     /**
      * Default Constructor
+     *
      * @param bookshelfDimension is the dimension the bookshelf
      */
-    public Bookshelf(Dimension bookshelfDimension){
+    public Bookshelf(Dimension bookshelfDimension) {
         width = bookshelfDimension.width;
         height = bookshelfDimension.height;
         bookshelfItems = new ItemTile[height][width];
 
-        for(int x = 0; x < width; x++){
-            for(int y = 0; y < height; y++){
-                bookshelfItems[y][x] = new ItemTile(ItemTileType.EMPTY,0);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bookshelfItems[y][x] = new ItemTile(ItemTileType.EMPTY, 0);
             }
         }
     }
 
     /**
      * Inserts the taken tiles from the board in the chosen column.
+     *
      * @param column the column in which to insert the tile.
-     * @param tile the tile to insert.
+     * @param tile   the tile to insert.
      * @throws FullColumnException if the selected column is full.
      */
     public void insertTile(int column, ItemTile tile) throws FullColumnException {
-        if(tile.getType().equals(ItemTileType.EMPTY)) return;
-        for(int y = height-1; y >= 0; y--){
-            if(bookshelfItems[y][column].getType() == ItemTileType.EMPTY) {
+        if (tile.getType().equals(ItemTileType.EMPTY)) return;
+        for (int y = height - 1; y >= 0; y--) {
+            if (bookshelfItems[y][column].getType() == ItemTileType.EMPTY) {
                 bookshelfItems[y][column] = tile;
                 return;
             }
@@ -46,12 +48,11 @@ public class Bookshelf {
     }
 
     /**
-     *
      * @return a copy of the items in this bookshelf
      */
     public ItemTile[][] getBookshelfItems() {
         ItemTile[][] returnValue = new ItemTile[height][width];
-        for(int y = 0; y < height; y++){
+        for (int y = 0; y < height; y++) {
             System.arraycopy(bookshelfItems[y], 0, returnValue[y], 0, width);
         }
         return returnValue;
@@ -59,29 +60,32 @@ public class Bookshelf {
 
     /**
      * Checks if that column is not full and can be filled with the item tiles.
+     *
      * @param numTakenTiles is the number of tiles taken from the board in that turn.
-     * @param column is the column that has to be controlled.
+     * @param column        is the column that has to be controlled.
      * @return true if the column can be filled, false otherwise.
      */
-    public boolean isColumnFillable(int numTakenTiles, int column){
-        return bookshelfItems[numTakenTiles-1][column].getType() == ItemTileType.EMPTY;
+    public boolean isColumnFillable(int numTakenTiles, int column) {
+        return bookshelfItems[numTakenTiles - 1][column].getType() == ItemTileType.EMPTY;
     }
 
     /**
      * Controls how many adjacent tiles there are in the bookshelf and assigned the correct number of points.
+     *
      * @return the points obtained from the adjacent tiles in the bookshelf.
      */
-    public int achievedAdjacentTiles(){
+    public int achievedAdjacentTiles() {
         boolean[][] boolBookshelf = new boolean[height][width];
         int points = 0, n;
 
 
-        for(int i=0; i<height;i++){
-            for(int j=0; j<width;j++){
-                if(!boolBookshelf[i][j] && bookshelfItems[i][j].getType()!=ItemTileType.EMPTY) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (!boolBookshelf[i][j] && bookshelfItems[i][j].getType() != ItemTileType.EMPTY) {
                     n = checkAdjacent(boolBookshelf, i, j);
                     switch (n) {
-                        case 1, 2 -> {}
+                        case 1, 2 -> {
+                        }
                         case 3 -> points += 2;
                         case 4 -> points += 3;
                         case 5 -> points += 5;
@@ -95,52 +99,55 @@ public class Bookshelf {
 
     /**
      * Checks how many adjacent tiles there are in the bookshelf.
+     *
      * @param boolBookshelf the bookshelf to check.
-     * @param i index for the raws.
-     * @param j index for the columns.
+     * @param i             index for the raws.
+     * @param j             index for the columns.
      * @return the number of adjacent tiles found.
      */
-    private int checkAdjacent(boolean[][] boolBookshelf, int i, int j){
-        int n=0;
-        boolBookshelf[i][j]=true;
-        if (j - 1 >= 0 && !boolBookshelf[i][j-1] && bookshelfItems[i][j-1].getType() == bookshelfItems[i][j].getType()) {
-            n+= checkAdjacent(boolBookshelf, i, j-1);
+    private int checkAdjacent(boolean[][] boolBookshelf, int i, int j) {
+        int n = 0;
+        boolBookshelf[i][j] = true;
+        if (j - 1 >= 0 && !boolBookshelf[i][j - 1] && bookshelfItems[i][j - 1].getType() == bookshelfItems[i][j].getType()) {
+            n += checkAdjacent(boolBookshelf, i, j - 1);
         }
-        if (i - 1 >= 0 && !boolBookshelf[i-1][j] && bookshelfItems[i-1][j].getType() == bookshelfItems[i][j].getType()) {
-            n+= checkAdjacent(boolBookshelf, i-1, j);
+        if (i - 1 >= 0 && !boolBookshelf[i - 1][j] && bookshelfItems[i - 1][j].getType() == bookshelfItems[i][j].getType()) {
+            n += checkAdjacent(boolBookshelf, i - 1, j);
         }
-        if (j+1 < width && !boolBookshelf[i][j+1] && bookshelfItems[i][j+1].getType() == bookshelfItems[i][j].getType()) {
-            n+=checkAdjacent(boolBookshelf, i, j+1);
+        if (j + 1 < width && !boolBookshelf[i][j + 1] && bookshelfItems[i][j + 1].getType() == bookshelfItems[i][j].getType()) {
+            n += checkAdjacent(boolBookshelf, i, j + 1);
         }
-        if (i + 1 <height && !boolBookshelf[i+1][j] && bookshelfItems[i+1][j].getType() == bookshelfItems[i][j].getType()) {
-            n+= checkAdjacent(boolBookshelf, i+1, j);
+        if (i + 1 < height && !boolBookshelf[i + 1][j] && bookshelfItems[i + 1][j].getType() == bookshelfItems[i][j].getType()) {
+            n += checkAdjacent(boolBookshelf, i + 1, j);
         }
-        return 1+n;
+        return 1 + n;
     }
 
     /**
      * Checks whether the bookshelf is full.
+     *
      * @return true if it's full, false otherwise.
      */
-    public boolean isFull(){
-        for(int i=0; i< width; i++){
-            if(bookshelfItems[0][i].getType()==ItemTileType.EMPTY) return false;
+    public boolean isFull() {
+        for (int i = 0; i < width; i++) {
+            if (bookshelfItems[0][i].getType() == ItemTileType.EMPTY) return false;
         }
         return true;
     }
 
     /**
      * Checks how many available free positions remain in a column.
+     *
      * @return how many positions are free.
      */
-    public int columnFreeSpace(){
-        int max=0, count;
-        for(int i=0; i<width; i++){
-            count=0;
-            for(int j=0; j<height; j++){
-                if(bookshelfItems[j][i].getType()==ItemTileType.EMPTY) count++;
+    public int columnFreeSpace() {
+        int max = 0, count;
+        for (int i = 0; i < width; i++) {
+            count = 0;
+            for (int j = 0; j < height; j++) {
+                if (bookshelfItems[j][i].getType() == ItemTileType.EMPTY) count++;
             }
-            if(count>max) max=count;
+            if (count > max) max = count;
         }
         return max;
     }

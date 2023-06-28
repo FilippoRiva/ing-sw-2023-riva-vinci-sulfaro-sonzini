@@ -8,20 +8,32 @@ import java.rmi.UnmarshalException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 
-public class ServerImpl extends UnicastRemoteObject implements Server{
+/**
+ * Represents the Server implementation.
+ */
+public class ServerImpl extends UnicastRemoteObject implements Server {
+
     private final Controller controller;
-    public ServerImpl(Controller controller) throws RemoteException{
+
+    /**
+     * Constructor.
+     *
+     * @param controller the controller.
+     * @throws RemoteException
+     */
+    public ServerImpl(Controller controller) throws RemoteException {
         super();
         this.controller = controller;
     }
+
     @Override
     public synchronized void connect(Client client) throws RemoteException {
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 ServerConnectionHandlerImpl s = new ServerConnectionHandlerImpl(client, controller);
                 s.start();
-            } catch (UnmarshalException e){
-                ServerLogger.log(Level.INFO,"Client trying to connect with unsupported class versions");
+            } catch (UnmarshalException e) {
+                ServerLogger.log(Level.INFO, "Client trying to connect with unsupported class versions");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

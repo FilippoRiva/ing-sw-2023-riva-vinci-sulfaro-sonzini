@@ -1,7 +1,9 @@
 package it.polimi.myshelfie.view.textual;
 
 import it.polimi.myshelfie.model.GameState;
-import it.polimi.myshelfie.model.modelviews.*;
+import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
+import it.polimi.myshelfie.model.modelviews.FullGameModelView;
+import it.polimi.myshelfie.model.modelviews.PlayerModelView;
 import it.polimi.myshelfie.view.*;
 import it.polimi.myshelfie.view.textual.pages.*;
 
@@ -11,18 +13,18 @@ import java.util.List;
 public class TextualUI implements UI {
     private final ViewManager viewManager;
     private final Terminal t;
+    private final List<String> inputParameters;
+    private final Thread readerThread;
     private String currentLibraryOwner;
     private ScreenPage currentPage;
-    private final List<String> inputParameters;
     private InternalViewState internalViewState;
-    private final Thread readerThread;
 
     public TextualUI() {
         this.viewManager = ViewManager.getInstance();
         this.inputParameters = new ArrayList<>();
         this.t = new Terminal();
         this.currentPage = new InitPage(t, inputParameters);
-        CLIInputReader reader = new CLIInputReader(this,inputParameters);
+        CLIInputReader reader = new CLIInputReader(this, inputParameters);
         this.readerThread = new Thread(reader::read);
     }
 
@@ -36,7 +38,7 @@ public class TextualUI implements UI {
     public void update(ViewUpdate evt, Object unused) {
         switch (evt) {
             case MODEL_UPDATE -> new Thread(this::initUpdate).start();
-            case EXCEPTION_UPDATE -> new Thread(()->printException(false)).start();
+            case EXCEPTION_UPDATE -> new Thread(() -> printException(false)).start();
             case CHAT_UPDATE -> new Thread(this::chatUpdate).start();
             case LOBBY_UPDATE -> new Thread(this::lobbyUpdate).start();
             case GAME_UPDATE -> new Thread(this::gameUpdate).start();
@@ -45,31 +47,31 @@ public class TextualUI implements UI {
     }
 
     private synchronized void gameUpdate() {
-        if(viewManager.getViewType()==ViewType.GAME && !(internalViewState == InternalViewState.CHAT ||
-                internalViewState == InternalViewState.HELP)){
-            if(viewManager.getGameModelView().getCurrentPlayerName().equals(ViewManager.getUsername()) &&
-            viewManager.getGameModelView().getCurrentState()== GameState.ORGANIZE &&
-            viewManager.getGameModelView().getCurrentPlayer().getTakenTiles().size() == 1){
+        if (viewManager.getViewType() == ViewType.GAME && !(internalViewState == InternalViewState.CHAT ||
+                internalViewState == InternalViewState.HELP)) {
+            if (viewManager.getGameModelView().getCurrentPlayerName().equals(ViewManager.getUsername()) &&
+                    viewManager.getGameModelView().getCurrentState() == GameState.ORGANIZE &&
+                    viewManager.getGameModelView().getCurrentPlayer().getTakenTiles().size() == 1) {
                 viewManager.organizeRequest(viewManager.getGameModelView().getCurrentPlayer().getTakenTiles());
             } else currentPage.render();
         }
     }
 
     private synchronized void lobbyUpdate() {
-        if(viewManager.getViewType()==ViewType.LOBBY){
+        if (viewManager.getViewType() == ViewType.LOBBY) {
             currentPage.render();
         }
     }
 
     private synchronized void chatUpdate() {
-        if((viewManager.getViewType()==ViewType.LOBBY || viewManager.getViewType()==ViewType.GAME)
-                && internalViewState == InternalViewState.CHAT){
+        if ((viewManager.getViewType() == ViewType.LOBBY || viewManager.getViewType() == ViewType.GAME)
+                && internalViewState == InternalViewState.CHAT) {
             currentPage.render();
         }
     }
 
     private synchronized void initUpdate() {
-        if(viewManager.getViewType()==ViewType.INIT && internalViewState != InternalViewState.CREATE){
+        if (viewManager.getViewType() == ViewType.INIT && internalViewState != InternalViewState.CREATE) {
             currentPage.render();
         }
     }
@@ -104,7 +106,7 @@ public class TextualUI implements UI {
 
     public synchronized void printException(boolean disconnection) {
         ClientExceptionsNotifierModelView exceptionsView;
-        if(disconnection) exceptionsView = viewManager.getDisconnectedClientExceptionsNotifierView();
+        if (disconnection) exceptionsView = viewManager.getDisconnectedClientExceptionsNotifierView();
         else exceptionsView = viewManager.getClientExceptionsNotifierView();
         if (exceptionsView == null) return;
         t.clearError();
@@ -115,7 +117,7 @@ public class TextualUI implements UI {
         wrongInput("insert a valid option");
     }
 
-    public synchronized void wrongInput(String message){
+    public synchronized void wrongInput(String message) {
         t.printError(message);
     }
 
@@ -123,8 +125,8 @@ public class TextualUI implements UI {
         FullGameModelView gmv = viewManager.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
         int index = players.indexOf(currentLibraryOwner);
-        if(index == players.size()-1) currentLibraryOwner = players.get(0);
-        else currentLibraryOwner = players.get(index+1);
+        if (index == players.size() - 1) currentLibraryOwner = players.get(0);
+        else currentLibraryOwner = players.get(index + 1);
         currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
         currentPage.render();
     }
@@ -133,8 +135,8 @@ public class TextualUI implements UI {
         FullGameModelView gmv = viewManager.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
         int index = players.indexOf(currentLibraryOwner);
-        if(index == 0) currentLibraryOwner = players.get(players.size()-1);
-        else currentLibraryOwner = players.get(index-1);
+        if (index == 0) currentLibraryOwner = players.get(players.size() - 1);
+        else currentLibraryOwner = players.get(index - 1);
         currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
         currentPage.render();
     }
@@ -145,7 +147,7 @@ public class TextualUI implements UI {
 
     public synchronized void setInternalViewState(InternalViewState internalViewState) {
         this.internalViewState = internalViewState;
-        switch (internalViewState){
+        switch (internalViewState) {
             case INIT -> currentPage = new InitPage(t, inputParameters);
             case JOIN -> currentPage = new JoinPage(t, inputParameters);
             case CREATE -> currentPage = new CreatePage(t, inputParameters);

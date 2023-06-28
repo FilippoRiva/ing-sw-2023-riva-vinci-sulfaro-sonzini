@@ -11,14 +11,25 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
+/**
+ * Represents the Server Connection Handler implementation for Socket connection.
+ */
 public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     final String ip;
     final int port;
+    final Object receiveLock = new Object();
+    final Object sendLock = new Object();
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
-
     private final Socket socket;
 
+    /**
+     * Constructor
+     *
+     * @param ip   the ip.
+     * @param port the port.
+     * @throws RemoteException
+     */
     public ServerConnectionHandlerStub(String ip, int port) throws RemoteException {
         this.ip = ip;
         this.port = port;
@@ -40,13 +51,9 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
-    final Object receiveLock = new Object();
-
-    final Object sendLock = new Object();
-
     @Override
     public void send(NetworkMessage networkMessage) throws RemoteException {
-        synchronized (sendLock){
+        synchronized (sendLock) {
             try {
                 oos.writeObject(networkMessage);
                 oos.flush();
@@ -74,8 +81,14 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         //not needed in socket implementation
     }
 
+    /**
+     * Used to receive messages.
+     *
+     * @param client the client.
+     * @throws IOException
+     */
     public void receive(ClientImpl client) throws IOException {
-        synchronized (receiveLock){
+        synchronized (receiveLock) {
             try {
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 client.send(message);
@@ -99,5 +112,10 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     @Override
     public void ping() {
         //not needed in socket implementation
+    }
+
+    @Override
+    public GameController getGameController() {
+        return null;
     }
 }

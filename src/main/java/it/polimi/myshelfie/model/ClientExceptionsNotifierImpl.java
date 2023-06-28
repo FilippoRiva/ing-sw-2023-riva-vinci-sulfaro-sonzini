@@ -1,9 +1,9 @@
 package it.polimi.myshelfie.model;
 
+import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.model.exceptions.DisconnectionException;
 import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
 import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
-import it.polimi.myshelfie.model.events.ExceptionEvent;
 import it.polimi.myshelfie.utils.Observable;
 import it.polimi.myshelfie.utils.Observer;
 
@@ -18,11 +18,12 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
     final List<Exception> exceptionList = new ArrayList<>();
 
     @Override
-    public void notifyException(DisconnectionException exception){
+    public void notifyException(DisconnectionException exception) {
         exceptionList.add(exception);
         setChanged();
         notifyObservers(ExceptionEvent.DISCONNECTION_EXCEPTION, new ClientExceptionsNotifierModelView(this));
     }
+
     @Override
     public synchronized void notifyException(Exception exception) {
         exceptionList.add(exception);
@@ -53,11 +54,10 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
     }
 
     /**
-     *
      * @return the last exception notified.
      */
     public synchronized Exception getLastException() {
-        if(exceptionList.size()==0) return null;
-        return exceptionList.get(exceptionList.size()-1);
+        if (exceptionList.size() == 0) return null;
+        return exceptionList.get(exceptionList.size() - 1);
     }
 }

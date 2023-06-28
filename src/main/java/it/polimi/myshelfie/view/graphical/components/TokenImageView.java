@@ -8,10 +8,11 @@ import javafx.scene.image.ImageView;
 public class TokenImageView extends ImageView {
     /**
      * Constructor of the TokenImageView given a certain Token
+     *
      * @param token the token whose TokenImageView is to be constructed
      */
-    public TokenImageView(Token token){
-        Image image = Images.getImage("game/tokens/"+token.getValue()+".jpg");
+    public TokenImageView(Token token) {
+        Image image = Images.getImage("game/tokens/" + token.getValue() + ".jpg");
         super.setImage(image);
     }
 }

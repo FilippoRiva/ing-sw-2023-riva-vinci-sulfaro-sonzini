@@ -3,20 +3,20 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
-public class CommonGoalTwoColumns extends CommonGoal{
+public class CommonGoalTwoColumns extends CommonGoal {
     /**
      * Checks theh common goal.
+     *
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists 2 columns with all ItemTiles different, false otherwise
-     *
      */
     @Override
     public boolean isVerified(ItemTile[][] bookshelf) {
-        int width = bookshelf[0].length-1;
-        int col_count=0;
-        for(int i = 0; i<=width; i++) {
+        int width = bookshelf[0].length - 1;
+        int col_count = 0;
+        for (int i = 0; i <= width; i++) {
             if (bookshelf[0][i].getType() != ItemTileType.EMPTY) {
-                if(checkColumn(bookshelf, i))
+                if (checkColumn(bookshelf, i))
                     col_count++;
             }
         }

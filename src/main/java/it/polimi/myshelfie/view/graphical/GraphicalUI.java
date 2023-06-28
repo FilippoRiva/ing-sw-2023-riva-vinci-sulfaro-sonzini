@@ -1,11 +1,11 @@
 package it.polimi.myshelfie.view.graphical;
 
+import it.polimi.myshelfie.view.InternalViewState;
 import it.polimi.myshelfie.view.UI;
 import it.polimi.myshelfie.view.ViewManager;
 import it.polimi.myshelfie.view.ViewUpdate;
 import it.polimi.myshelfie.view.graphical.components.TileImageView;
-import it.polimi.myshelfie.view.graphical.controllers.*;
-import it.polimi.myshelfie.view.InternalViewState;
+import it.polimi.myshelfie.view.graphical.controllers.MainViewController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -28,13 +28,13 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class GraphicalUI extends Application implements UI {
-    final ViewManager viewManager = ViewManager.getInstance();
     public static Stage stage;
     public static MainViewController mainViewController;
+    final ViewManager viewManager = ViewManager.getInstance();
 
     @Override
     public synchronized void update(ViewUpdate evt, Object object) {
-        if(mainViewController==null) return;
+        if (mainViewController == null) return;
         switch (evt) {
             case MODEL_UPDATE -> mainViewController.joinUpdate();
             case EXCEPTION_UPDATE -> mainViewController.exceptionUpdate();
@@ -45,9 +45,10 @@ public class GraphicalUI extends Application implements UI {
         }
     }
 
-    public void startGUI(){
+    public void startGUI() {
         Application.launch();
     }
+
     @Override
     public void start(Stage stage) throws Exception {
         GraphicalUI.stage = stage;
@@ -76,7 +77,7 @@ public class GraphicalUI extends Application implements UI {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/lightWood.jpg")));
         ImageView loadingImage = new ImageView(image);
         ProgressBar progressBar = new ProgressBar(0);
-        StackPane loadingPane = new StackPane(loadingImage,progressBar);
+        StackPane loadingPane = new StackPane(loadingImage, progressBar);
         loadingPane.setAlignment(Pos.CENTER);
         StackPane root = new StackPane();
         root.getChildren().add(loadingPane);
@@ -90,40 +91,40 @@ public class GraphicalUI extends Application implements UI {
         stage.show();
 
         //loading fxml
-        Task<AnchorPane> task = new Task<>(){
+        Task<AnchorPane> task = new Task<>() {
             @Override
             protected AnchorPane call() {
                 AnchorPane pane;
                 TileImageView.initImages();
-                updateProgress(3,10);
+                updateProgress(3, 10);
                 FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/main-view.fxml"));
-                updateProgress(6,10);
+                updateProgress(6, 10);
                 try {
                     pane = fxmlLoader.load();
-                    updateProgress(9,10);
+                    updateProgress(9, 10);
                 } catch (IOException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
                 }
                 mainViewController = fxmlLoader.getController();
-                updateProgress(10,10);
+                updateProgress(10, 10);
                 return pane;
             }
         };
-        task.setOnSucceeded((event)->{
+        task.setOnSucceeded((event) -> {
             AnchorPane pane;
             try {
                 pane = task.get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 root.getChildren().addAll(pane.getChildren());
                 root.getChildren().remove(loadingPane);
             });
         });
         progressBar.progressProperty().bind(task.progressProperty());
-        new Thread(task,"GUI Loader").start();
+        new Thread(task, "GUI Loader").start();
     }
 
     private synchronized void viewTypeUpdate() {

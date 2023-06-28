@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
+    final ViewManager viewManager = ViewManager.getInstance();
     @FXML
     protected TextField messageText;
     @FXML
@@ -43,16 +44,15 @@ public class ChatController implements Initializable {
     protected StackPane chat;
     @FXML
     protected Label notificationDot;
-    final ViewManager viewManager = ViewManager.getInstance();
     boolean chatIsOpen = false;
     private GameOverlayController gameOverlayController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        CustomBindings.bindSize(chatScroll, backgroundImage.fitWidthProperty().subtract(20),null);
-        CustomBindings.bindSize(messagesVBox,chatScroll.minWidthProperty().subtract(20),null);
-        CustomBindings.bindSize(backgroundImage,chat.minWidthProperty(),chat.minHeightProperty());
-        CustomBindings.bindSize(messagesBackgroundImage,chatScroll.minWidthProperty(),chat.minHeightProperty().subtract(180));
+        CustomBindings.bindSize(chatScroll, backgroundImage.fitWidthProperty().subtract(20), null);
+        CustomBindings.bindSize(messagesVBox, chatScroll.minWidthProperty().subtract(20), null);
+        CustomBindings.bindSize(backgroundImage, chat.minWidthProperty(), chat.minHeightProperty());
+        CustomBindings.bindSize(messagesBackgroundImage, chatScroll.minWidthProperty(), chat.minHeightProperty().subtract(180));
         messagesVBox.heightProperty().addListener(observable -> chatScroll.setVvalue(1D));
         receiverChoice.setValue("Everyone");
         notificationDot.setVisible(true);
@@ -60,24 +60,10 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    public void setChatVisible(boolean visible) {
-        if(visible){
-            resetNotificationDot();
-            chatIsOpen = true;
-            messageText.requestFocus();
-            Platform.runLater(() -> {
-                messageText.clear();
-                chatScroll.setVvalue(1.0);
-            });
-        } else {
-            chatIsOpen = false;
-        }
-    }
-    @FXML
     public void sendMessage() {
-        if(messageText.getText().replace(" ","").equals("")) return;
+        if (messageText.getText().replace(" ", "").equals("")) return;
         String receiver;
-        if(receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
+        if (receiverChoice.getValue().equals("Everyone")) receiver = Messages.toEveryOne;
         else receiver = receiverChoice.getValue();
 
         Message message = new Message(ViewManager.getUsername(), receiver, messageText.getText());
@@ -107,15 +93,16 @@ public class ChatController implements Initializable {
         Region emptySpace = new Region();
         HBox.setHgrow(emptySpace, Priority.ALWAYS);
         VBox singleMessageVBox = new VBox();
-        CustomBindings.bindSize(messageBox,chatScroll.minWidthProperty().subtract(20),null);
+        CustomBindings.bindSize(messageBox, chatScroll.minWidthProperty().subtract(20), null);
 
-        if(message.getSender().equals(ViewManager.getUsername())){
-            messageBox.getChildren().addAll(emptySpace,singleMessageVBox);
-        } else messageBox.getChildren().addAll(singleMessageVBox,emptySpace);
+        if (message.getSender().equals(ViewManager.getUsername())) {
+            messageBox.getChildren().addAll(emptySpace, singleMessageVBox);
+        } else messageBox.getChildren().addAll(singleMessageVBox, emptySpace);
 
         //create default textLabel
         Label userLabel = new Label(message.getSender());
-        if(message.getReceiver().equals(Messages.toEveryOne))userLabel.setStyle("-fx-font-size: 13; -fx-label-padding: 0 0 0 10");
+        if (message.getReceiver().equals(Messages.toEveryOne))
+            userLabel.setStyle("-fx-font-size: 13; -fx-label-padding: 0 0 0 10");
         else userLabel.setStyle("-fx-font-size: 13; -fx-text-fill:MidnightBlue; -fx-label-padding: 0 0 0 10");
         Label textLabel = new Label(message.getMessage());
         textLabel.setStyle("-fx-font-size: 20; -fx-label-padding: 0 0 0 10; -fx-wrap-text: true");
@@ -125,49 +112,51 @@ public class ChatController implements Initializable {
         textLabel.maxWidthProperty().bind(chatScroll.maxWidthProperty().divide(3).multiply(2));
         textLabel.minWidthProperty().bind(chatScroll.maxWidthProperty().divide(3));
 
-        CustomBindings.bindSize(singleMessageVBox,textLabel);
+        CustomBindings.bindSize(singleMessageVBox, textLabel);
 
-        if(message.getSender().equals(ViewManager.getUsername())){
-            if(message.getReceiver().equals(Messages.toEveryOne)) singleMessageVBox.setStyle("-fx-background-color: NavajoWhite ; -fx-background-radius: 20 0 20 20");
+        if (message.getSender().equals(ViewManager.getUsername())) {
+            if (message.getReceiver().equals(Messages.toEveryOne))
+                singleMessageVBox.setStyle("-fx-background-color: NavajoWhite ; -fx-background-radius: 20 0 20 20");
             else singleMessageVBox.setStyle("-fx-background-color: NavajoWhite  ; -fx-background-radius: 20 0 20 20");
         } else {
-            if(message.getReceiver().equals(Messages.toEveryOne)) singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20");
+            if (message.getReceiver().equals(Messages.toEveryOne))
+                singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20");
             else singleMessageVBox.setStyle("-fx-background-color: AntiqueWhite; -fx-background-radius: 0 20 20 20");
         }
 
-        if(!message.getReceiver().equals(Messages.toEveryOne)) {
-            if(message.getSender().equals(ViewManager.getUsername())){
-                userLabel.setText("Private to : "+message.getReceiver());
+        if (!message.getReceiver().equals(Messages.toEveryOne)) {
+            if (message.getSender().equals(ViewManager.getUsername())) {
+                userLabel.setText("Private to : " + message.getReceiver());
             } else {
-                userLabel.setText("Private from : "+message.getSender());
+                userLabel.setText("Private from : " + message.getSender());
             }
         }
 
-        singleMessageVBox.getChildren().addAll(userLabel,textLabel,timeLabel);
-        Platform.runLater(()-> {
+        singleMessageVBox.getChildren().addAll(userLabel, textLabel, timeLabel);
+        Platform.runLater(() -> {
             ObservableList<Node> messages = messagesVBox.getChildren();
-            if(messages.size() > 100) messages.remove(0);
+            if (messages.size() > 100) messages.remove(0);
             messages.add(messageBox);
         });
 
         updateNotificationDot();
     }
 
-    private void updateNotificationDot(){
-        if(!isChatVisible()) {
+    private void updateNotificationDot() {
+        if (!isChatVisible()) {
             int prev = Integer.parseInt(notificationDot.getText());
-            if(prev==0) {
+            if (prev == 0) {
                 Animations.popFadeIn(notificationDot).play();
             }
-            int newValue = prev+1;
-            Platform.runLater(()->notificationDot.setText(String.valueOf(newValue)));
+            int newValue = prev + 1;
+            Platform.runLater(() -> notificationDot.setText(String.valueOf(newValue)));
         }
     }
 
-    private void resetNotificationDot(){
-        if(notificationDot.getText().equals("0")) return;
+    private void resetNotificationDot() {
+        if (notificationDot.getText().equals("0")) return;
         Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));
-        a.setOnFinished((evt)-> Platform.runLater(()->notificationDot.setText("0")));
+        a.setOnFinished((evt) -> Platform.runLater(() -> notificationDot.setText("0")));
         a.play();
     }
 
@@ -175,14 +164,29 @@ public class ChatController implements Initializable {
         return chatIsOpen;
     }
 
+    @FXML
+    public void setChatVisible(boolean visible) {
+        if (visible) {
+            resetNotificationDot();
+            chatIsOpen = true;
+            messageText.requestFocus();
+            Platform.runLater(() -> {
+                messageText.clear();
+                chatScroll.setVvalue(1.0);
+            });
+        } else {
+            chatIsOpen = false;
+        }
+    }
+
     public void reset() {
-        Platform.runLater(()->messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));
+        Platform.runLater(() -> messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));
         resetNotificationDot();
     }
 
 
     public void toggleChat() {
-        if(gameOverlayController != null) gameOverlayController.toggleChatVisible();
+        if (gameOverlayController != null) gameOverlayController.toggleChatVisible();
     }
 
     public void initGameOverlay(GameOverlayController gameOverlayController) {

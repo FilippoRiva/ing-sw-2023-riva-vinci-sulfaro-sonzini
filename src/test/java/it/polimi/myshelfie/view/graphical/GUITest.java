@@ -11,16 +11,29 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GUITest extends Application implements Observer<ViewUpdate, Object> {
-    private static final double SCALE = (double) 2/3;
+    private static final double SCALE = (double) 2 / 3;
     static Stage stage;
+
+    public static void changeScene(String fxmlName) {
+        FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/" + fxmlName + "-view.fxml"));
+        fxmlLoader.setController(new EndGameControllerTest());
+        Scene scene;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1920 * SCALE, 1080 * SCALE); //(1280, 720)
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Platform.runLater(() -> stage.setScene(scene));
+    }
 
     @Override
     public void update(ViewUpdate evt, Object object) {
     }
 
-    public void startGUI(){
+    public void startGUI() {
         Application.launch();
     }
+
     @Override
     public void start(Stage stage) {
         GUITest.stage = stage;
@@ -34,17 +47,5 @@ public class GUITest extends Application implements Observer<ViewUpdate, Object>
             System.exit(0);
         });
         stage.show();
-    }
-
-    public static void changeScene(String fxmlName) {
-        FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource("/fxml/"+fxmlName+"-view.fxml"));
-        fxmlLoader.setController(new EndGameControllerTest());
-        Scene scene;
-        try {
-            scene = new Scene(fxmlLoader.load(), 1920 * SCALE, 1080 * SCALE); //(1280, 720)
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Platform.runLater(() -> stage.setScene(scene));
     }
 }
