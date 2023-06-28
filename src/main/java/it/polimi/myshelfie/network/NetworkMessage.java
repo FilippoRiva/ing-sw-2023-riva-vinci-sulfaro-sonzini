@@ -150,9 +150,9 @@ public class NetworkMessage implements Serializable {
     /**
      * Constructor when a Draw or Organize request is called.
      *
-     * @param evt                     a view event.
+     * @param evt a view event.
      * @param positionsOrOrderedTiles list of positions of the ordered tiles (drawn or organized).
-     * @throws InvalidParameterException if evt
+     * @throws InvalidParameterException if evt is not ViewEvent.DRAW_REQUEST or ViewEvent.ORGANIZE_REQUEST.
      */
     public NetworkMessage(ViewEvent evt, List<?> positionsOrOrderedTiles) throws InvalidParameterException {
         if (evt != ViewEvent.DRAW_REQUEST && evt != ViewEvent.ORGANIZE_REQUEST)
@@ -172,6 +172,14 @@ public class NetworkMessage implements Serializable {
         });
     }
 
+
+    /**
+     * Constructor when an Insert request is called.
+     *
+     * @param evt a view event.
+     * @param column the column where to insert the taken tiles.
+     * @throws InvalidParameterException if evt is not ViewEvent.INSERT_REQUEST.
+     */
     public NetworkMessage(ViewEvent evt, int column) throws InvalidParameterException {
         if (evt != ViewEvent.INSERT_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
@@ -182,18 +190,38 @@ public class NetworkMessage implements Serializable {
         });
     }
 
+
+    /**
+     * Constructor to set a specific ViewType.
+     *
+     * @param viewType the type of view to set
+     */
     public NetworkMessage(ViewType viewType) {
         this.messageType = MessageType.SELECT_VIEW_MESSAGE;
         this.event = null;
         this.clientFunction = ((view) -> new Thread(() -> view.setView(viewType)).start());
     }
 
+
+    /**
+     * Constructor when a LobbyEvent occurs.
+     *
+     * @param evt the lobby event.
+     * @param lobbyModelView the LobbyModelView to set.
+     */
     public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView) {
         this.messageType = MessageType.LOBBY_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view) -> new Thread(() -> view.setLobbyModelView(lobbyModelView)).start());
     }
 
+
+    /**
+     * Constructor when a GameEvent occurs. It updates the ModelViews based on the event.
+     *
+     * @param evt the game event.
+     * @param gameModelView the GameModelView to set.
+     */
     public NetworkMessage(GameEvent evt, GameModelView gameModelView) {
         this.messageType = MessageType.GAME_MESSAGE;
         this.event = evt;
@@ -208,24 +236,45 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
-    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierView) {
+
+    /**
+     * Constructor when an Exception Event occurs.
+     * @param evt the exception event.
+     * @param exceptionsNotifierModelView the ClientExceptionNotifierModelView to set.
+     */
+    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierModelView) {
         this.messageType = MessageType.EXCEPTION_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view) -> new Thread(() -> view.setExceptionView(exceptionsNotifierView, evt)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setExceptionView(exceptionsNotifierModelView, evt)).start());
     }
 
+    /**
+     * Constructor when a Chat Event occurs.
+     * @param evt the chat event.
+     * @param chatModelView the ChatModelVIew to set.
+     */
     public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView) {
         this.messageType = MessageType.CHAT_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view) -> new Thread(() -> view.setChatView(chatModelView)).start());
     }
 
+
+    /**
+     * Constructor when a Model Event occurs.
+     * @param evt the model event.
+     * @param modelView the ModelView to set.
+     */
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
         this.messageType = MessageType.MODEL_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view) -> new Thread(() -> view.setModelView(modelView)).start());
     }
 
+
+    /**
+     * Constructor whwen the message type is a Ping.
+     */
     public NetworkMessage() {
         this.messageType = MessageType.PING;
         this.clientFunction = ((view) -> {

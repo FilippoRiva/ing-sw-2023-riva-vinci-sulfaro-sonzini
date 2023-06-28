@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 
 /**
- * Represents th Client implementation for Socket connection.
+ * Represents the Client implementation for Socket connection.
  */
 public class ClientSkeleton implements Client {
     final Object sendLock = new Object();
