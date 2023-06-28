@@ -12,6 +12,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Represents the Server Connection Handler Implementation for RMI connection.
+ */
 public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements ServerConnectionHandler {
     private static int id = 0;
     public final String hostName;
@@ -26,6 +29,13 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     private Timer timeOutTimer;
     private boolean connected;
 
+    /**
+     * Constructor.
+     *
+     * @param client     the client.
+     * @param controller the controller.
+     * @throws RemoteException
+     */
     public ServerConnectionHandlerImpl(Client client, Controller controller) throws RemoteException {
         this.client = client;
         this.controller = controller;
@@ -35,6 +45,11 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         id++;
     }
 
+    /**
+     * Creates the RMI connection between client and server.
+     *
+     * @throws RemoteException
+     */
     public void start() throws RemoteException {
         client.handshake(this);
         ServerLogger.logClientInfo(this, "Connected");
@@ -148,6 +163,11 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
 
     @Override
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    @Override
     public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
         if (!connected) throw new RemoteException();
         MessageType messageType = networkMessage.getMessageType();
@@ -156,10 +176,20 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
                 playerName, controller, lobbyController, gameController, chatController));
     }
 
+    /**
+     * Associates the lobby controller.
+     *
+     * @param lobbyController the controller to set.
+     */
     public void setLobbyController(LobbyController lobbyController) {
         this.lobbyController = lobbyController;
     }
 
+    /**
+     * Associates the player name.
+     *
+     * @param playerName the name to set.
+     */
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }

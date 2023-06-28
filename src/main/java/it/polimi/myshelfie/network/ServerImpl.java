@@ -8,9 +8,19 @@ import java.rmi.UnmarshalException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 
+/**
+ * Represents the Server implementation.
+ */
 public class ServerImpl extends UnicastRemoteObject implements Server {
+
     private final Controller controller;
 
+    /**
+     * Constructor.
+     *
+     * @param controller the controller.
+     * @throws RemoteException
+     */
     public ServerImpl(Controller controller) throws RemoteException {
         super();
         this.controller = controller;

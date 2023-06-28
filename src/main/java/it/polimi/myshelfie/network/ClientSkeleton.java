@@ -6,6 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
+/**
+ * Represents th Client implementation for Socket connection.
+ */
 public class ClientSkeleton implements Client {
     final Object sendLock = new Object();
     final Object receiveLock = new Object();
@@ -13,6 +16,12 @@ public class ClientSkeleton implements Client {
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
 
+    /**
+     * Constructor.
+     *
+     * @param socket the socket.
+     * @throws RemoteException
+     */
     public ClientSkeleton(Socket socket) throws RemoteException {
         this.socket = socket;
         try {
@@ -57,6 +66,12 @@ public class ClientSkeleton implements Client {
         //not needed in socket programming
     }
 
+    /**
+     * Used to receive messages
+     *
+     * @param serverConnectionHandler the server connection handler.
+     * @throws IOException
+     */
     public void receive(ServerConnectionHandler serverConnectionHandler) throws IOException {
         synchronized (receiveLock) {
             try {

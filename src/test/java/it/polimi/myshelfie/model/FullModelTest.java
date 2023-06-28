@@ -199,7 +199,7 @@ public class FullModelTest {
         game.setState(GameState.DRAW);
         lmv = getLastModel(fullGameModelViewList);
         assertNotEquals(currPlayer, lmv.getCurrentPlayerName(), "Current player is the same of the previuos turn");
-        String oldPlayer = new String(currPlayer);
+        String oldPlayer = currPlayer;
         currPlayer = lmv.getCurrentPlayerName();
         positions = new ArrayList<>();
         positions.add(new Position(-1, 4));
@@ -252,6 +252,7 @@ public class FullModelTest {
             fail("Bookshelf non piena");
         } else {
             game.setState(GameState.LAST_DRAW);
+            assertEquals(1, game.getGameModelView().getPlayer(currPlayer).getEarnedPoints().stream().filter(x->x.getType()==PointType.END_GAME).mapToInt(EarnedPoint::getValue).sum());
             game.nextTurn();
             List<Position> positions = new ArrayList<>();
             positions.add(new Position(-1, 3));

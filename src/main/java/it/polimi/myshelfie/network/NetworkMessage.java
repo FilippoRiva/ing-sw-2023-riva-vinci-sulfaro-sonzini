@@ -17,6 +17,10 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Represents the generic network message.
+ * It has a specific messageType, a serialVersionUID, an event and 2 SerializableConsumer: clientFunction, used on the view, and serverFunction, used on the controllerGroup of the client.
+ */
 public class NetworkMessage implements Serializable {
     static final long serialVersionUID = 1L;
     MessageType messageType;
@@ -28,6 +32,21 @@ public class NetworkMessage implements Serializable {
         throw new RuntimeException("Not Implemented");
     });
 
+    //CLIENT TO SERVER MESSAGES
+
+    /**
+     * Constructor when Join or Create requests are called.
+     *
+     * @param evt        a view event.
+     * @param playerName the player name.
+     * @param lobby      the lobby name.
+     * @throws InvalidParameterException if :
+     *                                   <ul>
+     *                                   <li>evt is not ViewEvent.JOIN_REQUEST or ViewEvent.CREATE_REQUEST</li>
+     *                                   <li>playerName is null</li>
+     *                                   <li>lobby is null</li>
+     *                                   </ul>
+     */
     public NetworkMessage(ViewEvent evt, String playerName, String lobby) throws InvalidParameterException {
         if ((evt != ViewEvent.JOIN_REQUEST && evt != ViewEvent.CREATE_REQUEST) || playerName == null || lobby == null)
             throw new InvalidParameterException("wrong event");
@@ -57,6 +76,13 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
+    /**
+     * Constructor when a Config request is called.
+     *
+     * @param evt        a view event.
+     * @param gameConfig the game config to set.
+     * @throws InvalidParameterException if evt is not ViewEvent.CONFIG_ REQUEST.
+     */
     public NetworkMessage(ViewEvent evt, GameConfig gameConfig) throws InvalidParameterException {
         if (evt != ViewEvent.CONFIG_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
@@ -67,6 +93,13 @@ public class NetworkMessage implements Serializable {
         });
     }
 
+    /**
+     * Constructor when a message is sent in the chat.
+     *
+     * @param evt     a view event.
+     * @param message the message sent.
+     * @throws InvalidParameterException if evt is not ViewEvent.MESSAGE_SEND.
+     */
     public NetworkMessage(ViewEvent evt, Message message) throws InvalidParameterException {
         if (evt != ViewEvent.MESSAGE_SEND) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
@@ -78,6 +111,12 @@ public class NetworkMessage implements Serializable {
         });
     }
 
+    /**
+     * Constructor when a Start or Exit request is called.
+     *
+     * @param evt a view event.
+     * @throws InvalidParameterException if evt is not ViewEvent.START_REQUEST or ViewEvent.EXIT_REQUEST.
+     */
     public NetworkMessage(ViewEvent evt) throws InvalidParameterException {
         if (evt != ViewEvent.START_REQUEST && evt != ViewEvent.EXIT_REQUEST)
             throw new InvalidParameterException("wrong event");
@@ -108,6 +147,13 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
+    /**
+     * Constructor when a Draw or Organize request is called.
+     *
+     * @param evt                     a view event.
+     * @param positionsOrOrderedTiles list of positions of the ordered tiles (drawn or organized).
+     * @throws InvalidParameterException if evt
+     */
     public NetworkMessage(ViewEvent evt, List<?> positionsOrOrderedTiles) throws InvalidParameterException {
         if (evt != ViewEvent.DRAW_REQUEST && evt != ViewEvent.ORGANIZE_REQUEST)
             throw new InvalidParameterException("wrong event");
@@ -192,7 +238,11 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
-    //CLIENT TO SERVER MESSAGES
+    /**
+     * Executes the method invoked on the view from the client.
+     *
+     * @param view the view of the client.
+     */
     public void clientExecute(View view) {
         clientFunction.accept(view);
     }
@@ -202,10 +252,16 @@ public class NetworkMessage implements Serializable {
         serverFunction.accept(controllers);
     }
 
+    /**
+     * @return the message type.
+     */
     public MessageType getMessageType() {
         return messageType;
     }
 
+    /**
+     * @return the event.
+     */
     public Object getEvent() {
         return event;
     }

@@ -7,10 +7,20 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Represents the Client implementation for RMI. It has a view associated and an object (lifeLineSync) used for the
+ * connection.
+ */
 public class ClientImpl extends UnicastRemoteObject implements Client {
     private final View view;
     private final Object lifelineSync = new Object();
 
+    /**
+     * Constructor.
+     *
+     * @param view the view.
+     * @throws RemoteException
+     */
     public ClientImpl(View view) throws RemoteException {
         this.view = view;
     }
@@ -53,7 +63,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 
     @Override
     public void lifeline() throws RemoteException {
-        //this method blocks forever
+        //this method blocks forever the calling thread until the client disconnects
         synchronized (lifelineSync) {
             try {
                 lifelineSync.wait();
