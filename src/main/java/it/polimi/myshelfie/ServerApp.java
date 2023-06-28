@@ -20,6 +20,9 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 
 
+/**
+ * Used to run the Server.
+ */
 public class ServerApp {
     public static void main(String[] args) {
         ServerLogger.initialize();

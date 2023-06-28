@@ -21,6 +21,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
+
+/**
+ * Used to run the Client.
+ */
 public class ClientApp {
     static final int registryPort = 1099;
     static String serverIP = "localhost";
