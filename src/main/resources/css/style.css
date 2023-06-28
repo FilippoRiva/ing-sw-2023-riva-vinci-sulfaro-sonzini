@@ -67,6 +67,13 @@
     -fx-background-color: transparent;
 }
 
+.home {
+    -fx-background-image: url('../images/house.png');
+    -fx-background-size: 70;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
+
 .chat {
     -fx-background-image: url('../images/chat_icon.jpg');
     -fx-background-size: 100;
