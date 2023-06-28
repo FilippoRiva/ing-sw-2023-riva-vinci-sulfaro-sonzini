@@ -13,9 +13,11 @@ import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.model.events.GameEvent;
 import it.polimi.myshelfie.model.events.LobbyEvent;
 import it.polimi.myshelfie.utils.Observer;
+import it.polimi.myshelfie.utils.ServerLogger;
 
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Represents and entire game: it has all the settings, a name, the players, the living room, the common goals and the chat system.
@@ -44,7 +46,10 @@ public class Game implements GameModel, LobbyModel {
         this.gameObservable = new it.polimi.myshelfie.utils.Observable<>();
         try {
             this.gameConfig = new GameConfig(2);
-        } catch (InvalidParameterException ignored) {
+        } catch (InvalidParameterException e) {
+            ServerLogger.log(Level.SEVERE,"Critical Failure in Game Initialization. Unable to create Default Game Config. Shutting Down");
+            e.printStackTrace();
+            System.exit(-1);
         }
         this.currentState = GameState.LOBBY;
         this.chatSystem = new ChatSystem();

@@ -193,7 +193,9 @@ public class GameControllerImpl implements GameController, ChatController{
         for (Client c : clientsMap.values()) {
             try {
                 c.send(new NetworkMessage(ViewType.WIN));
-            } catch (RemoteException ignored) {}
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a WIN Network Message to a Disconnected Client");
+            }
         }
         closed = true;
         ServerLogger.log(Level.FINE,"Game ended. Game name : "+gameName);
@@ -220,7 +222,8 @@ public class GameControllerImpl implements GameController, ChatController{
                     connectionHandlersMap.get(player).setGameController(null);
                     connectionHandlersMap.get(player).setChatController(null);
                     clientsMap.get(player).send(new NetworkMessage(ViewType.DISCONNECTION));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.log(Level.FINE, "Sending a DISCONNECTION Network Message to a Disconnected Client");
                 }
                 controller.clientHasLeft(clientsMap.get(player));
             }).start();
@@ -243,13 +246,15 @@ public class GameControllerImpl implements GameController, ChatController{
             try {
                 connectionHandlersMap.get(username).setGameController(null);
                 connectionHandlersMap.get(username).setChatController(null);
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Setting Controllers to a Disconnected Client");
             }
             Client client = clientsMap.get(username);
             new Thread(()->{
                 try {
                     client.send(new NetworkMessage(ViewType.INIT));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.log(Level.FINE,"Sending a INIT Network Message to a disconnected client while leaving game");
                 }
             }).start();
         }

@@ -54,14 +54,16 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             controller.addClient(client, ((evt, modelView)-> new Thread(()->{
                 try { //this is called every 10 seconds
                     client.send(new NetworkMessage(evt,modelView));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this, "Model Observer failed to send a Network Message");
                 }
             }).start()), ((evt, clientExceptionsNotifierView)->{
                 if(evt==null) return;
                 new Thread(()->{
                     try {
                         client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
-                    } catch (RemoteException ignored) {
+                    } catch (RemoteException e) {
+                        ServerLogger.logClientInfo(this, "Model Observer failed to send a Network Message");
                     }
                 }).start();
             }));
@@ -82,7 +84,8 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             new Thread(()->{
                 try {
                     client.send(new NetworkMessage(evt,gameModelView));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this, "Game Observer failed to send a Network Message");
                 }
             }).start();
         });
@@ -98,7 +101,8 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             new Thread(()->{
                 try {
                     client.send(new NetworkMessage(evt, playerChatModelView));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this,"Chat Controller failed to send a Network Message");
                 }
             }).start();
         }));
@@ -139,7 +143,8 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
                 if(!connected) return;
                 ServerLogger.logClientInfo(connectionHandler,"Timed Out, Closing Connection...");
                 close();
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.logClientInfo(connectionHandler,"Failed to Close Connection after Timed Out");
             }
             }
         },10000);

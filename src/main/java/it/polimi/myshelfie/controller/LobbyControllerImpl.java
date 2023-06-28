@@ -87,7 +87,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(ViewType.INIT));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a INIT Network Message to a disconnected client while exiting lobby");
             }
         }).start();
         clientsMap.remove(playerName);
@@ -148,7 +149,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             try {
             sch.setLobbyController(null);
             sch.setChatController(null);
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE,"Setting Controllers to a Disconnected Client during game start");
             }
         }
 
@@ -167,7 +169,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController{
             new Thread(()->{
                 try {
                     client.send(new NetworkMessage(ViewType.GAME));
-                } catch (RemoteException ignored){
+                } catch (RemoteException e){
+                    ServerLogger.log(Level.INFO,"Sending a GAME Network message to a Disconnected Client");
                 }
             }).start();
         }

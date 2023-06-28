@@ -1,5 +1,7 @@
 package it.polimi.myshelfie.network;
 
+import it.polimi.myshelfie.utils.ServerLogger;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -66,7 +68,7 @@ public class ClientSkeleton implements Client{
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 serverConnectionHandler.send(message);
             } catch (ClassNotFoundException ignored) {
-                //ignoring out of date messages
+                ServerLogger.logClientInfo((ServerConnectionHandlerImpl) serverConnectionHandler,"Receiving unrecognized messages. ");
             }
             receiveLock.notifyAll();
         }

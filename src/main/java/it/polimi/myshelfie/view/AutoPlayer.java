@@ -52,59 +52,60 @@ public class AutoPlayer implements UI{
     public synchronized void update(ViewUpdate evt, Object unused) {
         if(finished) return;
         ViewType vt = viewManager.getViewType();
-        try {
-            switch (evt) {
-                case LOBBY_UPDATE -> {
-                    LobbyModelView lmv = viewManager.getLobbyModelView();
-                    if (lmv == null) return;
-                    if (owner && lmv.getPlayers().size() == lmv.getGameConfig().getNumPlayers())
-                        viewManager.startRequest();
-                }
-                case GAME_UPDATE -> {
-                    if (vt != ViewType.GAME) return;
-                    FullGameModelView gmv = viewManager.getGameModelView();
-                    if (!gmv.getCurrentPlayerName().equals(username)) return;
-                    switch (gmv.getCurrentState()) {
-                        case DRAW, LAST_DRAW -> draw(gmv);
-                        case ORGANIZE, LAST_ORGANIZE -> organize(gmv);
-                        case INSERT, LAST_INSERT -> insert(gmv);
-                        case WIN -> {
-                            ViewManager.getInstance().removeUI(this);
-                            finished = true;
-                        }
+        switch (evt) {
+            case LOBBY_UPDATE -> {
+                LobbyModelView lmv = viewManager.getLobbyModelView();
+                if (lmv == null) return;
+                if (owner && lmv.getPlayers().size() == lmv.getGameConfig().getNumPlayers())
+                    viewManager.startRequest();
+            }
+            case GAME_UPDATE -> {
+                if (vt != ViewType.GAME) return;
+                FullGameModelView gmv = viewManager.getGameModelView();
+                if (!gmv.getCurrentPlayerName().equals(username)) return;
+                switch (gmv.getCurrentState()) {
+                    case DRAW, LAST_DRAW -> draw(gmv);
+                    case ORGANIZE, LAST_ORGANIZE -> organize(gmv);
+                    case INSERT, LAST_INSERT -> insert(gmv);
+                    case WIN -> {
+                        ViewManager.getInstance().removeUI(this);
+                        finished = true;
                     }
                 }
-                case VIEW_TYPE_UPDATE -> {
-                    if ( vt == ViewType.LOBBY) {
-                        if (owner) {
+            }
+            case VIEW_TYPE_UPDATE -> {
+                if ( vt == ViewType.LOBBY) {
+                    if (owner) {
+                        try {
                             viewManager.configRequest(new GameConfig(numPlayers));
+                        } catch (InvalidParameterException e) {
+                            System.out.println("AutoPlayer Generating invalid Game Config");
                         }
-                    } else if (vt == ViewType.INIT){
-                        if(owner) {
-                            if(!joined && !ViewManager.getInstance().getModelView().getLobbies().contains("test")) {
-                                ViewManager.getInstance().createRequest("test",username);
-                                joined = true;
-                            }
-                        }
-                    } else if(vt == ViewType.GAME){
-                        this.update(ViewUpdate.GAME_UPDATE,null);
                     }
-                }
-                case MODEL_UPDATE -> {
-                    if(!owner){
-                        if(!joined && ViewManager.getInstance().getModelView().getLobbies().contains("test") && ViewManager.getInstance().getModelView().getMaxSize("test")==numPlayers) {
-                            ViewManager.getInstance().joinRequest("test",username);
+                } else if (vt == ViewType.INIT){
+                    if(owner) {
+                        if(!joined && !ViewManager.getInstance().getModelView().getLobbies().contains("test")) {
+                            ViewManager.getInstance().createRequest("test",username);
                             joined = true;
                         }
                     }
-
+                } else if(vt == ViewType.GAME){
+                    this.update(ViewUpdate.GAME_UPDATE,null);
                 }
             }
-        } catch (InvalidParameterException ignored){
+            case MODEL_UPDATE -> {
+                if(!owner){
+                    if(!joined && ViewManager.getInstance().getModelView().getLobbies().contains("test") && ViewManager.getInstance().getModelView().getMaxSize("test")==numPlayers) {
+                        ViewManager.getInstance().joinRequest("test",username);
+                        joined = true;
+                    }
+                }
+
+            }
         }
     }
 
-    private synchronized void draw(FullGameModelView gmv) throws InvalidParameterException {
+    private synchronized void draw(FullGameModelView gmv){
         ItemTile[][] bookshelf = gmv.getCurrentPlayer().getBookshelf();
         int maxDepth = 3;
         boolean finish = false;
@@ -140,12 +141,12 @@ public class AutoPlayer implements UI{
         }
     }
 
-    private synchronized void organize(FullGameModelView gmv) throws InvalidParameterException {
+    private synchronized void organize(FullGameModelView gmv){
         List<ItemTile> takenTiles = gmv.getPlayer(username).getTakenTiles();
         viewManager.organizeRequest(takenTiles);
     }
 
-    private synchronized void insert(FullGameModelView gmv) throws InvalidParameterException {
+    private synchronized void insert(FullGameModelView gmv){
         ItemTile[][] bookshelf = gmv.getCurrentPlayer().getBookshelf();
         int depth = gmv.getCurrentPlayer().getTakenTiles().size()-1;
         ArrayList<Integer> availableColumns = new ArrayList<>();

@@ -81,7 +81,8 @@ public class ControllerImpl implements Controller {
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(ViewType.INIT));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a INIT Network Message to a Disconnected Client while adding the client to the controller");
             }
         }).start();
     }
@@ -152,7 +153,8 @@ public class ControllerImpl implements Controller {
         new Thread(()->{
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a LOBBY Network Message to a Disconnected Client while creating lobby");
             }
         }).start();
 
@@ -214,7 +216,8 @@ public class ControllerImpl implements Controller {
         new Thread(()-> {
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a LOBBY Network Message to Disconnected Clients while joining lobby");
             }
         }).start();
 

@@ -9,6 +9,7 @@ import it.polimi.myshelfie.model.events.*;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.utils.SerializableConsumer;
+import it.polimi.myshelfie.utils.ServerLogger;
 import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.events.ViewEvent;
@@ -54,7 +55,8 @@ public class NetworkMessage implements Serializable {
             lobbyController.addLobbyObserver(playerName,((event,lobbyModelView)-> new Thread(()->{
                 try {
                     client.send(new NetworkMessage(event,lobbyModelView));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(controllers.getServerConnectionHandler(),"Lobby Observer failed to send a Network Message");
                 }
             }).start()));
             connectionHandler.setLobbyController(lobbyController);
@@ -98,6 +100,7 @@ public class NetworkMessage implements Serializable {
                         controllers.getServerConnectionHandler().setGameController(null);
                         controllers.getServerConnectionHandler().setChatController(null);
                     } catch (RemoteException ignored) {
+                        ServerLogger.logClientInfo(controllers.getServerConnectionHandler(), "Unable to set Controllers in game EXIT REQUEST");
                     }
                 }
                 else if(controllers.getLobbyController()!=null){ //leaving lobby
@@ -107,6 +110,7 @@ public class NetworkMessage implements Serializable {
                     try {
                         controllers.getServerConnectionHandler().setChatController(null);
                     } catch (RemoteException ignored) {
+                        ServerLogger.logClientInfo(controllers.getServerConnectionHandler(), "Unable to set Controllers in lobby EXIT REQUEST");
                     }
                 }
             }
@@ -193,6 +197,7 @@ public class NetworkMessage implements Serializable {
             try {
                 controllersGroup.getServerConnectionHandler().ping();
             } catch (RemoteException ignored){
+                ServerLogger.logClientInfo(controllersGroup.getServerConnectionHandler(),"Unable to Ping");
             }
         }).start());
     }

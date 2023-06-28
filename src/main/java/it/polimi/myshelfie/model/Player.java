@@ -62,11 +62,16 @@ public class Player {
         earnedPoints.add(p);
     }
 
+    /**
+     * Returns a list of EarnedPoints previously added with the addEarnedPoints(EarnedPoint p)
+     * @return a not-null list of EarnedPoints
+     */
     public ArrayList<EarnedPoint> getEarnedPoints() {
         return new ArrayList<>(earnedPoints);
     }
 
     /**
+     * Returns the immutable player name.
      * @return the player name.
      */
     public String getName(){
