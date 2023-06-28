@@ -163,6 +163,11 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
 
     @Override
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    @Override
     public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
         if (!connected) throw new RemoteException();
         MessageType messageType = networkMessage.getMessageType();

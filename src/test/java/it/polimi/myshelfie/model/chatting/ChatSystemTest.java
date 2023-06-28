@@ -74,7 +74,6 @@ class ChatSystemTest {
         assertNull(views[1]);
         assertNull(events[0]);
         assertNull(events[1]);
-        Messages messages = new Messages();
     }
 
     @Test
@@ -147,9 +146,9 @@ class ChatSystemTest {
         Player p1 = new Player("Pippo");
         Player p2 = new Player("Luca");
         PlayerChatModelView view1 = new PlayerChatModelView(cs.getPlayerChats().get(p1.getName()));
-        PlayerChatModelView view3 = new PlayerChatModelView(cs.getPlayerChats().get(p1.getName()));
         assertEquals(view1.getMessages().size(), cs.getPlayerChats().get(p1.getName()).getMessages().size());
         cs.addMessage(new Message(p1.getName(), p2.getName(), "msg1"));
+        view1 = new PlayerChatModelView(cs.getPlayerChats().get(p1.getName()));
         assertEquals(view1.getLastMessage().getMessage(), "msg1");
     }
 }

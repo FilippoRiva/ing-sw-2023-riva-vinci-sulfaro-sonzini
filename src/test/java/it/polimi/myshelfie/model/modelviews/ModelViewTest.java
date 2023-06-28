@@ -33,7 +33,7 @@ class ModelViewTest {
         modelView = model.getModelView();
         assertEquals(1, modelView.getLobbies().size());
         assertEquals(2, modelView.getCurrentSize("nuova lobby"));
-        model.addLobby("altra lobby");
+        LobbyModel lobby2 =model.addLobby("altra lobby");
         modelView = new ModelView(model);
         assertEquals(2, modelView.getLobbies().size());
         assertEquals(2, modelView.getMaxSize("nuova lobby"));

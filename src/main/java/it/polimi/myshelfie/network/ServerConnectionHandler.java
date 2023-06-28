@@ -64,4 +64,5 @@ public interface ServerConnectionHandler extends Remote {
      * @throws RemoteException
      */
     void ping() throws RemoteException;
+    GameController getGameController();
 }

@@ -113,4 +113,9 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     public void ping() {
         //not needed in socket implementation
     }
+
+    @Override
+    public GameController getGameController() {
+        return null;
+    }
 }
