@@ -12,11 +12,9 @@ import java.util.Enumeration;
 
 
 /**
- * Represents the network interface provider.
+ * The network interface provider is used to get active system network interfaces.
  */
 public class NetworkInterfaceProvider {
-    //returns the first active network interface he's able to find. otherwise it returns localhost
-
     /**
      * Checks the network interfaces.
      *

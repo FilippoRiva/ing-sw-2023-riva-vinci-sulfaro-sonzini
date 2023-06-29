@@ -8,7 +8,7 @@ import java.util.Vector;
  * Observable Class used for Observer/Observable pattern.
  * It has a boolean attribute "changed" to indicate when changes have occurred, and a vector of observers.
  *
- * @param <Event>          the event that has occurred.
+ * @param <Event>          the events' Enum used to represent events.
  * @param <Representation> the representation used for the observable.
  */
 public class Observable<Event extends Enum<Event>, Representation> {
