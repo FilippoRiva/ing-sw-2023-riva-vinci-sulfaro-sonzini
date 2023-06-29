@@ -169,7 +169,7 @@ class ControllerTest {
     }
 
     @Test
-    void lobbyControllerTest() throws InvalidParameterException {
+    void lobbyControllerTest() throws InvalidParameterException, RemoteException {
         ControllerImpl controller = new ControllerImpl();
         LobbyControllerImpl[] lobbyControllers = new LobbyControllerImpl[4];
         Model model= new ModelImpl();
@@ -259,7 +259,7 @@ class ControllerTest {
     }
 
     @Test
-    void gameControllerTest() throws InvalidParameterException {
+    void gameControllerTest() throws InvalidParameterException, RemoteException {
         ControllerImpl controller = new ControllerImpl();
         LobbyControllerImpl[] lobbyControllers = new LobbyControllerImpl[4];
         ModelImpl model= new ModelImpl();
@@ -795,7 +795,7 @@ class ControllerTest {
     }
 
     @Test
-    void chatControllerTest() throws InvalidParameterException {
+    void chatControllerTest() throws InvalidParameterException, RemoteException {
         ControllerImpl controller = new ControllerImpl();
         LobbyControllerImpl[] lobbyControllers = new LobbyControllerImpl[4];
         Model model= new ModelImpl();
