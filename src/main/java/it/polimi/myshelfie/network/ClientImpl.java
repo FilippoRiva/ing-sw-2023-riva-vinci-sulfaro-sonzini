@@ -5,6 +5,7 @@ import it.polimi.myshelfie.view.View;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,13 +46,17 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
             try {
                 server.send(message);
             } catch (RemoteException ignored) {
+                System.out.println("View Observer Failure. Unable to send Network Message to the server");
             }
         })).start();
 
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+        service.scheduleAtFixedRate(()->{
             try {
                 server.send(new NetworkMessage()); //ping message
             } catch (RemoteException ignored) {
+                System.out.println("Ping Failure. Unable to send Ping Network Message to the Server");
+                service.shutdown();
             }
         }, 1, 5, TimeUnit.SECONDS);
     }

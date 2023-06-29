@@ -30,6 +30,8 @@ public class ChatSystem implements ChatModel {
     }
 
     /**
+     * Returns all the messages ever sent to this game.
+     *
      * @return all the messages ever sent to this game.
      */
     public ArrayList<Message> getMessages() {
@@ -64,6 +66,12 @@ public class ChatSystem implements ChatModel {
         playerChats.get(message.getSender()).addMessage(message);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the player who wants to observe his chat.
+     * @param obs        the new network chat observer.
+     */
     @Override
     public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
         PlayerChat pc = playerChats.get(playerName);
@@ -73,6 +81,12 @@ public class ChatSystem implements ChatModel {
         pc.notifyObservers(new PlayerChatModelView(pc));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the player who no longer wants to observe his chat.
+     * @param obs        the observer to remove
+     */
     @Override
     public synchronized void removeChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs) {
         PlayerChat pc = playerChats.get(playerName);
@@ -81,6 +95,9 @@ public class ChatSystem implements ChatModel {
         playerChats.remove(pc);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void removeChatObservers() {
         for (PlayerChat pc : playerChats.values()) {

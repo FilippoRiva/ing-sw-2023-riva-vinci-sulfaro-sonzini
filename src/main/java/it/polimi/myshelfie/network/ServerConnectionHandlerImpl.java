@@ -70,15 +70,17 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         try {
             controller.addClient(client, ((evt, modelView) -> new Thread(() -> {
                 try { //this is called every 10 seconds
-                    client.send(new NetworkMessage(evt, modelView));
-                } catch (RemoteException ignored) {
+                    client.send(new NetworkMessage(evt,modelView));
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this, "Model Observer failed to send a Network Message");
                 }
             }).start()), ((evt, clientExceptionsNotifierView) -> {
                 if (evt == null) return;
                 new Thread(() -> {
                     try {
-                        client.send(new NetworkMessage(evt, clientExceptionsNotifierView));
-                    } catch (RemoteException ignored) {
+                        client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
+                    } catch (RemoteException e) {
+                        ServerLogger.logClientInfo(this, "Model Observer failed to send a Network Message");
                     }
                 }).start();
             }));
@@ -98,8 +100,9 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             if (evt == null) return;
             new Thread(() -> {
                 try {
-                    client.send(new NetworkMessage(evt, gameModelView));
-                } catch (RemoteException ignored) {
+                    client.send(new NetworkMessage(evt,gameModelView));
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this, "Game Observer failed to send a Network Message");
                 }
             }).start();
         });
@@ -115,7 +118,8 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             new Thread(() -> {
                 try {
                     client.send(new NetworkMessage(evt, playerChatModelView));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this,"Chat Controller failed to send a Network Message");
                 }
             }).start();
         }));
@@ -152,14 +156,20 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         this.timeOutTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    if (!connected) return;
-                    ServerLogger.logClientInfo(connectionHandler, "Timed Out, Closing Connection...");
-                    close();
-                } catch (RemoteException ignored) {
-                }
+            try {
+                if(!connected) return;
+                ServerLogger.logClientInfo(connectionHandler,"Timed Out, Closing Connection...");
+                close();
+            } catch (RemoteException e) {
+                ServerLogger.logClientInfo(connectionHandler,"Failed to Close Connection after Timed Out");
+            }
             }
         }, 10000);
+    }
+
+    @Override
+    public GameController getGameController() {
+        return gameController;
     }
 
     @Override

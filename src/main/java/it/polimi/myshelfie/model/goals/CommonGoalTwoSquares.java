@@ -35,11 +35,21 @@ public class CommonGoalTwoSquares extends CommonGoal {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Two groups containing 4 tiles of the same type in a 2x2 square";

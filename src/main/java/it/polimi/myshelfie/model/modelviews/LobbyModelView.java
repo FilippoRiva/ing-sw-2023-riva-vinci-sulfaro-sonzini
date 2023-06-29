@@ -28,6 +28,8 @@ public class LobbyModelView implements Serializable {
     }
 
     /**
+     * Returns the room owner's name.
+     *
      * @return the room owner's name.
      */
     public String getRoomOwner() {
@@ -35,6 +37,7 @@ public class LobbyModelView implements Serializable {
     }
 
     /**
+     * Returns the list of the player names.
      * @return the list of the player names.
      */
     public List<String> getPlayers() {
@@ -42,6 +45,7 @@ public class LobbyModelView implements Serializable {
     }
 
     /**
+     * Returns the game config of that lobby.
      * @return the game config of that lobby.
      */
     public GameConfig getGameConfig() {
@@ -49,6 +53,7 @@ public class LobbyModelView implements Serializable {
     }
 
     /**
+     * Returns the lobby name.
      * @return the lobby name.
      */
     public String getName() {
@@ -59,7 +64,7 @@ public class LobbyModelView implements Serializable {
      * Checks whether the player is the room owner.
      *
      * @param username the player to check.
-     * @return true if he's the roomowner, false otherwise.
+     * @return true if he's the room owner, false otherwise.
      */
     public boolean isRoomOwner(String username) {
         return roomOwner.equals(username);

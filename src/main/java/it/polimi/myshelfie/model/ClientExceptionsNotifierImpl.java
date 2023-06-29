@@ -17,6 +17,11 @@ import java.util.List;
 public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, ClientExceptionsNotifierModelView> implements ClientExceptionsNotifier {
     final List<Exception> exceptionList = new ArrayList<>();
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param exception the disconnection exception.
+     */
     @Override
     public void notifyException(DisconnectionException exception) {
         exceptionList.add(exception);
@@ -24,6 +29,11 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
         notifyObservers(ExceptionEvent.DISCONNECTION_EXCEPTION, new ClientExceptionsNotifierModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param exception the new exception.
+     */
     @Override
     public synchronized void notifyException(Exception exception) {
         exceptionList.add(exception);
@@ -31,6 +41,11 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
         notifyObservers(ExceptionEvent.NEW_EXCEPTION, new ClientExceptionsNotifierModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs is the observer to add.
+     */
     @Override
     public synchronized void addExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierModelView> obs) {
         addObserver(obs);
@@ -38,22 +53,37 @@ public class ClientExceptionsNotifierImpl extends Observable<ExceptionEvent, Cli
         notifyObservers(new ClientExceptionsNotifierModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs the observer to remove
+     */
     @Override
     public synchronized void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierModelView> obs) {
         deleteObserver(obs);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the {@link ClientExceptionsNotifierModelView} of this ClientExceptionNotifier
+     */
     @Override
     public synchronized ClientExceptionsNotifierModelView getClientExceptionNotifierView() {
         return new ClientExceptionsNotifierModelView(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeExceptionsObservers() {
         deleteObservers();
     }
 
     /**
+     * Returns the last Exception notified
+     *
      * @return the last exception notified.
      */
     public synchronized Exception getLastException() {

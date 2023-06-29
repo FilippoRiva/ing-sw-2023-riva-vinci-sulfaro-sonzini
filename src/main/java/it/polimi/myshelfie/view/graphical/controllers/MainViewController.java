@@ -56,7 +56,7 @@ public class MainViewController implements Initializable {
         CustomBindings.bindSize(criticalErrorBackground, errorLabel.widthProperty().add(40),
                 errorLabel.heightProperty().add(200));
 
-        errorLabel.setBackground(Background.fill(Color.BLACK));
+
         currentState = InternalViewState.INIT;
 
         preGame.setVisible(true);

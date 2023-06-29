@@ -9,6 +9,7 @@ import it.polimi.myshelfie.model.events.*;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.utils.SerializableConsumer;
+import it.polimi.myshelfie.utils.ServerLogger;
 import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.events.ViewEvent;
@@ -68,8 +69,9 @@ public class NetworkMessage implements Serializable {
             }
             lobbyController.addLobbyObserver(playerName, ((event, lobbyModelView) -> new Thread(() -> {
                 try {
-                    client.send(new NetworkMessage(event, lobbyModelView));
-                } catch (RemoteException ignored) {
+                    client.send(new NetworkMessage(event,lobbyModelView));
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(controllers.getServerConnectionHandler(),"Lobby Observer failed to send a Network Message");
                 }
             }).start()));
             connectionHandler.setLobbyController(lobbyController);
@@ -282,7 +284,8 @@ public class NetworkMessage implements Serializable {
         this.serverFunction = ((controllersGroup) -> new Thread(() -> {
             try {
                 controllersGroup.getServerConnectionHandler().ping();
-            } catch (RemoteException ignored) {
+            } catch (RemoteException ignored){
+                ServerLogger.logClientInfo(controllersGroup.getServerConnectionHandler(),"Unable to Ping");
             }
         }).start());
     }

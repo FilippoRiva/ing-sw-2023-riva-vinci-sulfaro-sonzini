@@ -55,11 +55,11 @@ public class ControllerImpl implements Controller {
     }
 
     /**
-     * Adds a client to this controller implementation.
+     * {@inheritDoc}
      *
      * @param client                    is the client representing the player who's connecting.
-     * @param networkModelObserver      is the network model observer (??)
-     * @param networkExceptionsObserver (??)
+     * @param networkModelObserver      is the network model observer for the client to be added.
+     * @param networkExceptionsObserver is the network exceptions observer for the client to be added.
      */
     @Override
     public synchronized void addClient(Client client, Observer<ModelEvent, ModelView> networkModelObserver,
@@ -83,13 +83,15 @@ public class ControllerImpl implements Controller {
         new Thread(() -> {
             try {
                 client.send(new NetworkMessage(ViewType.INIT));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a INIT Network Message to a Disconnected Client while adding the client to the controller");
             }
         }).start();
     }
 
     /**
-     * Creates a lobby and connects the creator to it.
+     * {@inheritDoc}
+     * Automatically connects the creator to it.
      * It checks if the username and the lobby name are valid names.
      * Notifies the Client's ClientExceptionNotifier if the lobby has already been created
      *
@@ -154,7 +156,8 @@ public class ControllerImpl implements Controller {
         new Thread(() -> {
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a LOBBY Network Message to a Disconnected Client while creating lobby");
             }
         }).start();
 
@@ -165,7 +168,7 @@ public class ControllerImpl implements Controller {
     }
 
     /**
-     * Connects the client to a pre-existing lobby.
+     * {@inheritDoc}
      * If the lobby doesn't exist it notifies the Client's ClientExceptionNotifier.
      *
      * @param client            the client representing the player who's connecting.
@@ -216,7 +219,8 @@ public class ControllerImpl implements Controller {
         new Thread(() -> {
             try {
                 client.send(new NetworkMessage(ViewType.LOBBY));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a LOBBY Network Message to Disconnected Clients while joining lobby");
             }
         }).start();
 
@@ -226,6 +230,11 @@ public class ControllerImpl implements Controller {
         return lobbyController;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param client the client quitting.
+     */
     @Override
     public synchronized void quit(Client client) {
         if (!clientExceptionsNotifiers.containsKey(client)) { //ignoring disconnected clients

@@ -27,7 +27,7 @@ public class CommonGoalModelView implements Serializable {
     }
 
     /**
-     * Constructor.
+     * Copy Constructor.
      *
      * @param toCopy the common model view to copy.
      */
@@ -38,6 +38,8 @@ public class CommonGoalModelView implements Serializable {
     }
 
     /**
+     * Returns the list of tokens on the common goal.
+     *
      * @return the list of tokens on the common goal.
      */
     public List<Token> getTokens() {
@@ -45,6 +47,7 @@ public class CommonGoalModelView implements Serializable {
     }
 
     /**
+     * Returns the id of that common goal.
      * @return the id of that common goal.
      */
     public int getId() {
@@ -52,6 +55,7 @@ public class CommonGoalModelView implements Serializable {
     }
 
     /**
+     * Returns the description of that common goal.
      * @return the description of that common goal.
      */
     public String getDescription() {

@@ -92,7 +92,7 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
             try {
                 NetworkMessage message = (NetworkMessage) ois.readObject();
                 client.send(message);
-            } catch (ClassNotFoundException ignored) {
+            } catch (ClassNotFoundException e) {
                 System.out.println("Receiving Unrecognized Classes");
             } catch (EOFException e) {
                 throw new RemoteException();
@@ -112,5 +112,10 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     @Override
     public void ping() {
         //not needed in socket implementation
+    }
+
+    @Override
+    public GameController getGameController() {
+        return null;
     }
 }

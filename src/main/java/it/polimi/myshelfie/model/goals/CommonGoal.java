@@ -23,6 +23,8 @@ public abstract class CommonGoal {
     public abstract boolean isVerified(ItemTile[][] bookshelf);
 
     /**
+     * Returns the id of the common goal.
+     *
      * @return the id of the common goal.
      */
     public abstract int getId();
@@ -56,6 +58,7 @@ public abstract class CommonGoal {
     }
 
     /**
+     * Returns the list of the tokens on the common goal.
      * @return the list of the tokens on the common goal.
      */
     public List<Token> getTokens() {
@@ -63,6 +66,7 @@ public abstract class CommonGoal {
     }
 
     /**
+     * Returns the description string of the common goal.
      * @return the description string of the common goal.
      */
     public abstract String getDescription();

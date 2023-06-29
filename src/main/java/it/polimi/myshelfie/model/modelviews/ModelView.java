@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the Model view.
+ * Represents the Model view containing every available lobby of the Model.
  */
 public class ModelView implements Serializable {
     final List<String> lobbies;
@@ -31,6 +31,8 @@ public class ModelView implements Serializable {
     }
 
     /**
+     * Returns the list with the lobby names.
+     *
      * @return the list with the lobby names.
      */
     public List<String> getLobbies() {
@@ -38,6 +40,7 @@ public class ModelView implements Serializable {
     }
 
     /**
+     * Returns the max lobby size of a certain lobby.
      * @param lobby the name of the lobby.
      * @return the max lobby size.
      */
@@ -46,6 +49,7 @@ public class ModelView implements Serializable {
     }
 
     /**
+     * Returns the current lobby size of a certain lobby.
      * @param lobby the name of the lobby.
      * @return the current lobby size.
      */
@@ -54,14 +58,16 @@ public class ModelView implements Serializable {
     }
 
     /**
-     * @return the list of lobbies with their max dimension.
+     * Returns a map associating each lobby name to his max size.
+     * @return a map associating each lobby name to his max size.
      */
     public Map<String, Integer> getMaxSizeMap() {
         return maxSizeMap;
     }
 
     /**
-     * @return the list of lobbies with their current dimension.
+     * Returns a map associating each lobby name to his current size.
+     * @return a map associating each lobby name to his current size.
      */
     public Map<String, Integer> getCurrentSizeMap() {
         return currentSizeMap;

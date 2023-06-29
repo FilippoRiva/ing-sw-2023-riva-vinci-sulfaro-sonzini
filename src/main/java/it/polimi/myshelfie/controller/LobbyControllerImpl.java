@@ -61,6 +61,11 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
         this.chatObserverMap = new HashMap<>();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the name of the player that leaves the lobby.
+     */
     @Override
     public synchronized void exitLobby(String playerName) {
         if (lobbyModel.hasStarted()) {
@@ -88,7 +93,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
         new Thread(() -> {
             try {
                 client.send(new NetworkMessage(ViewType.INIT));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a INIT Network Message to a disconnected client while exiting lobby");
             }
         }).start();
         clientsMap.remove(playerName);
@@ -100,6 +106,12 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the player's name
+     * @param config     the game's settings.
+     */
     @Override
     public synchronized void setConfig(String playerName, GameConfig config) {
         if (!lobbyModel.isRoomOwner(playerName)) {
@@ -122,6 +134,11 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
                 "    Player Num : " + config.getNumPlayers() + "\n");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the name of the player that can start the game.
+     */
     @Override
     public synchronized void startGame(String playerName) {
         if (!lobbyModel.isRoomOwner(playerName)) {
@@ -149,7 +166,8 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
             try {
                 sch.setLobbyController(null);
                 sch.setChatController(null);
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE,"Setting Controllers to a Disconnected Client during game start");
             }
         }
 
@@ -168,13 +186,20 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
             new Thread(() -> {
                 try {
                     client.send(new NetworkMessage(ViewType.GAME));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.log(Level.INFO, "Sending a GAME Network message to a Disconnected Client");
                 }
             }).start();
         }
         ServerLogger.log(Level.FINE, "Game start. Lobby name : " + lobbyName + " | Players : " + clientsMap.keySet());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName           the name of the player.
+     * @param networkLobbyObserver the observer to add.
+     */
     @Override
     public synchronized void addLobbyObserver(String playerName, Observer<LobbyEvent, LobbyModelView> networkLobbyObserver) {
         if (lobbyModel.hasStarted()) {
@@ -184,6 +209,12 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
         lobbyObserverMap.put(playerName, networkLobbyObserver);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the name of the player who's sending the message
+     * @param message    the message written by a player and sent to one or more players.
+     */
     @Override
     public synchronized void addMessage(String playerName, Message message) {
         if (lobbyModel.hasStarted()) {
@@ -196,6 +227,12 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
                 " | Message : " + message.getSender() + "->" + message.getReceiver() + " :: " + message.getMessage());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName          the name of the player.
+     * @param networkChatObserver the observer to add.
+     */
     @Override
     public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
         if (lobbyModel.hasStarted()) {

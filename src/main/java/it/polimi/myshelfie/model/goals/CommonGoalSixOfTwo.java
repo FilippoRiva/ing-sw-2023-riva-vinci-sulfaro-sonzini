@@ -40,11 +40,21 @@ public class CommonGoalSixOfTwo extends CommonGoal {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 3;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Six groups each containing at least 2 tiles of the same type.\n" +

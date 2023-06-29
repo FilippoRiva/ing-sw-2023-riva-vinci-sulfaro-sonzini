@@ -44,6 +44,8 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the last player.
+     *
      * @return the last player.
      */
     public String getLastPlayer() {
@@ -51,6 +53,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the list of earned points.
      * @return the list of earned points.
      */
     public ArrayList<EarnedPoint> getEarnedPoints() {
@@ -58,6 +61,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the list of the player tokens.
      * @return the list of the player tokens.
      */
     public List<Token> getPlayerTokens() {
@@ -65,6 +69,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the list of common goal.
      * @return the list of common goal.
      */
     public List<CommonGoalModelView> getCommonGoals() {
@@ -72,6 +77,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the living room.
      * @return the living room.
      */
     public ItemTile[][] getLivingRoom() {
@@ -79,6 +85,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns how many tiles remained on the board.
      * @return how many tiles remained on the board.
      */
     public int getRemainingTiles() {
@@ -86,6 +93,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the current state.
      * @return the current state.
      */
     public GameState getCurrentState() {
@@ -93,6 +101,7 @@ public class EndTurnModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the current player.
      * @return the current player.
      */
     public String getCurrentPlayer() {

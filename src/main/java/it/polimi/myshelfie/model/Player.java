@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Represents the player.
- * It has a name and everything he needs to play: a bookshelf, a personal goal and also the points and tokens earned during the game and the taken tiles in every turn.
+ * It has a name and everything he needs in order to play: a bookshelf, a personal goal, his taken tiles and the points and tokens earned during the game.
  */
 public class Player {
     private final String name;
@@ -50,11 +50,16 @@ public class Player {
         earnedPoints.add(p);
     }
 
+    /**
+     * Returns a list of EarnedPoints previously added with the addEarnedPoints(EarnedPoint p)
+     * @return a not-null list of EarnedPoints
+     */
     public ArrayList<EarnedPoint> getEarnedPoints() {
         return new ArrayList<>(earnedPoints);
     }
 
     /**
+     * Returns the immutable player name.
      * @return the player name.
      */
     public String getName() {
@@ -104,6 +109,9 @@ public class Player {
         this.bookshelf = bookshelf;
     }
 
+    /**
+     * Calculates and adds to the player the points earned from his Personal Goals and Adjacent Tiles
+     */
     public void calculatePoints() {
         for (PersonalGoal p : personalGoals)
             earnedPoints.add(new EarnedPoint(PointType.PERSONAL, p.achievedPoints(bookshelf.getBookshelfItems())));
@@ -111,14 +119,14 @@ public class Player {
     }
 
     /**
-     * @return the tiles taken from the board.
+     * @return the player's taken tiles previously set by the setTakenTiles() method.
      */
     public List<ItemTile> getTakenTiles() {
         return new ArrayList<>(takenTiles);
     }
 
     /**
-     * Sets the taken tiles from the board to the player.
+     * Sets the taken tiles of this player.
      *
      * @param takenTiles is the list of the tiles taken from the board.
      */
@@ -127,7 +135,7 @@ public class Player {
     }
 
     /**
-     * Resets the taken tiles in every turn.
+     * Resets the taken tiles of the player.
      */
     public void clearTakenTiles() {
         this.takenTiles = new ArrayList<>();

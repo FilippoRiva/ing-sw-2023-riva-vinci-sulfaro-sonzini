@@ -81,6 +81,8 @@ public class PersonalGoal {
     }
 
     /**
+     * Returns a copy of the personal goal.
+     *
      * @return a copy of the personal goal.
      */
     public ItemTile[][] getGoal() {
@@ -92,6 +94,7 @@ public class PersonalGoal {
     }
 
     /**
+     * Returns the id of the personal goal.
      * @return the id of the personal goal.
      */
     public int getId() {

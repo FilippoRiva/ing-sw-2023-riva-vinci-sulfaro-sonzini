@@ -20,6 +20,8 @@ public class ClientExceptionsNotifierModelView implements Serializable {
     }
 
     /**
+     * Returns the last exception notified.
+     *
      * @return the last exception notified.
      */
     public Exception getLastException() {

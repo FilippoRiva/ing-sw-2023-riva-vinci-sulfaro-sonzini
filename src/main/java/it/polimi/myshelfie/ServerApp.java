@@ -105,16 +105,16 @@ public class ServerApp {
                             while (true) {
                                 clientSkeleton.receive(serverConnectionHandler);
                             }
-                        } catch (InvalidClassException ignored) {
-                            ServerLogger.logClientInfo(serverConnectionHandler, "Receiving unknown messages from client. Forcing Disconnection");
+                        } catch (InvalidClassException e){
+                            ServerLogger.logClientInfo(serverConnectionHandler,"Receiving unknown messages from client. Forcing Disconnection");
                         } catch (IOException e) {
                             ServerLogger.log(Level.FINER, "Socket receive failed from " + socket.getInetAddress().getHostAddress());
                         } finally {
                             try {
                                 assert serverConnectionHandler != null;
                                 serverConnectionHandler.close();
-                            } catch (RemoteException ignored) {
-                                ServerLogger.log(Level.WARNING, "Unable to close \"" + serverConnectionHandler.hostName + " | ID : " + serverConnectionHandler.clientID + "\" Connection Handler after disconnection");
+                            } catch (RemoteException e) {
+                                ServerLogger.log(Level.WARNING,"Unable to close \""+serverConnectionHandler.hostName+" | ID : "+serverConnectionHandler.clientID+"\" Connection Handler after disconnection");
                             }
                             ServerLogger.logClientInfo(serverConnectionHandler, "Socket Closed");
                             try {

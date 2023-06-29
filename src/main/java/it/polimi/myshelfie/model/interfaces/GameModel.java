@@ -18,6 +18,8 @@ import java.util.List;
 public interface GameModel {
 
     /**
+     * Returns the current GameState previously set by the {@link #setState(GameState)}
+     *
      * @return the current state previously set by setState().
      */
     GameState getState();
@@ -61,7 +63,7 @@ public interface GameModel {
     void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException;
 
     /**
-     * Check if the player achieved the commonGoal and add the obtained tokens to the player.
+     * Checks if the player achieved a commonGoal and adds the obtained tokens to the player.
      * Has to be called at the end of a player's turn.
      *
      * @param playerName the player playing
@@ -100,7 +102,7 @@ public interface GameModel {
     boolean isBookshelfFull(String playerName);
 
     /**
-     * Cheks whether the player playing is the last one.
+     * Checks whether the player playing is the last one.
      *
      * @param playerName the player to check.
      * @return true if it's the last one, false otherwise.
@@ -129,11 +131,13 @@ public interface GameModel {
     FullGameModelView getGameModelView();
 
     /**
+     * Returns the game name.
      * @return the game name.
      */
     String getName();
 
     /**
+     * Returns the lobby name.
      * @return the lobby name.
      */
     String getLobbyName();

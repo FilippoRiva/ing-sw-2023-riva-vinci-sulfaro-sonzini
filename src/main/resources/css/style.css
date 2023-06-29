@@ -53,7 +53,7 @@
 
     -fx-text-fill: white;
     -fx-text-alignment: center;
-    -fx-font-size: 50;
+    -fx-font-size: 45;
 }
 
 .myButton:hover {
@@ -63,6 +63,13 @@
 .arrow {
     -fx-background-image: url('../images/arrow.jpg');
     -fx-background-size: 100;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
+
+.home {
+    -fx-background-image: url('../images/house.png');
+    -fx-background-size: 70;
     -fx-background-position: center;
     -fx-background-color: transparent;
 }
