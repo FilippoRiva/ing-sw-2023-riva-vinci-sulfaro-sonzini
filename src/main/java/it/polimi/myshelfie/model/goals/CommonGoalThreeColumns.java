@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Three columns. Maximum three different types per column. Different columns can have different combinations.
+ */
 public class CommonGoalThreeColumns extends CommonGoal {
     /**
      * Checks the common goal.

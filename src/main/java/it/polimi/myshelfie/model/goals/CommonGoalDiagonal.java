@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Five tiles of the same type forming a diagonal.
+ */
 public class CommonGoalDiagonal extends CommonGoal {
     private int width;
 

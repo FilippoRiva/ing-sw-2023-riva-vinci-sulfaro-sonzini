@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Six groups each containing at least 2 tiles of the same type. The tiles of one group can be different from those of another group.
+ */
 public class CommonGoalSixOfTwo extends CommonGoal {
     /**
      * Checks common goal.

@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Two columns each formed by 6 different types of tiles.
+ */
 public class CommonGoalTwoColumns extends CommonGoal {
     /**
      * Checks theh common goal.

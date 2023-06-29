@@ -5,6 +5,10 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 import java.util.Arrays;
 
+
+/**
+ * Common goal: Two groups containing 4 tiles of the same type in a 2x2 square.
+ */
 public class CommonGoalTwoSquares extends CommonGoal {
     /**
      * Checks the common goal.

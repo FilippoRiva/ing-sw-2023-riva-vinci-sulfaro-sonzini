@@ -5,6 +5,10 @@ import it.polimi.myshelfie.model.ItemTileType;
 
 import java.util.Arrays;
 
+
+/**
+ * Common goal: Eight tiles of the same type.
+ */
 public class CommonGoalEightTiles extends CommonGoal {
     /**
      * Checks the common goal.

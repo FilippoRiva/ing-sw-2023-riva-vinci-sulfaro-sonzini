@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Five columns of increasing or decreasing height.
+ */
 public class CommonGoalStairs extends CommonGoal {
     int height;
     int width;

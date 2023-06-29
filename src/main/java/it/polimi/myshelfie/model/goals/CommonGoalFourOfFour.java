@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Four groups each containing at least 4 tiles of the same type. The tile of one group can be different from those of another group.
+ */
 public class CommonGoalFourOfFour extends CommonGoal {
     /**
      * Checks the common goal.

@@ -3,6 +3,10 @@ package it.polimi.myshelfie.model.goals;
 import it.polimi.myshelfie.model.ItemTile;
 import it.polimi.myshelfie.model.ItemTileType;
 
+
+/**
+ * Common goal: Two lines each formed by 5 different types of tiles.
+ */
 public class CommonGoalTwoLines extends CommonGoal {
     /**
      * Checks the common goal
