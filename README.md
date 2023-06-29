@@ -126,7 +126,8 @@ powershell.exe .\client.ps1  [ -n ] [ client_ip server_ip ]
 If launching these commands you get an error like "+ FullyQualifiedErrorId : UnauthorizedAccess" follow these steps:
 1. Open a PowerShell window as administrator
 2. Type `Set-ExecutionPolicy Unrestricted` and press Enter
-3. Confirm your choice typing S and press Enter<\br>
+3. Confirm your choice typing S and press Enter
+
 Now you are able to launch the application from PowerShell.
 
 
@@ -147,5 +148,32 @@ properly to the java RMI server.
 
 If your terminal doesn't support ANSI escape sequences, or you're experiencing weird textual UI behaviour, please use
 the -n option.
+
+### Additional options
+When launching the server it's possible to set the serverLog level of detail.
+ServerLog is used to get an ongoing list of updates of what's happening in the server, at various level of detail:
+- SEVERE: shows bugs and critical errors (lowest level of detail);
+- WARNING: shows non critical errors;
+- INFO: shows generic network and controller info;
+- CONFIG: shows config;
+- FINE: shows network additional info;
+- FINER: shows controller info;
+- FINEST: shows debug controller info (highest level of detail);
+
+By setting a certain level of detail, messages from lower levels of detail are also shown.
+
+This feature is used for monitoring client interactions with the server.
+
+To do this is necessary to set the LOG_LEVEL environmental variable.
+
+#### Linux/MacOS
+``` bash
+export LOG_LEVEL=<LEVEL_OF_DETAIL>
+```
+####Windows
+``` bash
+$Env:LOG_LEVEL = "<LEVEL_OF_DETAIL>"
+```
+
 
 
