@@ -43,6 +43,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the client.
      * @return the client.
      */
     public Client getClient() {
@@ -50,6 +51,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the server connection handler.
      * @return the server connection handler.
      */
     public ServerConnectionHandlerImpl getServerConnectionHandler() {
@@ -57,6 +59,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the name of the player.
      * @return the name of the player.
      */
     public String getUsername() {
@@ -64,6 +67,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the controller.
      * @return the controller.
      */
     public Controller getController() {
@@ -71,6 +75,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the lobby controller.
      * @return the lobby controller.
      */
     public LobbyController getLobbyController() {
@@ -78,6 +83,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the game controller.
      * @return the game controller.
      */
     public GameController getGameController() {
@@ -85,6 +91,7 @@ public class ControllerGroup {
     }
 
     /**
+     * Returns the chat controller.
      * @return the chat controller.
      */
     public ChatController getChatController() {

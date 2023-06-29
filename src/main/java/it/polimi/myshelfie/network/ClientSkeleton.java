@@ -22,7 +22,7 @@ public class ClientSkeleton implements Client {
      * Constructor.
      *
      * @param socket the socket.
-     * @throws RemoteException
+     * @throws RemoteException we cannot get the object output/input streams
      */
     public ClientSkeleton(Socket socket) throws RemoteException {
         this.socket = socket;
@@ -39,16 +39,28 @@ public class ClientSkeleton implements Client {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return the socket address
+     */
     @Override
     public String getHostName() {
         return socket.getInetAddress().getHostAddress();
     }
 
+    /**
+     * Used only in RMI implementation
+     */
     @Override
-    public void handshake(ServerConnectionHandler server) throws RemoteException {
+    public void handshake(ServerConnectionHandler server){
         //not needed in socket programming
     }
 
+    /**
+     * {@inheritDoc}
+     * @param networkMessage the message to send.
+     * @throws RemoteException if we cannot send the network message over the object output stream
+     */
     @Override
     public void send(NetworkMessage networkMessage) throws RemoteException {
         synchronized (sendLock) {
@@ -59,12 +71,14 @@ public class ClientSkeleton implements Client {
             } catch (IOException e) {
                 throw new RemoteException("Cannot send network message", e);
             }
-            sendLock.notifyAll();
         }
     }
 
+    /**
+     * Used only in RMI implementation
+     */
     @Override
-    public void lifeline() throws RemoteException {
+    public void lifeline() {
         //not needed in socket programming
     }
 
@@ -72,7 +86,7 @@ public class ClientSkeleton implements Client {
      * Used to receive messages
      *
      * @param serverConnectionHandler the server connection handler.
-     * @throws IOException
+     * @throws IOException if the object input stream read fails.
      */
     public void receive(ServerConnectionHandler serverConnectionHandler) throws IOException {
         synchronized (receiveLock) {
@@ -82,7 +96,6 @@ public class ClientSkeleton implements Client {
             } catch (ClassNotFoundException ignored) {
                 ServerLogger.logClientInfo((ServerConnectionHandlerImpl) serverConnectionHandler,"Receiving unrecognized messages. ");
             }
-            receiveLock.notifyAll();
         }
     }
 }

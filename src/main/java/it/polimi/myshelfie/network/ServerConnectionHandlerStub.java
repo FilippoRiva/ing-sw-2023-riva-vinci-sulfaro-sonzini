@@ -28,7 +28,7 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
      *
      * @param ip   the ip.
      * @param port the port.
-     * @throws RemoteException
+     * @throws RemoteException if we are not able to create input/output streams or connect to the server
      */
     public ServerConnectionHandlerStub(String ip, int port) throws RemoteException {
         this.ip = ip;
@@ -51,6 +51,11 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param networkMessage the message to send.
+     * @throws RemoteException if we are not able to send a message over the object output stream
+     */
     @Override
     public void send(NetworkMessage networkMessage) throws RemoteException {
         synchronized (sendLock) {
@@ -64,20 +69,35 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
+    /**
+     * Does nothing.
+     * @param gameController the controller to set.
+     */
     @Override
-    public void setGameController(GameController gameController) throws RemoteException {
+    public void setGameController(GameController gameController){
     }
 
+    /**
+     * Does nothing.
+     * @param chatController the controller to set.
+     */
     @Override
-    public void setChatController(ChatController chatController) throws RemoteException {
+    public void setChatController(ChatController chatController){
     }
 
+    /**
+     * Does nothing.
+     * @param lobbyController the controller to set.
+     */
     @Override
-    public void setLobbyController(LobbyController lobbyController) throws RemoteException {
+    public void setLobbyController(LobbyController lobbyController) {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
-    public void lifeline() throws RemoteException {
+    public void lifeline(){
         //not needed in socket implementation
     }
 
@@ -85,7 +105,7 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
      * Used to receive messages.
      *
      * @param client the client.
-     * @throws IOException
+     * @throws IOException if the object input stream read fails.
      */
     public void receive(ClientImpl client) throws IOException {
         synchronized (receiveLock) {
@@ -100,6 +120,10 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws RemoteException if the socket cannot be closed.
+     */
     @Override
     public void close() throws RemoteException {
         try {
@@ -109,11 +133,18 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
         }
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void ping() {
         //not needed in socket implementation
     }
 
+    /**
+     * Does nothing.
+     * @return null.
+     */
     @Override
     public GameController getGameController() {
         return null;

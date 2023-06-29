@@ -33,10 +33,9 @@ public class NetworkMessage implements Serializable {
         throw new RuntimeException("Not Implemented");
     });
 
-    //CLIENT TO SERVER MESSAGES
-
     /**
-     * Constructor when Join or Create requests are called.
+     * Constructor to make a Join or Create requests.
+     * To be used as a message from the client to the server.
      *
      * @param evt        a view event.
      * @param playerName the player name.
@@ -79,7 +78,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Config request is called.
+     * Constructor to make a Config request.
+     * To be used as a message from the client to the server.
      *
      * @param evt        a view event.
      * @param gameConfig the game config to set.
@@ -96,7 +96,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a message is sent in the chat.
+     * Constructor to make a Message request.
+     * To be used as a message from the client to the server.
      *
      * @param evt     a view event.
      * @param message the message sent.
@@ -114,7 +115,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Start or Exit request is called.
+     * Constructor to make a Start or Exit request.
+     * To be used as a message from the client to the server.
      *
      * @param evt a view event.
      * @throws InvalidParameterException if evt is not ViewEvent.START_REQUEST or ViewEvent.EXIT_REQUEST.
@@ -150,9 +152,10 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Draw or Organize request is called.
+     * Constructor to make Draw or Organize request.
+     * To be used as a message from the client to the server.
      *
-     * @param evt a view event.
+     * @param evt                     a view event.
      * @param positionsOrOrderedTiles list of positions of the ordered tiles (drawn or organized).
      * @throws InvalidParameterException if evt is not ViewEvent.DRAW_REQUEST or ViewEvent.ORGANIZE_REQUEST.
      */
@@ -176,9 +179,10 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor when an Insert request is called.
+     * Constructor to make an Insert Request.
+     * To be used as a message from the client to the server.
      *
-     * @param evt a view event.
+     * @param evt    a view event.
      * @param column the column where to insert the taken tiles.
      * @throws InvalidParameterException if evt is not ViewEvent.INSERT_REQUEST.
      */
@@ -194,9 +198,9 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor to set a specific ViewType.
-     *
-     * @param viewType the type of view to set
+     * Constructor to make a Select View message.
+     * To be used as a message from the server to the client.
+     * @param viewType the ViewType to set.
      */
     public NetworkMessage(ViewType viewType) {
         this.messageType = MessageType.SELECT_VIEW_MESSAGE;
@@ -206,7 +210,8 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor when a LobbyEvent occurs.
+     * Constructor to make a Lobby Message.
+     * To be used as a message from the server to the client.
      *
      * @param evt the lobby event.
      * @param lobbyModelView the LobbyModelView to set.
@@ -219,7 +224,8 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor when a GameEvent occurs. It updates the ModelViews based on the event.
+     * Constructor to make a Game Message. It updates the ModelViews based on the event.
+     * To be used as a message from the server to the client.
      *
      * @param evt the game event.
      * @param gameModelView the GameModelView to set.
@@ -240,7 +246,8 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor when an Exception Event occurs.
+     * Constructor to make an Exception Message.
+     * To be used as a message from the server to the client.
      * @param evt the exception event.
      * @param exceptionsNotifierModelView the ClientExceptionNotifierModelView to set.
      */
@@ -251,7 +258,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Chat Event occurs.
+     * Constructor to make a Chat Message.
+     * To be used as a message from the server to the client.
      * @param evt the chat event.
      * @param chatModelView the ChatModelVIew to set.
      */
@@ -263,7 +271,8 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor when a Model Event occurs.
+     * Constructor to make a Model Message.
+     * To be used as a message from the server to the client.
      * @param evt the model event.
      * @param modelView the ModelView to set.
      */
@@ -275,7 +284,8 @@ public class NetworkMessage implements Serializable {
 
 
     /**
-     * Constructor whwen the message type is a Ping.
+     * Constructor to make a Ping message
+     * To be used as a message from the server to the client.
      */
     public NetworkMessage() {
         this.messageType = MessageType.PING;
@@ -291,7 +301,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Executes the method invoked on the view from the client.
+     * Executes the method invoked on the view by the server.
+     * To be used when receiving messages client-side.
      *
      * @param view the view of the client.
      */
@@ -299,12 +310,19 @@ public class NetworkMessage implements Serializable {
         clientFunction.accept(view);
     }
 
-    //SERVER TO CLIENT MESSAGES
+    /**
+     * Executes the method invoked on the controller by the client.
+     * To be used when receiving message server-side
+     *
+     * @param controllers the group of controllers and others parameters needed to execute the server message.
+     */
     public void serverExecute(ControllerGroup controllers) {
         serverFunction.accept(controllers);
     }
 
     /**
+     * Returns the message type.
+     *
      * @return the message type.
      */
     public MessageType getMessageType() {
@@ -312,6 +330,7 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
+     * Returns the event.
      * @return the event.
      */
     public Object getEvent() {

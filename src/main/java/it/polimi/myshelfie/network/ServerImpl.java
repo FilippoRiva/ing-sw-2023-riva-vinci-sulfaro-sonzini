@@ -19,7 +19,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * Constructor.
      *
      * @param controller the controller.
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     public ServerImpl(Controller controller) throws RemoteException {
         super();
