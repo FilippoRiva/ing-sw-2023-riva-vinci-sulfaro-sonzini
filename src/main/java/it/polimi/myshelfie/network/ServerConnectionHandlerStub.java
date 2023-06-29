@@ -65,10 +65,6 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     }
 
     @Override
-    public void setGameController(GameController gameController) throws RemoteException {
-    }
-
-    @Override
     public void setChatController(ChatController chatController) throws RemoteException {
     }
 
@@ -117,5 +113,9 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
     @Override
     public GameController getGameController() {
         return null;
+    }
+
+    @Override
+    public void setGameController(GameController gameController) throws RemoteException {
     }
 }

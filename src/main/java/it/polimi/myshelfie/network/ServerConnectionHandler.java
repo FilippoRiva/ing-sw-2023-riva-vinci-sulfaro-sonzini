@@ -21,14 +21,6 @@ public interface ServerConnectionHandler extends Remote {
     void send(NetworkMessage networkMessage) throws RemoteException;
 
     /**
-     * Associates the game controller.
-     *
-     * @param gameController the controller to set.
-     * @throws RemoteException
-     */
-    void setGameController(GameController gameController) throws RemoteException;
-
-    /**
      * Associates the chat controller.
      *
      * @param chatController the controller to set.
@@ -64,5 +56,14 @@ public interface ServerConnectionHandler extends Remote {
      * @throws RemoteException
      */
     void ping() throws RemoteException;
-    GameController getGameController();
+
+    GameController getGameController() throws RemoteException;
+
+    /**
+     * Associates the game controller.
+     *
+     * @param gameController the controller to set.
+     * @throws RemoteException
+     */
+    void setGameController(GameController gameController) throws RemoteException;
 }

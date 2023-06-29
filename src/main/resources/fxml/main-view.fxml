@@ -10,14 +10,15 @@
             fx:controller="it.polimi.myshelfie.view.graphical.controllers.MainViewController">
     <fx:include fx:id="preGame" source="pre-game-view.fxml" AnchorPane.topAnchor="0.0"/>
     <fx:include fx:id="game" source="game-view.fxml"/>
-    <StackPane id="criticalErrorPane" fx:id="criticalErrorPane" style="-fx-border-color: black; -fx-border: 5px solid">
+    <StackPane fx:id="criticalErrorPane" styleClass="borderError">
         <ImageView fx:id="criticalErrorBackground" cache="true" pickOnBounds="true" StackPane.alignment="CENTER">
             <Image url="@../images/darkWood.jpg"/>
         </ImageView>
         <VBox alignment="CENTER" spacing="20.0" StackPane.alignment="CENTER">
             <Label fx:id="errorLabel" alignment="CENTER" prefHeight="114.0" prefWidth="621.0"
-                   style="-fx-font-size: 30; -fx-text-fill: #ce954b;" textAlignment="CENTER" wrapText="true" />
-            <Button styleClass="home" fx:id="errorButton" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0"
+                   style="-fx-font-size: 30; -fx-text-fill: #ce954b;" textAlignment="CENTER" wrapText="true"/>
+            <Button styleClass="home" fx:id="errorButton" maxHeight="70.0" maxWidth="70.0" minHeight="70.0"
+                    minWidth="70.0"
                     onMouseClicked="#onErrorButtonMouseClicked" prefHeight="70.0"
                     prefWidth="70.0"/>
         </VBox>

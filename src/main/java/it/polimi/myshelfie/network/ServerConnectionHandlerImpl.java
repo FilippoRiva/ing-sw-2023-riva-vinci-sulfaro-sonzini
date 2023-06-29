@@ -90,22 +90,6 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
 
     @Override
-    public synchronized void setGameController(GameController gameController) throws RemoteException {
-        if (!connected) throw new RemoteException();
-        this.gameController = gameController;
-        if (gameController == null) return;
-        gameController.addGameObserver(playerName, (evt, gameModelView) -> {
-            if (evt == null) return;
-            new Thread(() -> {
-                try {
-                    client.send(new NetworkMessage(evt, gameModelView));
-                } catch (RemoteException ignored) {
-                }
-            }).start();
-        });
-    }
-
-    @Override
     public synchronized void setChatController(ChatController chatController) throws RemoteException {
         if (!connected) throw new RemoteException();
         this.chatController = chatController;
@@ -165,6 +149,22 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     @Override
     public GameController getGameController() {
         return gameController;
+    }
+
+    @Override
+    public synchronized void setGameController(GameController gameController) throws RemoteException {
+        if (!connected) throw new RemoteException();
+        this.gameController = gameController;
+        if (gameController == null) return;
+        gameController.addGameObserver(playerName, (evt, gameModelView) -> {
+            if (evt == null) return;
+            new Thread(() -> {
+                try {
+                    client.send(new NetworkMessage(evt, gameModelView));
+                } catch (RemoteException ignored) {
+                }
+            }).start();
+        });
     }
 
     @Override
