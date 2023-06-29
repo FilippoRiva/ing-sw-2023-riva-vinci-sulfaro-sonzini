@@ -12,6 +12,12 @@ public class LobbyFullException extends Exception {
         else this.message = "Lobby not full";
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the Message
+     **/
+    @Override
     public String getMessage() {
         return message;
     }

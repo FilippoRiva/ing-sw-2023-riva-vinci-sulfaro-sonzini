@@ -40,11 +40,14 @@ public interface Model {
     void removeModelObserver(Observer<ModelEvent, ModelView> obs);
 
     /**
+     * Returns the model view.
+     *
      * @return the model view.
      */
     ModelView getModelView();
 
     /**
+     * To be used by the controller to get new Exception Notifiers.
      * @return the client exception notifier.
      */
     ClientExceptionsNotifier getNewClientExceptionNotifier();

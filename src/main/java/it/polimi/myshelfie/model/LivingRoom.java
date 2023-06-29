@@ -21,27 +21,6 @@ public class LivingRoom {
     /**
      * Creates a new empty livingRoom of size x size dimension. The livingRoom will contain a bag of item tiles with
      * a set number of tile per each tile type. The coordinate system has 0,0 at the center of the board.
-     * Example of a 9x9 board<br>
-     * -----------------------------------------------------<br>
-     * -----|-----|-----|-1,+4|+0,+4|-----|-----|-----|-----<br>
-     * -----------------------------------------------------<br>
-     * -----|-----|-----|-1,+3|+0,+3|+1,+3|-----|-----|-----<br>
-     * -----------------------------------------------------<br>
-     * -----|-----|-2,+2|-1,+2|+0,+2|+1,+2|+2,+2|-----|-----<br>
-     * -----------------------------------------------------<br>
-     * -----|-3,+1|-2,+1|-1,+1|+0,+1|+1,+1|+2,+1|+3,+1|+4,+1<br>
-     * -----------------------------------------------------<br>
-     * -4,+0|-3,+0|-2,+0|-1,+0|+0,+0|+1,+0|+2,+0|+3,+0|+4,+0<br>
-     * -----------------------------------------------------<br>
-     * -4,-1|-3,-1|-2,-1|-1,-1|+0,-1|+1,-1|+2,-1|+3,-1|-----<br>
-     * -----------------------------------------------------<br>
-     * -----|-----|-2,-2|-1,-2|+0,-2|+1,-2|+2,-2|-----|-----<br>
-     * -----------------------------------------------------<br>
-     * -----|-----|-----|-1,-3|+0,-3|+1,-3|-----|-----|-----<br>
-     * -----------------------------------------------------<br>
-     * -----|-----|-----|-----|+0,-4|+1,-4|-----|-----|-----<br>
-     * -----------------------------------------------------<br>
-     *
      * @param numTilesPerType the number of tiles of a single tile type
      * @param size            the odd size of the new board
      */
@@ -154,15 +133,25 @@ public class LivingRoom {
     }
 
     /**
+     * Fills a Stair given an x and y coordinates a size of the stair and it's orientation.
      * @param x           upper left corner x coordinate
      * @param y           upper left corner y coordinate
      * @param size        size of the stair (they are always squares)
-     * @param orientation orientation of the stair.
-     *                    The orientation parameters can be:<br>
+     * @param orientation orientation of the stair. The orientation parameters can be:
+     *                    <ul>
+     *                    <li>
      *                    0 - from lower left to upper right<br>
+     *                    </li>
+     *                    <li>
      *                    1 - from lower right to upper left<br>
+     *                    </li>
+     *                    <li>
      *                    2 - from upper right to lower left<br>
+     *                    </li>
+     *                    <li>
      *                    3 - from upper left to lower right
+     *                    </li>
+     *                    </ul>
      */
     private void fillStair(int x, int y, int size, int orientation) {
         if (bag.empty()) return;
@@ -285,12 +274,18 @@ public class LivingRoom {
         return oldTile;
     }
 
-    //TODO return copy
+    /**
+     * Returns the table of this livingRoom.
+     *
+     * @return and ItemTile[][] containing the ItemTiles of the living room.
+     */
     public ItemTile[][] getTable() {
         return table;
     }
 
     /**
+     * Checks if the livingRoom is refillable
+     *
      * @return true if every remaining tile has no neighbour tile
      */
     public boolean isRefillable() {
@@ -363,6 +358,11 @@ public class LivingRoom {
         return p.getX() == -offset || getTile(x - 1, y) == null || getTile(x - 1, y).getType() == ItemTileType.EMPTY;
     }
 
+    /**
+     * Returns the bag of this livingRoom containing the remaining tiles.
+     *
+     * @return the bag of this livingRoom
+     */
     public Stack<ItemTile> getBag() {
         return bag;
     }

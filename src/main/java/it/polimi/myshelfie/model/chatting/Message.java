@@ -32,6 +32,8 @@ public class Message implements Serializable {
     }
 
     /**
+     * Returns the sender's name.
+     *
      * @return the sender's name.
      */
     public String getSender() {
@@ -39,6 +41,7 @@ public class Message implements Serializable {
     }
 
     /**
+     * Returns the receiver's name.
      * @return the receiver's name.
      */
     public String getReceiver() {
@@ -46,14 +49,15 @@ public class Message implements Serializable {
     }
 
     /**
+     * Returns the text message String.
      * @return the text message String.
      */
-
     public String getMessage() {
         return message;
     }
 
     /**
+     * Returns the local time.
      * @return the local time.
      */
     public LocalTime getTime() {
@@ -61,6 +65,7 @@ public class Message implements Serializable {
     }
 
     /**
+     * Returns the current hour.
      * @return the current hour.
      */
     public int getHour() {
@@ -68,6 +73,7 @@ public class Message implements Serializable {
     }
 
     /**
+     * Returns the current minute.
      * @return the current minute.
      */
     public int getMinute() {
@@ -75,6 +81,7 @@ public class Message implements Serializable {
     }
 
     /**
+     * Returns the current hour and minute.
      * @return the current hour and minute.
      */
     public String getTimeHHmm() {

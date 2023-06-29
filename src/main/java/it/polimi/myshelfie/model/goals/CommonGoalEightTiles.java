@@ -32,11 +32,21 @@ public class CommonGoalEightTiles extends CommonGoal {
         return Arrays.stream(counter).anyMatch(num -> num >= 8);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 8;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Eight tiles of the same type";

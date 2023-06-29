@@ -30,6 +30,8 @@ public class DrawModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the player playing.
+     *
      * @return the player playing.
      */
     public String getCurrentPlayer() {
@@ -37,6 +39,7 @@ public class DrawModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the current state.
      * @return the current state.
      */
     public GameState getCurrentState() {
@@ -44,6 +47,7 @@ public class DrawModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the living room.
      * @return the living room.
      */
     public ItemTile[][] getLivingRoom() {
@@ -51,6 +55,7 @@ public class DrawModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the taken tiles in the draw move.
      * @return the taken tiles in the draw move.
      */
     public List<ItemTile> getTakenTiles() {

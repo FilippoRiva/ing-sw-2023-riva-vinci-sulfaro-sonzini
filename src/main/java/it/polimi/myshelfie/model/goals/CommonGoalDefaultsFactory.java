@@ -13,7 +13,7 @@ import java.util.List;
 public class CommonGoalDefaultsFactory {
 
     /**
-     * Generate a list of common goals.
+     * Generate a random list of common goals.
      *
      * @param playerNum is the number of players in the game.
      * @return a list containing random common goals with Tokens already stacked on top.

@@ -68,11 +68,21 @@ public class CommonGoalFourOfFour extends CommonGoal {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 2;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Four groups each containing at least 4 tiles of the same type.\n" +

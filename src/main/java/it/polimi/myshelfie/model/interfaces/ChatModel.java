@@ -30,5 +30,8 @@ public interface ChatModel {
      */
     void removeChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> obs);
 
+    /**
+     * Remove every chat observer of this ChatModel
+     */
     void removeChatObservers();
 }

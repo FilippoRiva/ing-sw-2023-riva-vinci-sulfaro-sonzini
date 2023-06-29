@@ -22,6 +22,8 @@ public class EarnedPoint implements Serializable {
     }
 
     /**
+     * Returns the point type.
+     *
      * @return the point type.
      */
     public PointType getType() {
@@ -29,6 +31,7 @@ public class EarnedPoint implements Serializable {
     }
 
     /**
+     * Returns the point value.
      * @return the point value.
      */
     public int getValue() {

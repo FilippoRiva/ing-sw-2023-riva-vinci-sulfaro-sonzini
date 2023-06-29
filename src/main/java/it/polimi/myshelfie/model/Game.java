@@ -50,7 +50,7 @@ public class Game implements GameModel, LobbyModel {
         try {
             this.gameConfig = new GameConfig(2);
         } catch (InvalidParameterException e) {
-            ServerLogger.log(Level.SEVERE,"Critical Failure in Game Initialization. Unable to create Default Game Config. Shutting Down");
+            ServerLogger.log(Level.SEVERE, "Critical Failure in Game Initialization. Unable to create Default Game Config. Shutting Down");
             e.printStackTrace();
             System.exit(-1);
         }
@@ -60,6 +60,13 @@ public class Game implements GameModel, LobbyModel {
         this.lobbyName = roomName;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName is the name of the new player that has to be added to the game.
+     * @throws LobbyFullException        if the lobby is full
+     * @throws InvalidParameterException if the playerName is not available
+     */
     @Override
     public synchronized void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
         if (isLobbyFull()) throw new LobbyFullException(true);
@@ -95,6 +102,12 @@ public class Game implements GameModel, LobbyModel {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName is the name of the player that has to be removed from the game.
+     * @throws InvalidParameterException if the requested player is not in this lobby.
+     */
     @Override
     public synchronized void removePlayer(String playerName) throws InvalidParameterException {
         for (Player p : players) {
@@ -109,11 +122,21 @@ public class Game implements GameModel, LobbyModel {
         throw new InvalidParameterException("player is not in this lobby");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return true if the lobby is empty
+     */
     @Override
     public boolean isLobbyEmpty() {
         return players.size() == 0;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws LobbyFullException if the lobby is not full.
+     */
     @Override
     public synchronized void initialize() throws LobbyFullException {
         if (!isLobbyFull()) throw new LobbyFullException(false);
@@ -155,6 +178,9 @@ public class Game implements GameModel, LobbyModel {
         return PersonalGoalFactory.getDistinctPersonalGoals(numOfPersonalGoal, gameConfig.getBookshelfDimension(), numOfPlayers, gameConfig.getPersonalGoalRatio());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void nextTurn() {
         int currentTurn;
@@ -168,6 +194,9 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void calculateWinResults() {
         for (Player player : players) {
@@ -175,6 +204,11 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the name of the player who obtains the token.
+     */
     @Override
     public void addEndToken(String playerName) {
         for (Player p : players) {
@@ -184,11 +218,21 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the current GameState.
+     */
     @Override
     public GameState getState() {
         return currentState;
     }
 
+    /**
+     * Sets a {@link GameState}
+     *
+     * @param state the new state.
+     */
     @Override
     public synchronized void setState(GameState state) {
         if (state == GameState.FIRST_DRAW) {
@@ -216,6 +260,18 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * @param positions  the positions of the tiles that have to be removed from the board, where the first in the list is the first one to be
+     *                   inserted into the player's bookshelf, and the last one is the last one to be inserted.
+     * @param playerName the name of the player drawing the tiles.
+     * @throws InvalidParameterException if the player is :
+     *                                   <ul>
+     *                                       <li>playing in the wrong turn</li>
+     *                                       <li>drawing and empty list of Position</li>
+     *                                       <li>drawing non valid positions</li>
+     *                                       <li>drawing more tiles then allowed</li>
+     *                                   </ul>
+     */
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) throws InvalidParameterException {
         if (!playerName.equals(currentPlayer.getName()))
@@ -249,6 +305,13 @@ public class Game implements GameModel, LobbyModel {
         return !Position.arePositionsMisaligned(positions);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param orderedTiles the tiles taken form the board.
+     * @param playerName   the player playing.
+     * @throws InvalidParameterException if the player is playing in the wrong turn or the ordered tiles are different from the taken ones in the draw move.
+     */
     @Override
     public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) throws InvalidParameterException {
         if (!playerName.equals(currentPlayer.getName()))
@@ -266,6 +329,14 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the player playing.
+     * @param column     the chose column to insert the tiles in.
+     * @throws InvalidParameterException if the player is playing in the wrong turn or if the column is not available or has not yet drawn any tile.
+     * @throws FullColumnException       if the requested column is full.
+     */
     @Override
     public synchronized void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
         if (!playerName.equals(currentPlayer.getName()))
@@ -288,6 +359,11 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the player playing
+     */
     @Override
     public synchronized void checkCommonGoal(String playerName) {
         for (CommonGoal cm : commonGoals) {
@@ -320,17 +396,31 @@ public class Game implements GameModel, LobbyModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void refillLivingRoom() {
         livingRoom.refill();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the Chat Model of this game
+     */
     @Override
     public ChatModel getChatModel() {
         return chatSystem;
 
     }
 
+    /**
+     * {@inheritDoc}.
+     * If the lobby has not been initialized it returns null.
+     *
+     * @return the GameModel
+     */
     @Override
     public GameModel getGameModel() {
         if (!hasStarted()) return null; //lobby has not been initialized
@@ -338,6 +428,7 @@ public class Game implements GameModel, LobbyModel {
     }
 
     /**
+     * Returns the name of the player that created the lobby.
      * @return the name of the player that created the lobby.
      */
     public String getRoomOwner() {
@@ -345,6 +436,8 @@ public class Game implements GameModel, LobbyModel {
     }
 
     /**
+     * Returns the name of the player playing in that turn.
+     *
      * @return the name of the player playing in that turn.
      */
     public String getCurrentPlayer() {
@@ -352,6 +445,8 @@ public class Game implements GameModel, LobbyModel {
     }
 
     /**
+     * Returns the name of the last player who played.
+     *
      * @return the name of the last player who played.
      */
     public String getLastPlayer() {
@@ -362,6 +457,11 @@ public class Game implements GameModel, LobbyModel {
         return players.get(index - 1).getName();
     }
 
+    /**
+     * Returns the Player associated with a certain playerName.
+     * @param playerName the requested playerName.
+     * @return the {@link Player} associated whit the playerName.
+     */
     public Player getPlayer(String playerName) {
         for (Player p : players) {
             if (p.getName().equals(playerName)) {
@@ -393,11 +493,21 @@ public class Game implements GameModel, LobbyModel {
         return players.get(players.size() - 1).getName().equals(playerName);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the lobby name
+     */
     @Override
     public String getLobbyName() {
         return lobbyName;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs the observer to add.
+     */
     @Override
     public synchronized void addGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.addObserver(obs);
@@ -405,16 +515,31 @@ public class Game implements GameModel, LobbyModel {
         gameObservable.notifyObservers(new FullGameModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs the game observer to remove.
+     */
     @Override
     public synchronized void removeGameObserver(Observer<GameEvent, GameModelView> obs) {
         gameObservable.deleteObserver(obs);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the {@link FullGameModelView} of this game
+     */
     @Override
     public synchronized FullGameModelView getGameModelView() {
         return new FullGameModelView(this);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs the observer to add.
+     */
     @Override
     public synchronized void addLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.addObserver(obs);
@@ -422,17 +547,27 @@ public class Game implements GameModel, LobbyModel {
         lobbyObservable.notifyObservers(new LobbyModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs the observer to remove.
+     */
     @Override
     public synchronized void removeLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs) {
         lobbyObservable.deleteObserver(obs);
     }
 
+    /**
+     * {@inheritDoc}
+     * @return the {@link LobbyModelView}
+     */
     @Override
     public synchronized LobbyModelView getLobbyModelView() {
         return new LobbyModelView(this);
     }
 
     /**
+     * Returns the list of the players in the game.
      * @return the list of the players in the game.
      */
     public List<Player> getPlayers() {
@@ -458,12 +593,20 @@ public class Game implements GameModel, LobbyModel {
     }
 
     /**
-     * @return the game config.
+     * Returns the {@link GameConfig} previously set in this Game.
+     *
+     * @return the {@link GameConfig}.
      */
     public GameConfig getGameConfig() {
         return gameConfig;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param gameConfig are the configurations for the game.
+     * @throws InvalidParameterException if the players in the game config are less then the current players in this lobby
+     */
     @Override
     public synchronized void setGameConfig(GameConfig gameConfig) throws InvalidParameterException {
         if (gameConfig.getNumPlayers() < players.size()) throw new InvalidParameterException("too few players");
@@ -523,22 +666,39 @@ public class Game implements GameModel, LobbyModel {
         return lobbyName;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param username the name of the player to check.
+     * @return true if the player is the room owner
+     */
     @Override
     public boolean isRoomOwner(String username) {
         if (username == null) return false;
         return roomOwner.equals(username);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return true if the game has started
+     */
     @Override
     public boolean hasStarted() {
         return commonGoals != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeLobbyObservers() {
         lobbyObservable.deleteObservers();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeGameObservers() {
         gameObservable.deleteObservers();

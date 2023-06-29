@@ -13,7 +13,7 @@ import java.util.List;
 public class PersonalGoalFactory {
 
     /**
-     * Generates a list of random personal goals.
+     * Generates a random list of random custom personal goals.
      *
      * @param numPersonalGoalsPerPlayer the number of personal goals are assigned to a player.
      * @param bookshelfSize             the dimension of the bookshelf.
@@ -33,7 +33,7 @@ public class PersonalGoalFactory {
     }
 
     /**
-     * Generates a list of default personal goals.
+     * Generates a random list of default personal goals.
      *
      * @param numPersonalGoals the num of personal goals per player.
      * @param numPlayers       the number of players.
@@ -59,7 +59,7 @@ public class PersonalGoalFactory {
      *
      * @param numPersonalGoals  the number of personal goals to generate.
      * @param bookshelfSize     the bookshelf dimension.
-     * @param numPlayers        the numbero of players.
+     * @param numPlayers        the number of players.
      * @param personalGoalRatio the filling percentage of the personal goal.
      * @return a list of custom personal goals.
      * @throws Exception if the number of personal goals per player is not valid (equals to 0).

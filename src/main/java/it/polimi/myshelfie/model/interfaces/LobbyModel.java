@@ -50,16 +50,20 @@ public interface LobbyModel {
     boolean isLobbyEmpty();
 
     /**
+     * Returns the Chat Model of this lobby.
+     *
      * @return the chat model.
      */
     ChatModel getChatModel();
 
     /**
+     * Returns the GameModel of this Lobby
      * @return the game model.
      */
     GameModel getGameModel();
 
     /**
+     * Returns the lobby name
      * @return the lobby name
      */
     String getLobbyName();
@@ -79,11 +83,13 @@ public interface LobbyModel {
     void removeLobbyObserver(Observer<LobbyEvent, LobbyModelView> obs);
 
     /**
+     * Returns the lobby model view.
      * @return the lobby model view.
      */
     LobbyModelView getLobbyModelView();
 
     /**
+     * Returns the lobby name.
      * @return the lobby name.
      */
     String getName();

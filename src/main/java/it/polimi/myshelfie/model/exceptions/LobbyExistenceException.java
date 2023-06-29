@@ -12,6 +12,11 @@ public class LobbyExistenceException extends Exception {
         else this.message = "this lobby does not exists: " + lobbyName;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the Message
+     **/
     @Override
     public String getMessage() {
         return message;

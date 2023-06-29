@@ -10,6 +10,11 @@ public class InvalidParameterException extends Exception {
         this.message = message;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the Message
+     */
     @Override
     public String getMessage() {
         return message;

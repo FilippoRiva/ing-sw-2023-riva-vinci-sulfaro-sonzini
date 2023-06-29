@@ -38,6 +38,8 @@ public interface ClientExceptionsNotifier {
     void removeExceptionsObserver(Observer<ExceptionEvent, ClientExceptionsNotifierModelView> obs);
 
     /**
+     * Returns a client exception notifier view.
+     *
      * @return a client exception notifier view.
      */
     ClientExceptionsNotifierModelView getClientExceptionNotifierView();

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Represents the available lobbies that can be joined.
- * It contains a list with all the lobbies created and it can add and remove them from the list.
+ * It contains a list with all the lobbies created that can be modified by the {@link #addLobby(String)} and {@link #removeLobby(String)} methods.
  */
 public class ModelImpl extends Observable<ModelEvent, ModelView> implements Model {
     private final HashMap<String, Game> lobbiesModel = new HashMap<>();
@@ -68,6 +68,11 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
         notifyObservers(ModelEvent.LOBBY_REMOVE, new ModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs is the observer to add.
+     */
     @Override
     public synchronized void addModelObserver(Observer<ModelEvent, ModelView> obs) {
         addObserver(obs);
@@ -75,11 +80,21 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
         notifyObservers(new ModelView(this));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param obs the observer to remove.
+     */
     @Override
     public synchronized void removeModelObserver(Observer<ModelEvent, ModelView> obs) {
         deleteObserver(obs);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public synchronized ModelView getModelView() {
         return new ModelView(this);
@@ -92,15 +107,32 @@ public class ModelImpl extends Observable<ModelEvent, ModelView> implements Mode
         return new ArrayList<>(lobbiesModel.keySet().stream().toList());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return a new ClientExceptionsNotifier
+     */
     @Override
     public synchronized ClientExceptionsNotifier getNewClientExceptionNotifier() {
         return new ClientExceptionsNotifierImpl();
     }
 
+    /**
+     * Returns the number of players currently inside a specific lobby
+     *
+     * @param lobby the lobby
+     * @return the number of players of the requested lobby
+     */
     public int getLobbyCurrentSize(String lobby) {
         return lobbiesModel.get(lobby).getCurrentSize();
     }
 
+    /**
+     * Returns the maximum number of players specified in the last Game Config of a specific lobby
+     *
+     * @param lobby the lobby
+     * @return the maximum number of players of the requested lobby
+     */
     public int getLobbyMaxSize(String lobby) {
         return lobbiesModel.get(lobby).getMaxSize();
     }
