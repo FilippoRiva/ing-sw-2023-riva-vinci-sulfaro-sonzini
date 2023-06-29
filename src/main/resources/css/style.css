@@ -127,3 +127,9 @@
     -fx-background-position: center;
     -fx-background-color: transparent;
 }
+
+.borderError {
+    -fx-border-width: 20;
+    -fx-border-color: #ce954b;
+    -fx-border-style: solid;
+}
