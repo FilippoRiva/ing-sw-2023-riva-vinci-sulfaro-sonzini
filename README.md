@@ -10,7 +10,7 @@
 
 - Filippo Riva (matriculation number: 957652)
 - Antonio Sulfaro (matriculation number: 960053)
-- Francesco Vinci (matriculation number: )
+- Francesco Vinci (matriculation number: 955528)
 - Anna Sonzini (matriculation number: 956790)
 
 ---
@@ -78,6 +78,7 @@ If your terminal doesn't support ANSI escape sequences, or you're experiencing w
 the -n option.
 
 ### Windows
+
 
 #### Server
 
@@ -151,7 +152,7 @@ the -n option.
 
 ### Additional options
 When launching the server it's possible to set the serverLog level of detail.
-ServerLog is used to get an ongoing list of updates of what's happening in the server, at various level of detail:
+The Logger is used to get an ongoing list of updates of what's happening in the server, at various level of detail:
 - SEVERE: shows bugs and critical errors (lowest level of detail);
 - WARNING: shows non critical errors;
 - INFO: shows generic network and controller info;
