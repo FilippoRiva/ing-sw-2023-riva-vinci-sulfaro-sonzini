@@ -10,15 +10,23 @@ import it.polimi.myshelfie.view.textual.pages.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ *Represents the TextualUI.
+ */
 public class TextualUI implements UI {
     private final ViewManager viewManager;
     private final Terminal t;
     private final List<String> inputParameters;
     private final Thread readerThread;
-    private String currentLibraryOwner;
+    private String currentBookshelfOwner;
     private ScreenPage currentPage;
     private InternalViewState internalViewState;
 
+
+    /**
+     * Constructor.
+     */
     public TextualUI() {
         this.viewManager = ViewManager.getInstance();
         this.inputParameters = new ArrayList<>();
@@ -46,6 +54,10 @@ public class TextualUI implements UI {
         }
     }
 
+
+    /**
+     * Renders the currentPage if viewManager.getViewType() == ViewType.GAME
+     */
     private synchronized void gameUpdate() {
         if (viewManager.getViewType() == ViewType.GAME && !(internalViewState == InternalViewState.CHAT ||
                 internalViewState == InternalViewState.HELP)) {
@@ -57,12 +69,20 @@ public class TextualUI implements UI {
         }
     }
 
+
+    /**
+     * Renders the currentPage if viewManager.getViewType() == ViewType.LOBBY
+     */
     private synchronized void lobbyUpdate() {
         if (viewManager.getViewType() == ViewType.LOBBY) {
             currentPage.render();
         }
     }
 
+
+    /**
+     * Renders the currentPage if InternalViewState == InternalViewState.CHAT
+     */
     private synchronized void chatUpdate() {
         if ((viewManager.getViewType() == ViewType.LOBBY || viewManager.getViewType() == ViewType.GAME)
                 && internalViewState == InternalViewState.CHAT) {
@@ -70,12 +90,20 @@ public class TextualUI implements UI {
         }
     }
 
+
+    /**
+     * Renders the currentPage if viewManager.getViewType() == ViewType.INIT
+     */
     private synchronized void initUpdate() {
         if (viewManager.getViewType() == ViewType.INIT && internalViewState != InternalViewState.CREATE) {
             currentPage.render();
         }
     }
 
+
+    /**
+     * Updates the pages and the InternalViewStates based on the viewType.
+     */
     private synchronized void updateViewType() {
         ViewType viewType = viewManager.getViewType();
         switch (viewType) {
@@ -89,8 +117,8 @@ public class TextualUI implements UI {
             }
             case GAME -> {
                 internalViewState = InternalViewState.GAME;
-                currentLibraryOwner = ViewManager.getUsername();
-                currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
+                currentBookshelfOwner = ViewManager.getUsername();
+                currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);
             }
             case WIN -> {
                 internalViewState = InternalViewState.WIN;
@@ -104,6 +132,11 @@ public class TextualUI implements UI {
         currentPage.render();
     }
 
+
+    /**
+     * Prints an exception when occurs.
+     * @param disconnection a boolean that signals a disconnection.
+     */
     public synchronized void printException(boolean disconnection) {
         ClientExceptionsNotifierModelView exceptionsView;
         if (disconnection) exceptionsView = viewManager.getDisconnectedClientExceptionsNotifierView();
@@ -113,38 +146,65 @@ public class TextualUI implements UI {
         t.printError(exceptionsView.getLastException().getMessage());
     }
 
+
+    /**
+     * Prints "insert a valid option" when a wrong input is entered by calling {@link #wrongInput(String)}.
+     */
     public synchronized void wrongInput() {
         wrongInput("insert a valid option");
     }
 
+
+    /**
+     * Prints an error message.
+     * @param message the error message to print.
+     */
     public synchronized void wrongInput(String message) {
         t.printError(message);
     }
 
-    public synchronized void showNextLibrary() {
+
+    /**
+     * Show the bookshelf of the next player.
+     */
+    public synchronized void showNextBookshelf() {
         FullGameModelView gmv = viewManager.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
-        int index = players.indexOf(currentLibraryOwner);
-        if (index == players.size() - 1) currentLibraryOwner = players.get(0);
-        else currentLibraryOwner = players.get(index + 1);
-        currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
+        int index = players.indexOf(currentBookshelfOwner);
+        if (index == players.size() - 1) currentBookshelfOwner = players.get(0);
+        else currentBookshelfOwner = players.get(index + 1);
+        currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);
         currentPage.render();
     }
 
-    public synchronized void showPrevLibrary() {
+
+    /**
+     * Shows the bookshelf of the previous player.
+     */
+    public synchronized void showPrevBookshelf() {
         FullGameModelView gmv = viewManager.getGameModelView();
         List<String> players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();
-        int index = players.indexOf(currentLibraryOwner);
-        if (index == 0) currentLibraryOwner = players.get(players.size() - 1);
-        else currentLibraryOwner = players.get(index - 1);
-        currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
+        int index = players.indexOf(currentBookshelfOwner);
+        if (index == 0) currentBookshelfOwner = players.get(players.size() - 1);
+        else currentBookshelfOwner = players.get(index - 1);
+        currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);
         currentPage.render();
     }
 
+
+    /**
+     * Returns the InternalViewState.
+     * @return the InternalViewState.
+     */
     public InternalViewState getInternalViewState() {
         return internalViewState;
     }
 
+
+    /**
+     * Sets the Pages based on the specific InternalViewState.
+     * @param internalViewState the InternalViewState.
+     */
     public synchronized void setInternalViewState(InternalViewState internalViewState) {
         this.internalViewState = internalViewState;
         switch (internalViewState) {
@@ -152,7 +212,7 @@ public class TextualUI implements UI {
             case JOIN -> currentPage = new JoinPage(t, inputParameters);
             case CREATE -> currentPage = new CreatePage(t, inputParameters);
             case LOBBY -> currentPage = new LobbyPage(t, inputParameters);
-            case GAME -> currentPage = new GamePage(t, inputParameters, currentLibraryOwner);
+            case GAME -> currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);
             case GOALS -> currentPage = new GoalPage(t, inputParameters);
             case CHAT -> currentPage = new ChatPage(t, inputParameters);
             case HELP -> currentPage = new HelpPage(t, inputParameters);
@@ -161,21 +221,36 @@ public class TextualUI implements UI {
         currentPage.render();
     }
 
+    /**
+     * Clears the terminalInput.
+     */
     public void clearInput() {
         t.clearInput();
     }
 
+
+    /**
+     * Clears all the terminal.
+     */
     public void refresh() {
         t.clearAll();
         currentPage.render();
         t.clearInput();
     }
 
+
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void startUI() {
         readerThread.start();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stopUI() {
         t.printPermanentError("Unable to reach server, press any button to try to reconnect");

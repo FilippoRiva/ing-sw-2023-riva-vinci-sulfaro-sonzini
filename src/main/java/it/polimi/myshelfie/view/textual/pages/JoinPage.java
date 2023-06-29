@@ -5,11 +5,24 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
+/**
+ * Represents the join page for the textualUI.
+ */
 public class JoinPage extends ScreenPage {
+
+    /**
+     * Initialises a JoinPage.
+     * @param t the terminal in which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI.
+     */
     public JoinPage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
     }
 
+
+    /**
+     * Renders the join page inside the Screen portion of the Terminal.
+     */
     @Override
     public void render() {
         t.clearScreen();

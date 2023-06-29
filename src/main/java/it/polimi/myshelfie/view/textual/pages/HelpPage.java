@@ -6,14 +6,25 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
+/**
+ * Represents the help page for the textualUI.
+ */
 public class HelpPage extends ScreenPage {
 
     private final String color = ANSI.PINK_FG;
 
+    /**
+     * Initialises a HelpPage.
+     * @param t the terminal in which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI.
+     */
     public HelpPage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
     }
 
+    /**
+     * Renders the help page inside the Screen portion of the Terminal.
+     */
     @Override
     public void render() {
         t.clearScreen();

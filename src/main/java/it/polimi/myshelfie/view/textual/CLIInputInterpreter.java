@@ -18,15 +18,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The CLIInputInterpreter given an input string it interprets it, updates the view, and tells the viewManager to notify its observe
+ * A string is interpreted based on how the UI and the viewManager are set
+ */
 public class CLIInputInterpreter {
     private final TextualUI UI;
     private final ViewManager viewManager;
     private final List<String> inputParameters;
 
     /**
-     * creates a CLIInputInterpreter that given an input string it interprets it, updates the view, and tells the viewManager
-     * to notify its observers.
-     * how a string is interpreted depends on how the UI and the viewManager are set
+     * Creates a CLIInputInterpreter.
      *
      * @param UI the UI this interpreter should look at to interpret user input
      */
@@ -36,6 +38,10 @@ public class CLIInputInterpreter {
         this.inputParameters = inputParameters;
     }
 
+    /**
+     * Interpret a string based on the UI and viewManager state variables.
+     * @param input the string to be interpreted.
+     */
     public void interpret(String input) {
         if (input.equals("")) {
             UI.clearInput();
@@ -141,9 +147,9 @@ public class CLIInputInterpreter {
                     }
                 } else {
                     if (input.equals("n")) {
-                        UI.showNextLibrary();
+                        UI.showNextBookshelf();
                     } else if (input.equals("p")) {
-                        UI.showPrevLibrary();
+                        UI.showPrevBookshelf();
                     } else if (input.equals("help")) {
                         UI.setInternalViewState(InternalViewState.HELP);
                     } else if (input.equals("chat")) {

@@ -11,14 +11,28 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
-public class GamePage extends ScreenPage {
-    private final String currentLibraryOwner;
 
-    public GamePage(Terminal t, List<String> inputParameters, String libraryOwner) {
+/**
+ * Represents the game page for the textualUI.
+ */
+public class GamePage extends ScreenPage {
+    private final String currentBookshelfOwner;
+
+
+    /**
+     * Initialises a GamePage.
+     * @param t the terminal in which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI
+     * @param bookshelfOwner the current bookshelf owner.
+     */
+    public GamePage(Terminal t, List<String> inputParameters, String bookshelfOwner) {
         super(t, inputParameters);
-        this.currentLibraryOwner = libraryOwner;
+        this.currentBookshelfOwner = bookshelfOwner;
     }
 
+    /**
+     * Renders the game page inside the Screen portion of the Terminal.
+     */
     @Override
     public void render() {
         FullGameModelView fullGameModelView = viewManager.getGameModelView();
@@ -27,7 +41,7 @@ public class GamePage extends ScreenPage {
         t.printLivingRoom(fullGameModelView);
         t.printPersonalGoal(fullGameModelView.getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getGoal(), 25, 4);
         printGameInfo(fullGameModelView);
-        t.printBookshelf(fullGameModelView.getPlayer(currentLibraryOwner).getBookshelf(), currentLibraryOwner, 25, 36);
+        t.printBookshelf(fullGameModelView.getPlayer(currentBookshelfOwner).getBookshelf(), currentBookshelfOwner, 25, 36);
         if (!fullGameModelView.getCurrentPlayerName().equals(ViewManager.getUsername())) {
             t.printAction("help, chat, goals");
         } else {
@@ -42,6 +56,7 @@ public class GamePage extends ScreenPage {
         t.printVerticalDivider(0, 42, 25);
         t.printVerticalDivider(24, 30, 11);
     }
+
 
     private void printGameInfo(FullGameModelView fullGameModelView) {
         int pos = 1;

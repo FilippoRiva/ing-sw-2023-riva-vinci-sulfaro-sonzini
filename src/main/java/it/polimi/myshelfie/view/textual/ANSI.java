@@ -1,5 +1,9 @@
 package it.polimi.myshelfie.view.textual;
 
+
+/**
+ * Contains some static variables used for the rendering with ANSI escape codes.
+ */
 public abstract class ANSI {
     public static final String RESET = "\033[0m";
     public static final String RED_FG = "\033[31m";

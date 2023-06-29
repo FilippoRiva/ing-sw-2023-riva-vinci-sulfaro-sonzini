@@ -4,11 +4,24 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
+
+/**
+ * Represents the create page for the textualUI.
+ */
 public class CreatePage extends ScreenPage {
+
+    /**
+     * Initialises a CreatePage.
+     * @param t the terminal in which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI.
+     */
     public CreatePage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
     }
 
+    /**
+     * Renders the create page inside the Screen portion of the Terminal.
+     */
     @Override
     public void render() {
         t.clearScreen();

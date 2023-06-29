@@ -10,11 +10,22 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
+/**
+ * Represents the win page for the textualUI.
+ */
 public class WinPage extends ScreenPage {
+    /**
+     * Initialises a WinPage.
+     * @param t the terminal in which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI.
+     */
     public WinPage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
     }
 
+    /**
+     * Renders the win page inside the Screen portion of the Terminal.
+     */
     @Override
     public void render() {
         FullGameModelView gmv = viewManager.getGameModelView();

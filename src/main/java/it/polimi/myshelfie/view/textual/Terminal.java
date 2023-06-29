@@ -7,6 +7,10 @@ import it.polimi.myshelfie.model.modelviews.FullGameModelView;
 import java.io.PrintStream;
 import java.util.List;
 
+
+/**
+ * Represents the Terminal.
+ */
 public class Terminal {
     public final boolean ANSI_ON;
     public final int WIDTH = 63;
@@ -29,6 +33,10 @@ public class Terminal {
                     titleColor + "          __/ |                                 \n" + ANSI.RESET,
                     titleColor + "         |___/                                  \n" + ANSI.RESET};
 
+
+    /**
+     * Constructor.
+     */
     public Terminal() {
         out = System.out;
         String ANSI_ON_str = System.getenv("ANSI_ON");
@@ -40,6 +48,10 @@ public class Terminal {
         }
     }
 
+
+    /**
+     * Prints the title.
+     */
     public void printTitle() {
         int idx = 0;
         for (String s : title) {
@@ -49,6 +61,11 @@ public class Terminal {
         moveToInput();
     }
 
+
+    /**
+     * Prints an error message.
+     * @param message the error message.
+     */
     public void printError(String message) {
         if (ANSI_ON) {
             positionCursor(EXCEPTION_LINE, 1);
@@ -64,6 +81,11 @@ public class Terminal {
         }).start();
     }
 
+
+    /**
+     * Prints a permanent error message.
+     * @param message the error message.
+     */
     public void printPermanentError(String message) {
         if (ANSI_ON) {
             positionCursor(EXCEPTION_LINE, 1);
@@ -72,6 +94,11 @@ public class Terminal {
         moveToInput();
     }
 
+
+    /**
+     * Prints an action.
+     * @param s the string for the action.
+     */
     public void printAction(String s) {
         positionCursor(ACTION_LINE, 1);
         eraseLine();
@@ -83,6 +110,13 @@ public class Terminal {
         out.print(message);
     }
 
+
+    /**
+     * Prints a message at a specific line and column
+     * @param message the message.
+     * @param line the line.
+     * @param column the column.
+     */
     public void print(String message, int line, int column) {
         positionCursor(line, column);
         print(message);
@@ -94,11 +128,23 @@ public class Terminal {
         moveToInput();
     }
 
+
+    /**
+     * Prints a message at a specific line and column.
+     * @param message the message to print.
+     * @param line the line.
+     * @param column the column.
+     */
     public void println(String message, int line, int column) {
         positionCursor(line, column);
         println(message);
     }
 
+    /**
+     * Prints a string in the middle of the screen
+     * @param message the String to print
+     * @param line the line at which we want to print the message.
+     */
     public void centerPrint(String message, int line) {
         if (message.length() > (WIDTH - 2)) message = message.substring(0, WIDTH - 2);
         positionCursor(line, WIDTH / 2 - message.length() / 2);
@@ -106,7 +152,10 @@ public class Terminal {
     }
 
     /**
+     * Prints a string in the middle of the screen
      * Used for colored messages where the actual length of the message is not the length of the string
+     * @param message the String to print
+     * @param line the line at which we want to print the message.
      */
     public void centerPrint(String message, int line, int messageLength) {
         if (messageLength > (WIDTH - 2)) message = message.substring(0, WIDTH - 2);
@@ -114,6 +163,13 @@ public class Terminal {
         println(message);
     }
 
+    /**
+     * Prints a Message in the middle of the screen. If the message is wider the screen width
+     * it prints just a substring of it.
+     * @param message the message to print
+     * @param line the line at which we want to print the message.
+     * @param messageLength the message length.
+     */
     public void printMessage(String message, int line, int messageLength) {
         if (messageLength > (WIDTH - 2)) {
             message = message.substring(0, WIDTH - 2);
@@ -123,6 +179,11 @@ public class Terminal {
         println(message);
     }
 
+
+    /**
+     * Prints a divider at a specific line.
+     * @param line the line where to print the divider.
+     */
     public void printDivider(int line) {
         positionCursor(line, 0);
         if (ANSI_ON) {
@@ -135,6 +196,13 @@ public class Terminal {
         moveToInput();
     }
 
+
+    /**
+     * Prints a vertical divider at a specific line and column, given the height.
+     * @param line the line.
+     * @param column then column.
+     * @param height the height.
+     */
     public void printVerticalDivider(int line, int column, int height) {
         if (ANSI_ON) {
             positionCursor(line, column);
@@ -151,6 +219,11 @@ public class Terminal {
         moveToInput();
     }
 
+    /**
+     * Prints a String into the Info Table of the GamePage
+     * @param info the info string
+     * @param pos the info line
+     */
     public void printInInfoTable(String info, int pos) {
         println(info, pos, INFO_POS);
         moveToInput();
@@ -174,6 +247,14 @@ public class Terminal {
         }
     }
 
+
+    /**
+     * Prints the a List of ItemTiles.
+     * @param takenTiles the takenTiles to print.
+     * @param line the line at which the takenTiles are to be printed.
+     * @param column the column at which the taken Tiles are to be printed.
+     * @param printNumbers true if we want to print the numbers to the right of the taken tile representation.
+     */
     public void printTakenTiles(List<ItemTile> takenTiles, int line, int column, boolean printNumbers) {
         positionCursor(line, column);
         for (int i = takenTiles.size() - 1; i >= 0; i--) {
@@ -184,6 +265,13 @@ public class Terminal {
         }
     }
 
+    /**
+     * Prints a bookshelf at a certain line and column.
+     * @param bookshelf the bookshelf to print.
+     * @param currentPlayer the owner of the bookshelf.
+     * @param line the line at which the bookshelf is to be printed.
+     * @param column the column at which the bookshelf is to be printed.
+     */
     public void printBookshelf(ItemTile[][] bookshelf, String currentPlayer, int line, int column) {
         String formattedCurrentPlayer = currentPlayer.length() > 10 ? currentPlayer.substring(0, 9) : currentPlayer;
         println("Bookshelf : " + formattedCurrentPlayer, line, column);
@@ -204,6 +292,12 @@ public class Terminal {
         for (int i = 0; i < maxX; i++) print("  " + i + " ");
     }
 
+    /**
+     * Prints a personalGoal at a certain line and column.
+     * @param goal the goal to print.
+     * @param line the line at which the goal has to be printed.
+     * @param column the column at which the goal has to be printed.
+     */
     public void printPersonalGoal(ItemTile[][] goal, int line, int column) {
         positionCursor(line, column);
         println("Personal Goal :");
@@ -223,6 +317,12 @@ public class Terminal {
         moveToInput();
     }
 
+    /**
+     * Prints only the first token of a certain list of token in a certain line-column position
+     * @param tokens the tokens list
+     * @param line the line at which the token is to be printed
+     * @param column the column at which the token is to be printed
+     */
     public void printTopToken(List<Token> tokens, int line, int column) {
         positionCursor(line, column);
         if (tokens.size() == 0) {
@@ -236,6 +336,12 @@ public class Terminal {
         moveToInput();
     }
 
+    /**
+     * Prints a list of token in a certain line-column position
+     * @param tokens the tokens list
+     * @param line the line at which the token is to be printed
+     * @param column the column at which the token is to be printed
+     */
     public void printAllTokens(List<Token> tokens, int line, int column) {
         positionCursor(line, column);
         if (tokens.size() == 0) {
@@ -251,6 +357,10 @@ public class Terminal {
         moveToInput();
     }
 
+    /**
+     * Prints the livingroom at 1 1 position.
+     * @param fullGameModelView the game model view containing the living room.
+     */
     public void printLivingRoom(FullGameModelView fullGameModelView) {
         int size = fullGameModelView.getLivingRoom().length * 4;
         positionCursor(1, 1);
@@ -301,15 +411,24 @@ public class Terminal {
         out.print("───┘\n");
     }
 
+    /**
+     * Clears the entire Terminal.
+     */
     public void clearAll() {
         out.print(ANSI.CLEAR_ALL);
     }
 
+    /**
+     * Clears only the top portion of the screen
+     */
     public void clearScreen() {
         eraseLines();
         moveToInput();
     }
 
+    /**
+     * Clears the input lines. Excluding the borders.
+     */
     public synchronized void clearInput() {
         eraseLine(INPUT_LINE + 1, INPUT_COLUMN, WIDTH - INPUT_COLUMN - 1);
         if (ANSI_ON) print(">", INPUT_LINE + 1, INPUT_COLUMN - 1);
@@ -317,6 +436,9 @@ public class Terminal {
     }
 
 
+    /**
+     * Clears the error lines. Excluding the borders.
+     */
     public void clearError() {
         positionCursor(EXCEPTION_LINE, 0);
         eraseLine();
@@ -325,7 +447,6 @@ public class Terminal {
         print("│", EXCEPTION_LINE, WIDTH);
         moveToInput();
     }
-
 
     private void eraseLines() {
         goOnTop();

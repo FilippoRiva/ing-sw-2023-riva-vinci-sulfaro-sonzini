@@ -5,19 +5,35 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
+
+/**
+ * Represents a screen page for the textualUI.
+ */
 public abstract class ScreenPage {
+
     final protected Terminal t;
     final protected ViewManager viewManager;
     final protected List<String> inputParameters;
 
+    /**
+     * Initializes a Screen Page.
+     * @param t the terminal on which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI.
+     */
     public ScreenPage(Terminal t, List<String> inputParameters) {
         this.t = t;
         this.viewManager = ViewManager.getInstance();
         this.inputParameters = inputParameters;
     }
 
+    /**
+     * Renders the page inside the Screen portion of the Terminal.
+     */
     public abstract void render();
 
+    /**
+     * Prints the borders of the Terminal.
+     */
     public void printBorder() {
         t.printDivider(0);
         t.printDivider(40);

@@ -11,15 +11,28 @@ import it.polimi.myshelfie.view.textual.Terminal;
 
 import java.util.List;
 
+
+/**
+ * Represents the chat page for the textualUI.
+ */
 public class ChatPage extends ScreenPage {
     private final String[] colors = {
             ANSI.PINK_FG, ANSI.BLUE_FG, ANSI.GREEN_FG, ANSI.LIGHTBLUE_FG, ANSI.YELLOW_FG, ANSI.RED_FG
     };
 
+
+    /**
+     * Initialises a ChatPage.
+     * @param t the terminal in which we want to render the page.
+     * @param inputParameters the shared input parameters between the TextualUI.
+     */
     public ChatPage(Terminal t, List<String> inputParameters) {
         super(t, inputParameters);
     }
 
+    /**
+     * Renders the chat page inside the Screen portion of the Terminal.
+     */
     @Override
     public void render() {
         LobbyModelView lobby = viewManager.getLobbyModelView();
