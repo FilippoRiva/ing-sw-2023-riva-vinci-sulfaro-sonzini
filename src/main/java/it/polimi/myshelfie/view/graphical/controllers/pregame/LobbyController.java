@@ -224,7 +224,9 @@ public class LobbyController {
                 if (lobbyModelView.isRoomOwner(ViewManager.getUsername())) onMouseMinusClicked();
             }
             case S -> {
-                if (lobbyModelView.isRoomOwner(ViewManager.getUsername())) viewManager.startRequest();
+                if (!chatController.isChatVisible() && lobbyModelView.isRoomOwner(ViewManager.getUsername()) &&
+                        lobbyModelView.getPlayers().size() == lobbyModelView.getGameConfig().getNumPlayers())
+                    onStartMouseClicked();
             }
         }
     }

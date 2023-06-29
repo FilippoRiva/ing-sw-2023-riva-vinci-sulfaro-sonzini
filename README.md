@@ -123,6 +123,13 @@ powershell.exe .\client.ps1  [ -n ] [ client_ip server_ip ]
 .\client.ps1  [ -n ] [ client_ip server_ip ] 
 ```
 
+If launching these commands you get an error like "+ FullyQualifiedErrorId : UnauthorizedAccess" follow these steps:
+1. Open a PowerShell window as administrator
+2. Type `Set-ExecutionPolicy Unrestricted` and press Enter
+3. Confirm your choice typing S and press Enter<\br>
+Now you are able to launch the application from PowerShell.
+
+
 Where :
 
 - -n : disables ANSI escape sequences (just in case your terminal doesn't support them).
