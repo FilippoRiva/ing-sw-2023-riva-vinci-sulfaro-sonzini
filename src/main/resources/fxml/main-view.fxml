@@ -21,13 +21,13 @@
                     minWidth="70.0"
                     onMouseClicked="#onErrorButtonMouseClicked" prefHeight="70.0"
                     prefWidth="70.0">
-                    <graphic>
-                        <ImageView preserveRatio="true">
-                            <fitWidth>65</fitWidth>
-                            <fitHeight>65</fitHeight>
-                            <Image url="@../images/house.png"/>
-                        </ImageView>
-                    </graphic>
+                <graphic>
+                    <ImageView preserveRatio="true">
+                        <fitWidth>65</fitWidth>
+                        <fitHeight>65</fitHeight>
+                        <Image url="@../images/house.png"/>
+                    </ImageView>
+                </graphic>
             </Button>
         </VBox>
     </StackPane>

@@ -106,7 +106,7 @@ public class AutoPlayer implements UI {
         }
     }
 
-    private synchronized void draw(FullGameModelView gmv){
+    private synchronized void draw(FullGameModelView gmv) {
         ItemTile[][] bookshelf = gmv.getCurrentPlayer().getBookshelf();
         int maxDepth = 3;
         boolean finish = false;
@@ -142,12 +142,12 @@ public class AutoPlayer implements UI {
         }
     }
 
-    private synchronized void organize(FullGameModelView gmv){
+    private synchronized void organize(FullGameModelView gmv) {
         List<ItemTile> takenTiles = gmv.getPlayer(username).getTakenTiles();
         viewManager.organizeRequest(takenTiles);
     }
 
-    private synchronized void insert(FullGameModelView gmv){
+    private synchronized void insert(FullGameModelView gmv) {
         ItemTile[][] bookshelf = gmv.getCurrentPlayer().getBookshelf();
         int depth = gmv.getCurrentPlayer().getTakenTiles().size() - 1;
         ArrayList<Integer> availableColumns = new ArrayList<>();

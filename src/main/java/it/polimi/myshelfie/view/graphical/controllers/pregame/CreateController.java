@@ -38,7 +38,7 @@ public class CreateController {
      */
     public void initialize(ImageView banner) {
         CustomBindings.bindLowerPreGamePane(backgroundClear, banner);
-        CustomBindings.bindSize(createButton,null,GraphicalUI.stage.heightProperty().divide(13).multiply(2));
+        CustomBindings.bindSize(createButton, null, GraphicalUI.stage.heightProperty().divide(13).multiply(2));
         Animations.applyHoverScaling(createButton);
         Effects.applyShadow(createButton);
     }

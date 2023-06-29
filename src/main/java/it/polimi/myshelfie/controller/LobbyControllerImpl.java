@@ -167,7 +167,7 @@ public class LobbyControllerImpl implements LobbyController, ChatController {
                 sch.setLobbyController(null);
                 sch.setChatController(null);
             } catch (RemoteException e) {
-                ServerLogger.log(Level.FINE,"Setting Controllers to a Disconnected Client during game start");
+                ServerLogger.log(Level.FINE, "Setting Controllers to a Disconnected Client during game start");
             }
         }
 

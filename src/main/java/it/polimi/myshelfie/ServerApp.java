@@ -115,8 +115,8 @@ public class ServerApp {
                             while (true) {
                                 clientSkeleton.receive(serverConnectionHandler);
                             }
-                        } catch (InvalidClassException e){
-                            ServerLogger.logClientInfo(serverConnectionHandler,"Receiving unknown messages from client. Forcing Disconnection");
+                        } catch (InvalidClassException e) {
+                            ServerLogger.logClientInfo(serverConnectionHandler, "Receiving unknown messages from client. Forcing Disconnection");
                         } catch (IOException e) {
                             ServerLogger.log(Level.FINER, "Socket receive failed from " + socket.getInetAddress().getHostAddress());
                         } finally {

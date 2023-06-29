@@ -129,7 +129,6 @@ public class EndGameController {
     }
 
 
-
     private void addColumnDetail(PlayerModelView player, int position, int numPlayers) {
         List<Token> takenTokens = player.getTokens();
         List<EarnedPoint> earnedPoints = player.getEarnedPoints();

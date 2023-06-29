@@ -252,7 +252,7 @@ public class FullModelTest {
             fail("Bookshelf non piena");
         } else {
             game.setState(GameState.LAST_DRAW);
-            assertEquals(1, game.getGameModelView().getPlayer(currPlayer).getEarnedPoints().stream().filter(x->x.getType()==PointType.END_GAME).mapToInt(EarnedPoint::getValue).sum());
+            assertEquals(1, game.getGameModelView().getPlayer(currPlayer).getEarnedPoints().stream().filter(x -> x.getType() == PointType.END_GAME).mapToInt(EarnedPoint::getValue).sum());
             game.nextTurn();
             List<Position> positions = new ArrayList<>();
             positions.add(new Position(-1, 3));

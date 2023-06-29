@@ -68,9 +68,9 @@ public class NetworkMessage implements Serializable {
             }
             lobbyController.addLobbyObserver(playerName, ((event, lobbyModelView) -> new Thread(() -> {
                 try {
-                    client.send(new NetworkMessage(event,lobbyModelView));
+                    client.send(new NetworkMessage(event, lobbyModelView));
                 } catch (RemoteException e) {
-                    ServerLogger.logClientInfo(controllers.getServerConnectionHandler(),"Lobby Observer failed to send a Network Message");
+                    ServerLogger.logClientInfo(controllers.getServerConnectionHandler(), "Lobby Observer failed to send a Network Message");
                 }
             }).start()));
             connectionHandler.setLobbyController(lobbyController);
@@ -200,6 +200,7 @@ public class NetworkMessage implements Serializable {
     /**
      * Constructor to make a Select View message.
      * To be used as a message from the server to the client.
+     *
      * @param viewType the ViewType to set.
      */
     public NetworkMessage(ViewType viewType) {
@@ -213,7 +214,7 @@ public class NetworkMessage implements Serializable {
      * Constructor to make a Lobby Message.
      * To be used as a message from the server to the client.
      *
-     * @param evt the lobby event.
+     * @param evt            the lobby event.
      * @param lobbyModelView the LobbyModelView to set.
      */
     public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView) {
@@ -227,7 +228,7 @@ public class NetworkMessage implements Serializable {
      * Constructor to make a Game Message. It updates the ModelViews based on the event.
      * To be used as a message from the server to the client.
      *
-     * @param evt the game event.
+     * @param evt           the game event.
      * @param gameModelView the GameModelView to set.
      */
     public NetworkMessage(GameEvent evt, GameModelView gameModelView) {
@@ -248,7 +249,8 @@ public class NetworkMessage implements Serializable {
     /**
      * Constructor to make an Exception Message.
      * To be used as a message from the server to the client.
-     * @param evt the exception event.
+     *
+     * @param evt                         the exception event.
      * @param exceptionsNotifierModelView the ClientExceptionNotifierModelView to set.
      */
     public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierModelView) {
@@ -260,7 +262,8 @@ public class NetworkMessage implements Serializable {
     /**
      * Constructor to make a Chat Message.
      * To be used as a message from the server to the client.
-     * @param evt the chat event.
+     *
+     * @param evt           the chat event.
      * @param chatModelView the ChatModelVIew to set.
      */
     public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView) {
@@ -273,7 +276,8 @@ public class NetworkMessage implements Serializable {
     /**
      * Constructor to make a Model Message.
      * To be used as a message from the server to the client.
-     * @param evt the model event.
+     *
+     * @param evt       the model event.
      * @param modelView the ModelView to set.
      */
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
@@ -294,8 +298,8 @@ public class NetworkMessage implements Serializable {
         this.serverFunction = ((controllersGroup) -> new Thread(() -> {
             try {
                 controllersGroup.getServerConnectionHandler().ping();
-            } catch (RemoteException ignored){
-                ServerLogger.logClientInfo(controllersGroup.getServerConnectionHandler(),"Unable to Ping");
+            } catch (RemoteException ignored) {
+                ServerLogger.logClientInfo(controllersGroup.getServerConnectionHandler(), "Unable to Ping");
             }
         }).start());
     }
@@ -331,6 +335,7 @@ public class NetworkMessage implements Serializable {
 
     /**
      * Returns the event.
+     *
      * @return the event.
      */
     public Object getEvent() {

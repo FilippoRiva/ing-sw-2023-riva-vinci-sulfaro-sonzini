@@ -288,11 +288,11 @@ public class GameControllerImpl implements GameController, ChatController {
                 ServerLogger.log(Level.FINE, "Setting Controllers to a Disconnected Client");
             }
             Client client = clientsMap.get(username);
-            new Thread(()->{
+            new Thread(() -> {
                 try {
                     client.send(new NetworkMessage(ViewType.INIT));
                 } catch (RemoteException e) {
-                    ServerLogger.log(Level.FINE,"Sending a INIT Network Message to a disconnected client while leaving game");
+                    ServerLogger.log(Level.FINE, "Sending a INIT Network Message to a disconnected client while leaving game");
                 }
             }).start();
         }
