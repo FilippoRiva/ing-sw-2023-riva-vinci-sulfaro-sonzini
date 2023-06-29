@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The CLIInputInterpreter given an input string it interprets it, updates the view, and tells the viewManager to notify its observe
- * A string is interpreted based on how the UI and the viewManager are set
+ * The CLIInputInterpreter, given an input string, it interprets it, updates the view, and tells the viewManager to notify its observers.
+ * A string is interpreted based on how the UI and the viewManager are set.
  */
 public class CLIInputInterpreter {
     private final TextualUI UI;
@@ -30,7 +30,7 @@ public class CLIInputInterpreter {
     /**
      * Creates a CLIInputInterpreter.
      *
-     * @param UI the UI this interpreter should look at to interpret user input
+     * @param UI the UI this interpreter should look at to interpret user input.
      */
     public CLIInputInterpreter(TextualUI UI, List<String> inputParameters) {
         this.UI = UI;

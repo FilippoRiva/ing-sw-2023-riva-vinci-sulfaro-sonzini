@@ -29,7 +29,7 @@ public class ViewManager extends View {
     public static String username;
 
     /**
-     * Used to implement the Singleton Design Pattern.
+     * Used to implement the Singleton Design Pattern, so to have only one ViewManager.
      */
     private static ViewManager viewManager; //used to have only one ViewManager.
     private final Observable<ViewUpdate, Object> UINotifier;
@@ -119,7 +119,7 @@ public class ViewManager extends View {
      * Sends a NetworkMessage with the lobby name and player name when a ViewEvent.JOIN_REQUEST occurs.
      *
      * @param lobby      the lobby name.
-     * @param playerName thn eplayer name.
+     * @param playerName the player name.
      */
     public void joinRequest(String lobby, String playerName) {
         synchronized (this) {
@@ -358,7 +358,7 @@ public class ViewManager extends View {
     /**
      * {@inheritDoc}
      *
-     * @param changes th emodel view to update.
+     * @param changes the model view to update.
      */
     @Override
     public void updateOrganizeView(OrganizeModelView changes) {

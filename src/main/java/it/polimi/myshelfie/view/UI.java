@@ -5,7 +5,7 @@ import it.polimi.myshelfie.utils.Observer;
 
 
 /**
- * Represents the User Interface.
+ * Represents the user interface.
  */
 public interface UI extends Observer<ViewUpdate, Object> {
 

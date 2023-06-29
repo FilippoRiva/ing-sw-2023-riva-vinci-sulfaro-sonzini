@@ -8,7 +8,10 @@ import it.polimi.myshelfie.model.ItemTileType;
  * Common goal: Five tiles of the same type forming an X.
  */
 public class CommonGoalX extends CommonGoal {
+
     /**
+     * Checks the common goal.
+     *
      * @param bookshelf is a generic n x m matrix of ItemTile
      * @return true if exists an X of 5 ItemTiles of same type, false otherwise
      */

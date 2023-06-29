@@ -15,6 +15,7 @@ public abstract class CommonGoal {
     private final Stack<Token> tokens = new Stack<>();
 
     /**
+     * Strategy pattern.
      * Used to verify if a specific common goal has been achieved.
      *
      * @param bookshelf is the player's bookshelf that has to be checked.

@@ -1,0 +1,1 @@
+moduleSearchIndex = [{"l":"ingsw.myshelfie"}];updateSearchResults();

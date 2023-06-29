@@ -249,7 +249,7 @@ public class Terminal {
 
 
     /**
-     * Prints the a List of ItemTiles.
+     * Prints the List of ItemTiles.
      * @param takenTiles the takenTiles to print.
      * @param line the line at which the takenTiles are to be printed.
      * @param column the column at which the taken Tiles are to be printed.
@@ -358,7 +358,7 @@ public class Terminal {
     }
 
     /**
-     * Prints the livingroom at 1 1 position.
+     * Prints the living room at 1 1 position.
      * @param fullGameModelView the game model view containing the living room.
      */
     public void printLivingRoom(FullGameModelView fullGameModelView) {

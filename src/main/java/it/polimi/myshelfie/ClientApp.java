@@ -76,6 +76,10 @@ public class ClientApp {
         initialUserChoice();
     }
 
+
+    /**
+     * Initial user choices: connection (socket or RMI), view (CLI or Graphical).
+     */
     public static void initialUserChoice() {
         Scanner scanner = new Scanner(System.in);
         int networkChoice = -1;
@@ -131,6 +135,12 @@ public class ClientApp {
         view.startUI();
     }
 
+
+    /**
+     * Return the user choice.
+     * @param scanner the scanner.
+     * @return the int associated to the choice.
+     */
     private static int getChoice(Scanner scanner) {
         int networkChoice;
         try {
@@ -145,6 +155,12 @@ public class ClientApp {
         return networkChoice;
     }
 
+
+    /**
+     * Starts RMI connection.
+     * @param viewManager the view manager.
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
     private static void startRMIConnection(ViewManager viewManager) throws RemoteException {
         if (clientIP.equals("")) { //automatic client ip retrieval
             clientIP = NetworkInterfaceProvider.getInterfaceHostName();
@@ -162,6 +178,12 @@ public class ClientApp {
         server.connect(new ClientImpl(viewManager));
     }
 
+
+    /**
+     * Starts socket connection.
+     * @param viewManager the view manager.
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
     private static void startSocketConnection(ViewManager viewManager) throws RemoteException {
         ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(serverIP, 54321);
         ClientImpl client = new ClientImpl(viewManager);

@@ -65,6 +65,11 @@ public class ServerApp {
         new Thread(() -> startSocket(controller)).start();
     }
 
+
+    /**
+     * Starts RMI connection.
+     * @param server the server.
+     */
     public static void startRMI(ServerImpl server) {
         Registry registry;
         final int port = 1099;
@@ -87,6 +92,11 @@ public class ServerApp {
         System.out.println("--------------------------------------------------------");
     }
 
+
+    /**
+     * Starts socket connection.
+     * @param controller the controller.
+     */
     public static void startSocket(Controller controller) {
         final int port = 54321;
 
