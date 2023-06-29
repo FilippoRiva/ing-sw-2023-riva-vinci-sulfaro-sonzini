@@ -17,9 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * The ViewManager handles the View and all the requests that come to it.
+ * It sends NetworkMessages with the ViewEvents that happen and the information associated with them.
+ * It sets and makes updates to the modelViews based on the ViewEvents that occurred.
+ * It manages the Observers with the UINotifier.
+ * A unique one is instantiated for each game.
+ */
 public class ViewManager extends View {
+
     public static String username;
-    private static ViewManager viewManager;
+
+    /**
+     * Used to have only one ViewManager.
+     */
+    private static ViewManager viewManager; //used to have only one ViewManager.
     private final Observable<ViewUpdate, Object> UINotifier;
     private final Object sync;
     private ModelView modelView;
@@ -32,19 +44,41 @@ public class ViewManager extends View {
     private FullGameModelView oldGameModelView;
     private ViewType viewType;
 
-    public ViewManager() {
+
+    /**
+     * Constructor.
+     */
+    private ViewManager() {
         this.UINotifier = new Observable<>();
         this.sync = new Object();
     }
 
+
+    /**
+     * Returns the username.
+     *
+     * @return the username.
+     */
     public static String getUsername() {
         return username;
     }
 
+
+    /**
+     * Sets the username.
+     *
+     * @param username the username to set.
+     */
     public static void setUsername(String username) {
         ViewManager.username = username;
     }
 
+
+    /**
+     * Returns the instance of THE View manager by using a Singleton Design Pattern.
+     *
+     * @return the ViewManager.
+     */
     public static ViewManager getInstance() {
         if (viewManager == null) {
             ViewManager.viewManager = new ViewManager();
@@ -52,12 +86,24 @@ public class ViewManager extends View {
         return viewManager;
     }
 
+
+    /**
+     * Notifies the observers that a change has occurred and changes their attribute "changed" to true.
+     *
+     * @param networkMessage the NetworkMessage sent.
+     */
     private synchronized void sendMessage(NetworkMessage networkMessage) {
         if (networkMessage == null) return;
         setChanged();
         notifyObservers((ViewEvent) networkMessage.getEvent(), networkMessage);
     }
 
+
+    /**
+     * Sends a NetworkMessage with the game settings when a ViewEvent.CONFIG_REQUEST occurs.
+     *
+     * @param config the game settings.
+     */
     public void configRequest(GameConfig config) {
         synchronized (this) {
             try {
@@ -68,6 +114,13 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage with the lobby name and player name when a ViewEvent.JOIN_REQUEST occurs.
+     *
+     * @param lobby      the lobby name.
+     * @param playerName thn eplayer name.
+     */
     public void joinRequest(String lobby, String playerName) {
         synchronized (this) {
             try {
@@ -78,6 +131,13 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage with the lobby name and player name when a ViewEvent.CREATE_REQUEST occurs.
+     *
+     * @param lobby      the lobby name.
+     * @param playerName the player name.
+     */
     public void createRequest(String lobby, String playerName) {
         synchronized (this) {
             try {
@@ -88,6 +148,10 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage when a ViewEvent.EXIT_REQUEST occurs.
+     */
     public void exitRequest() {
         try {
             sendMessage(new NetworkMessage(ViewEvent.EXIT_REQUEST));
@@ -96,6 +160,10 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage when a ViewEvent.START_REQUEST occurs.
+     */
     public void startRequest() {
         synchronized (this) {
             try {
@@ -106,6 +174,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage with the chosen positions when a ViewEvent.DRAW_REQUEST occurs.
+     *
+     * @param positions the position selected in the draw move.
+     */
     public void drawRequest(List<Position> positions) {
         synchronized (this) {
             try {
@@ -116,6 +190,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage with the ordered tiles when a ViewEvent.ORGANIZE_REQUEST occurs.
+     *
+     * @param orderedTiles the tiles ordered.
+     */
     public void organizeRequest(List<ItemTile> orderedTiles) {
         synchronized (this) {
             try {
@@ -126,6 +206,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage with the selected column when a ViewEvent.INSERT_REQUEST occurs.
+     *
+     * @param column the column where to insert the taken tiles.
+     */
     public void insertRequest(int column) {
         synchronized (this) {
             try {
@@ -136,6 +222,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Sends a NetworkMessage with a message when a ViewEvent.MESSAGE_SEND occurs.
+     *
+     * @param message the message sent.
+     */
     public void sendChatMessage(Message message) {
         synchronized (this) {
             try {
@@ -147,7 +239,7 @@ public class ViewManager extends View {
     }
 
     /**
-     * @return true if remove player fails
+     * @return true if removePlayer fails.
      */
     public boolean removePlayer() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
@@ -170,7 +262,7 @@ public class ViewManager extends View {
     }
 
     /**
-     * @return true if addPlayer fails
+     * @return true if addPlayer fails.
      */
     public boolean addPlayer() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
@@ -192,6 +284,13 @@ public class ViewManager extends View {
         return false;
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param exceptionView the exception view to check.
+     * @param evt           the exception event that has occurred.
+     */
     @Override
     public void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt) {
         synchronized (sync) {
@@ -204,6 +303,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param chatView the chat view to set.
+     */
     @Override
     public void setChatView(PlayerChatModelView chatView) {
         synchronized (sync) {
@@ -214,6 +319,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param drawModelView the model view to update.
+     */
     @Override
     public void updateDrawView(DrawModelView drawModelView) {
         synchronized (sync) {
@@ -241,6 +352,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param changes th emodel view to update.
+     */
     @Override
     public void updateOrganizeView(OrganizeModelView changes) {
         synchronized (sync) {
@@ -268,6 +385,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param changes the model view to update.
+     */
     @Override
     public void updateInsertView(InsertModelView changes) {
         synchronized (sync) {
@@ -295,6 +418,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param endTurnModelView the modelview to update.
+     */
     @Override
     public void updateTurnView(EndTurnModelView endTurnModelView) {
         synchronized (sync) {
@@ -322,6 +451,10 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Resets the ModelViews.
+     */
     private void resetBuffer() {
         this.oldGameModelView = fullGameModelView;
         this.fullGameModelView = null;
@@ -330,6 +463,12 @@ public class ViewManager extends View {
         this.playerChatModelView = null;
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param viewType the view type.
+     */
     @Override
     public void setView(ViewType viewType) {
         synchronized (sync) {
@@ -384,18 +523,42 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Adds an observer to the UINotifier.
+     *
+     * @param o the observer to add.
+     */
     public synchronized void addUI(Observer<ViewUpdate, Object> o) {
         UINotifier.addObserver(o);
     }
 
+
+    /**
+     * Removes an observer to the UINotifier.
+     *
+     * @param o the observer to remove.
+     */
     public synchronized void removeUI(Observer<ViewUpdate, Object> o) {
         UINotifier.deleteObserver(o);
     }
 
+
+    /**
+     * Returns the ModelView.
+     *
+     * @return the ModelView.
+     */
     public synchronized ModelView getModelView() {
         return modelView;
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param modelView the model view to set.
+     */
     @Override
     public void setModelView(ModelView modelView) {
         synchronized (sync) {
@@ -406,22 +569,52 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Returns the ClientExceptionsNotifierModelView.
+     *
+     * @return the ClientExceptionsNotifierModelView.
+     */
     public synchronized ClientExceptionsNotifierModelView getClientExceptionsNotifierView() {
         return clientExceptionsNotifierView;
     }
 
+
+    /**
+     * Returns the ClientExceptionsNotifierModelView that disconnected.
+     *
+     * @return the ClientExceptionsNotifierModelView that disconnected.
+     */
     public synchronized ClientExceptionsNotifierModelView getDisconnectedClientExceptionsNotifierView() {
         return disconnectedClientExceptionsNotifierView;
     }
 
+
+    /**
+     * Return the PlayerChatModelView.
+     *
+     * @return the PlayerChatModelView.
+     */
     public synchronized PlayerChatModelView getPlayerChatModelView() {
         return playerChatModelView;
     }
 
+
+    /**
+     * Returns the LobbyModelView.
+     *
+     * @return the LobbyModelView.
+     */
     public synchronized LobbyModelView getLobbyModelView() {
         return lobbyModelView;
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param lobbyModelView the lobby model view to set.
+     */
     @Override
     public void setLobbyModelView(LobbyModelView lobbyModelView) {
         synchronized (sync) {
@@ -432,10 +625,22 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Returns the FullGameModelView.
+     *
+     * @return the FullGameModelView.
+     */
     public synchronized FullGameModelView getGameModelView() {
         return fullGameModelView;
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param theNewOne the game model view to set.
+     */
     @Override
     public void setGameModelView(FullGameModelView theNewOne) {
         synchronized (sync) {
@@ -454,6 +659,12 @@ public class ViewManager extends View {
         }
     }
 
+
+    /**
+     * Returns the ViewType.
+     *
+     * @return the ViewType.
+     */
     public synchronized ViewType getViewType() {
         return viewType;
     }
@@ -559,14 +770,18 @@ public class ViewManager extends View {
     }
 
     /**
-     * @return the new points of the player if they have changed, otherwise returns -1
+     * Returns the new points of the player if they have changed, otherwise returns -1.
+     *
+     * @return an int.
      */
     public synchronized int getLastPlayerPointsDiff() {
         return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getPoints();
     }
 
     /**
-     * @return the tokens that the last player has earned in the last game update
+     * Returns the tokens that the lasta player has earned in the last game update.
+     *
+     * @return a list of tokens.
      */
     public synchronized List<Token> getLastPlayerTokenDiff() {
         if (oldGameModelView != null && gameDifferences != null)
@@ -575,29 +790,56 @@ public class ViewManager extends View {
     }
 
     /**
-     * @return the last player taken tiles that have been added in the last game update
+     * Returns the last player taken tiles that have been added in the last game update.
+     *
+     * @return a list of item tiles.
      */
     public synchronized List<ItemTile> getCurrentPlayerTakenTilesDiff() {
         return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTakenTiles();
     }
 
+
+    /**
+     * Return the list of item tiles inserted by the current player.
+     *
+     * @return the list of item tiles inserted by the current player.
+     */
     public synchronized List<ItemTile> getCurrentPlayerInsertedTiles() {
         if (oldGameModelView != null) return oldGameModelView.getCurrentPlayer().getTakenTiles();
         return new ArrayList<>();
     }
 
+
+    /**
+     * Checks if the current player has inserted the tile taken.
+     *
+     * @return true if the player inserted, false otherwise.
+     */
     public synchronized boolean hasCurrentPlayerInsertedTiles() {
         if (fullGameModelView != null && oldGameModelView != null)
             return fullGameModelView.getCurrentPlayer().getTakenTiles().size() < oldGameModelView.getCurrentPlayer().getTakenTiles().size();
         return false;
     }
 
+
+    /**
+     * Checks if it's the right turn.
+     *
+     * @return true if it's the turn of the player playing in the right moment, false otherwise.
+     */
     public synchronized boolean isMyTurn() {
         if (fullGameModelView != null) return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);
         else if (oldGameModelView != null) return oldGameModelView.getCurrentPlayerName().equals(ViewManager.username);
         else return false;
     }
 
+
+    /**
+     * Checks if the tiles taken are at least one and has at least one side free.
+     *
+     * @param chosenTiles the tiles taken.
+     * @return true if the chosen tiles are not valid, false otherwise.
+     */
     public synchronized boolean areChosenTilesInvalid(List<Position> chosenTiles) {
         if (fullGameModelView == null) return false;
         if (chosenTiles.size() == 0) return true;
@@ -607,6 +849,13 @@ public class ViewManager extends View {
         return false;
     }
 
+
+    /**
+     * Checks if there's enough space in the bookshelf to insert tiles.
+     *
+     * @param tryChosenTiles the tiles to insert.
+     * @return true if there's enough space in the bookshelf, false otherwise.
+     */
     public boolean isThereEnoughBookshelfSpace(List<Position> tryChosenTiles) {
         if (fullGameModelView == null) return false;
         ItemTile[][] bookshelf = fullGameModelView.getCurrentPlayer().getBookshelf();
@@ -617,6 +866,12 @@ public class ViewManager extends View {
         return false;
     }
 
+
+    /**
+     * Returns the position in the column where the current player has inserted the last tile taken.
+     *
+     * @return an int.
+     */
     public synchronized int getCurrentPlayerInsertedColumnPosition() {
         if (!hasCurrentPlayerInsertedTiles()) return -1;
         ItemTile[][] bookshelf = gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getBookshelf();
@@ -628,6 +883,12 @@ public class ViewManager extends View {
         return -1;
     }
 
+
+    /**
+     * Returns the list of players ordered by scores.
+     *
+     * @return a list of PlayerModelViews.
+     */
     public synchronized List<PlayerModelView> getPlayersOrderedByScores() {
         if (fullGameModelView == null) return new ArrayList<>();
         return fullGameModelView.getPlayers().stream().sorted((x, y) -> {
@@ -636,6 +897,12 @@ public class ViewManager extends View {
         }).toList();
     }
 
+
+    /**
+     * Returns the winner.
+     *
+     * @return the player who won and has the highest score.
+     */
     public synchronized PlayerModelView getWinner() {
         return getPlayersOrderedByScores().get(0);
     }
@@ -660,6 +927,9 @@ public class ViewManager extends View {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stopUI() {
         for (Observer<ViewUpdate, Object> o : UINotifier.getObservers()) {

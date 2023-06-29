@@ -1,5 +1,9 @@
 package it.polimi.myshelfie.view;
 
+
+/**
+ * Represents all the states of the view.
+ */
 public enum InternalViewState {
     INIT,
     JOIN,
