@@ -23,6 +23,9 @@ import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
+/**
+ * The controller of the EndGame view.
+ */
 public class EndGameController {
     private final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -60,6 +63,11 @@ public class EndGameController {
     private Label[] pointsPodium;
     private Label[] playersPodium;
 
+
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     */
     public void customInitialize() {
         CustomBindings.bindSize(mainHBox, GraphicalUI.stage.widthProperty(), GraphicalUI.stage.heightProperty());
         CustomBindings.bindSize(firstPodiumImage, GraphicalUI.stage.widthProperty().divide(5), null);
@@ -70,6 +78,10 @@ public class EndGameController {
         pointsPodium = new Label[]{points1, points2, points3};
     }
 
+
+    /**
+     * Updates the end game view adding points and player names.
+     */
     public void update() {
         Platform.runLater(() ->
                 addColumn(detailsGrid, 0,
@@ -86,7 +98,7 @@ public class EndGameController {
         int numPlayers = players.size();
 
         if (numPlayers == 2) {
-            thirdPodiumStack.setVisible(false);
+            thirdPodiumStack.setVisible(false); //only 2 players
         }
 
         for (int i = 0; i < numPlayers; i++) {
@@ -106,6 +118,7 @@ public class EndGameController {
         Platform.runLater(() -> lobbyNameLabel.setText(lobbyModelView.getName()));
     }
 
+
     private void addRowScoreboard(PlayerModelView player, int position) {
         Label nameLabel = new Label((position + 1) + ". " + player.getName());
         nameLabel.setStyle("-fx-font-size: 25");
@@ -114,6 +127,8 @@ public class EndGameController {
 
         Platform.runLater(() -> addRow(scoreboardGrid, position, nameLabel, pointsLabel));
     }
+
+
 
     private void addColumnDetail(PlayerModelView player, int position, int numPlayers) {
         List<Token> takenTokens = player.getTokens();
@@ -134,7 +149,6 @@ public class EndGameController {
         Label adjacent = createLabel(earnedPoints.stream().filter(x -> x.getType() == PointType.ADJACENT).toList().get(0).getValue());
 
         Label tot = createLabel(player.getPoints());
-        //TODO make class and give to all tests
         tot.setStyle("-fx-font-weight: bold; -fx-font-family: 'Baskerville Old Face'; -fx-font-size: 22");
 
         ColumnConstraints columnConstraints = new ColumnConstraints();
@@ -153,6 +167,7 @@ public class EndGameController {
         Tot:			31pt
          */
     }
+
 
     private void addColumn(GridPane grid, int column, Label... labels) {
         for (int i = 0; i < labels.length; i++) {
@@ -183,6 +198,10 @@ public class EndGameController {
         return label;
     }
 
+
+    /**
+     * Changes the ViewDetail.
+     */
     @FXML
     protected void changeViewDetail() {
         Platform.runLater(() -> {
@@ -198,11 +217,19 @@ public class EndGameController {
         });
     }
 
+
+    /**
+     * When the back arrow is clicked, the view manager sends a network message associated to the EXIT_REQUEST.
+     */
     @FXML
     protected void onBackArrowClick() {
         viewManager.exitRequest();
     }
 
+
+    /**
+     * Resets the controller to its original state.
+     */
     public void reset() {
         Platform.runLater(() -> {
             detailsGrid.getColumnConstraints().clear();
@@ -215,6 +242,11 @@ public class EndGameController {
         });
     }
 
+
+    /**
+     * Processes how a certain KeyEvent should be interpreted while this Controller is active
+     * @param keyEvent the keyEvent to process.
+     */
     public void processKeyEvent(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case ESCAPE -> onBackArrowClick();

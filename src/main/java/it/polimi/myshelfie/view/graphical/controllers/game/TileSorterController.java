@@ -22,6 +22,9 @@ import javafx.util.Duration;
 
 import java.util.*;
 
+/**
+ * The controller of the tile sorter component of the game view.
+ */
 public class TileSorterController {
     @FXML
     protected StackPane mainStackPane;
@@ -55,6 +58,11 @@ public class TileSorterController {
     private List<TileImageView> orderedTiles;
     private List<Label> activeDots;
 
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     * @param tileSize is the tileSize to be bound to the tiles of this tileSorter.
+     */
     public void initialize(NumberBinding tileSize) {
         this.orderedTiles = new ArrayList<>();
         this.tiles = new TileImageView[]{bottom, middle, top};
@@ -81,6 +89,11 @@ public class TileSorterController {
         active = false;
     }
 
+    /**
+     * Returns the absolute position of a certain tile position.
+     * @param tileIndex the index starting from 1 to 3.
+     * @return a Point2D of the minX and minY absolute position.
+     */
     public Point2D getPosition(int tileIndex) {
         return switch (tileIndex) {
             case 1 -> getPosition(bottom);
@@ -94,6 +107,9 @@ public class TileSorterController {
         return CustomBindings.getAbsolutePosition(tile);
     }
 
+    /**
+     * Loads the taken tiles of the TileSorter component
+     */
     public void loadTiles() {
         List<ItemTile> drawnTiles = ViewManager.getInstance().getGameModelView().getPlayer(ViewManager.getUsername()).getTakenTiles();
         for (int i = 0; i < drawnTiles.size(); i++) {

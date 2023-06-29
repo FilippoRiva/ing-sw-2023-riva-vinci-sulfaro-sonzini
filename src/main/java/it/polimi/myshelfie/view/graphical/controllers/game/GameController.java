@@ -13,6 +13,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+/**
+ * The game controller contains the panel, overlay and end game controllers.
+ * It is used to propagate updates to the controllers.
+ */
 public class GameController {
 
     private final ViewManager viewManager = ViewManager.getInstance();
@@ -35,6 +39,11 @@ public class GameController {
     @FXML
     protected AnchorPane mainAnchorPane;
 
+
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     */
     public void initialize() {
         Stage stage = GraphicalUI.stage;
         endGame.setVisible(false);
@@ -48,6 +57,9 @@ public class GameController {
         CustomBindings.bindSize(mainAnchorPane, stage.widthProperty(), stage.heightProperty());
     }
 
+    /**
+     * Sets to visible the components that needs to be visible at the beginning of the game.
+     */
     public void gameStart() {
         //default visible panels
         endGame.setVisible(false);
@@ -67,6 +79,9 @@ public class GameController {
         gameOverlayController.gameStart();
     }
 
+    /**
+     * Used to trigger a game update over this controller and its sub controllers.
+     */
     public void update() {
         GameState currentState = viewManager.getCurrentStateDiff();
 
@@ -88,13 +103,26 @@ public class GameController {
         }
     }
 
+
+    /**
+     * Updates the chat by adding a chat message.
+     */
     public void updateChat() {
         gameOverlayController.chatController.addChatMessage();
     }
 
+
+    /**
+     * Displays an error.
+     * @param message the error message to display.
+     */
     public void displayError(String message) {
     }
 
+
+    /**
+     * Resets the controller to its original state.
+     */
     public void reset() {
         endGame.setVisible(false);
         endGame.setMouseTransparent(true);
@@ -103,6 +131,11 @@ public class GameController {
         endGameController.reset();
     }
 
+
+    /**
+     * Processes how a certain KeyEvent should be interpreted while this Controller is active.
+     * @param keyEvent the keyEvent to process.
+     */
     public void processKeyPress(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case ESCAPE -> {

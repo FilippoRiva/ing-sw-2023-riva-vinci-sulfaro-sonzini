@@ -29,7 +29,9 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * The controller of the bookshelf for the game view.
+ */
 @SuppressWarnings("FieldCanBeLocal")
 public class BookshelfController {
     private final float bookshelfImageWidth = 1413;
@@ -91,6 +93,12 @@ public class BookshelfController {
     private int currentPlayerPos;
     private TileImageView[][] gridImages = new TileImageView[6][5];
 
+
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     * @param left sets if the bookshelf is the left or the right one.
+     */
     public void initialize(boolean left) {
         Stage stage = GraphicalUI.stage;
 
@@ -182,6 +190,8 @@ public class BookshelfController {
         }
     }
 
+
+
     private void prevBookshelf() {
         PlayerModelView player;
         List<PlayerModelView> players = viewManager.getGameModelView().getPlayers();
@@ -203,6 +213,10 @@ public class BookshelfController {
         }
     }
 
+    /**
+     * Loads a bookshelf.
+     * @param player the player's bookshelf.
+     */
     protected void loadBookshelf(PlayerModelView player) {
         TileImageView[][] bookshelf = TileImageView.convertMatrix(player.getBookshelf());
         gridImages = bookshelf;
@@ -229,6 +243,11 @@ public class BookshelfController {
         });
     }
 
+    /**
+     * Adds a token when visible.
+     * @param token the token to add.
+     * @param visible the boolean associated to the visibility of the token.
+     */
     public void addToken(Token token, boolean visible) {
         TokenImageView tokenImage = new TokenImageView(token);
         Animation animation;
@@ -254,6 +273,9 @@ public class BookshelfController {
     }
 
 
+    /**
+     * Loads new tiles.
+     */
     public void loadNewTiles() {
         FullGameModelView gmv = viewManager.getGameModelView();
         if (left) {
@@ -290,20 +312,37 @@ public class BookshelfController {
         });
     }
 
+    /**
+     * Loads the bookshelf on the left.
+     */
     public void loadLeft() {
         currentPlayerPos = -1;
         this.nextBookshelf(true);
     }
 
+
+    /**
+     * Loads the bookshelf on the right.
+     */
     public void loadRight() {
         FullGameModelView gmv = ViewManager.getInstance().getGameModelView();
         loadBookshelf(gmv.getPlayer(ViewManager.getUsername()));
     }
 
-    public DoubleBinding tileWidthProperty() {
+
+    /**
+     * Returns the size of the tile.
+     * @return the size property of the tile.
+     */
+    public DoubleBinding getTileWidthProperty() {
         return bookshelfImage.fitWidthProperty().multiply(tileWidthToBookshelfWidth);
     }
 
+
+    /**
+     * Sets the Insert button active, so it can be pressed and the selected column can be filled.
+     * @param active the boolean for the activeness of the button.
+     */
     public void setActive(boolean active) {
         if (active) {
             int numTakenTiles = viewManager.getGameModelView().getCurrentPlayer().getTakenTiles().size();
@@ -325,10 +364,16 @@ public class BookshelfController {
         }
     }
 
+
+
     private void insertAction(int column) {
         viewManager.insertRequest(column);
     }
 
+
+    /**
+     * Adds a token to the bookshelf.
+     */
     public void loadTokens() {
         if (left && !playerName.getText().equals(viewManager.getPreviousPlayer())) return;
         List<Token> newTokens = viewManager.getLastPlayerTokenDiff();
@@ -337,6 +382,12 @@ public class BookshelfController {
         }
     }
 
+
+    /**
+     * Resets the controller to its original state.
+     * Removes the tokens from the common goals.
+     * Resets the state variables and visual elements.
+     */
     public void reset() {
         //resetting tokens images
         Platform.runLater(() -> {

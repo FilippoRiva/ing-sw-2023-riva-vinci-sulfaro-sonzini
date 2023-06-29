@@ -24,6 +24,9 @@ import java.util.List;
 
 import static it.polimi.myshelfie.view.graphical.Images.getImage;
 
+/**
+ * The game overlay controller containing common goals, the personal goal, the chat and other info components.
+ */
 public class GameOverlayController {
     final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -52,6 +55,10 @@ public class GameOverlayController {
     protected ImageView personalGoal;
     Stage stage;
 
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     */
     public void customInitialize() {
         stage = GraphicalUI.stage;
 
@@ -72,6 +79,9 @@ public class GameOverlayController {
         CustomBindings.bindSize(chat, stage.widthProperty().divide(21).multiply(6), stage.heightProperty().divide(15).multiply(8));
     }
 
+    /**
+     * Initializes the view when the game starts.
+     */
     public void gameStart() {
         chatController.initGameOverlay(this);
 
@@ -118,6 +128,9 @@ public class GameOverlayController {
         return tokenImageView;
     }
 
+    /**
+     * Shows the new infos at the beginning of a turn such as the new player who's playing and the new obtained tokens
+     */
     public void startTurn() {
         List<Token> tokens = viewManager.getLastPlayerTokenDiff();
         if (!tokens.isEmpty()) {
@@ -140,16 +153,25 @@ public class GameOverlayController {
         Platform.runLater(() -> playingLabel.setText(viewManager.getCurrentPlayerDiff()));
     }
 
+    /**
+     * Translates the personal goal to a fully visible position.
+     */
     @FXML
     protected void showPersonalGoal() {
         personalGoal.setTranslateY(0);
     }
 
+    /**
+     * Translates the personal goal to a partially visible position.
+     */
     @FXML
     protected void hidePersonalGoal() {
         personalGoal.setTranslateY(stage.getHeight() / 5 * 3 - 70);
     }
 
+    /**
+     * Toggles the chat visibility and translation.
+     */
     public void toggleChatVisible() {
         if (chatController.isChatVisible()) {
             chat.setTranslateY(stage.getHeight() / 15 * 8 - 80);
@@ -162,6 +184,9 @@ public class GameOverlayController {
         //reset notificationCounter
     }
 
+    /**
+     * Completely resets this controller to its original state.
+     */
     public void reset() {
         Platform.runLater(() -> {
             messageLabel.setText(null);

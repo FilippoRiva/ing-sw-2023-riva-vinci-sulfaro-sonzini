@@ -24,6 +24,10 @@ import javafx.util.Duration;
 
 import java.util.List;
 
+/**
+ * It's the controller of the game panel. It contains every element needed for drawing tiles, ordering tiles and
+ * inserting tiles.
+ */
 public class GamePanelController {
     private final ViewManager vm = ViewManager.getInstance();
     @FXML
@@ -52,12 +56,16 @@ public class GamePanelController {
     TileSorterController tileSorterController;
     private PanelState state;
 
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     */
     public void customInitialize() {
         //sub controllers initialization
         leftBookshelfController.initialize(true);
         rightBookshelfController.initialize(false);
-        livingRoomController.initialize(this, leftBookshelfController.tileWidthProperty());
-        tileSorterController.initialize(leftBookshelfController.tileWidthProperty());
+        livingRoomController.initialize(this, leftBookshelfController.getTileWidthProperty());
+        tileSorterController.initialize(leftBookshelfController.getTileWidthProperty());
         //bindings
         Stage stage = GraphicalUI.stage;
         CustomBindings.bindSize(panelHBox, stage.widthProperty(), stage.heightProperty());
@@ -248,6 +256,10 @@ public class GamePanelController {
         }
     }
 
+    /**
+     * Draws the tiles chosen inside the livingRoomController.
+     * If there's an error such as invalid tiles no tiles are selected it displays an error.
+     */
     protected void draw() {
         if (livingRoomController.chosenTiles.size() == 0) {
             Animations.nodeError(confirmButton, 1).play();
@@ -263,6 +275,10 @@ public class GamePanelController {
         }
     }
 
+    /**
+     * Organizes the tiles inside the tileSorterController.
+     * If the tiles selected are not empty and less than the tiles taken it displays an error.
+     */
     protected void organize() {
         List<ItemTile> orderedTiles = tileSorterController.getOrderedTiles();
         if (orderedTiles.size() == 0 || orderedTiles.size() == vm.getGameModelView().getCurrentPlayer().getTakenTiles().size()) {
@@ -273,6 +289,10 @@ public class GamePanelController {
         }
     }
 
+    /**
+     * Shows a confirmation error below the Confirm button.
+     * @param message the message to show
+     */
     protected void showConfirmError(String message) {
         Platform.runLater(() -> {
             confirmButtonLabel.setText(message);
@@ -281,6 +301,9 @@ public class GamePanelController {
         });
     }
 
+    /**
+     * Completely resets the controller and every sub controller.
+     */
     protected void reset() {
         //sub controllers reset
         leftBookshelfController.reset();
