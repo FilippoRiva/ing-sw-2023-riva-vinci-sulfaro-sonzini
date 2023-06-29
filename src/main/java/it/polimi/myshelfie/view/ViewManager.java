@@ -21,15 +21,15 @@ import java.util.List;
  * The ViewManager handles the View and all the requests that come to it.
  * It sends NetworkMessages with the ViewEvents that happen and the information associated with them.
  * It sets and makes updates to the modelViews based on the ViewEvents that occurred.
- * It manages the Observers with the UINotifier.
- * A unique one is instantiated for each game.
+ * It manages the ViewManager Observers with the UINotifier.
+ * It implements a Singleton Design Pattern.
  */
 public class ViewManager extends View {
 
     public static String username;
 
     /**
-     * Used to have only one ViewManager.
+     * Used to implement the Singleton Design Pattern.
      */
     private static ViewManager viewManager; //used to have only one ViewManager.
     private final Observable<ViewUpdate, Object> UINotifier;
@@ -239,6 +239,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns true if removePlayer fails.
      * @return true if removePlayer fails.
      */
     public boolean removePlayer() {
@@ -262,6 +263,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns true if addPlayer fails.
      * @return true if addPlayer fails.
      */
     public boolean addPlayer() {
@@ -670,6 +672,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns if the current player/turn has changed in the last game update
      * @return if the current player/turn has changed in the last game update
      */
     public synchronized boolean isCurrentPlayerDiff() {
@@ -677,6 +680,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns the username of the player that is currently the new current player
      * @return the username of the player that is currently the new current player
      */
     public synchronized String getCurrentPlayerDiff() {
@@ -684,6 +688,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns the username of the player that was playing in the last game update
      * @return the username of the player that was playing in the last game update
      */
     public synchronized String getPreviousPlayer() {
@@ -692,6 +697,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns if the state have changed since the last game update
      * @return if the state have changed since the last game update
      */
     public synchronized boolean isCurrentStateDiff() {
@@ -699,6 +705,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns the new state if the state has changed, otherwise it returns null
      * @return the new state if the state has changed, otherwise it returns null
      */
     public synchronized GameState getCurrentStateDiff() {
@@ -707,6 +714,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns the state previous to the one received in the last game update
      * @return the state previous to the one received in the last game update
      */
     public synchronized GameState getLastState() {
@@ -714,6 +722,7 @@ public class ViewManager extends View {
     }
 
     /**
+     * Returns if remaining tiles have changed since the last game update
      * @return if remaining tiles have changed since the last game update
      */
     public synchronized boolean isRemainingTilesDiff() {
@@ -779,7 +788,7 @@ public class ViewManager extends View {
     }
 
     /**
-     * Returns the tokens that the lasta player has earned in the last game update.
+     * Returns the tokens that the last player has earned in the last game update.
      *
      * @return a list of tokens.
      */
@@ -823,9 +832,9 @@ public class ViewManager extends View {
 
 
     /**
-     * Checks if it's the right turn.
+     * Checks if it's the turn of the player set in the ViewManager.username.
      *
-     * @return true if it's the turn of the player playing in the right moment, false otherwise.
+     * @return true if it's the turn of the player set in the ViewManager.username. false otherwise.
      */
     public synchronized boolean isMyTurn() {
         if (fullGameModelView != null) return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);

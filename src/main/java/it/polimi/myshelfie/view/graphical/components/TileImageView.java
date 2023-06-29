@@ -9,6 +9,10 @@ import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 
+
+/**
+ * Represents the TileImageView.
+ */
 public class TileImageView extends ImageView {
     private static final HashMap<String, Image> tilesNameToImage = new HashMap<>();
     private ItemTile tile;
@@ -26,6 +30,10 @@ public class TileImageView extends ImageView {
         super.setCacheHint(CacheHint.SPEED);
     }
 
+
+    /**
+     * Default Constructor.
+     */
     public TileImageView() {
         super();
         this.tile = null;
@@ -49,7 +57,7 @@ public class TileImageView extends ImageView {
     /**
      * Returns the preloaded tile image associated with the given ItemTile
      *
-     * @param itemTile the itemTile whose images is to be returned
+     * @param itemTile the itemTile whose image is to be returned
      * @return the Image
      */
     public static Image getTileImage(ItemTile itemTile) {
@@ -73,12 +81,23 @@ public class TileImageView extends ImageView {
         return result;
     }
 
+
+    /**
+     * Sets the tile.
+     * @param tile the tile to set.
+     * @param opacity the opacity to set.
+     */
     public void setTile(ItemTile tile, int opacity) {
         super.setImage(getTileImage(tile));
         this.tile = tile;
         this.setOpacity(opacity);
     }
 
+
+    /**
+     * Returns the tile.
+     * @return the ItemTile.
+     */
     public ItemTile getTile() {
         return tile;
     }

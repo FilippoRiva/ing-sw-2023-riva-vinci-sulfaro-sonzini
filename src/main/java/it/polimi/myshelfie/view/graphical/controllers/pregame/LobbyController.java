@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The controller of the Lobby view.
+ */
 public class LobbyController {
     private final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -51,6 +54,12 @@ public class LobbyController {
     protected ChatController chatController;
     private PreGameController preGameController;
 
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     * @param homeBanner the top banner of the pregame view.
+     * @param preGameController the preGameController.
+     */
     public void initialize(ImageView homeBanner, PreGameController preGameController) {
         Stage stage = GraphicalUI.stage;
         DoubleBinding maxHeight = stage.heightProperty().divide(3).multiply(2);
@@ -68,16 +77,25 @@ public class LobbyController {
         this.preGameController = preGameController;
     }
 
+    /**
+     * Updates the lobby name and the list of players.
+     */
     public void refresh() {
         Platform.runLater(() -> lobbyNameLabel.setText(viewManager.getLobbyModelView().getName()));
         updateListPlayers();
     }
 
+    /**
+     * Starts the game. Associated to the start button.
+     */
     @FXML
     protected void onStartMouseClicked() {
         viewManager.startRequest();
     }
 
+    /**
+     * Sets a new game config with one player less. If the new game configs set fails the error animation is played.
+     */
     @FXML
     protected void onMouseMinusClicked() {
         if (viewManager.removePlayer()) {
@@ -85,6 +103,9 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Sets a new game config with one player more. If the new game configs set fails the error animation is played.
+     */
     @FXML
     protected void onMousePlusClicked() {
         if (viewManager.addPlayer()) {
@@ -92,6 +113,9 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Updates the list of players inside the VBox.
+     */
     public void updateListPlayers() {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         //generates the nodes to add;
@@ -158,6 +182,9 @@ public class LobbyController {
         chatController.updateChoiceBox();
     }
 
+    /**
+     * Resets the controller to its original state.
+     */
     public void reset() {
         Platform.runLater(() -> {
             lobbyNameLabel.setText("lobby");
@@ -167,6 +194,10 @@ public class LobbyController {
         chatController.reset();
     }
 
+    /**
+     * Processes how a certain KeyEvent should be interpreted while this Controller is active
+     * @param keyEvent the keyEvent to process.
+     */
     public void processKeyEvent(KeyEvent keyEvent) {
         LobbyModelView lobbyModelView = viewManager.getLobbyModelView();
         switch (keyEvent.getCode()) {

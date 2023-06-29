@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+
+/**
+ * Represents the chat controller.
+ */
 public class ChatController implements Initializable {
     final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -47,6 +51,12 @@ public class ChatController implements Initializable {
     boolean chatIsOpen = false;
     private GameOverlayController gameOverlayController;
 
+    /**
+     * Initializes the controller's component's resize properties and sets the state variables to their default values.
+     *
+     * @param url            the URL.
+     * @param resourceBundle the ResourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         CustomBindings.bindSize(chatScroll, backgroundImage.fitWidthProperty().subtract(20), null);
@@ -59,6 +69,9 @@ public class ChatController implements Initializable {
         notificationDot.setOpacity(0);
     }
 
+    /**
+     * Reads the text inside the chat TextField and, if valid, it sends it to the viewManager.
+     */
     @FXML
     public void sendMessage() {
         if (messageText.getText().replace(" ", "").equals("")) return;
@@ -71,6 +84,9 @@ public class ChatController implements Initializable {
         viewManager.sendChatMessage(message);
     }
 
+    /**
+     * Updates the usernames in the chat ChoiceBox
+     */
     public void updateChoiceBox() {
         List<String> players = new ArrayList<>(viewManager.getLobbyModelView().getPlayers());
         players.remove(ViewManager.getUsername());
@@ -83,6 +99,9 @@ public class ChatController implements Initializable {
         });
     }
 
+    /**
+     * Adds the last message present in the ViewManager to the messagesVBox.
+     */
     public void addChatMessage() {
         Message message = viewManager.getPlayerChatModelView().getLastMessage();
 
@@ -160,10 +179,18 @@ public class ChatController implements Initializable {
         a.play();
     }
 
+    /**
+     * Returns true if the chat is visible
+     * @return true if the chat is visible
+     */
     public boolean isChatVisible() {
         return chatIsOpen;
     }
 
+    /**
+     * If set to true it sets the chat to visible by resetting the notificationDot and focusing the chat input.
+     * @param visible the visibility of the chat.
+     */
     @FXML
     public void setChatVisible(boolean visible) {
         if (visible) {
@@ -179,16 +206,26 @@ public class ChatController implements Initializable {
         }
     }
 
+    /**
+     * Resets the controller by removing messages from the messagesVBox and resetting the notificationDot
+     */
     public void reset() {
         Platform.runLater(() -> messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));
         resetNotificationDot();
     }
 
 
+    /**
+     * Used to toggle the chat while in GAME internal view state.
+     */
     public void toggleChat() {
         if (gameOverlayController != null) gameOverlayController.toggleChatVisible();
     }
 
+    /**
+     * Used to initialize the chat while in GAME internal view state.
+     * @param gameOverlayController the overlay controller.
+     */
     public void initGameOverlay(GameOverlayController gameOverlayController) {
         this.gameOverlayController = gameOverlayController;
         updateChoiceBox();

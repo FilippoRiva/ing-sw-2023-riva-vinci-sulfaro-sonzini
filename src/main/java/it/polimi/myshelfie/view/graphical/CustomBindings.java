@@ -11,6 +11,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 
+
+/**
+ * Represents Custom Bindings.
+ */
 public class CustomBindings {
 
     /**
@@ -115,6 +119,12 @@ public class CustomBindings {
         }
     }
 
+    /**
+     * Returns a POINT2D representing the absolute minX and minY of the node.
+     * Absolute means the position relative to the Scene in which the node has been added
+     * @param node the node
+     * @return the POINT2D of the node's absolute minX and minY positions.
+     */
     public static Point2D getAbsolutePosition(Node node) {
         Bounds regionBounds = node.localToScene(node.getBoundsInLocal());
         return new Point2D(regionBounds.getMinX(), regionBounds.getMinY());

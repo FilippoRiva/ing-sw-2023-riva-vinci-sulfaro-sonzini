@@ -20,6 +20,10 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
+/**
+ * Represents the controller for the pre game for the view.
+ */
 public class PreGameController implements Initializable {
     @FXML
     public HomeController homeController;
@@ -54,6 +58,13 @@ public class PreGameController implements Initializable {
     InternalViewState page;
     StackPane lastSlideUp;
 
+
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     * @param url            the URL.
+     * @param resourceBundle the ResourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Stage stage = GraphicalUI.stage;
@@ -73,14 +84,26 @@ public class PreGameController implements Initializable {
         changePage(InternalViewState.INIT);
     }
 
+
+    /**
+     * Sets to visible the progress indicator.
+     */
     public void startLoading() {
         Platform.runLater(() -> progress.setVisible(true));
     }
 
+    /**
+     * Sets to invisible the progress indicator.
+     */
     public void stopLoading() {
         Platform.runLater(() -> progress.setVisible(false));
     }
 
+
+    /**
+     * Changes the pages according to the internal view state.
+     * @param page the page.
+     */
     public void changePage(InternalViewState page) {
         if (page == this.page) return; //avoiding forced animations
         stopLoading();
@@ -190,6 +213,9 @@ public class PreGameController implements Initializable {
         Animations.slideRegionToTop(label).play();
     }
 
+    /**
+     * Changes the view accordingly to the current internal view state. Associated to the back button.
+     */
     @FXML
     public void onBackArrowClicked() {
         if (page == InternalViewState.LOBBY) {
@@ -198,11 +224,18 @@ public class PreGameController implements Initializable {
         GraphicalUI.mainViewController.changeView(InternalViewState.INIT);
     }
 
+    /**
+     * Closes the application. Associated to the exit button.
+     */
     @FXML
     public void onExitButtonClicked() {
         System.exit(0);
     }
 
+    /**
+     * Displays an error inside the Error Label of the active sub controller.
+     * @param errorMessage the message to display.
+     */
     public void displayError(String errorMessage) {
         Label errorLabel;
         switch (page) {
@@ -220,6 +253,9 @@ public class PreGameController implements Initializable {
         Animations.timer(() -> Platform.runLater(() -> errorLabel.setVisible(false)), 3000);
     }
 
+    /**
+     * Resets the controller to its default state.
+     */
     public void reset() {
         joinController.reset();
         createController.reset();
@@ -230,6 +266,9 @@ public class PreGameController implements Initializable {
         });
     }
 
+    /**
+     * Toggles the visibility of the chat.
+     */
     public void toggleChatVisible() {
         if (lobbyController.chatController.isChatVisible()) {
             lobbyController.chat.setMouseTransparent(true);
@@ -247,6 +286,9 @@ public class PreGameController implements Initializable {
         a.play();
     }
 
+    /**
+     * Adds the message to its chat controller and updates the notification Dot
+     */
     public void notifyNewMessage() {
         lobbyController.chatController.addChatMessage();
         if (lobbyController.chatController.isChatVisible()) return;

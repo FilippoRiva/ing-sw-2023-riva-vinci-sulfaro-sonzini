@@ -53,7 +53,7 @@ public abstract class View extends Observable<ViewEvent, NetworkMessage> {
 
 
     /**
-     * Updates the DrawModelView when a draw move occures.
+     * Updates the DrawModelView when a draw move occurs.
      *
      * @param drawModelView the model view to update.
      */
@@ -63,7 +63,7 @@ public abstract class View extends Observable<ViewEvent, NetworkMessage> {
     /**
      * Updates the OrganizeModelVIew when an organize move occurs.
      *
-     * @param organizeModelView th emodel view to update.
+     * @param organizeModelView the model view to update.
      */
     public abstract void updateOrganizeView(OrganizeModelView organizeModelView);
 
@@ -79,7 +79,7 @@ public abstract class View extends Observable<ViewEvent, NetworkMessage> {
     /**
      * Updates the EndTurnModelView.
      *
-     * @param endTurnModelView the modelview to update.
+     * @param endTurnModelView the model view to update.
      */
     public abstract void updateTurnView(EndTurnModelView endTurnModelView);
 

@@ -5,6 +5,10 @@ import it.polimi.myshelfie.view.graphical.Images;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+
+/**
+ * Represents the TokenImageView
+ */
 public class TokenImageView extends ImageView {
     /**
      * Constructor of the TokenImageView given a certain Token

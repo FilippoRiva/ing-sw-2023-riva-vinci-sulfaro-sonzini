@@ -27,11 +27,22 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+
+/**
+ * Represents the GraphicalUI.
+ */
 public class GraphicalUI extends Application implements UI {
+
     public static Stage stage;
     public static MainViewController mainViewController;
     final ViewManager viewManager = ViewManager.getInstance();
 
+
+    /**
+     * {@inheritDoc}
+     * @param evt       the event occurred.
+     * @param object the model view to update.
+     */
     @Override
     public synchronized void update(ViewUpdate evt, Object object) {
         if (mainViewController == null) return;
@@ -45,10 +56,21 @@ public class GraphicalUI extends Application implements UI {
         }
     }
 
+
+    /**
+     * Starts the GUI.
+     */
     public void startGUI() {
         Application.launch();
     }
 
+
+    /**
+     * This method is automatically called by JavaFX graphical thread. It starts the GUI application and loads the
+     * required FXML files
+     * @param stage the stage passed by JavaFX
+     * @throws Exception if image loading fails
+     */
     @Override
     public void start(Stage stage) throws Exception {
         GraphicalUI.stage = stage;
@@ -127,6 +149,10 @@ public class GraphicalUI extends Application implements UI {
         new Thread(task, "GUI Loader").start();
     }
 
+
+    /**
+     * Updates the View Type based on the viewType.
+     */
     private synchronized void viewTypeUpdate() {
         switch (viewManager.getViewType()) {
             case INIT -> mainViewController.changeView(InternalViewState.INIT);
@@ -137,11 +163,19 @@ public class GraphicalUI extends Application implements UI {
         }
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void startUI() {
         startGUI();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stopUI() {
         mainViewController.changeView(InternalViewState.STOPPED);

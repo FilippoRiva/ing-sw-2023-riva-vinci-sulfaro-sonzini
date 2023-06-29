@@ -14,6 +14,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
+
+/**
+ * The controller of the Create view.
+ */
 public class CreateController {
     final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -28,6 +32,13 @@ public class CreateController {
     protected Label createErrorLabel;
     PreGameController preGameController;
 
+
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     * @param banner the top banner of the pregame view.
+     * @param preGameController the preGameController.
+     */
     public void initialize(ImageView banner, PreGameController preGameController) {
         CustomBindings.bindLowerPreGamePane(backgroundClear, banner);
         Animations.applyHoverScaling(createButton);
@@ -35,6 +46,11 @@ public class CreateController {
         this.preGameController = preGameController;
     }
 
+
+    /**
+     * Makes a createRequest when the create button is clicked.
+     * Sets the lobbyName and the playerName.
+     */
     @FXML
     protected void onCreateMouseClicked() {
         String playerName = playerNameField.getText();
@@ -50,6 +66,11 @@ public class CreateController {
         }
     }
 
+
+    /**
+     * Resets the controller to its original state.
+     * Clears the lobbyNameField and the playerNameField.
+     */
     public void reset() {
         Platform.runLater(() -> {
             lobbyNameField.clear();
@@ -57,6 +78,11 @@ public class CreateController {
         });
     }
 
+
+    /**
+     * Processes how a certain KeyEvent should be interpreted while this Controller is active
+     * @param keyEvent the keyEvent to process.
+     */
     public void processKeyEvent(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);

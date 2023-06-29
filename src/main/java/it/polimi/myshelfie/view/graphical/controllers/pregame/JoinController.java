@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The controller of the Join view.
+ */
 public class JoinController {
     final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -46,6 +49,12 @@ public class JoinController {
     String selected = null;
     private PreGameController preGameController;
 
+    /**
+     * Initializes the controller's component's resize properties and animations.
+     * It sets the state variables to their default values.
+     * @param banner the top banner of the pregame view.
+     * @param preGameController the preGameController.
+     */
     public void initialize(ImageView banner, PreGameController preGameController) {
         CustomBindings.bindSize(listBackgroundImage, GraphicalUI.stage.widthProperty().divide(1.5),
                 GraphicalUI.stage.heightProperty().divide(6).multiply(2.5));
@@ -59,6 +68,9 @@ public class JoinController {
         this.preGameController = preGameController;
     }
 
+    /**
+     * Makes a join request if the player has selected a lobby and has inserted a username.
+     */
     @FXML
     protected void onJoinMouseClicked() {
         String playerName = playerNameField.getText();
@@ -72,6 +84,9 @@ public class JoinController {
         }
     }
 
+    /**
+     * Updates the list of lobbies in the lobbiesVBox.
+     */
     public void updateListLobbies() {
         //generating nodes
         Task<List<Node>> task = new Task<>() {
@@ -129,6 +144,9 @@ public class JoinController {
         return label;
     }
 
+    /**
+     * Resets the controller to its original state.
+     */
     public void reset() {
         this.selected = null;
         Platform.runLater(() -> {
@@ -137,6 +155,10 @@ public class JoinController {
         });
     }
 
+    /**
+     * Processes how a certain KeyEvent should be interpreted while this Controller is active
+     * @param keyEvent the keyEvent to process.
+     */
     public void processKeyEvent(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case ESCAPE -> GraphicalUI.mainViewController.changeView(InternalViewState.INIT);

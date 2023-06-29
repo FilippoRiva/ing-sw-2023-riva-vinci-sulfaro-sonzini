@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+/**
+ * Represents the animations.
+ */
 public class Animations {
 
     /**
@@ -42,7 +46,7 @@ public class Animations {
     }
 
     /**
-     * Util function that runs a certain task after a certain time of milliseconds
+     * Utility function that runs a certain task after a certain time of milliseconds
      *
      * @param runnable the task
      * @param time     the time in milliseconds
@@ -244,6 +248,12 @@ public class Animations {
         return pop;
     }
 
+
+    /**
+     * Returns an animation that scales in 100 millis a node from 100% scaling to 100% scaling.
+     * @param node the node to be popped.
+     * @return the animation.
+     */
     public static Animation reversePop(Node node) {
         ScaleTransition pop = new ScaleTransition(Duration.millis(100), node);
         pop.setFromX(1);
@@ -265,6 +275,13 @@ public class Animations {
         return new ParallelTransition(fade, pop);
     }
 
+
+    /**
+     * Returns the parallel combination of the reversePop and fadeOut animations
+     *
+     * @param node the node to be animated.
+     * @return the animations.
+     */
     public static Animation popFadeOut(Node node) {
         Animation fade = Animations.fadeOut(node);
         Animation revPop = reversePop(node);
@@ -329,6 +346,15 @@ public class Animations {
         return new ParallelTransition(rotations.toArray(new RotateTransition[0]));
     }
 
+
+    /**
+     * Rotates a node of a certain amount of degrees.
+     *
+     * @param node the node to rotate.
+     * @param angle the angle of rotation.
+     * @param duration the duration in millis of the animation.
+     * @return the animation.
+     */
     public static Animation rotateZ(Node node, double angle, Duration duration) {
         RotateTransition rt = new RotateTransition(duration);
         rt.setNode(node);
@@ -337,7 +363,7 @@ public class Animations {
     }
 
     /**
-     * Util method to get an X-Y paired scaling animation.
+     * Utility method to get an X-Y paired scaling animation.
      *
      * @param node   the node to be scaled
      * @param fromXY the fromX and fromY parameters
@@ -363,6 +389,15 @@ public class Animations {
         return st;
     }
 
+
+    /**
+     * Translates a node by a certain position.
+     *
+     * @param node the node to translate.
+     * @param byX the X coordinate.
+     * @param byY the Y coordinate.
+     * @return the animation.
+     */
     public static Animation translateBy(Node node, double byX, double byY) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(200));
         tt.setNode(node);
@@ -371,6 +406,14 @@ public class Animations {
         return tt;
     }
 
+
+    /**
+     * Translates a node to a certain position.
+     *
+     * @param node the node to translate.
+     * @param coordinate the coordinates.
+     * @return the animation.
+     */
     public static Animation translateTo(Node node, Point2D coordinate) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(400));
         node.setMouseTransparent(true);
@@ -381,6 +424,14 @@ public class Animations {
         return tt;
     }
 
+
+    /**
+     * Fixes reorder tiles translations.
+     *
+     * @param node the node to translate.
+     * @param coordinate the fixing coordinates.
+     * @return the animation.
+     */
     public static Animation fixTranslateTo(Node node, Point2D coordinate) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(400));
         tt.setNode(node);
@@ -395,6 +446,13 @@ public class Animations {
         return tt;
     }
 
+
+    /**
+     * Returns an animation that erases the translations previously set to the node.
+     *
+     * @param node the node from which to erase the translation.
+     * @return the animation.
+     */
     public static Animation eraseTranslation(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(200));
         node.setMouseTransparent(true);
@@ -405,6 +463,14 @@ public class Animations {
         return tt;
     }
 
+
+    /**
+     * Returns an Animation that rotates a tile from -90 degrees to 0 in a tile over the Y axis.
+     *
+     * @param tile the tile to rotate in.
+     * @param duration the duration of the animation.
+     * @return the animation.
+     */
     public static Animation tileRotateIn(TileImageView tile, Duration duration) {
         tile.setRotationAxis(Rotate.Y_AXIS);
         tile.setRotate(-90);
@@ -412,6 +478,14 @@ public class Animations {
         return rotateY(90, duration, tile);
     }
 
+
+    /**
+     * Returns an Animation that rotates a tile from 0 degrees to -90 in a tile over the Y axis.
+     *
+     * @param tile the tile to rotate out.
+     * @param duration the duration of the animation.
+     * @return the animation.
+     */
     public static Animation tileRotateOut(TileImageView tile, Duration duration) {
         tile.setRotationAxis(Rotate.Y_AXIS);
         tile.setRotate(0);

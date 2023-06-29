@@ -21,6 +21,10 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Represents the main GUI controller. It acts as a container of every other GUI controller and provides
+ * some utilities such as {@link #changeView(InternalViewState)} or {@link #showErrorPane(String)}.
+ */
 public class MainViewController implements Initializable {
     private final ViewManager viewManager = ViewManager.getInstance();
     @FXML
@@ -42,10 +46,10 @@ public class MainViewController implements Initializable {
     private InternalViewState currentState;
 
     /**
-     * Initializes the view setting its sub controllers to visible/non-visible
+     * Initializes the view by setting its sub controllers to visible/non-visible.
      *
-     * @param url            the URL
-     * @param resourceBundle the ResourceBundle
+     * @param url            the URL.
+     * @param resourceBundle the ResourceBundle.
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -68,10 +72,9 @@ public class MainViewController implements Initializable {
     }
 
     /**
-     * Given an InternalViewState this function hides the current components and shows the view associated with that
-     * internalViewState
+     * Given an InternalViewState, this method hides the current components and shows the view associated with that internalViewState.
      *
-     * @param internalViewState the internalViewState to be shown
+     * @param internalViewState the internalViewState to be shown.
      */
     public void changeView(InternalViewState internalViewState) {
         switch (internalViewState) {
@@ -107,9 +110,9 @@ public class MainViewController implements Initializable {
     }
 
     /**
-     * Shows an overlay message. Intended for critical error messages such as server disconnection or other major errors
+     * Shows an overlay message. Intended for critical error messages such as server disconnection or other major errors.
      *
-     * @param message the message to be shown
+     * @param message the message to be shown.
      */
     private void showErrorPane(String message) {
         Platform.runLater(() -> {
@@ -120,7 +123,7 @@ public class MainViewController implements Initializable {
     }
 
     /**
-     * The action associated with the error overlay confirm button
+     * The action associated with the error overlay confirm button.
      */
     @FXML
     public void onErrorButtonMouseClicked() {
@@ -135,20 +138,32 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Updates the PreGameController's JoinController when currentState is JOIN.
+     */
     public void joinUpdate() {
         if (currentState == InternalViewState.JOIN)
             preGameController.joinController.updateListLobbies();
     }
 
+    /**
+     * Updates the PreGameController's LobbyController when currentState is GAME.
+     */
     public void lobbyUpdate() {
         if (currentState == InternalViewState.LOBBY && viewManager.getLobbyModelView() != null)
             preGameController.lobbyController.updateListPlayers();
     }
 
+    /**
+     * Updates the GameController when currentState is GAME.
+     */
     public void gameUpdate() {
         if (currentState == InternalViewState.GAME) gameController.update();
     }
 
+    /**
+     * Propagates the exception update to the active view controller.
+     */
     public void exceptionUpdate() {
         if (currentState != InternalViewState.GAME) {
             preGameController.displayError(viewManager.getClientExceptionsNotifierView().getLastException().getMessage());
@@ -157,6 +172,9 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Propagates the chat update to the active view controller.
+     */
     public void chatUpdate() {
         if (currentState == InternalViewState.GAME) gameController.updateChat();
         else preGameController.notifyNewMessage();
