@@ -22,7 +22,7 @@ public abstract class View extends Observable<ViewEvent, NetworkMessage> {
     /**
      * Associates an Exception view.
      *
-     * @param exceptionView the exception view to check.
+     * @param exceptionView the exception view to set.
      * @param evt           the exception event that has occurred.
      */
     public abstract void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt);

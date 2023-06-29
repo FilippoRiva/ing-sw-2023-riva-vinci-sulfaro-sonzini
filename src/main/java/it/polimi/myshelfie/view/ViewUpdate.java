@@ -3,6 +3,14 @@ package it.polimi.myshelfie.view;
 
 /**
  * Represents all kinds of view updates.
+ *                                      <UL>
+ *                                          <li>MODEL_UPDATE</li>
+ *                                          <li>EXCEPTION_UPDATE</li>
+ *                                          <li>CHAT_UPDATE</li>
+ *                                          <li>LOBBY_UPDATE</li>
+ *                                          <li>GAME_UPDATE</li>
+ *                                          <li>VIEW_TYPE_UPDATE</li>
+ *                                      </UL>
  */
 public enum ViewUpdate {
     MODEL_UPDATE,

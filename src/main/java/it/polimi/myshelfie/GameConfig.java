@@ -6,7 +6,16 @@ import java.awt.*;
 import java.io.Serializable;
 
 /**
- * Represents all the general settings of the game.
+ * Represents all the general settings of the game:
+ *                                                  <ul>
+ *                                                  <li>number of players</li>
+ *                                                  <li>bookshelf dimension</li>
+ *                                                  <li>number of common goals</li>
+ *                                                  <li>number of tiles per type</li>
+ *                                                  <li>living room size</li>
+ *                                                  <li>number of personal goals</li>
+ *                                                  <li>personal goal ratio</li>
+ *                                                  </ul>
  */
 public class GameConfig implements Serializable {
     private final int numPlayers;
@@ -35,7 +44,7 @@ public class GameConfig implements Serializable {
     }
 
     /**
-     * Costume constructor.
+     * Costum constructor.
      *
      * @param numPlayers         the number of players in the game.
      * @param bookshelfDimension the dimension of the bookshelf.
@@ -65,6 +74,7 @@ public class GameConfig implements Serializable {
     }
 
     /**
+     * Returns the number of players in the game.
      * @return the number of players in the game.
      */
     public int getNumPlayers() {
@@ -72,6 +82,7 @@ public class GameConfig implements Serializable {
     }
 
     /**
+     * Returns the bookshelf dimension.
      * @return the bookshelf dimension.
      */
     public Dimension getBookshelfDimension() {
@@ -79,20 +90,23 @@ public class GameConfig implements Serializable {
     }
 
     /**
-     * @return the number of common goal.
+     * Returns the number of common goals.
+     * @return the number of common goals.
      */
     public int getNumCommonGoal() {
         return numCommonGoal;
     }
 
     /**
-     * @return the number of personal goal.
+     * Returns the number of personal goals
+     * @return the number of personal goals.
      */
     public int getNumPersonalGoals() {
         return numPersonalGoals;
     }
 
     /**
+     * Returns the number of tiles per type
      * @return the number of tiles per type.
      */
     public int getNumTilesPerType() {
@@ -100,6 +114,7 @@ public class GameConfig implements Serializable {
     }
 
     /**
+     * Returns the living room size.
      * @return the living room size.
      */
     public int getLivingRoomSize() {
@@ -107,6 +122,7 @@ public class GameConfig implements Serializable {
     }
 
     /**
+     * Returns the filling percentage of the personal goals.
      * @return the filling percentage of the personal goals.
      */
     public double getPersonalGoalRatio() {

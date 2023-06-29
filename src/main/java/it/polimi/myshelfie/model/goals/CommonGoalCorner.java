@@ -8,6 +8,7 @@ import it.polimi.myshelfie.model.ItemTileType;
  * Common goal: Four tiles of the same type in the four corners.
  */
 public class CommonGoalCorner extends CommonGoal {
+
     /**
      * Checks the common goal.
      *

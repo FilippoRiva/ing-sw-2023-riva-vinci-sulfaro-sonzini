@@ -301,7 +301,7 @@ public class Animations {
     }
 
     /**
-     * Translate a region to the left of the view
+     * Translates a region to the left of the view
      *
      * @param pane the pane to be slid
      * @return the animation
@@ -314,7 +314,7 @@ public class Animations {
     }
 
     /**
-     * Translate a region back to its original position from the left of the view
+     * Translates a region back to its original position from the left of the view
      *
      * @param pane the pane to be slid
      * @return the animation
