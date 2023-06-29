@@ -151,6 +151,8 @@ public class BookshelfController {
         } else {
             prevButton.setOpacity(0);
             nextButton.setOpacity(0);
+            prevButton.setMouseTransparent(true);
+            prevButton.setMouseTransparent(true);
             prevButton.setOnMousePressed((event) -> prevBookshelf());
             nextButton.setOnMousePressed((event) -> nextBookshelf(false));
             topHBox.getChildren().clear();
@@ -401,5 +403,9 @@ public class BookshelfController {
 
         //resetting visual elements
         setActive(false);
+        prevButton.setOpacity(0);
+        nextButton.setOpacity(0);
+        prevButton.setMouseTransparent(true);
+        prevButton.setMouseTransparent(true);
     }
 }
