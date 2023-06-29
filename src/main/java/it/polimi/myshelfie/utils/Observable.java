@@ -71,6 +71,7 @@ public class Observable<Event extends Enum<Event>, Representation> {
     }
 
     /**
+     * Returns the list of observers.
      * @return the list of observers.
      */
     public synchronized ArrayList<Observer<Event, Representation>> getObservers() {

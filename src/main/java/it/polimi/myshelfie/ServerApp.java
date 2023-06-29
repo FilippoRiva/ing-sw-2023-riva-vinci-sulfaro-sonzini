@@ -110,12 +110,8 @@ public class ServerApp {
                         } catch (IOException e) {
                             ServerLogger.log(Level.FINER, "Socket receive failed from " + socket.getInetAddress().getHostAddress());
                         } finally {
-                            try {
-                                assert serverConnectionHandler != null;
-                                serverConnectionHandler.close();
-                            } catch (RemoteException e) {
-                                ServerLogger.log(Level.WARNING,"Unable to close \""+serverConnectionHandler.hostName+" | ID : "+serverConnectionHandler.clientID+"\" Connection Handler after disconnection");
-                            }
+                            assert serverConnectionHandler != null;
+                            serverConnectionHandler.close();
                             ServerLogger.logClientInfo(serverConnectionHandler, "Socket Closed");
                             try {
                                 socket.close();
