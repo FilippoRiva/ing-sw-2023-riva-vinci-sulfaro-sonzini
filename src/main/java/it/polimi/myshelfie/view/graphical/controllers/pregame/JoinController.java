@@ -46,7 +46,7 @@ public class JoinController {
     protected ScrollPane lobbiesScrollPane;
     @FXML
     protected Label joinErrorLabel;
-    String selected = null;
+    private String selected = null;
     private PreGameController preGameController;
 
     /**

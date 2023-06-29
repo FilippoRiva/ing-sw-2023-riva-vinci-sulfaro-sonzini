@@ -136,7 +136,7 @@ public class GameController {
      * Processes how a certain KeyEvent should be interpreted while this Controller is active.
      * @param keyEvent the keyEvent to process.
      */
-    public void processKeyPress(KeyEvent keyEvent) {
+    public void processKeyEvent(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case ESCAPE -> {
                 if (gameOverlayController.chatController.isChatVisible()) gameOverlayController.toggleChatVisible();

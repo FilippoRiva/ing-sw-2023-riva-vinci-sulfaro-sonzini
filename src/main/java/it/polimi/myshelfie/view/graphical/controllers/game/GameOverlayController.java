@@ -53,7 +53,7 @@ public class GameOverlayController {
     protected StackPane tokens2;
     @FXML
     protected ImageView personalGoal;
-    Stage stage;
+    private Stage stage;
 
     /**
      * Initializes the controller's component's resize properties and animations.

@@ -187,7 +187,7 @@ public class MainViewController implements Initializable {
                 case JOIN -> preGameController.joinController.processKeyEvent(keyEvent);
                 case CREATE -> preGameController.createController.processKeyEvent(keyEvent);
                 case LOBBY -> preGameController.lobbyController.processKeyEvent(keyEvent);
-                case GAME -> gameController.processKeyPress(keyEvent);
+                case GAME -> gameController.processKeyEvent(keyEvent);
                 case WIN -> gameController.endGameController.processKeyEvent(keyEvent);
             }
         });

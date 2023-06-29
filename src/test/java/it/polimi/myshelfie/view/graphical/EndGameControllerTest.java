@@ -152,7 +152,6 @@ public class EndGameControllerTest implements Initializable {
         Label common = new Label(common1 + " + " + common2);
         common.setStyle("-fx-font-size: 13");
 
-        //TODO takes points for personal goal and adjacent tiles
         Label personal = createLabel(earnedPoints.stream().filter(x -> x.getType() == PointType.PERSONAL).mapToInt(EarnedPoint::getValue).sum());
         Label adjacent = createLabel(earnedPoints.stream().filter(x -> x.getType() == PointType.ADJACENT).toList().get(0).getValue());
 

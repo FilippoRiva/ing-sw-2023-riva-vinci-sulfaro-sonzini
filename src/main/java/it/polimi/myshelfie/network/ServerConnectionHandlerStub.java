@@ -15,10 +15,8 @@ import java.rmi.RemoteException;
  * Represents the Server Connection Handler implementation for Socket connection.
  */
 public class ServerConnectionHandlerStub implements ServerConnectionHandler {
-    final String ip;
-    final int port;
-    final Object receiveLock = new Object();
-    final Object sendLock = new Object();
+    private final Object receiveLock = new Object();
+    private final Object sendLock = new Object();
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
     private final Socket socket;
@@ -31,8 +29,6 @@ public class ServerConnectionHandlerStub implements ServerConnectionHandler {
      * @throws RemoteException if we are not able to create input/output streams or connect to the server
      */
     public ServerConnectionHandlerStub(String ip, int port) throws RemoteException {
-        this.ip = ip;
-        this.port = port;
         try {
             this.socket = new Socket(ip, port);
             try {

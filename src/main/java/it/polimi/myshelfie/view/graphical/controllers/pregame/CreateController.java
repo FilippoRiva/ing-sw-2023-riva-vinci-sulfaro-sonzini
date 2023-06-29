@@ -30,21 +30,17 @@ public class CreateController {
     protected Button createButton;
     @FXML
     protected Label createErrorLabel;
-    PreGameController preGameController;
-
 
     /**
      * Initializes the controller's component's resize properties and animations.
      * It sets the state variables to their default values.
      * @param banner the top banner of the pregame view.
-     * @param preGameController the preGameController.
      */
-    public void initialize(ImageView banner, PreGameController preGameController) {
+    public void initialize(ImageView banner) {
         CustomBindings.bindLowerPreGamePane(backgroundClear, banner);
         CustomBindings.bindSize(createButton,null,GraphicalUI.stage.heightProperty().divide(13).multiply(2));
         Animations.applyHoverScaling(createButton);
         Effects.applyShadow(createButton);
-        this.preGameController = preGameController;
     }
 
 

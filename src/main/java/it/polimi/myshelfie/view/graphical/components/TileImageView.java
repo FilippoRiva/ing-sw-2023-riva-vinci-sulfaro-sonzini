@@ -60,7 +60,7 @@ public class TileImageView extends ImageView {
      * @param itemTile the itemTile whose image is to be returned
      * @return the Image
      */
-    public static Image getTileImage(ItemTile itemTile) {
+    private Image getTileImage(ItemTile itemTile) {
         if (itemTile == null || itemTile.getType() == ItemTileType.EMPTY) return null;
         else return tilesNameToImage.get(itemTile.getType().getName() + (itemTile.getId() + 1));
     }

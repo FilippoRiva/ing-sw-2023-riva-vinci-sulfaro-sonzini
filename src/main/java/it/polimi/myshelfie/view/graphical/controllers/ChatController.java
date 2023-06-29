@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
  * Represents the chat controller.
  */
 public class ChatController implements Initializable {
-    final ViewManager viewManager = ViewManager.getInstance();
+    private final ViewManager viewManager = ViewManager.getInstance();
     @FXML
     protected TextField messageText;
     @FXML
@@ -48,7 +48,7 @@ public class ChatController implements Initializable {
     protected StackPane chat;
     @FXML
     protected Label notificationDot;
-    boolean chatIsOpen = false;
+    private boolean chatIsOpen = false;
     private GameOverlayController gameOverlayController;
 
     /**
