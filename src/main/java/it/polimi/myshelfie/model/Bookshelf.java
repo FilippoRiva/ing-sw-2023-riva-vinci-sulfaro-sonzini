@@ -48,6 +48,8 @@ public class Bookshelf {
     }
 
     /**
+     * Returns a copy of the items in this bookshelf
+     *
      * @return a copy of the items in this bookshelf
      */
     public ItemTile[][] getBookshelfItems() {

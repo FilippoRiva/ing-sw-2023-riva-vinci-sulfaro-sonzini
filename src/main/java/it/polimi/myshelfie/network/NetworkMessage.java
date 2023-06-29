@@ -9,6 +9,7 @@ import it.polimi.myshelfie.model.events.*;
 import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
 import it.polimi.myshelfie.model.modelviews.*;
 import it.polimi.myshelfie.utils.SerializableConsumer;
+import it.polimi.myshelfie.utils.ServerLogger;
 import it.polimi.myshelfie.view.View;
 import it.polimi.myshelfie.view.ViewType;
 import it.polimi.myshelfie.view.events.ViewEvent;
@@ -32,10 +33,9 @@ public class NetworkMessage implements Serializable {
         throw new RuntimeException("Not Implemented");
     });
 
-    //CLIENT TO SERVER MESSAGES
-
     /**
-     * Constructor when Join or Create requests are called.
+     * Constructor to make a Join or Create requests.
+     * To be used as a message from the client to the server.
      *
      * @param evt        a view event.
      * @param playerName the player name.
@@ -68,8 +68,9 @@ public class NetworkMessage implements Serializable {
             }
             lobbyController.addLobbyObserver(playerName, ((event, lobbyModelView) -> new Thread(() -> {
                 try {
-                    client.send(new NetworkMessage(event, lobbyModelView));
-                } catch (RemoteException ignored) {
+                    client.send(new NetworkMessage(event,lobbyModelView));
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(controllers.getServerConnectionHandler(),"Lobby Observer failed to send a Network Message");
                 }
             }).start()));
             connectionHandler.setLobbyController(lobbyController);
@@ -77,7 +78,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Config request is called.
+     * Constructor to make a Config request.
+     * To be used as a message from the client to the server.
      *
      * @param evt        a view event.
      * @param gameConfig the game config to set.
@@ -94,7 +96,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a message is sent in the chat.
+     * Constructor to make a Message request.
+     * To be used as a message from the client to the server.
      *
      * @param evt     a view event.
      * @param message the message sent.
@@ -112,7 +115,8 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Start or Exit request is called.
+     * Constructor to make a Start or Exit request.
+     * To be used as a message from the client to the server.
      *
      * @param evt a view event.
      * @throws InvalidParameterException if evt is not ViewEvent.START_REQUEST or ViewEvent.EXIT_REQUEST.
@@ -148,11 +152,12 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
-     * Constructor when a Draw or Organize request is called.
+     * Constructor to make Draw or Organize request.
+     * To be used as a message from the client to the server.
      *
      * @param evt                     a view event.
      * @param positionsOrOrderedTiles list of positions of the ordered tiles (drawn or organized).
-     * @throws InvalidParameterException if evt
+     * @throws InvalidParameterException if evt is not ViewEvent.DRAW_REQUEST or ViewEvent.ORGANIZE_REQUEST.
      */
     public NetworkMessage(ViewEvent evt, List<?> positionsOrOrderedTiles) throws InvalidParameterException {
         if (evt != ViewEvent.DRAW_REQUEST && evt != ViewEvent.ORGANIZE_REQUEST)
@@ -172,6 +177,15 @@ public class NetworkMessage implements Serializable {
         });
     }
 
+
+    /**
+     * Constructor to make an Insert Request.
+     * To be used as a message from the client to the server.
+     *
+     * @param evt    a view event.
+     * @param column the column where to insert the taken tiles.
+     * @throws InvalidParameterException if evt is not ViewEvent.INSERT_REQUEST.
+     */
     public NetworkMessage(ViewEvent evt, int column) throws InvalidParameterException {
         if (evt != ViewEvent.INSERT_REQUEST) throw new InvalidParameterException("wrong event");
         this.messageType = MessageType.VIEW_MESSAGE;
@@ -182,18 +196,40 @@ public class NetworkMessage implements Serializable {
         });
     }
 
+
+    /**
+     * Constructor to make a Select View message.
+     * To be used as a message from the server to the client.
+     * @param viewType the ViewType to set.
+     */
     public NetworkMessage(ViewType viewType) {
         this.messageType = MessageType.SELECT_VIEW_MESSAGE;
         this.event = null;
         this.clientFunction = ((view) -> new Thread(() -> view.setView(viewType)).start());
     }
 
+
+    /**
+     * Constructor to make a Lobby Message.
+     * To be used as a message from the server to the client.
+     *
+     * @param evt the lobby event.
+     * @param lobbyModelView the LobbyModelView to set.
+     */
     public NetworkMessage(LobbyEvent evt, LobbyModelView lobbyModelView) {
         this.messageType = MessageType.LOBBY_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view) -> new Thread(() -> view.setLobbyModelView(lobbyModelView)).start());
     }
 
+
+    /**
+     * Constructor to make a Game Message. It updates the ModelViews based on the event.
+     * To be used as a message from the server to the client.
+     *
+     * @param evt the game event.
+     * @param gameModelView the GameModelView to set.
+     */
     public NetworkMessage(GameEvent evt, GameModelView gameModelView) {
         this.messageType = MessageType.GAME_MESSAGE;
         this.event = evt;
@@ -208,24 +244,49 @@ public class NetworkMessage implements Serializable {
         }).start());
     }
 
-    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierView) {
+
+    /**
+     * Constructor to make an Exception Message.
+     * To be used as a message from the server to the client.
+     * @param evt the exception event.
+     * @param exceptionsNotifierModelView the ClientExceptionNotifierModelView to set.
+     */
+    public NetworkMessage(ExceptionEvent evt, ClientExceptionsNotifierModelView exceptionsNotifierModelView) {
         this.messageType = MessageType.EXCEPTION_MESSAGE;
         this.event = evt;
-        this.clientFunction = ((view) -> new Thread(() -> view.setExceptionView(exceptionsNotifierView, evt)).start());
+        this.clientFunction = ((view) -> new Thread(() -> view.setExceptionView(exceptionsNotifierModelView, evt)).start());
     }
 
+    /**
+     * Constructor to make a Chat Message.
+     * To be used as a message from the server to the client.
+     * @param evt the chat event.
+     * @param chatModelView the ChatModelVIew to set.
+     */
     public NetworkMessage(ChatEvent evt, PlayerChatModelView chatModelView) {
         this.messageType = MessageType.CHAT_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view) -> new Thread(() -> view.setChatView(chatModelView)).start());
     }
 
+
+    /**
+     * Constructor to make a Model Message.
+     * To be used as a message from the server to the client.
+     * @param evt the model event.
+     * @param modelView the ModelView to set.
+     */
     public NetworkMessage(ModelEvent evt, ModelView modelView) {
         this.messageType = MessageType.MODEL_MESSAGE;
         this.event = evt;
         this.clientFunction = ((view) -> new Thread(() -> view.setModelView(modelView)).start());
     }
 
+
+    /**
+     * Constructor to make a Ping message
+     * To be used as a message from the server to the client.
+     */
     public NetworkMessage() {
         this.messageType = MessageType.PING;
         this.clientFunction = ((view) -> {
@@ -233,13 +294,15 @@ public class NetworkMessage implements Serializable {
         this.serverFunction = ((controllersGroup) -> new Thread(() -> {
             try {
                 controllersGroup.getServerConnectionHandler().ping();
-            } catch (RemoteException ignored) {
+            } catch (RemoteException ignored){
+                ServerLogger.logClientInfo(controllersGroup.getServerConnectionHandler(),"Unable to Ping");
             }
         }).start());
     }
 
     /**
-     * Executes the method invoked on the view from the client.
+     * Executes the method invoked on the view by the server.
+     * To be used when receiving messages client-side.
      *
      * @param view the view of the client.
      */
@@ -247,12 +310,19 @@ public class NetworkMessage implements Serializable {
         clientFunction.accept(view);
     }
 
-    //SERVER TO CLIENT MESSAGES
+    /**
+     * Executes the method invoked on the controller by the client.
+     * To be used when receiving message server-side
+     *
+     * @param controllers the group of controllers and others parameters needed to execute the server message.
+     */
     public void serverExecute(ControllerGroup controllers) {
         serverFunction.accept(controllers);
     }
 
     /**
+     * Returns the message type.
+     *
      * @return the message type.
      */
     public MessageType getMessageType() {
@@ -260,6 +330,7 @@ public class NetworkMessage implements Serializable {
     }
 
     /**
+     * Returns the event.
      * @return the event.
      */
     public Object getEvent() {

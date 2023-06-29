@@ -22,6 +22,8 @@ public class PlayerChatModelView implements Serializable {
     }
 
     /**
+     * Returns the player's last message sent in his personal chat.
+     *
      * @return the player's last message sent in his personal chat.
      */
     public Message getLastMessage() {
@@ -29,6 +31,7 @@ public class PlayerChatModelView implements Serializable {
     }
 
     /**
+     * Returns the player's list of messages in the chat.
      * @return the player's list of messages in the chat.
      */
     public List<Message> getMessages() {

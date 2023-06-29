@@ -119,6 +119,8 @@ public enum PersonalGoalDefaults {
     }
 
     /**
+     * Returns a copy of the goal.
+     *
      * @return a copy of the goal.
      */
     public ItemTile[][] getGoal() {
@@ -130,6 +132,7 @@ public enum PersonalGoalDefaults {
     }
 
     /**
+     * Returns the id of this default personal goal.
      * @return the id of this default personal goal.
      */
     public int getId() {

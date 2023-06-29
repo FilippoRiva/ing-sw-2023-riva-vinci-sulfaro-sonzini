@@ -73,6 +73,8 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the list of player model views.
+     *
      * @return the list of player model views.
      */
     public List<PlayerModelView> getPlayers() {
@@ -101,6 +103,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the player model view of the first player.
      * @return the player model view of the first player.
      */
     public PlayerModelView getFirstPlayer() {
@@ -108,6 +111,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the name of the player playing.
      * @return the name of the player playing.
      */
     public String getCurrentPlayerName() {
@@ -115,6 +119,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the player model view of the current player.
      * @return the player model view of the current player.
      */
     public PlayerModelView getCurrentPlayer() {
@@ -131,6 +136,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the current state of the game.
      * @return the current state of the game.
      */
     public GameState getCurrentState() {
@@ -147,6 +153,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the list of common goal views of the common goals of the game.
      * @return the list of common goal views of the common goals of the game.
      */
     public List<CommonGoalModelView> getCommonGoals() {
@@ -163,7 +170,8 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
-     * @return a copy of the living room.
+     * Returns the living room.
+     * @return the living room.
      */
     public ItemTile[][] getLivingRoom() {
         return livingRoom;
@@ -179,6 +187,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns how many remaining tiles are on the board.
      * @return how many remaining tiles are on the board.
      */
     public int getRemainingTiles() {
@@ -195,6 +204,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the game config.
      * @return the game config.
      */
     public GameConfig getGameConfig() {
@@ -202,6 +212,7 @@ public class FullGameModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the lobby name.
      * @return the lobby name.
      */
     public String getRoomName() {

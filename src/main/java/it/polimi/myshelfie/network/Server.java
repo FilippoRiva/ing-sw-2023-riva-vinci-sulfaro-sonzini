@@ -12,7 +12,7 @@ public interface Server extends Remote {
      * Used to connect a client.
      *
      * @param client the client to connect.
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void connect(Client client) throws RemoteException;
 }

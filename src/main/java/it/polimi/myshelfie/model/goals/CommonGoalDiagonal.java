@@ -58,11 +58,21 @@ public class CommonGoalDiagonal extends CommonGoal {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 10;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Five tiles of the same type forming a diagonal";

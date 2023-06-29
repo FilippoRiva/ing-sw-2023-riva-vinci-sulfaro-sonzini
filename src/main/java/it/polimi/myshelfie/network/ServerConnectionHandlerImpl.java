@@ -13,7 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Represents the Server Connection Handler Implementation for RMI connection.
+ * Represents the Server Connection Handler Implementation.
  */
 public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements ServerConnectionHandler {
     private static int id = 0;
@@ -34,7 +34,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
      *
      * @param client     the client.
      * @param controller the controller.
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     public ServerConnectionHandlerImpl(Client client, Controller controller) throws RemoteException {
         this.client = client;
@@ -47,8 +47,7 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
 
     /**
      * Creates the RMI connection between client and server.
-     *
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     public void start() throws RemoteException {
         client.handshake(this);
@@ -58,27 +57,25 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             try {
                 client.lifeline();
             } catch (RemoteException e) {
-                try {
-                    if (!connected) return;
-                    ServerLogger.logClientInfo(this, "RMI Lifeline failed. Closing connection...");
-                    close();
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
+                if (!connected) return;
+                ServerLogger.logClientInfo(this, "RMI Lifeline failed. Closing connection...");
+                close();
             }
         }).start();
         try {
             controller.addClient(client, ((evt, modelView) -> new Thread(() -> {
                 try { //this is called every 10 seconds
-                    client.send(new NetworkMessage(evt, modelView));
-                } catch (RemoteException ignored) {
+                    client.send(new NetworkMessage(evt,modelView));
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this, "Model Observer failed to send a Network Message");
                 }
             }).start()), ((evt, clientExceptionsNotifierView) -> {
                 if (evt == null) return;
                 new Thread(() -> {
                     try {
-                        client.send(new NetworkMessage(evt, clientExceptionsNotifierView));
-                    } catch (RemoteException ignored) {
+                        client.send(new NetworkMessage(evt,clientExceptionsNotifierView));
+                    } catch (RemoteException e) {
+                        ServerLogger.logClientInfo(this, "Model Observer failed to send a Network Message");
                     }
                 }).start();
             }));
@@ -89,6 +86,33 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         connected = true;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param gameController the controller to set.
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
+    @Override
+    public synchronized void setGameController(GameController gameController) throws RemoteException {
+        if (!connected) throw new RemoteException();
+        this.gameController = gameController;
+        if (gameController == null) return;
+        gameController.addGameObserver(playerName, (evt, gameModelView) -> {
+            if (evt == null) return;
+            new Thread(() -> {
+                try {
+                    client.send(new NetworkMessage(evt,gameModelView));
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this, "Game Observer failed to send a Network Message");
+                }
+            }).start();
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param chatController the controller to set.
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
     @Override
     public synchronized void setChatController(ChatController chatController) throws RemoteException {
         if (!connected) throw new RemoteException();
@@ -99,14 +123,18 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
             new Thread(() -> {
                 try {
                     client.send(new NetworkMessage(evt, playerChatModelView));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.logClientInfo(this,"Chat Controller failed to send a Network Message");
                 }
             }).start();
         }));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void lifeline() throws RemoteException {
+    public void lifeline() {
         //this method blocks forever
         synchronized (lifelineSync) {
             try {
@@ -117,8 +145,11 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public synchronized void close() throws RemoteException {
+    public synchronized void close() {
         if (!connected) return;
         controller.quit(client);
         if (gameController != null) gameController.disconnectFromGame(playerName);
@@ -127,6 +158,10 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         ServerLogger.logClientInfo(this, "Disconnected");
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
     @Override
     public void ping() throws RemoteException {
         if (!connected) throw new RemoteException();
@@ -136,37 +171,27 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
         this.timeOutTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    if (!connected) return;
-                    ServerLogger.logClientInfo(connectionHandler, "Timed Out, Closing Connection...");
-                    close();
-                } catch (RemoteException ignored) {
-                }
+                if(!connected) return;
+                ServerLogger.logClientInfo(connectionHandler,"Timed Out, Closing Connection...");
+                close();
             }
         }, 10000);
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
     @Override
     public GameController getGameController() {
         return gameController;
     }
 
-    @Override
-    public synchronized void setGameController(GameController gameController) throws RemoteException {
-        if (!connected) throw new RemoteException();
-        this.gameController = gameController;
-        if (gameController == null) return;
-        gameController.addGameObserver(playerName, (evt, gameModelView) -> {
-            if (evt == null) return;
-            new Thread(() -> {
-                try {
-                    client.send(new NetworkMessage(evt, gameModelView));
-                } catch (RemoteException ignored) {
-                }
-            }).start();
-        });
-    }
-
+    /**
+     * {@inheritDoc}
+     * @param networkMessage the message to send.
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
     @Override
     public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
         if (!connected) throw new RemoteException();
@@ -177,10 +202,10 @@ public class ServerConnectionHandlerImpl extends UnicastRemoteObject implements 
     }
 
     /**
-     * Associates the lobby controller.
-     *
+     * {@inheritDoc}
      * @param lobbyController the controller to set.
      */
+    @Override
     public void setLobbyController(LobbyController lobbyController) {
         this.lobbyController = lobbyController;
     }

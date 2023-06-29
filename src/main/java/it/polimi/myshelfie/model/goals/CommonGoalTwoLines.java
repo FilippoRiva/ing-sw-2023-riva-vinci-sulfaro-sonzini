@@ -23,11 +23,21 @@ public class CommonGoalTwoLines extends CommonGoal {
         return row_count >= 2;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 5;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Two lines each formed by 5 different types of tiles";

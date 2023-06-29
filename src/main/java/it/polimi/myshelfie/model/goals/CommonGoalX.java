@@ -29,11 +29,21 @@ public class CommonGoalX extends CommonGoal {
         return centerType == bookshelf[i - 1][j - 1].getType();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 9;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Five tiles of the same type forming an X";

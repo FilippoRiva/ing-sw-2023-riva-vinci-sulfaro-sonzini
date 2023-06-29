@@ -16,15 +16,23 @@ public interface ServerConnectionHandler extends Remote {
      * Used to send a network message.
      *
      * @param networkMessage the message to send.
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void send(NetworkMessage networkMessage) throws RemoteException;
+
+    /**
+     * Associates the game controller.
+     *
+     * @param gameController the controller to set.
+     * @throws RemoteException if a communication-related exceptions has occurred.
+     */
+    void setGameController(GameController gameController) throws RemoteException;
 
     /**
      * Associates the chat controller.
      *
      * @param chatController the controller to set.
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void setChatController(ChatController chatController) throws RemoteException;
 
@@ -32,38 +40,29 @@ public interface ServerConnectionHandler extends Remote {
      * Associates the lobby controller.
      *
      * @param lobbyController the controller to set.
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void setLobbyController(LobbyController lobbyController) throws RemoteException;
 
     /**
      * It blocks forever the calling thread until the client disconnects.
      *
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void lifeline() throws RemoteException;
 
     /**
      * Closes the connection.
      *
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void close() throws RemoteException;
 
     /**
-     * Sets a 10 seconds timer.
+     * Resets the ping's timer.
      *
-     * @throws RemoteException
+     * @throws RemoteException if a communication-related exceptions has occurred.
      */
     void ping() throws RemoteException;
-
     GameController getGameController() throws RemoteException;
-
-    /**
-     * Associates the game controller.
-     *
-     * @param gameController the controller to set.
-     * @throws RemoteException
-     */
-    void setGameController(GameController gameController) throws RemoteException;
 }

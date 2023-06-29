@@ -1,5 +1,9 @@
 package it.polimi.myshelfie.view.events;
 
+
+/**
+ * Represents all kinds of view events.
+ */
 public enum ViewEvent {
     CREATE_REQUEST,
     JOIN_REQUEST,

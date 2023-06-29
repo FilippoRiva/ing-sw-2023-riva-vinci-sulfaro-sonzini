@@ -60,6 +60,8 @@ public class PlayerModelView implements Serializable {
     }
 
     /**
+     * Returns the player name.
+     *
      * @return the player name.
      */
     public String getName() {
@@ -67,6 +69,7 @@ public class PlayerModelView implements Serializable {
     }
 
     /**
+     * Returns the player's list of personal goals.
      * @return the player's list of personal goals.
      */
     public List<PersonalGoalModelView> getPersonalGoals() {
@@ -74,12 +77,19 @@ public class PlayerModelView implements Serializable {
     }
 
     /**
+     * Returns the player's points.
+     *
      * @return the player's points.
      */
     public int getPoints() {
         return earnedPoints.stream().mapToInt(EarnedPoint::getValue).sum();
     }
 
+    /**
+     * Returns a List of EarnedPoints of this PlayerModelView
+     *
+     * @return a List of EarnedPoints of this PlayerModelView
+     */
     public ArrayList<EarnedPoint> getEarnedPoints() {
         return earnedPoints;
     }
@@ -94,6 +104,7 @@ public class PlayerModelView implements Serializable {
     }
 
     /**
+     * Returns the player's list of obtained tokens.
      * @return the player's list of obtained tokens.
      */
     public List<Token> getTokens() {
@@ -110,6 +121,7 @@ public class PlayerModelView implements Serializable {
     }
 
     /**
+     * Returns a copy of the player's bookshelf.
      * @return a copy of the player's bookshelf.
      */
     public ItemTile[][] getBookshelf() {
@@ -126,6 +138,7 @@ public class PlayerModelView implements Serializable {
     }
 
     /**
+     * Returns the list of the tiles taken from the player.
      * @return the list of the tiles taken from the player.
      */
     public List<ItemTile> getTakenTiles() {

@@ -20,7 +20,8 @@ public interface LobbyController {
     /**
      * Allows the room owner to set the game settings.
      *
-     * @param config the game's settings.
+     * @param playerName the player name.
+     * @param config     the game's settings.
      */
     void setConfig(String playerName, GameConfig config);
 

@@ -34,11 +34,21 @@ public class CommonGoalTwoColumns extends CommonGoal {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 1;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Two columns each formed by 6 different types of tiles";

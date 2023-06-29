@@ -32,6 +32,8 @@ public class PlayerChat extends Observable<ChatEvent, PlayerChatModelView> {
     }
 
     /**
+     * Returns the entire list of received messages by the player.
+     *
      * @return the entire list of received messages by the player.
      */
     public ArrayList<Message> getMessages() {

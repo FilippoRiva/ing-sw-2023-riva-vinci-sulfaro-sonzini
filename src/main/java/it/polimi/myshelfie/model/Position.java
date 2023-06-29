@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Represents the position of a tile on the board. The centre of the board has coordinates (0,0).
+ * Immutable class representing the position of a tile on the board. The centre of the board has coordinates (0,0).
  */
 public class Position implements Serializable {
     private final int x;

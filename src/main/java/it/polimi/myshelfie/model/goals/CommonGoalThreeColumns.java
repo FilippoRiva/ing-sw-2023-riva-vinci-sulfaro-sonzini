@@ -42,11 +42,21 @@ public class CommonGoalThreeColumns extends CommonGoal {
         return type_count <= maxNumber;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 4;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Three columns. Maximum three different types per column.\n" +

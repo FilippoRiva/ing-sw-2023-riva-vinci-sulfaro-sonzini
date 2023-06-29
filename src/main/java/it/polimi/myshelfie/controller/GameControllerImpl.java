@@ -92,6 +92,12 @@ public class GameControllerImpl implements GameController, ChatController {
         gameModel.setState(GameState.FIRST_DRAW);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param positions  the positions of the tiles the player wants to select from the board.
+     * @param playerName the player playing.
+     */
     @Override
     public synchronized void drawTiles(List<Position> positions, String playerName) {
         if (closed) {
@@ -112,6 +118,12 @@ public class GameControllerImpl implements GameController, ChatController {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param orderedTiles the tiles selected from the board.
+     * @param playerName   the player playing.
+     */
     @Override
     public synchronized void orderChosenTiles(List<ItemTile> orderedTiles, String playerName) {
         if (closed) {
@@ -132,6 +144,12 @@ public class GameControllerImpl implements GameController, ChatController {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName the player playing.
+     * @param column     the column where to insert the chosen tiles.
+     */
     @Override
     public synchronized void insertTiles(String playerName, int column) {
         if (closed) {
@@ -187,7 +205,7 @@ public class GameControllerImpl implements GameController, ChatController {
     }
 
     /**
-     * Sets the end game state WIN.
+     * Calculates the end game results such as end game tokens or personal goals points. Sets the game state to WIN.
      */
     private void endGame() {
         gameModel.calculateWinResults();
@@ -195,19 +213,31 @@ public class GameControllerImpl implements GameController, ChatController {
         for (Client c : clientsMap.values()) {
             try {
                 c.send(new NetworkMessage(ViewType.WIN));
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Sending a WIN Network Message to a Disconnected Client");
             }
         }
         closed = true;
         ServerLogger.log(Level.FINE, "Game ended. Game name : " + gameName);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName          the name of the player.
+     * @param networkGameObserver the observer to add.
+     */
     @Override
     public synchronized void addGameObserver(String playerName, Observer<GameEvent, GameModelView> networkGameObserver) {
         gameModel.addGameObserver(networkGameObserver);
         gameObserverMap.put(playerName, networkGameObserver);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param disconnectedPlayerName the name of the player quitting.
+     */
     @Override
     public synchronized void disconnectFromGame(String disconnectedPlayerName) {
         if (gameModel.getState() == GameState.WIN) {
@@ -224,7 +254,8 @@ public class GameControllerImpl implements GameController, ChatController {
                     connectionHandlersMap.get(player).setGameController(null);
                     connectionHandlersMap.get(player).setChatController(null);
                     clientsMap.get(player).send(new NetworkMessage(ViewType.DISCONNECTION));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.log(Level.FINE, "Sending a DISCONNECTION Network Message to a Disconnected Client");
                 }
                 controller.clientHasLeft(clientsMap.get(player));
             }).start();
@@ -236,6 +267,12 @@ public class GameControllerImpl implements GameController, ChatController {
         ServerLogger.log(Level.FINE, "Game shutdown after disconnection. Game name : " + gameName + " | Player disconnected : " + disconnectedPlayerName);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param username          the name of the player leaving.
+     * @param fromDisconnection indicates the disconnection.
+     */
     @Override
     public synchronized void leaveEndGame(String username, boolean fromDisconnection) {
         if (gameModel.getState() != GameState.WIN) {
@@ -247,13 +284,15 @@ public class GameControllerImpl implements GameController, ChatController {
             try {
                 connectionHandlersMap.get(username).setGameController(null);
                 connectionHandlersMap.get(username).setChatController(null);
-            } catch (RemoteException ignored) {
+            } catch (RemoteException e) {
+                ServerLogger.log(Level.FINE, "Setting Controllers to a Disconnected Client");
             }
             Client client = clientsMap.get(username);
-            new Thread(() -> {
+            new Thread(()->{
                 try {
                     client.send(new NetworkMessage(ViewType.INIT));
-                } catch (RemoteException ignored) {
+                } catch (RemoteException e) {
+                    ServerLogger.log(Level.FINE,"Sending a INIT Network Message to a disconnected client while leaving game");
                 }
             }).start();
         }
@@ -269,6 +308,12 @@ public class GameControllerImpl implements GameController, ChatController {
             ServerLogger.log(Level.FINE, "Player disconnected from end game. Game name : " + gameName + " | Player disconnected : " + username);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName
+     * @param message    the message written by a player and sent to one or more players.
+     */
     @Override
     public synchronized void addMessage(String playerName, Message message) {
         ServerLogger.log(Level.FINEST, "Player sent game chat message. Game name : " + gameName + " | Player chatting : " + playerName +
@@ -276,6 +321,12 @@ public class GameControllerImpl implements GameController, ChatController {
         chatModel.addMessage(message);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param playerName          the name of the player.
+     * @param networkChatObserver the observer to add.
+     */
     @Override
     public synchronized void addChatObserver(String playerName, Observer<ChatEvent, PlayerChatModelView> networkChatObserver) {
         chatModel.addChatObserver(playerName, networkChatObserver);

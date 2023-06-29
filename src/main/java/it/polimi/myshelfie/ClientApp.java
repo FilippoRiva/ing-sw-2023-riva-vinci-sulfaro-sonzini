@@ -21,6 +21,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
+
+/**
+ * Used to run the Client.
+ */
 public class ClientApp {
     static final int registryPort = 1099;
     static String serverIP = "localhost";
@@ -171,11 +175,12 @@ public class ClientApp {
                     try {
                         serverStub.close();
                     } catch (RemoteException ignored) {
+                        System.err.println("Unable to close the Socket");
                     }
                     break;
                 } catch (StreamCorruptedException e) {
                     System.err.println("The stream has been reset by the server");
-                } catch (InvalidClassException ignored) {
+                } catch (InvalidClassException e) {
                     System.out.println("Receiving Unrecognized Classes");
                 } catch (SocketException e) {
                     System.err.println("Lost server connection. Disconnecting....");

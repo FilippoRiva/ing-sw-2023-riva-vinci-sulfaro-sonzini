@@ -49,11 +49,21 @@ public class CommonGoalStairs extends CommonGoal {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 11;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Five columns of increasing or decreasing height";

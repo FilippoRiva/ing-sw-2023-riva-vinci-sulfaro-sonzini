@@ -28,6 +28,8 @@ public class OrganizeModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the current player
+     *
      * @return the current player
      */
     public String getCurrentPlayer() {
@@ -35,6 +37,7 @@ public class OrganizeModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the current state
      * @return the current state
      */
     public GameState getCurrentState() {
@@ -42,6 +45,7 @@ public class OrganizeModelView implements Serializable, GameModelView {
     }
 
     /**
+     * Returns the list of ordered tiles.
      * @return the list of ordered tiles.
      */
     public List<ItemTile> getOrderedTiles() {

@@ -50,11 +50,21 @@ public class CommonGoalFourLines extends CommonGoal {
         return typeCount <= maxNumber;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 6;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description.
+     */
     @Override
     public String getDescription() {
         return "Four lines formed by 5 tiles of maximum three different types";

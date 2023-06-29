@@ -20,11 +20,21 @@ public class CommonGoalCorner extends CommonGoal {
         return bookshelf[height][width].getType() == bookshelf[height][0].getType();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the id
+     */
     @Override
     public int getId() {
         return 7;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the description
+     */
     @Override
     public String getDescription() {
         return "Four tiles of the same type in the four corners";

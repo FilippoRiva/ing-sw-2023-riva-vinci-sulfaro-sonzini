@@ -10,6 +10,11 @@ public class FullColumnException extends Exception {
         this.message = message.concat(String.valueOf(column));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the Message
+     */
     @Override
     public String getMessage() {
         return message;
