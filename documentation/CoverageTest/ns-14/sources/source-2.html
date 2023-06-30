@@ -1,0 +1,118 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ClientExceptionsNotifier</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientExceptionsNotifier (it.polimi.myshelfie.model.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ClientExceptionsNotifier</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.interfaces;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.events.ExceptionEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.DisconnectionException;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the client exceptions notifier&#39;s interface.
+&nbsp; */
+&nbsp;public interface ClientExceptionsNotifier {
+&nbsp;    /**
+&nbsp;     * Add this exception to the list of exceptions and notifies the observers.
+&nbsp;     *
+&nbsp;     * @param exception the new exception.
+&nbsp;     */
+&nbsp;    void notifyException(Exception exception);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notifies whether a player disconnects.
+&nbsp;     *
+&nbsp;     * @param exception the disconnection exception.
+&nbsp;     */
+&nbsp;    void notifyException(DisconnectionException exception);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds an exception observer.
+&nbsp;     *
+&nbsp;     * @param obs is the observer to add.
+&nbsp;     */
+&nbsp;    void addExceptionsObserver(Observer&lt;ExceptionEvent, ClientExceptionsNotifierModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes an exception observer.
+&nbsp;     *
+&nbsp;     * @param obs the observer to remove
+&nbsp;     */
+&nbsp;    void removeExceptionsObserver(Observer&lt;ExceptionEvent, ClientExceptionsNotifierModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a client exception notifier view.
+&nbsp;     *
+&nbsp;     * @return a client exception notifier view.
+&nbsp;     */
+&nbsp;    ClientExceptionsNotifierModelView getClientExceptionNotifierView();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes the exception observer.
+&nbsp;     */
+&nbsp;    void removeExceptionsObservers();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

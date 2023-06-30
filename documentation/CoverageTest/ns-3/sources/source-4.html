@@ -1,0 +1,835 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Game</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Game (it.polimi.myshelfie.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    98%
+  </span>
+  <span class="absValue">
+    (48/49)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89,4%
+  </span>
+  <span class="absValue">
+    (168/188)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Game$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    98%
+  </span>
+  <span class="absValue">
+    (49/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89,4%
+  </span>
+  <span class="absValue">
+    (169/189)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.GameConfig;
+&nbsp;import it.polimi.myshelfie.model.chatting.ChatSystem;
+&nbsp;import it.polimi.myshelfie.model.events.GameEvent;
+&nbsp;import it.polimi.myshelfie.model.events.LobbyEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.FullColumnException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.LobbyFullException;
+&nbsp;import it.polimi.myshelfie.model.goals.CommonGoal;
+&nbsp;import it.polimi.myshelfie.model.goals.CommonGoalDefaultsFactory;
+&nbsp;import it.polimi.myshelfie.model.goals.PersonalGoal;
+&nbsp;import it.polimi.myshelfie.model.goals.PersonalGoalFactory;
+&nbsp;import it.polimi.myshelfie.model.interfaces.ChatModel;
+&nbsp;import it.polimi.myshelfie.model.interfaces.GameModel;
+&nbsp;import it.polimi.myshelfie.model.interfaces.LobbyModel;
+&nbsp;import it.polimi.myshelfie.model.modelviews.*;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;import it.polimi.myshelfie.utils.ServerLogger;
+&nbsp;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;import java.util.logging.Level;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents and entire game: it has all the settings, a name, the players, the living room, the common goals and the chat system.
+&nbsp; */
+&nbsp;public class Game implements GameModel, LobbyModel {
+&nbsp;    private final it.polimi.myshelfie.utils.Observable&lt;LobbyEvent, LobbyModelView&gt; lobbyObservable;
+&nbsp;    private final it.polimi.myshelfie.utils.Observable&lt;GameEvent, GameModelView&gt; gameObservable;
+&nbsp;    private final ChatSystem chatSystem;
+&nbsp;    private final String lobbyName;
+&nbsp;    private final ArrayList&lt;Player&gt; players;
+&nbsp;    private GameConfig gameConfig;
+&nbsp;    private Player currentPlayer;
+&nbsp;    private GameState currentState;
+&nbsp;    private List&lt;CommonGoal&gt; commonGoals;
+&nbsp;    private LivingRoom livingRoom;
+&nbsp;    private String roomOwner;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param roomName the name of the game.
+&nbsp;     */
+<b class="fc">&nbsp;    public Game(String roomName) {</b>
+<b class="fc">&nbsp;        this.lobbyObservable = new it.polimi.myshelfie.utils.Observable&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.gameObservable = new it.polimi.myshelfie.utils.Observable&lt;&gt;();</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            this.gameConfig = new GameConfig(2);</b>
+<b class="nc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.SEVERE, &quot;Critical Failure in Game Initialization. Unable to create Default Game Config. Shutting Down&quot;);</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+<b class="nc">&nbsp;            System.exit(-1);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        this.currentState = GameState.LOBBY;</b>
+<b class="fc">&nbsp;        this.chatSystem = new ChatSystem();</b>
+<b class="fc">&nbsp;        this.players = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.lobbyName = roomName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the new player that has to be added to the game.
+&nbsp;     * @throws LobbyFullException        if the lobby is full
+&nbsp;     * @throws InvalidParameterException if the playerName is not available
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException {
+<b class="fc">&nbsp;        if (isLobbyFull()) throw new LobbyFullException(true);</b>
+<b class="fc">&nbsp;        if (!isPlayerNameValid(playerName)) throw new InvalidParameterException(&quot;Player name is not valid&quot;);</b>
+<b class="fc">&nbsp;        if (players.size() == 0) roomOwner = playerName;</b>
+<b class="fc">&nbsp;        players.add(new Player(playerName));</b>
+<b class="fc">&nbsp;        lobbyObservable.setChanged();</b>
+<b class="fc">&nbsp;        lobbyObservable.notifyObservers(LobbyEvent.PLAYER_ADD, getLobbyModelView());</b>
+<b class="fc">&nbsp;        chatSystem.addPlayerToChat(playerName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the lobby is full.
+&nbsp;     *
+&nbsp;     * @return true when the number of the players that wants to play is grater than the param NumPlayers set in the game config, false otherwise.
+&nbsp;     */
+&nbsp;    private boolean isLobbyFull() {
+<b class="fc">&nbsp;        return players.size() == gameConfig.getNumPlayers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the player name is valid.
+&nbsp;     *
+&nbsp;     * @param playerName is the username the player choose to play with.
+&nbsp;     * @return true if the chosen username is already taken by another player, false otherwise.
+&nbsp;     */
+&nbsp;    private boolean isPlayerNameValid(String playerName) {
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            if (p.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the player that has to be removed from the game.
+&nbsp;     * @throws InvalidParameterException if the requested player is not in this lobby.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void removePlayer(String playerName) throws InvalidParameterException {
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            if (p.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                players.remove(p);</b>
+<b class="fc">&nbsp;                if (p.getName().equals(roomOwner) &amp;&amp; players.size() != 0) roomOwner = players.get(0).getName();</b>
+<b class="fc">&nbsp;                lobbyObservable.setChanged();</b>
+<b class="fc">&nbsp;                lobbyObservable.notifyObservers(LobbyEvent.PLAYER_REMOVE, getLobbyModelView());</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        throw new InvalidParameterException(&quot;player is not in this lobby&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return true if the lobby is empty
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isLobbyEmpty() {
+<b class="fc">&nbsp;        return players.size() == 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @throws LobbyFullException if the lobby is not full.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void initialize() throws LobbyFullException {
+<b class="fc">&nbsp;        if (!isLobbyFull()) throw new LobbyFullException(false);</b>
+<b class="fc">&nbsp;        Collections.shuffle(players);</b>
+<b class="fc">&nbsp;        currentPlayer = players.get(0);</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            commonGoals = CommonGoalDefaultsFactory.getGoals(gameConfig.getNumPlayers(), gameConfig.getNumCommonGoal());</b>
+<b class="fc">&nbsp;            livingRoom = new LivingRoom(gameConfig.getNumTilesPerType(), gameConfig.getLivingRoomSize(), gameConfig.getNumPlayers());</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(e);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        List&lt;PersonalGoal&gt; goals;
+&nbsp;        try {
+<b class="fc">&nbsp;            goals = generatePersonalGoals(gameConfig.getNumPlayers(), gameConfig.getNumPersonalGoals());</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(e);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            p.setBookshelf(new Bookshelf(gameConfig.getBookshelfDimension()));</b>
+<b class="fc">&nbsp;            List&lt;PersonalGoal&gt; playerGoals = new ArrayList&lt;&gt;(goals.subList(0, gameConfig.getNumPersonalGoals()));</b>
+<b class="fc">&nbsp;            p.setPersonalGoals(playerGoals);</b>
+<b class="fc">&nbsp;            for (PersonalGoal pp : playerGoals) {</b>
+<b class="fc">&nbsp;                goals.remove(pp);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the list of personal goals that have to be assigned to every player.
+&nbsp;     *
+&nbsp;     * @param numOfPlayers      the number of the players in the game.
+&nbsp;     * @param numOfPersonalGoal the number of the personal goals assigned to every player.
+&nbsp;     * @return the list of personal goals that have to be assigned to every player in the game.
+&nbsp;     * @throws Exception if the number of personal goals per player is not valid.
+&nbsp;     */
+&nbsp;    private List&lt;PersonalGoal&gt; generatePersonalGoals(int numOfPlayers, int numOfPersonalGoal) throws Exception {
+<b class="fc">&nbsp;        return PersonalGoalFactory.getDistinctPersonalGoals(numOfPersonalGoal, gameConfig.getBookshelfDimension(), numOfPlayers, gameConfig.getPersonalGoalRatio());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void nextTurn() {
+&nbsp;        int currentTurn;
+&nbsp;
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            if (p.equals(currentPlayer)) {</b>
+<b class="fc">&nbsp;                currentTurn = players.indexOf(p);</b>
+<b class="fc">&nbsp;                currentPlayer = players.get((currentTurn + 1) % players.size());</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void calculateWinResults() {
+<b class="fc">&nbsp;        for (Player player : players) {</b>
+<b class="fc">&nbsp;            player.calculatePoints();</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the name of the player who obtains the token.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void addEndToken(String playerName) {
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            if (p.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                p.addObtainedToken(Token.ENDGAME);</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the current GameState.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public GameState getState() {
+<b class="fc">&nbsp;        return currentState;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets a {@link GameState}
+&nbsp;     *
+&nbsp;     * @param state the new state.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void setState(GameState state) {
+<b class="fc">&nbsp;        if (state == GameState.FIRST_DRAW) {</b>
+<b class="fc">&nbsp;            this.currentState = GameState.DRAW;</b>
+<b class="fc">&nbsp;            gameObservable.setChanged();</b>
+<b class="fc">&nbsp;            gameObservable.notifyObservers(GameEvent.GAME_START, new FullGameModelView(this));</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        this.currentState = state;</b>
+<b class="fc">&nbsp;        if (state == GameState.LOBBY) {</b>
+<b class="nc">&nbsp;            lobbyObservable.setChanged();</b>
+<b class="nc">&nbsp;            lobbyObservable.notifyObservers(new LobbyModelView(this));</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            gameObservable.setChanged();</b>
+<b class="fc">&nbsp;            switch (state) {</b>
+&nbsp;                case DRAW, LAST_DRAW -&gt;
+<b class="fc">&nbsp;                        gameObservable.notifyObservers(GameEvent.COUNTING_POINTS, new EndTurnModelView(this));</b>
+<b class="fc">&nbsp;                case ORGANIZE, LAST_ORGANIZE -&gt; gameObservable.notifyObservers(GameEvent.DRAW, new DrawModelView(this));</b>
+&nbsp;                case INSERT, LAST_INSERT -&gt;
+<b class="fc">&nbsp;                        gameObservable.notifyObservers(GameEvent.ORGANIZE, new OrganizeModelView(this));</b>
+&nbsp;                case COUNTING_POINTS, LAST_COUNTING_POINTS -&gt;
+<b class="fc">&nbsp;                        gameObservable.notifyObservers(GameEvent.INSERT, new InsertModelView(this));</b>
+<b class="fc">&nbsp;                case WIN -&gt; gameObservable.notifyObservers(GameEvent.WIN, new FullGameModelView(this));</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param positions  the positions of the tiles that have to be removed from the board, where the first in the list is the first one to be
+&nbsp;     *                   inserted into the player&#39;s bookshelf, and the last one is the last one to be inserted.
+&nbsp;     * @param playerName the name of the player drawing the tiles.
+&nbsp;     * @throws InvalidParameterException if the player is :
+&nbsp;     *                                   &lt;ul&gt;
+&nbsp;     *                                       &lt;li&gt;playing in the wrong turn&lt;/li&gt;
+&nbsp;     *                                       &lt;li&gt;drawing and empty list of Position&lt;/li&gt;
+&nbsp;     *                                       &lt;li&gt;drawing non valid positions&lt;/li&gt;
+&nbsp;     *                                       &lt;li&gt;drawing more tiles then allowed&lt;/li&gt;
+&nbsp;     *                                   &lt;/ul&gt;
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void drawTiles(List&lt;Position&gt; positions, String playerName) throws InvalidParameterException {
+<b class="fc">&nbsp;        if (!playerName.equals(currentPlayer.getName()))</b>
+<b class="fc">&nbsp;            throw new InvalidParameterException(&quot;player playing in the wrong turn&quot;);</b>
+<b class="fc">&nbsp;        if (positions.size() == 0) throw new InvalidParameterException(&quot;no tiles selected&quot;);</b>
+<b class="fc">&nbsp;        if (!positionsAreValid(positions)) throw new InvalidParameterException(&quot;positions are not valid&quot;);</b>
+<b class="fc">&nbsp;        if (positions.size() &gt; currentPlayer.getBookshelf().columnFreeSpace() || positions.size() &gt; 3)</b>
+<b class="nc">&nbsp;            throw new InvalidParameterException(&quot;player has taken more tiles than allowed&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;ItemTile&gt; items = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Position p : positions) {</b>
+<b class="fc">&nbsp;            items.add(livingRoom.removeTile(p.getX(), p.getY()));</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        currentPlayer.setTakenTiles(items);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns true if the selected tiles from the board can be taken.
+&nbsp;     *
+&nbsp;     * @param positions are the positions of the items selected from the board.
+&nbsp;     * @return true or false.
+&nbsp;     */
+&nbsp;    private boolean positionsAreValid(List&lt;Position&gt; positions) {
+<b class="fc">&nbsp;        for (Position p : positions) {</b>
+<b class="fc">&nbsp;            if (!livingRoom.isValid(p)) return false;</b>
+<b class="fc">&nbsp;            if (livingRoom.emptyPosition(p)) return false;</b>
+<b class="fc">&nbsp;            if (!livingRoom.atLeastOneSideFree(p)) return false;</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        return !Position.arePositionsMisaligned(positions);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param orderedTiles the tiles taken form the board.
+&nbsp;     * @param playerName   the player playing.
+&nbsp;     * @throws InvalidParameterException if the player is playing in the wrong turn or the ordered tiles are different from the taken ones in the draw move.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void orderChosenTiles(List&lt;ItemTile&gt; orderedTiles, String playerName) throws InvalidParameterException {
+<b class="fc">&nbsp;        if (!playerName.equals(currentPlayer.getName()))</b>
+<b class="fc">&nbsp;            throw new InvalidParameterException(&quot;player playing in the wrong turn&quot;);</b>
+<b class="fc">&nbsp;        if (orderedTiles == null || orderedTiles.size() == 0) { //keeping the order</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        for (Player player : players) {</b>
+<b class="fc">&nbsp;            if (player.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                if (!player.getTakenTiles().containsAll(orderedTiles) || player.getTakenTiles().size() != orderedTiles.size())</b>
+<b class="nc">&nbsp;                    throw new InvalidParameterException(&quot;tiles different from the taken ones in the draw move&quot;);</b>
+<b class="fc">&nbsp;                player.setTakenTiles(orderedTiles);</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the player playing.
+&nbsp;     * @param column     the chose column to insert the tiles in.
+&nbsp;     * @throws InvalidParameterException if the player is playing in the wrong turn or if the column is not available or has not yet drawn any tile.
+&nbsp;     * @throws FullColumnException       if the requested column is full.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException {
+<b class="fc">&nbsp;        if (!playerName.equals(currentPlayer.getName()))</b>
+<b class="fc">&nbsp;            throw new InvalidParameterException(&quot;player playing in the wrong turn&quot;);</b>
+<b class="fc">&nbsp;        if (column &lt; 0 || column &gt; gameConfig.getBookshelfDimension().width - 1)</b>
+<b class="nc">&nbsp;            throw new InvalidParameterException(&quot;column not available&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            if (p.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                int numTakenTiles = p.getTakenTiles().size();</b>
+<b class="fc">&nbsp;                if (numTakenTiles == 0) throw new InvalidParameterException(&quot;player has not yet drawn any tiles&quot;);</b>
+<b class="fc">&nbsp;                if (!p.getBookshelf().isColumnFillable(numTakenTiles, column))</b>
+<b class="nc">&nbsp;                    throw new FullColumnException(column);</b>
+<b class="fc">&nbsp;                for (ItemTile t : p.getTakenTiles()) {</b>
+<b class="fc">&nbsp;                    p.getBookshelf().insertTile(column, t);</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;                p.clearTakenTiles();</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the player playing
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void checkCommonGoal(String playerName) {
+<b class="fc">&nbsp;        for (CommonGoal cm : commonGoals) {</b>
+<b class="fc">&nbsp;            for (Player p : players) {</b>
+<b class="fc">&nbsp;                if (p.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                    if (cm.getTokens().size() != 0 &amp;&amp; !p.getObtainedTokens().stream().map(Token::getRomanNumeral).toList().contains(cm.peekToken().getRomanNumeral())) {</b>
+<b class="fc">&nbsp;                        if (cm.isVerified(currentPlayer.getBookshelf().getBookshelfItems())) {</b>
+<b class="nc">&nbsp;                            addToken(playerName, cm.popToken());</b>
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                    break;
+&nbsp;                }
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a token when a player completes a common goal.
+&nbsp;     * The one added is on the top of the stack, and the points on the token are added to the points of the player.
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the player that obtained the token.
+&nbsp;     * @param token      is the token obtained.
+&nbsp;     */
+&nbsp;    private void addToken(String playerName, Token token) {
+<b class="nc">&nbsp;        for (Player p : players) {</b>
+<b class="nc">&nbsp;            if (p.getName().equals(playerName)) {</b>
+<b class="nc">&nbsp;                p.addObtainedToken(token);</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void refillLivingRoom() {
+<b class="fc">&nbsp;        livingRoom.refill();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the Chat Model of this game
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public ChatModel getChatModel() {
+<b class="fc">&nbsp;        return chatSystem;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}.
+&nbsp;     * If the lobby has not been initialized it returns null.
+&nbsp;     *
+&nbsp;     * @return the GameModel
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public GameModel getGameModel() {
+<b class="fc">&nbsp;        if (!hasStarted()) return null; //lobby has not been initialized</b>
+<b class="fc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the name of the player that created the lobby.
+&nbsp;     * @return the name of the player that created the lobby.
+&nbsp;     */
+&nbsp;    public String getRoomOwner() {
+<b class="fc">&nbsp;        return roomOwner;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the name of the player playing in that turn.
+&nbsp;     *
+&nbsp;     * @return the name of the player playing in that turn.
+&nbsp;     */
+&nbsp;    public String getCurrentPlayer() {
+<b class="fc">&nbsp;        return currentPlayer.getName();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the name of the last player who played.
+&nbsp;     *
+&nbsp;     * @return the name of the last player who played.
+&nbsp;     */
+&nbsp;    public String getLastPlayer() {
+<b class="fc">&nbsp;        int index = players.indexOf(currentPlayer);</b>
+<b class="fc">&nbsp;        if (index == 0) {</b>
+<b class="fc">&nbsp;            return players.get(players.size() - 1).getName();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return players.get(index - 1).getName();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the Player associated with a certain playerName.
+&nbsp;     * @param playerName the requested playerName.
+&nbsp;     * @return the {@link Player} associated whit the playerName.
+&nbsp;     */
+&nbsp;    public Player getPlayer(String playerName) {
+<b class="fc">&nbsp;        for (Player p : players) {</b>
+<b class="fc">&nbsp;            if (p.getName().equals(playerName)) {</b>
+<b class="fc">&nbsp;                return p;</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether the bookshelf is full.
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the player whose bookshelf has to be controlled.
+&nbsp;     * @return true if the bookshelf is full, false otherwise.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized boolean isBookshelfFull(String playerName) {
+<b class="fc">&nbsp;        return this.getPlayer(playerName).getBookshelf().isFull();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether the player playing is the last one of that turn.
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the player that has to be controlled.
+&nbsp;     * @return true if the player playing is the last one of that turn, false otherwise.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized boolean isLastPlayer(String playerName) {
+<b class="fc">&nbsp;        return players.get(players.size() - 1).getName().equals(playerName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the lobby name
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getLobbyName() {
+<b class="fc">&nbsp;        return lobbyName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param obs the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addGameObserver(Observer&lt;GameEvent, GameModelView&gt; obs) {
+<b class="fc">&nbsp;        gameObservable.addObserver(obs);</b>
+<b class="fc">&nbsp;        gameObservable.setChanged();</b>
+<b class="fc">&nbsp;        gameObservable.notifyObservers(new FullGameModelView(this));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param obs the game observer to remove.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void removeGameObserver(Observer&lt;GameEvent, GameModelView&gt; obs) {
+<b class="fc">&nbsp;        gameObservable.deleteObserver(obs);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the {@link FullGameModelView} of this game
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized FullGameModelView getGameModelView() {
+<b class="fc">&nbsp;        return new FullGameModelView(this);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param obs the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addLobbyObserver(Observer&lt;LobbyEvent, LobbyModelView&gt; obs) {
+<b class="fc">&nbsp;        lobbyObservable.addObserver(obs);</b>
+<b class="fc">&nbsp;        lobbyObservable.setChanged();</b>
+<b class="fc">&nbsp;        lobbyObservable.notifyObservers(new LobbyModelView(this));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param obs the observer to remove.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void removeLobbyObserver(Observer&lt;LobbyEvent, LobbyModelView&gt; obs) {
+<b class="fc">&nbsp;        lobbyObservable.deleteObserver(obs);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     * @return the {@link LobbyModelView}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized LobbyModelView getLobbyModelView() {
+<b class="fc">&nbsp;        return new LobbyModelView(this);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the list of the players in the game.
+&nbsp;     * @return the list of the players in the game.
+&nbsp;     */
+&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(players);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of the players of the game in a specific moment.
+&nbsp;     *
+&nbsp;     * @return the size of the list of players.
+&nbsp;     */
+&nbsp;    protected int getCurrentSize() {
+<b class="fc">&nbsp;        return players.size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the max number of players admitted in the game.
+&nbsp;     *
+&nbsp;     * @return a number.
+&nbsp;     */
+&nbsp;    public int getMaxSize() {
+<b class="fc">&nbsp;        return gameConfig.getNumPlayers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the {@link GameConfig} previously set in this Game.
+&nbsp;     *
+&nbsp;     * @return the {@link GameConfig}.
+&nbsp;     */
+&nbsp;    public GameConfig getGameConfig() {
+<b class="fc">&nbsp;        return gameConfig;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param gameConfig are the configurations for the game.
+&nbsp;     * @throws InvalidParameterException if the players in the game config are less then the current players in this lobby
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void setGameConfig(GameConfig gameConfig) throws InvalidParameterException {
+<b class="fc">&nbsp;        if (gameConfig.getNumPlayers() &lt; players.size()) throw new InvalidParameterException(&quot;too few players&quot;);</b>
+<b class="fc">&nbsp;        this.gameConfig = gameConfig;</b>
+<b class="fc">&nbsp;        lobbyObservable.setChanged();</b>
+<b class="fc">&nbsp;        lobbyObservable.notifyObservers(LobbyEvent.NEW_CONFIG, getLobbyModelView());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the list with all the player names.
+&nbsp;     *
+&nbsp;     * @return a list of strings.
+&nbsp;     */
+&nbsp;    public List&lt;String&gt; getPlayersNames() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(players.stream().map(Player::getName).toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the list of the common goals of the game.
+&nbsp;     *
+&nbsp;     * @return a list of common goals.
+&nbsp;     */
+&nbsp;    public List&lt;CommonGoal&gt; getCommonGoals() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(commonGoals);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return a copy of the living room.
+&nbsp;     *
+&nbsp;     * @return a matrix of the item tiles in the living room.
+&nbsp;     */
+&nbsp;    public ItemTile[][] getLivingRoom() {
+<b class="fc">&nbsp;        ItemTile[][] livingRoom = this.livingRoom.getTable();</b>
+<b class="fc">&nbsp;        ItemTile[][] result = new ItemTile[gameConfig.getLivingRoomSize()][gameConfig.getLivingRoomSize()];</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; gameConfig.getLivingRoomSize(); i++) {</b>
+<b class="fc">&nbsp;            if (gameConfig.getLivingRoomSize() &gt;= 0)</b>
+<b class="fc">&nbsp;                System.arraycopy(livingRoom[i], 0, result[i], 0, gameConfig.getLivingRoomSize());</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the number of item tiles remained in the bag.
+&nbsp;     *
+&nbsp;     * @return the dimension of the bag stack.
+&nbsp;     */
+&nbsp;    public int getBagSize() {
+<b class="fc">&nbsp;        return livingRoom.getBag().size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the name of the game.
+&nbsp;     *
+&nbsp;     * @return a string with the name of the game.
+&nbsp;     */
+&nbsp;    public String getName() {
+<b class="fc">&nbsp;        return lobbyName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param username the name of the player to check.
+&nbsp;     * @return true if the player is the room owner
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isRoomOwner(String username) {
+<b class="fc">&nbsp;        if (username == null) return false;</b>
+<b class="fc">&nbsp;        return roomOwner.equals(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return true if the game has started
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean hasStarted() {
+<b class="fc">&nbsp;        return commonGoals != null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void removeLobbyObservers() {
+<b class="fc">&nbsp;        lobbyObservable.deleteObservers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void removeGameObservers() {
+<b class="fc">&nbsp;        gameObservable.deleteObservers();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

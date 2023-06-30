@@ -1,0 +1,394 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TextualUI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.textual</a>
+</div>
+
+<h1>Coverage Summary for Class: TextualUI (it.polimi.myshelfie.view.textual)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TextualUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/90)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TextualUI$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/93)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.textual;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.GameState;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.FullGameModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerModelView;
+&nbsp;import it.polimi.myshelfie.view.*;
+&nbsp;import it.polimi.myshelfie.view.textual.pages.*;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; *Represents the TextualUI.
+&nbsp; */
+&nbsp;public class TextualUI implements UI {
+&nbsp;    private final ViewManager viewManager;
+&nbsp;    private final Terminal t;
+&nbsp;    private final List&lt;String&gt; inputParameters;
+&nbsp;    private final Thread readerThread;
+&nbsp;    private String currentBookshelfOwner;
+&nbsp;    private ScreenPage currentPage;
+&nbsp;    private InternalViewState internalViewState;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     */
+<b class="nc">&nbsp;    public TextualUI() {</b>
+<b class="nc">&nbsp;        this.viewManager = ViewManager.getInstance();</b>
+<b class="nc">&nbsp;        this.inputParameters = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        this.t = new Terminal();</b>
+<b class="nc">&nbsp;        this.currentPage = new InitPage(t, inputParameters);</b>
+<b class="nc">&nbsp;        CLIInputReader reader = new CLIInputReader(this, inputParameters);</b>
+<b class="nc">&nbsp;        this.readerThread = new Thread(reader::read);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * this update is called when the buffer receives a new update from the server
+&nbsp;     * It switches over the ViewUpdate event and updates the part of the view referring to that data
+&nbsp;     *
+&nbsp;     * @param evt the ViewUpdate event passed by the viewManager
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void update(ViewUpdate evt, Object unused) {
+<b class="nc">&nbsp;        switch (evt) {</b>
+<b class="nc">&nbsp;            case MODEL_UPDATE -&gt; new Thread(this::initUpdate).start();</b>
+<b class="nc">&nbsp;            case EXCEPTION_UPDATE -&gt; new Thread(() -&gt; printException(false)).start();</b>
+<b class="nc">&nbsp;            case CHAT_UPDATE -&gt; new Thread(this::chatUpdate).start();</b>
+<b class="nc">&nbsp;            case LOBBY_UPDATE -&gt; new Thread(this::lobbyUpdate).start();</b>
+<b class="nc">&nbsp;            case GAME_UPDATE -&gt; new Thread(this::gameUpdate).start();</b>
+<b class="nc">&nbsp;            case VIEW_TYPE_UPDATE -&gt; new Thread(this::updateViewType).start();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the currentPage if viewManager.getViewType() == ViewType.GAME
+&nbsp;     */
+&nbsp;    private synchronized void gameUpdate() {
+<b class="nc">&nbsp;        if (viewManager.getViewType() == ViewType.GAME &amp;&amp; !(internalViewState == InternalViewState.CHAT ||</b>
+&nbsp;                internalViewState == InternalViewState.HELP)) {
+<b class="nc">&nbsp;            if (viewManager.getGameModelView().getCurrentPlayerName().equals(ViewManager.getUsername()) &amp;&amp;</b>
+<b class="nc">&nbsp;                    viewManager.getGameModelView().getCurrentState() == GameState.ORGANIZE &amp;&amp;</b>
+<b class="nc">&nbsp;                    viewManager.getGameModelView().getCurrentPlayer().getTakenTiles().size() == 1) {</b>
+<b class="nc">&nbsp;                viewManager.organizeRequest(viewManager.getGameModelView().getCurrentPlayer().getTakenTiles());</b>
+<b class="nc">&nbsp;            } else currentPage.render();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the currentPage if viewManager.getViewType() == ViewType.LOBBY
+&nbsp;     */
+&nbsp;    private synchronized void lobbyUpdate() {
+<b class="nc">&nbsp;        if (viewManager.getViewType() == ViewType.LOBBY) {</b>
+<b class="nc">&nbsp;            currentPage.render();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the currentPage if InternalViewState == InternalViewState.CHAT
+&nbsp;     */
+&nbsp;    private synchronized void chatUpdate() {
+<b class="nc">&nbsp;        if ((viewManager.getViewType() == ViewType.LOBBY || viewManager.getViewType() == ViewType.GAME)</b>
+&nbsp;                &amp;&amp; internalViewState == InternalViewState.CHAT) {
+<b class="nc">&nbsp;            currentPage.render();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the currentPage if viewManager.getViewType() == ViewType.INIT
+&nbsp;     */
+&nbsp;    private synchronized void initUpdate() {
+<b class="nc">&nbsp;        if (viewManager.getViewType() == ViewType.INIT &amp;&amp; internalViewState != InternalViewState.CREATE) {</b>
+<b class="nc">&nbsp;            currentPage.render();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the pages and the InternalViewStates based on the viewType.
+&nbsp;     */
+&nbsp;    private synchronized void updateViewType() {
+<b class="nc">&nbsp;        ViewType viewType = viewManager.getViewType();</b>
+<b class="nc">&nbsp;        switch (viewType) {</b>
+&nbsp;            case INIT -&gt; {
+<b class="nc">&nbsp;                internalViewState = InternalViewState.INIT;</b>
+<b class="nc">&nbsp;                currentPage = new InitPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case LOBBY -&gt; {
+<b class="nc">&nbsp;                internalViewState = InternalViewState.LOBBY;</b>
+<b class="nc">&nbsp;                currentPage = new LobbyPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case GAME -&gt; {
+<b class="nc">&nbsp;                internalViewState = InternalViewState.GAME;</b>
+<b class="nc">&nbsp;                currentBookshelfOwner = ViewManager.getUsername();</b>
+<b class="nc">&nbsp;                currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case WIN -&gt; {
+<b class="nc">&nbsp;                internalViewState = InternalViewState.WIN;</b>
+<b class="nc">&nbsp;                currentPage = new WinPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case DISCONNECTION -&gt; {
+<b class="nc">&nbsp;                printException(true);</b>
+<b class="nc">&nbsp;                viewManager.setView(ViewType.INIT);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        currentPage.render();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints an exception when occurs.
+&nbsp;     * @param disconnection a boolean that signals a disconnection.
+&nbsp;     */
+&nbsp;    public synchronized void printException(boolean disconnection) {
+&nbsp;        ClientExceptionsNotifierModelView exceptionsView;
+<b class="nc">&nbsp;        if (disconnection) exceptionsView = viewManager.getDisconnectedClientExceptionsNotifierView();</b>
+<b class="nc">&nbsp;        else exceptionsView = viewManager.getClientExceptionsNotifierView();</b>
+<b class="nc">&nbsp;        if (exceptionsView == null) return;</b>
+<b class="nc">&nbsp;        t.clearError();</b>
+<b class="nc">&nbsp;        t.printError(exceptionsView.getLastException().getMessage());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints &quot;insert a valid option&quot; when a wrong input is entered by calling {@link #wrongInput(String)}.
+&nbsp;     */
+&nbsp;    public synchronized void wrongInput() {
+<b class="nc">&nbsp;        wrongInput(&quot;insert a valid option&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints an error message.
+&nbsp;     * @param message the error message to print.
+&nbsp;     */
+&nbsp;    public synchronized void wrongInput(String message) {
+<b class="nc">&nbsp;        t.printError(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Show the bookshelf of the next player.
+&nbsp;     */
+&nbsp;    public synchronized void showNextBookshelf() {
+<b class="nc">&nbsp;        FullGameModelView gmv = viewManager.getGameModelView();</b>
+<b class="nc">&nbsp;        List&lt;String&gt; players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();</b>
+<b class="nc">&nbsp;        int index = players.indexOf(currentBookshelfOwner);</b>
+<b class="nc">&nbsp;        if (index == players.size() - 1) currentBookshelfOwner = players.get(0);</b>
+<b class="nc">&nbsp;        else currentBookshelfOwner = players.get(index + 1);</b>
+<b class="nc">&nbsp;        currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);</b>
+<b class="nc">&nbsp;        currentPage.render();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the bookshelf of the previous player.
+&nbsp;     */
+&nbsp;    public synchronized void showPrevBookshelf() {
+<b class="nc">&nbsp;        FullGameModelView gmv = viewManager.getGameModelView();</b>
+<b class="nc">&nbsp;        List&lt;String&gt; players = gmv.getPlayers().stream().map(PlayerModelView::getName).toList();</b>
+<b class="nc">&nbsp;        int index = players.indexOf(currentBookshelfOwner);</b>
+<b class="nc">&nbsp;        if (index == 0) currentBookshelfOwner = players.get(players.size() - 1);</b>
+<b class="nc">&nbsp;        else currentBookshelfOwner = players.get(index - 1);</b>
+<b class="nc">&nbsp;        currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);</b>
+<b class="nc">&nbsp;        currentPage.render();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the InternalViewState.
+&nbsp;     * @return the InternalViewState.
+&nbsp;     */
+&nbsp;    public InternalViewState getInternalViewState() {
+<b class="nc">&nbsp;        return internalViewState;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the Pages based on the specific InternalViewState.
+&nbsp;     * @param internalViewState the InternalViewState.
+&nbsp;     */
+&nbsp;    public synchronized void setInternalViewState(InternalViewState internalViewState) {
+<b class="nc">&nbsp;        this.internalViewState = internalViewState;</b>
+<b class="nc">&nbsp;        switch (internalViewState) {</b>
+<b class="nc">&nbsp;            case INIT -&gt; currentPage = new InitPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case JOIN -&gt; currentPage = new JoinPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case CREATE -&gt; currentPage = new CreatePage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case LOBBY -&gt; currentPage = new LobbyPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case GAME -&gt; currentPage = new GamePage(t, inputParameters, currentBookshelfOwner);</b>
+<b class="nc">&nbsp;            case GOALS -&gt; currentPage = new GoalPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case CHAT -&gt; currentPage = new ChatPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case HELP -&gt; currentPage = new HelpPage(t, inputParameters);</b>
+<b class="nc">&nbsp;            case WIN -&gt; currentPage = new WinPage(t, inputParameters);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        currentPage.render();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears the terminalInput.
+&nbsp;     */
+&nbsp;    public void clearInput() {
+<b class="nc">&nbsp;        t.clearInput();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clears all the terminal.
+&nbsp;     */
+&nbsp;    public void refresh() {
+<b class="nc">&nbsp;        t.clearAll();</b>
+<b class="nc">&nbsp;        currentPage.render();</b>
+<b class="nc">&nbsp;        t.clearInput();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     *{@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void startUI() {
+<b class="nc">&nbsp;        readerThread.start();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void stopUI() {
+<b class="nc">&nbsp;        t.printPermanentError(&quot;Unable to reach server, press any button to try to reconnect&quot;);</b>
+<b class="nc">&nbsp;        this.internalViewState = InternalViewState.STOPPED;</b>
+<b class="nc">&nbsp;        readerThread.interrupt();</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            readerThread.join();</b>
+<b class="nc">&nbsp;            t.clearAll();</b>
+<b class="nc">&nbsp;        } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,444 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FullGameModelView</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.modelviews</a>
+</div>
+
+<h1>Coverage Summary for Class: FullGameModelView (it.polimi.myshelfie.model.modelviews)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FullGameModelView</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96,2%
+  </span>
+  <span class="absValue">
+    (25/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,3%
+  </span>
+  <span class="absValue">
+    (91/103)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.modelviews;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.GameConfig;
+&nbsp;import it.polimi.myshelfie.model.*;
+&nbsp;import it.polimi.myshelfie.model.goals.CommonGoal;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the full game model view.
+&nbsp; */
+&nbsp;public class FullGameModelView implements Serializable, GameModelView {
+&nbsp;    private final List&lt;PlayerModelView&gt; players;
+&nbsp;    private final String roomName;
+&nbsp;    private String currentPlayer;
+&nbsp;    private GameState currentState;
+&nbsp;    private List&lt;CommonGoalModelView&gt; commonGoals;
+&nbsp;    private ItemTile[][] livingRoom;
+&nbsp;    private int remainingTiles;
+&nbsp;    private GameConfig gameConfig;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Default constructor.
+&nbsp;     *
+&nbsp;     * @param game the game I want the full model view.
+&nbsp;     */
+<b class="fc">&nbsp;    public FullGameModelView(Game game) {</b>
+<b class="fc">&nbsp;        List&lt;Player&gt; actualPlayers = game.getPlayers();</b>
+<b class="fc">&nbsp;        players = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Player p : actualPlayers) {</b>
+<b class="fc">&nbsp;            players.add(new PlayerModelView(p));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        this.currentPlayer = game.getCurrentPlayer();</b>
+<b class="fc">&nbsp;        this.currentState = game.getState();</b>
+<b class="fc">&nbsp;        List&lt;CommonGoal&gt; actualCommonGoals = game.getCommonGoals();</b>
+<b class="fc">&nbsp;        this.commonGoals = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (CommonGoal c : actualCommonGoals) {</b>
+<b class="fc">&nbsp;            commonGoals.add(new CommonGoalModelView(c));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        this.livingRoom = game.getLivingRoom();</b>
+<b class="fc">&nbsp;        this.remainingTiles = game.getBagSize();</b>
+<b class="fc">&nbsp;        this.gameConfig = game.getGameConfig();</b>
+<b class="fc">&nbsp;        this.roomName = game.getName();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param toCopy the full game model view I want to copy
+&nbsp;     */
+<b class="fc">&nbsp;    public FullGameModelView(FullGameModelView toCopy) {</b>
+<b class="fc">&nbsp;        this.players = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (PlayerModelView p : toCopy.getPlayers()) {</b>
+<b class="fc">&nbsp;            this.players.add(new PlayerModelView(p));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        this.currentPlayer = toCopy.currentPlayer;</b>
+<b class="fc">&nbsp;        this.currentState = toCopy.currentState;</b>
+<b class="fc">&nbsp;        this.commonGoals = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (CommonGoalModelView c : toCopy.getCommonGoals()) {</b>
+<b class="fc">&nbsp;            this.commonGoals.add(new CommonGoalModelView(c));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        this.livingRoom = new ItemTile[toCopy.livingRoom.length][toCopy.livingRoom[0].length];</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; toCopy.livingRoom.length; i++) {</b>
+<b class="fc">&nbsp;            System.arraycopy(toCopy.livingRoom[i], 0, this.livingRoom[i], 0, toCopy.livingRoom[0].length);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        this.remainingTiles = toCopy.remainingTiles;</b>
+<b class="fc">&nbsp;        this.gameConfig = toCopy.gameConfig;</b>
+<b class="fc">&nbsp;        this.roomName = toCopy.roomName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the list of player model views.
+&nbsp;     *
+&nbsp;     * @return the list of player model views.
+&nbsp;     */
+&nbsp;    public List&lt;PlayerModelView&gt; getPlayers() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(players);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the player model view of the player given his position.
+&nbsp;     * The position can be requested with any offset, even negatives ones.
+&nbsp;     *
+&nbsp;     * @param position the position of the player.
+&nbsp;     * @return the player model view associated to that player.
+&nbsp;     */
+&nbsp;    public PlayerModelView getPlayer(int position) {
+<b class="fc">&nbsp;        return players.get((int) (Math.sqrt(Math.pow(position, 2)) % players.size()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the player model view given the name of the player.
+&nbsp;     *
+&nbsp;     * @param username the player name.
+&nbsp;     * @return the player model view requested.
+&nbsp;     */
+&nbsp;    public PlayerModelView getPlayer(String username) {
+<b class="fc">&nbsp;        return players.stream().filter(x -&gt; x.getName().equals(username)).findFirst().orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the player model view of the first player.
+&nbsp;     * @return the player model view of the first player.
+&nbsp;     */
+&nbsp;    public PlayerModelView getFirstPlayer() {
+<b class="fc">&nbsp;        return getPlayer(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the name of the player playing.
+&nbsp;     * @return the name of the player playing.
+&nbsp;     */
+&nbsp;    public String getCurrentPlayerName() {
+<b class="fc">&nbsp;        return currentPlayer;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the player model view of the current player.
+&nbsp;     * @return the player model view of the current player.
+&nbsp;     */
+&nbsp;    public PlayerModelView getCurrentPlayer() {
+<b class="fc">&nbsp;        return players.stream().filter(x -&gt; x.getName().equals(currentPlayer)).findFirst().orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the current player.
+&nbsp;     *
+&nbsp;     * @param currentPlayer the player to set.
+&nbsp;     */
+&nbsp;    protected void setCurrentPlayer(String currentPlayer) {
+<b class="fc">&nbsp;        this.currentPlayer = currentPlayer;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the current state of the game.
+&nbsp;     * @return the current state of the game.
+&nbsp;     */
+&nbsp;    public GameState getCurrentState() {
+<b class="fc">&nbsp;        return currentState;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the current state.
+&nbsp;     *
+&nbsp;     * @param currentState the state to set.
+&nbsp;     */
+&nbsp;    protected void setCurrentState(GameState currentState) {
+<b class="fc">&nbsp;        this.currentState = currentState;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the list of common goal views of the common goals of the game.
+&nbsp;     * @return the list of common goal views of the common goals of the game.
+&nbsp;     */
+&nbsp;    public List&lt;CommonGoalModelView&gt; getCommonGoals() {
+<b class="fc">&nbsp;        return commonGoals;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the common goals.
+&nbsp;     *
+&nbsp;     * @param commonGoals the common goals to set.
+&nbsp;     */
+&nbsp;    protected void setCommonGoals(List&lt;CommonGoalModelView&gt; commonGoals) {
+<b class="fc">&nbsp;        this.commonGoals = commonGoals;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the living room.
+&nbsp;     * @return the living room.
+&nbsp;     */
+&nbsp;    public ItemTile[][] getLivingRoom() {
+<b class="fc">&nbsp;        return livingRoom;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the living room.
+&nbsp;     *
+&nbsp;     * @param livingRoom the living room to set.
+&nbsp;     */
+&nbsp;    protected void setLivingRoom(ItemTile[][] livingRoom) {
+<b class="fc">&nbsp;        this.livingRoom = livingRoom;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns how many remaining tiles are on the board.
+&nbsp;     * @return how many remaining tiles are on the board.
+&nbsp;     */
+&nbsp;    public int getRemainingTiles() {
+<b class="fc">&nbsp;        return remainingTiles;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the number of remaining tiles.
+&nbsp;     *
+&nbsp;     * @param remainingTiles the number  of tiles to set.
+&nbsp;     */
+&nbsp;    protected void setRemainingTiles(int remainingTiles) {
+<b class="fc">&nbsp;        this.remainingTiles = remainingTiles;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the game config.
+&nbsp;     * @return the game config.
+&nbsp;     */
+&nbsp;    public GameConfig getGameConfig() {
+<b class="fc">&nbsp;        return gameConfig;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the lobby name.
+&nbsp;     * @return the lobby name.
+&nbsp;     */
+&nbsp;    public String getRoomName() {
+<b class="fc">&nbsp;        return roomName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the tile with coordinates (x, y).
+&nbsp;     *
+&nbsp;     * @param x is the x coordinate.
+&nbsp;     * @param y is the y coordinate.
+&nbsp;     * @return the requested item tile.
+&nbsp;     */
+&nbsp;    public ItemTile getTile(int x, int y) {
+<b class="fc">&nbsp;        int offset = (livingRoom.length - 1) / 2;</b>
+<b class="fc">&nbsp;        if (x &gt; offset || x &lt; -offset || y &gt; offset || y &lt; -offset) return null;</b>
+<b class="fc">&nbsp;        return livingRoom[x + offset][offset - y];</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Modifies the attributes of this full game model view, by changing them with the differences applied.
+&nbsp;     * It calculates the differences and re-initialize the attributes.
+&nbsp;     *
+&nbsp;     * @param theNewOne the full game model view to confront.
+&nbsp;     */
+&nbsp;    public void diff(FullGameModelView theNewOne) {
+<b class="fc">&nbsp;        for (PlayerModelView p : theNewOne.players) {</b>
+<b class="fc">&nbsp;            Optional&lt;PlayerModelView&gt; player = this.players.stream().filter(x -&gt; x.getName().equals(p.getName())).findFirst();</b>
+<b class="fc">&nbsp;            player.ifPresent((x) -&gt; x.diff(p));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (this.currentPlayer.equals(theNewOne.currentPlayer)) this.currentPlayer = null;</b>
+<b class="fc">&nbsp;        else this.currentPlayer = theNewOne.currentPlayer;</b>
+<b class="fc">&nbsp;        if (this.currentState.equals(theNewOne.currentState)) this.currentState = null;</b>
+<b class="fc">&nbsp;        else this.currentState = theNewOne.currentState;</b>
+<b class="fc">&nbsp;        for (CommonGoalModelView c : theNewOne.commonGoals) {</b>
+<b class="fc">&nbsp;            Optional&lt;CommonGoalModelView&gt; commonGoal = this.commonGoals.stream().filter(x -&gt; x.getId() == c.getId()).findFirst();</b>
+<b class="fc">&nbsp;            commonGoal.ifPresent((x) -&gt; x.diff(c));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (theNewOne.livingRoom.length != this.livingRoom.length ||</b>
+<b class="nc">&nbsp;                theNewOne.livingRoom[0].length != this.livingRoom[0].length) this.livingRoom = null;</b>
+&nbsp;        else {
+<b class="fc">&nbsp;            for (int i = 0; i &lt; livingRoom.length; i++) {</b>
+<b class="fc">&nbsp;                for (int j = 0; j &lt; livingRoom[0].length; j++) {</b>
+<b class="fc">&nbsp;                    if (theNewOne.livingRoom[i][j] != null) {</b>
+<b class="fc">&nbsp;                        this.livingRoom[i][j] = theNewOne.livingRoom[i][j].equals(this.livingRoom[i][j]) ?</b>
+<b class="fc">&nbsp;                                null : theNewOne.livingRoom[i][j];</b>
+&nbsp;                    } else {
+<b class="fc">&nbsp;                        this.livingRoom[i][j] = null;</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        if (this.remainingTiles == theNewOne.remainingTiles) this.remainingTiles = -1;</b>
+<b class="nc">&nbsp;        else this.remainingTiles = theNewOne.remainingTiles;</b>
+<b class="fc">&nbsp;        this.gameConfig = null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * It applies the edits to the draw model view after something changes in the game.
+&nbsp;     *
+&nbsp;     * @param drawModelView the model view to modify.
+&nbsp;     */
+&nbsp;    public void applyChanges(DrawModelView drawModelView) {
+<b class="fc">&nbsp;        this.setCurrentState(drawModelView.getCurrentState());</b>
+<b class="fc">&nbsp;        this.setLivingRoom(drawModelView.getLivingRoom());</b>
+<b class="fc">&nbsp;        this.getCurrentPlayer().setTakenTiles(drawModelView.getTakenTiles());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * It applies the edits to the Organize model view after something changes in the game.
+&nbsp;     *
+&nbsp;     * @param organizeModelView the model view to modify.
+&nbsp;     */
+&nbsp;    public void applyChanges(OrganizeModelView organizeModelView) {
+<b class="fc">&nbsp;        this.setCurrentState(organizeModelView.getCurrentState());</b>
+<b class="fc">&nbsp;        this.getCurrentPlayer().setTakenTiles(organizeModelView.getOrderedTiles());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * * It applies the edits to the Insert model view after something changes in the game.
+&nbsp;     *
+&nbsp;     * @param insertModelView the model view to modify.
+&nbsp;     */
+&nbsp;    public void applyChanges(InsertModelView insertModelView) {
+<b class="fc">&nbsp;        this.getPlayer(insertModelView.getCurrentPlayer()).setBookshelf(insertModelView.getBookshelf());</b>
+<b class="fc">&nbsp;        this.getPlayer(insertModelView.getCurrentPlayer()).setTakenTiles(new ArrayList&lt;&gt;());</b>
+<b class="fc">&nbsp;        if (this.getCurrentState() != GameState.DRAW) {</b>
+<b class="fc">&nbsp;            this.setCurrentState(insertModelView.getCurrentState());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * It applies the edits to the end turn model view after something changes in the game.
+&nbsp;     *
+&nbsp;     * @param endTurnModelView the model view to modify.
+&nbsp;     */
+&nbsp;    public void applyChanges(EndTurnModelView endTurnModelView) {
+<b class="fc">&nbsp;        this.setCurrentState(endTurnModelView.getCurrentState());</b>
+<b class="fc">&nbsp;        this.getPlayer(endTurnModelView.getLastPlayer()).setEarnedPoints(endTurnModelView.getEarnedPoints());</b>
+<b class="fc">&nbsp;        this.getPlayer(endTurnModelView.getLastPlayer()).setTokens(endTurnModelView.getPlayerTokens());</b>
+<b class="fc">&nbsp;        this.setRemainingTiles(endTurnModelView.getRemainingTiles());</b>
+<b class="fc">&nbsp;        this.setLivingRoom(endTurnModelView.getLivingRoom());</b>
+<b class="fc">&nbsp;        this.setCommonGoals(endTurnModelView.getCommonGoals());</b>
+<b class="fc">&nbsp;        this.setCurrentPlayer(endTurnModelView.getCurrentPlayer());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether a tile has at least one side free.
+&nbsp;     *
+&nbsp;     * @param p the position of the tile to check.
+&nbsp;     * @return false if there are no free sides, true otherwise.
+&nbsp;     */
+&nbsp;    public boolean atLeastOneSideFree(Position p) {
+<b class="nc">&nbsp;        int x = p.getX();</b>
+<b class="nc">&nbsp;        int y = p.getY();</b>
+&nbsp;
+<b class="nc">&nbsp;        int offset = livingRoom.length / 2;</b>
+<b class="nc">&nbsp;        if (p.getY() == offset || getTile(x, y + 1) == null || getTile(x, y + 1).getType() == ItemTileType.EMPTY)</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        if (p.getX() == offset || getTile(x + 1, y) == null || getTile(x + 1, y).getType() == ItemTileType.EMPTY)</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        if (p.getY() == -offset || getTile(x, y - 1) == null || getTile(x, y - 1).getType() == ItemTileType.EMPTY)</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        return p.getX() == -offset || getTile(x - 1, y) == null || getTile(x - 1, y).getType() == ItemTileType.EMPTY;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

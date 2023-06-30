@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CustomBindings</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomBindings (it.polimi.myshelfie.view.graphical)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CustomBindings</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/31)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical;
+&nbsp;
+&nbsp;
+&nbsp;import javafx.beans.binding.Bindings;
+&nbsp;import javafx.beans.value.ObservableValue;
+&nbsp;import javafx.geometry.Bounds;
+&nbsp;import javafx.geometry.Point2D;
+&nbsp;import javafx.scene.Node;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.layout.ColumnConstraints;
+&nbsp;import javafx.scene.layout.Region;
+&nbsp;import javafx.scene.layout.RowConstraints;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents Custom Bindings.
+&nbsp; */
+<b class="nc">&nbsp;public class CustomBindings {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds min and max width properties of a certain region to the given ObservableValues;
+&nbsp;     *
+&nbsp;     * @param region is the region whose properties are to be bound
+&nbsp;     * @param width  is the width property
+&nbsp;     * @param height is the height property
+&nbsp;     */
+&nbsp;    public static void bindSize(Region region, ObservableValue&lt;Number&gt; width, ObservableValue&lt;Number&gt; height) {
+<b class="nc">&nbsp;        if (width != null) {</b>
+<b class="nc">&nbsp;            region.minWidthProperty().bind(width);</b>
+<b class="nc">&nbsp;            region.maxWidthProperty().bind(width);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (height != null) {</b>
+<b class="nc">&nbsp;            region.minHeightProperty().bind(height);</b>
+<b class="nc">&nbsp;            region.maxHeightProperty().bind(height);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds fitWidth and fitHeight properties of a certain image to the given ObservableValues;
+&nbsp;     *
+&nbsp;     * @param image  is the image whose properties are to be bound
+&nbsp;     * @param width  is the width property
+&nbsp;     * @param height is the height property
+&nbsp;     */
+&nbsp;    public static void bindSize(ImageView image, ObservableValue&lt;Number&gt; width, ObservableValue&lt;Number&gt; height) {
+<b class="nc">&nbsp;        if (width != null) image.fitWidthProperty().bind(width);</b>
+<b class="nc">&nbsp;        if (height != null) image.fitHeightProperty().bind(height);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds the size of a region to the size of another region
+&nbsp;     *
+&nbsp;     * @param region             is the region whose properties are to be bound
+&nbsp;     * @param regionToCopySizeOf is the region whose properties are to be copied
+&nbsp;     */
+&nbsp;    public static void bindSize(Region region, Region regionToCopySizeOf) {
+<b class="nc">&nbsp;        region.minWidthProperty().bind(regionToCopySizeOf.minWidthProperty());</b>
+<b class="nc">&nbsp;        region.maxWidthProperty().bind(regionToCopySizeOf.maxWidthProperty());</b>
+<b class="nc">&nbsp;        region.prefWidthProperty().bind(regionToCopySizeOf.prefWidthProperty());</b>
+<b class="nc">&nbsp;        region.minHeightProperty().bind(regionToCopySizeOf.minHeightProperty());</b>
+<b class="nc">&nbsp;        region.maxHeightProperty().bind(regionToCopySizeOf.maxHeightProperty());</b>
+<b class="nc">&nbsp;        region.prefHeightProperty().bind(regionToCopySizeOf.prefHeightProperty());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds the translateX and translateY properties of a node to the given ObservableValues
+&nbsp;     *
+&nbsp;     * @param node is the node whose translations are to be bound
+&nbsp;     * @param x    the x translation property
+&nbsp;     * @param y    the y translation property
+&nbsp;     */
+&nbsp;    public static void bindTranslate(Node node, ObservableValue&lt;Number&gt; x, ObservableValue&lt;Number&gt; y) {
+<b class="nc">&nbsp;        if (x != null) node.translateXProperty().bind(x);</b>
+<b class="nc">&nbsp;        if (y != null) node.translateYProperty().bind(y);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds an image view such that it resizes dynamically with a certain banner behind it such that:
+&nbsp;     * - it never shows empty background space
+&nbsp;     * - the top banner preserve its ratio
+&nbsp;     * - the bottom background resizes and stretches such that is covers 2/3 of the background&#39;s height or the difference between the banner height and the total height of the stage
+&nbsp;     *
+&nbsp;     * @param lowerBackground the lower background
+&nbsp;     * @param banner          the top background
+&nbsp;     */
+&nbsp;    public static void bindLowerPreGamePane(ImageView lowerBackground, ImageView banner) {
+<b class="nc">&nbsp;        CustomBindings.bindSize(lowerBackground, GraphicalUI.stage.widthProperty(),</b>
+<b class="nc">&nbsp;                Bindings.max(</b>
+<b class="nc">&nbsp;                        GraphicalUI.stage.heightProperty().subtract(banner.fitWidthProperty().multiply(banner.getImage().getHeight() / banner.getImage().getWidth()))</b>
+<b class="nc">&nbsp;                        , GraphicalUI.stage.heightProperty().divide(3).multiply(2))</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds the width of a column constraint to the given ObservableValue
+&nbsp;     *
+&nbsp;     * @param columnConstraints the column constraint
+&nbsp;     * @param width             the intended with of the column constraint
+&nbsp;     */
+&nbsp;    public static void bindSize(ColumnConstraints columnConstraints, ObservableValue&lt;Number&gt; width) {
+<b class="nc">&nbsp;        if (width != null) {</b>
+<b class="nc">&nbsp;            columnConstraints.minWidthProperty().bind(width);</b>
+<b class="nc">&nbsp;            columnConstraints.maxWidthProperty().bind(width);</b>
+<b class="nc">&nbsp;            columnConstraints.prefWidthProperty().bind(width);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Binds the height of a row constraint to the given ObservableValue
+&nbsp;     *
+&nbsp;     * @param rowConstraints the row constraint
+&nbsp;     * @param height         the intended height of the row constraint
+&nbsp;     */
+&nbsp;    public static void bindSize(RowConstraints rowConstraints, ObservableValue&lt;Number&gt; height) {
+<b class="nc">&nbsp;        if (height != null) {</b>
+<b class="nc">&nbsp;            rowConstraints.minHeightProperty().bind(height);</b>
+<b class="nc">&nbsp;            rowConstraints.maxHeightProperty().bind(height);</b>
+<b class="nc">&nbsp;            rowConstraints.prefHeightProperty().bind(height);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a POINT2D representing the absolute minX and minY of the node.
+&nbsp;     * Absolute means the position relative to the Scene in which the node has been added
+&nbsp;     * @param node the node
+&nbsp;     * @return the POINT2D of the node&#39;s absolute minX and minY positions.
+&nbsp;     */
+&nbsp;    public static Point2D getAbsolutePosition(Node node) {
+<b class="nc">&nbsp;        Bounds regionBounds = node.localToScene(node.getBoundsInLocal());</b>
+<b class="nc">&nbsp;        return new Point2D(regionBounds.getMinX(), regionBounds.getMinY());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

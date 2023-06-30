@@ -1,0 +1,88 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view</a>
+</div>
+
+<h1>Coverage Summary for Class: UI (it.polimi.myshelfie.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">UI</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view;
+&nbsp;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the user interface.
+&nbsp; */
+&nbsp;public interface UI extends Observer&lt;ViewUpdate, Object&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts the UI.
+&nbsp;     */
+&nbsp;    void startUI();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Stops the UI
+&nbsp;     */
+&nbsp;    void stopUI();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

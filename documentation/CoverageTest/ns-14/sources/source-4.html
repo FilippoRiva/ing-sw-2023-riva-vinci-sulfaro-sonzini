@@ -1,0 +1,223 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: GameModel (it.polimi.myshelfie.model.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">GameModel</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.interfaces;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.GameState;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.Position;
+&nbsp;import it.polimi.myshelfie.model.events.GameEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.FullColumnException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.modelviews.FullGameModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.GameModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the game&#39;s interface.
+&nbsp; */
+&nbsp;public interface GameModel {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the current GameState previously set by the {@link #setState(GameState)}
+&nbsp;     *
+&nbsp;     * @return the current state previously set by setState().
+&nbsp;     */
+&nbsp;    GameState getState();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Change the state of the game and notifies every view on the game.
+&nbsp;     *
+&nbsp;     * @param state the new state.
+&nbsp;     */
+&nbsp;    void setState(GameState state);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Draws the tiles in the given positions from the livingRoom.
+&nbsp;     *
+&nbsp;     * @param positions  the positions of the tiles that have to be removed from the board, where the first in the list is the first one to be
+&nbsp;     *                   inserted into the player&#39;s bookshelf, and the last one is the last one to be inserted.
+&nbsp;     * @param playerName the name of the player drawing the tiles.
+&nbsp;     * @throws InvalidParameterException if the given positions/column are/is not valid.
+&nbsp;     */
+&nbsp;    void drawTiles(List&lt;Position&gt; positions, String playerName) throws InvalidParameterException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Orders the tiles drawn from the living room.
+&nbsp;     *
+&nbsp;     * @param orderedTiles the tiles taken form the board.
+&nbsp;     * @param playerName   the player playing.
+&nbsp;     * @throws InvalidParameterException if the player is playing in the wrong turn and if the tiles are different from
+&nbsp;     *                                   the ones taken in the draw move.
+&nbsp;     */
+&nbsp;    void orderChosenTiles(List&lt;ItemTile&gt; orderedTiles, String playerName) throws InvalidParameterException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Inserts the tiles taken from the board in the chosen column.
+&nbsp;     *
+&nbsp;     * @param playerName the player playing.
+&nbsp;     * @param column     the chose column to insert the tiles in.
+&nbsp;     * @throws InvalidParameterException if the player is playing in the wrong turn and if the chosen column does not exist
+&nbsp;     *                                   in that bookshelf.
+&nbsp;     * @throws FullColumnException       if the selected column is not refillable.
+&nbsp;     */
+&nbsp;    void insertTiles(String playerName, int column) throws InvalidParameterException, FullColumnException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the player achieved a commonGoal and adds the obtained tokens to the player.
+&nbsp;     * Has to be called at the end of a player&#39;s turn.
+&nbsp;     *
+&nbsp;     * @param playerName the player playing
+&nbsp;     */
+&nbsp;    void checkCommonGoal(String playerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Refills the livingRoom if refillable.
+&nbsp;     */
+&nbsp;    void refillLivingRoom();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Changes the current player playing and notifies every view.
+&nbsp;     */
+&nbsp;    void nextTurn();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If last round and last player, calculates the results.
+&nbsp;     */
+&nbsp;    void calculateWinResults();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds the end game token to the player who finishes first.
+&nbsp;     *
+&nbsp;     * @param playerName the name of the player who obtains the token.
+&nbsp;     */
+&nbsp;    void addEndToken(String playerName);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the bookshelf is full.
+&nbsp;     *
+&nbsp;     * @param playerName the player whose bookshelf has to be checked.
+&nbsp;     * @return true if the bookshelf is full, false otherwise.
+&nbsp;     */
+&nbsp;    boolean isBookshelfFull(String playerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether the player playing is the last one.
+&nbsp;     *
+&nbsp;     * @param playerName the player to check.
+&nbsp;     * @return true if it&#39;s the last one, false otherwise.
+&nbsp;     */
+&nbsp;    boolean isLastPlayer(String playerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a game observer.
+&nbsp;     *
+&nbsp;     * @param obs the observer to add.
+&nbsp;     */
+&nbsp;    void addGameObserver(Observer&lt;GameEvent, GameModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a game observer.
+&nbsp;     *
+&nbsp;     * @param obs the game observer to remove.
+&nbsp;     */
+&nbsp;    void removeGameObserver(Observer&lt;GameEvent, GameModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the game model view of that game.
+&nbsp;     *
+&nbsp;     * @return a game model view.
+&nbsp;     */
+&nbsp;    FullGameModelView getGameModelView();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the game name.
+&nbsp;     * @return the game name.
+&nbsp;     */
+&nbsp;    String getName();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the lobby name.
+&nbsp;     * @return the lobby name.
+&nbsp;     */
+&nbsp;    String getLobbyName();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a game observer.
+&nbsp;     */
+&nbsp;    void removeGameObservers();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the chat model.
+&nbsp;     *
+&nbsp;     * @return a chat model.
+&nbsp;     */
+&nbsp;    ChatModel getChatModel();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

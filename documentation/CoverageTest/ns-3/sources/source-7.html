@@ -1,0 +1,149 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ItemTileType</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemTileType (it.polimi.myshelfie.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemTileType</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the 6 type of item tiles of the game, that are CAT, BOOK, GAME, FRAME, TROPHY and PLANT.
+&nbsp; * There&#39;s also a seventh type, which is the EMPTY one, used to indicate an empty position.
+&nbsp; */
+<b class="fc">&nbsp;public enum ItemTileType implements Serializable {</b>
+<b class="fc">&nbsp;    CAT(&quot;Cat&quot;),         //Green</b>
+<b class="fc">&nbsp;    BOOK(&quot;Book&quot;),       //White</b>
+<b class="fc">&nbsp;    GAME(&quot;Game&quot;),       //Yellow</b>
+<b class="fc">&nbsp;    FRAME(&quot;Frame&quot;),     //Blue</b>
+<b class="fc">&nbsp;    TROPHY(&quot;Trophy&quot;),   //Light Blue</b>
+<b class="fc">&nbsp;    PLANT(&quot;Plant&quot;),     //Pink</b>
+<b class="fc">&nbsp;    EMPTY(&quot;Empty&quot;);</b>
+&nbsp;    private final String name;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param name the name of the item tile type.
+&nbsp;     */
+<b class="fc">&nbsp;    ItemTileType(String name) {</b>
+<b class="fc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Use to generate a random ItemTileType.
+&nbsp;     *
+&nbsp;     * @return a random ItemTileType excluding the EMPTY tile.
+&nbsp;     */
+&nbsp;    public static ItemTileType random() {
+<b class="fc">&nbsp;        Random rand = new Random();</b>
+<b class="fc">&nbsp;        int tilePos = rand.nextInt(ItemTileType.values().length - 1);</b>
+<b class="fc">&nbsp;        return ItemTileType.values()[tilePos];</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @return the name of the ItemTileType (cat, game, frame, book, plant, trophy and empty)
+&nbsp;     */
+&nbsp;    public String getName() {
+<b class="fc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

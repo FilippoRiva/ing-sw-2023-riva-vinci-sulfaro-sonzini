@@ -1,0 +1,331 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GraphicalUI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphicalUI (it.polimi.myshelfie.view.graphical)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GraphicalUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/61)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GraphicalUI$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GraphicalUI$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/77)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.view.InternalViewState;
+&nbsp;import it.polimi.myshelfie.view.UI;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.ViewUpdate;
+&nbsp;import it.polimi.myshelfie.view.graphical.components.TileImageView;
+&nbsp;import it.polimi.myshelfie.view.graphical.controllers.MainViewController;
+&nbsp;import javafx.application.Application;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.concurrent.Task;
+&nbsp;import javafx.fxml.FXMLLoader;
+&nbsp;import javafx.geometry.Pos;
+&nbsp;import javafx.geometry.Rectangle2D;
+&nbsp;import javafx.scene.Scene;
+&nbsp;import javafx.scene.control.ProgressBar;
+&nbsp;import javafx.scene.image.Image;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.input.KeyCombination;
+&nbsp;import javafx.scene.layout.AnchorPane;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.stage.Screen;
+&nbsp;import javafx.stage.Stage;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.concurrent.ExecutionException;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the GraphicalUI.
+&nbsp; */
+<b class="nc">&nbsp;public class GraphicalUI extends Application implements UI {</b>
+&nbsp;
+&nbsp;    public static Stage stage;
+&nbsp;    public static MainViewController mainViewController;
+<b class="nc">&nbsp;    final ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     * @param evt       the event occurred.
+&nbsp;     * @param object the model view to update.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void update(ViewUpdate evt, Object object) {
+<b class="nc">&nbsp;        if (mainViewController == null) return;</b>
+<b class="nc">&nbsp;        switch (evt) {</b>
+<b class="nc">&nbsp;            case MODEL_UPDATE -&gt; mainViewController.joinUpdate();</b>
+<b class="nc">&nbsp;            case EXCEPTION_UPDATE -&gt; mainViewController.exceptionUpdate();</b>
+<b class="nc">&nbsp;            case CHAT_UPDATE -&gt; mainViewController.chatUpdate();</b>
+<b class="nc">&nbsp;            case LOBBY_UPDATE -&gt; mainViewController.lobbyUpdate();</b>
+<b class="nc">&nbsp;            case GAME_UPDATE -&gt; mainViewController.gameUpdate();</b>
+<b class="nc">&nbsp;            case VIEW_TYPE_UPDATE -&gt; viewTypeUpdate();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts the GUI.
+&nbsp;     */
+&nbsp;    public void startGUI() {
+<b class="nc">&nbsp;        Application.launch();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This method is automatically called by JavaFX graphical thread. It starts the GUI application and loads the
+&nbsp;     * required FXML files
+&nbsp;     * @param stage the stage passed by JavaFX
+&nbsp;     * @throws Exception if image loading fails
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void start(Stage stage) throws Exception {
+<b class="nc">&nbsp;        GraphicalUI.stage = stage;</b>
+&nbsp;        //stage config
+<b class="nc">&nbsp;        stage.setTitle(&quot;My Shelfie&quot;);</b>
+<b class="nc">&nbsp;        stage.setX(0);</b>
+<b class="nc">&nbsp;        stage.setY(0);</b>
+<b class="nc">&nbsp;        Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();</b>
+<b class="nc">&nbsp;        stage.setWidth(primaryScreenBounds.getWidth());</b>
+<b class="nc">&nbsp;        stage.setHeight(primaryScreenBounds.getHeight());</b>
+<b class="nc">&nbsp;        stage.setResizable(false);</b>
+<b class="nc">&nbsp;        stage.setFullScreen(true);</b>
+<b class="nc">&nbsp;        stage.setFullScreenExitHint(&quot;&quot;);</b>
+<b class="nc">&nbsp;        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);</b>
+&nbsp;        //loading icon
+<b class="nc">&nbsp;        URL iconUrl = getClass().getResource(&quot;/images/Icon.png&quot;);</b>
+<b class="nc">&nbsp;        assert iconUrl != null;</b>
+<b class="nc">&nbsp;        Image icon = new Image(iconUrl.openStream());</b>
+<b class="nc">&nbsp;        stage.getIcons().add(icon);</b>
+&nbsp;        //close action
+<b class="nc">&nbsp;        stage.setOnCloseRequest(event -&gt; {</b>
+<b class="nc">&nbsp;            Platform.exit();</b>
+<b class="nc">&nbsp;            System.exit(0);</b>
+&nbsp;        });
+&nbsp;        //setting loading page
+<b class="nc">&nbsp;        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(&quot;/images/lightWood.jpg&quot;)));</b>
+<b class="nc">&nbsp;        ImageView loadingImage = new ImageView(image);</b>
+<b class="nc">&nbsp;        ProgressBar progressBar = new ProgressBar(0);</b>
+<b class="nc">&nbsp;        StackPane loadingPane = new StackPane(loadingImage, progressBar);</b>
+<b class="nc">&nbsp;        loadingPane.setAlignment(Pos.CENTER);</b>
+<b class="nc">&nbsp;        StackPane root = new StackPane();</b>
+<b class="nc">&nbsp;        root.getChildren().add(loadingPane);</b>
+<b class="nc">&nbsp;        Scene scene = new Scene(root);</b>
+<b class="nc">&nbsp;        loadingImage.setPreserveRatio(false);</b>
+<b class="nc">&nbsp;        loadingImage.fitHeightProperty().bind(scene.heightProperty());</b>
+<b class="nc">&nbsp;        loadingImage.fitWidthProperty().bind(scene.widthProperty());</b>
+<b class="nc">&nbsp;        stage.setScene(scene);</b>
+&nbsp;
+&nbsp;        //showing stage
+<b class="nc">&nbsp;        stage.show();</b>
+&nbsp;
+&nbsp;        //loading fxml
+<b class="nc">&nbsp;        Task&lt;AnchorPane&gt; task = new Task&lt;&gt;() {</b>
+&nbsp;            @Override
+&nbsp;            protected AnchorPane call() {
+&nbsp;                AnchorPane pane;
+<b class="nc">&nbsp;                TileImageView.initImages();</b>
+<b class="nc">&nbsp;                updateProgress(3, 10);</b>
+<b class="nc">&nbsp;                FXMLLoader fxmlLoader = new FXMLLoader(GraphicalUI.class.getResource(&quot;/fxml/main-view.fxml&quot;));</b>
+<b class="nc">&nbsp;                updateProgress(6, 10);</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    pane = fxmlLoader.load();</b>
+<b class="nc">&nbsp;                    updateProgress(9, 10);</b>
+<b class="nc">&nbsp;                } catch (IOException e) {</b>
+<b class="nc">&nbsp;                    e.printStackTrace();</b>
+<b class="nc">&nbsp;                    throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                mainViewController = fxmlLoader.getController();</b>
+<b class="nc">&nbsp;                updateProgress(10, 10);</b>
+<b class="nc">&nbsp;                return pane;</b>
+&nbsp;            }
+&nbsp;        };
+<b class="nc">&nbsp;        task.setOnSucceeded((event) -&gt; {</b>
+&nbsp;            AnchorPane pane;
+&nbsp;            try {
+<b class="nc">&nbsp;                pane = task.get();</b>
+<b class="nc">&nbsp;            } catch (InterruptedException | ExecutionException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;                root.getChildren().addAll(pane.getChildren());</b>
+<b class="nc">&nbsp;                root.getChildren().remove(loadingPane);</b>
+&nbsp;            });
+&nbsp;        });
+<b class="nc">&nbsp;        progressBar.progressProperty().bind(task.progressProperty());</b>
+<b class="nc">&nbsp;        new Thread(task, &quot;GUI Loader&quot;).start();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the View Type based on the viewType.
+&nbsp;     */
+&nbsp;    private synchronized void viewTypeUpdate() {
+<b class="nc">&nbsp;        switch (viewManager.getViewType()) {</b>
+<b class="nc">&nbsp;            case INIT -&gt; mainViewController.changeView(InternalViewState.INIT);</b>
+<b class="nc">&nbsp;            case LOBBY -&gt; mainViewController.changeView(InternalViewState.LOBBY);</b>
+<b class="nc">&nbsp;            case GAME -&gt; mainViewController.changeView(InternalViewState.GAME);</b>
+<b class="nc">&nbsp;            case WIN -&gt; mainViewController.changeView(InternalViewState.WIN);</b>
+<b class="nc">&nbsp;            case DISCONNECTION -&gt; mainViewController.changeView(InternalViewState.DISCONNECTION);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void startUI() {
+<b class="nc">&nbsp;        startGUI();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void stopUI() {
+<b class="nc">&nbsp;        mainViewController.changeView(InternalViewState.STOPPED);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

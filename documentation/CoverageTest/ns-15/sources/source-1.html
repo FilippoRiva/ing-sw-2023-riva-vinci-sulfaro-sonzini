@@ -1,0 +1,128 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.controller.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: GameController (it.polimi.myshelfie.controller.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">GameController</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.controller.interfaces;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.Position;
+&nbsp;import it.polimi.myshelfie.model.events.GameEvent;
+&nbsp;import it.polimi.myshelfie.model.modelviews.GameModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a controller for the game.
+&nbsp; */
+&nbsp;public interface GameController {
+&nbsp;    /**
+&nbsp;     * Allows the player playing to draw from the board the tiles he wants to add to his bookshelf.
+&nbsp;     *
+&nbsp;     * @param positions  the positions of the tiles the player wants to select from the board.
+&nbsp;     * @param playerName the player playing.
+&nbsp;     */
+&nbsp;    void drawTiles(List&lt;Position&gt; positions, String playerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Allows the player to order the tiles he drew from the board before insert them in the bookshelf.
+&nbsp;     *
+&nbsp;     * @param orderedTiles the tiles selected from the board.
+&nbsp;     * @param playerName   the player playing.
+&nbsp;     */
+&nbsp;    void orderChosenTiles(List&lt;ItemTile&gt; orderedTiles, String playerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Allows the player to insert the ordered tiles in his bookshelf.
+&nbsp;     *
+&nbsp;     * @param playerName the player playing.
+&nbsp;     * @param column     the column where to insert the chosen tiles.
+&nbsp;     */
+&nbsp;    void insertTiles(String playerName, int column);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a game observer.
+&nbsp;     *
+&nbsp;     * @param playerName          the name of the player.
+&nbsp;     * @param networkGameObserver the observer to add.
+&nbsp;     */
+&nbsp;    void addGameObserver(String playerName, Observer&lt;GameEvent, GameModelView&gt; networkGameObserver);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Disconnects a player from the game.
+&nbsp;     *
+&nbsp;     * @param playerName the name of the player quitting.
+&nbsp;     */
+&nbsp;    void disconnectFromGame(String playerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Disconnects a player from the end game
+&nbsp;     *
+&nbsp;     * @param username          the name of the player leaving.
+&nbsp;     * @param fromDisconnection indicates the disconnection.
+&nbsp;     */
+&nbsp;    void leaveEndGame(String username, boolean fromDisconnection);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

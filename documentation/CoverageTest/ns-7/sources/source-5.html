@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonGoalEightTiles</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.goals</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonGoalEightTiles (it.polimi.myshelfie.model.goals)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonGoalEightTiles</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CommonGoalEightTiles$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.goals;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Common goal: Eight tiles of the same type.
+&nbsp; */
+<b class="fc">&nbsp;public class CommonGoalEightTiles extends CommonGoal {</b>
+&nbsp;    /**
+&nbsp;     * Checks the common goal.
+&nbsp;     *
+&nbsp;     * @param bookshelf is a generic n x m matrix of ItemTile
+&nbsp;     * @return true if 8 elements has the same ItemTile value, false otherwise
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isVerified(ItemTile[][] bookshelf) {
+<b class="fc">&nbsp;        int width = bookshelf[0].length;</b>
+<b class="fc">&nbsp;        int[] counter = new int[ItemTileType.values().length];</b>
+&nbsp;
+<b class="fc">&nbsp;        for (ItemTile[] itemTiles : bookshelf) {</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; width; j++) {</b>
+<b class="fc">&nbsp;                switch (itemTiles[j].getType()) {</b>
+<b class="fc">&nbsp;                    case CAT -&gt; counter[0]++;</b>
+<b class="fc">&nbsp;                    case BOOK -&gt; counter[1]++;</b>
+<b class="fc">&nbsp;                    case GAME -&gt; counter[2]++;</b>
+<b class="fc">&nbsp;                    case FRAME -&gt; counter[3]++;</b>
+<b class="fc">&nbsp;                    case TROPHY -&gt; counter[4]++;</b>
+<b class="fc">&nbsp;                    case PLANT -&gt; counter[5]++;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return Arrays.stream(counter).anyMatch(num -&gt; num &gt;= 8);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the id
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return 8;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the description
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getDescription() {
+<b class="fc">&nbsp;        return &quot;Eight tiles of the same type&quot;;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

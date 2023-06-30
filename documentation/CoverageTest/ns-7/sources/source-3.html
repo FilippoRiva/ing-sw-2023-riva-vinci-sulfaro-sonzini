@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonGoalDefaultsFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.goals</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonGoalDefaultsFactory (it.polimi.myshelfie.model.goals)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonGoalDefaultsFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,3%
+  </span>
+  <span class="absValue">
+    (58/59)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.goals;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.Token;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Used to generate common goals.
+&nbsp; */
+<b class="nc">&nbsp;public class CommonGoalDefaultsFactory {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Generate a random list of common goals.
+&nbsp;     *
+&nbsp;     * @param playerNum is the number of players in the game.
+&nbsp;     * @return a list containing random common goals with Tokens already stacked on top.
+&nbsp;     * @throws InvalidParameterException if the number of players is not valid (smaller than 2).
+&nbsp;     */
+&nbsp;    public static List&lt;CommonGoal&gt; getGoals(int playerNum, int commonGoalNum) throws InvalidParameterException {
+<b class="fc">&nbsp;        if (playerNum &lt; 2) throw new InvalidParameterException(&quot;invalid player number&quot;);</b>
+<b class="fc">&nbsp;        if (commonGoalNum &gt; 12 || commonGoalNum == 0) throw new InvalidParameterException(&quot;invalid common goal number&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;CommonGoal&gt; result = new ArrayList&lt;&gt;(commonGoalNum);</b>
+<b class="fc">&nbsp;        List&lt;Integer&gt; randomValues = generateDistinctRandomIntegers(commonGoalNum);</b>
+<b class="fc">&nbsp;        for (Integer i : randomValues) result.add(generateGoal(i));</b>
+&nbsp;
+&nbsp;        // adding tokens given the number of players
+<b class="fc">&nbsp;        int i = 0;</b>
+<b class="fc">&nbsp;        switch (playerNum) {</b>
+&nbsp;            case 2 -&gt; {
+<b class="fc">&nbsp;                for (CommonGoal commonGoal : result) {</b>
+<b class="fc">&nbsp;                    if (i % 2 == 0) {</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.FOUR_FIRST);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.EIGHT_FIRST);</b>
+&nbsp;                    } else {
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.FOUR_SECOND);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.EIGHT_SECOND);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    i++;</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;            case 3 -&gt; {
+<b class="fc">&nbsp;                for (CommonGoal commonGoal : result) {</b>
+<b class="fc">&nbsp;                    if (i % 2 == 0) {</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.FOUR_FIRST);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.SIX_FIRST);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.EIGHT_FIRST);</b>
+&nbsp;                    } else {
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.FOUR_SECOND);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.SIX_SECOND);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.EIGHT_SECOND);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    i++;</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;            default -&gt; {
+<b class="fc">&nbsp;                for (CommonGoal commonGoal : result) {</b>
+<b class="fc">&nbsp;                    if (i % 2 == 0) {</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.TWO_FIRST);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.FOUR_FIRST);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.SIX_FIRST);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.EIGHT_FIRST);</b>
+&nbsp;                    } else {
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.TWO_SECOND);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.FOUR_SECOND);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.SIX_SECOND);</b>
+<b class="fc">&nbsp;                        commonGoal.pushToken(Token.EIGHT_SECOND);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    i++;</b>
+<b class="fc">&nbsp;                }</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Generates a list of random integers.
+&nbsp;     *
+&nbsp;     * @param num how many integers are required.
+&nbsp;     * @return a list of random integers.
+&nbsp;     */
+&nbsp;    private static List&lt;Integer&gt; generateDistinctRandomIntegers(int num) {
+<b class="fc">&nbsp;        List&lt;Integer&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; 12; i++) result.add(i);</b>
+<b class="fc">&nbsp;        Collections.shuffle(result);</b>
+<b class="fc">&nbsp;        result = result.subList(0, num);</b>
+<b class="fc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Generate a common goal given the id.
+&nbsp;     *
+&nbsp;     * @param id the id of the common goal.
+&nbsp;     * @return the common goal with the given id.
+&nbsp;     */
+&nbsp;    private static CommonGoal generateGoal(int id) {
+<b class="fc">&nbsp;        switch (id) {</b>
+&nbsp;            case 0 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalTwoSquares();</b>
+&nbsp;            }
+&nbsp;            case 1 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalTwoColumns();</b>
+&nbsp;            }
+&nbsp;            case 2 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalFourOfFour();</b>
+&nbsp;            }
+&nbsp;            case 3 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalSixOfTwo();</b>
+&nbsp;            }
+&nbsp;            case 4 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalThreeColumns();</b>
+&nbsp;            }
+&nbsp;            case 5 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalTwoLines();</b>
+&nbsp;            }
+&nbsp;            case 6 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalFourLines();</b>
+&nbsp;            }
+&nbsp;            case 7 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalCorner();</b>
+&nbsp;            }
+&nbsp;            case 8 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalEightTiles();</b>
+&nbsp;            }
+&nbsp;            case 9 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalX();</b>
+&nbsp;            }
+&nbsp;            case 10 -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalDiagonal();</b>
+&nbsp;            }
+&nbsp;            default -&gt; {
+<b class="fc">&nbsp;                return new CommonGoalStairs();</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

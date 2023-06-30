@@ -1,0 +1,1082 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ViewManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view</a>
+</div>
+
+<h1>Coverage Summary for Class: ViewManager (it.polimi.myshelfie.view)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ViewManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/323)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ViewManager$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/63)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/324)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.ClientApp;
+&nbsp;import it.polimi.myshelfie.GameConfig;
+&nbsp;import it.polimi.myshelfie.model.*;
+&nbsp;import it.polimi.myshelfie.model.chatting.Message;
+&nbsp;import it.polimi.myshelfie.model.events.ExceptionEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.modelviews.*;
+&nbsp;import it.polimi.myshelfie.network.NetworkMessage;
+&nbsp;import it.polimi.myshelfie.utils.Observable;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;import it.polimi.myshelfie.view.events.ViewEvent;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * The ViewManager handles the View and all the requests that come to it.
+&nbsp; * It sends NetworkMessages with the ViewEvents that happen and the information associated with them.
+&nbsp; * It sets and makes updates to the modelViews based on the ViewEvents that occurred.
+&nbsp; * It manages the ViewManager Observers with the UINotifier.
+&nbsp; * It implements a Singleton Design Pattern.
+&nbsp; */
+&nbsp;public class ViewManager extends View {
+&nbsp;
+&nbsp;    public static String username;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Used to implement the Singleton Design Pattern, so to have only one ViewManager.
+&nbsp;     */
+&nbsp;    private static ViewManager viewManager; //used to have only one ViewManager.
+&nbsp;    private final Observable&lt;ViewUpdate, Object&gt; UINotifier;
+&nbsp;    private final Object sync;
+&nbsp;    private ModelView modelView;
+&nbsp;    private ClientExceptionsNotifierModelView clientExceptionsNotifierView;
+&nbsp;    private ClientExceptionsNotifierModelView disconnectedClientExceptionsNotifierView;
+&nbsp;    private PlayerChatModelView playerChatModelView;
+&nbsp;    private LobbyModelView lobbyModelView;
+&nbsp;    private FullGameModelView fullGameModelView;
+&nbsp;    private FullGameModelView gameDifferences;
+&nbsp;    private FullGameModelView oldGameModelView;
+&nbsp;    private ViewType viewType;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     */
+<b class="nc">&nbsp;    private ViewManager() {</b>
+<b class="nc">&nbsp;        this.UINotifier = new Observable&lt;&gt;();</b>
+<b class="nc">&nbsp;        this.sync = new Object();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the username.
+&nbsp;     *
+&nbsp;     * @return the username.
+&nbsp;     */
+&nbsp;    public static String getUsername() {
+<b class="nc">&nbsp;        return username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the username.
+&nbsp;     *
+&nbsp;     * @param username the username to set.
+&nbsp;     */
+&nbsp;    public static void setUsername(String username) {
+<b class="nc">&nbsp;        ViewManager.username = username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the instance of THE View manager by using a Singleton Design Pattern.
+&nbsp;     *
+&nbsp;     * @return the ViewManager.
+&nbsp;     */
+&nbsp;    public static ViewManager getInstance() {
+<b class="nc">&nbsp;        if (viewManager == null) {</b>
+<b class="nc">&nbsp;            ViewManager.viewManager = new ViewManager();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return viewManager;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notifies the observers that a change has occurred and changes their attribute &quot;changed&quot; to true.
+&nbsp;     *
+&nbsp;     * @param networkMessage the NetworkMessage sent.
+&nbsp;     */
+&nbsp;    private synchronized void sendMessage(NetworkMessage networkMessage) {
+<b class="nc">&nbsp;        if (networkMessage == null) return;</b>
+<b class="nc">&nbsp;        setChanged();</b>
+<b class="nc">&nbsp;        notifyObservers((ViewEvent) networkMessage.getEvent(), networkMessage);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with the game settings when a ViewEvent.CONFIG_REQUEST occurs.
+&nbsp;     *
+&nbsp;     * @param config the game settings.
+&nbsp;     */
+&nbsp;    public void configRequest(GameConfig config) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                viewManager.sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, config));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with the lobby name and player name when a ViewEvent.JOIN_REQUEST occurs.
+&nbsp;     *
+&nbsp;     * @param lobby      the lobby name.
+&nbsp;     * @param playerName the player name.
+&nbsp;     */
+&nbsp;    public void joinRequest(String lobby, String playerName) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.JOIN_REQUEST, playerName, lobby));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with the lobby name and player name when a ViewEvent.CREATE_REQUEST occurs.
+&nbsp;     *
+&nbsp;     * @param lobby      the lobby name.
+&nbsp;     * @param playerName the player name.
+&nbsp;     */
+&nbsp;    public void createRequest(String lobby, String playerName) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.CREATE_REQUEST, playerName, lobby));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage when a ViewEvent.EXIT_REQUEST occurs.
+&nbsp;     */
+&nbsp;    public void exitRequest() {
+&nbsp;        try {
+<b class="nc">&nbsp;            sendMessage(new NetworkMessage(ViewEvent.EXIT_REQUEST));</b>
+<b class="nc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage when a ViewEvent.START_REQUEST occurs.
+&nbsp;     */
+&nbsp;    public void startRequest() {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.START_REQUEST));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with the chosen positions when a ViewEvent.DRAW_REQUEST occurs.
+&nbsp;     *
+&nbsp;     * @param positions the position selected in the draw move.
+&nbsp;     */
+&nbsp;    public void drawRequest(List&lt;Position&gt; positions) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.DRAW_REQUEST, positions));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with the ordered tiles when a ViewEvent.ORGANIZE_REQUEST occurs.
+&nbsp;     *
+&nbsp;     * @param orderedTiles the tiles ordered.
+&nbsp;     */
+&nbsp;    public void organizeRequest(List&lt;ItemTile&gt; orderedTiles) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.ORGANIZE_REQUEST, orderedTiles));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with the selected column when a ViewEvent.INSERT_REQUEST occurs.
+&nbsp;     *
+&nbsp;     * @param column the column where to insert the taken tiles.
+&nbsp;     */
+&nbsp;    public void insertRequest(int column) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.INSERT_REQUEST, column));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a NetworkMessage with a message when a ViewEvent.MESSAGE_SEND occurs.
+&nbsp;     *
+&nbsp;     * @param message the message sent.
+&nbsp;     */
+&nbsp;    public void sendChatMessage(Message message) {
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.MESSAGE_SEND, message));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns true if removePlayer fails.
+&nbsp;     * @return true if removePlayer fails.
+&nbsp;     */
+&nbsp;    public boolean removePlayer() {
+<b class="nc">&nbsp;        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();</b>
+<b class="nc">&nbsp;        int currentSize = lobbyModelView.getGameConfig().getNumPlayers();</b>
+<b class="nc">&nbsp;        if (currentSize == 2) return true;</b>
+&nbsp;        GameConfig config;
+&nbsp;        try {
+<b class="nc">&nbsp;            config = new GameConfig(currentSize - 1);</b>
+<b class="nc">&nbsp;        } catch (InvalidParameterException ignored) {</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, config));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns true if addPlayer fails.
+&nbsp;     * @return true if addPlayer fails.
+&nbsp;     */
+&nbsp;    public boolean addPlayer() {
+<b class="nc">&nbsp;        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();</b>
+<b class="nc">&nbsp;        int currentSize = lobbyModelView.getGameConfig().getNumPlayers();</b>
+<b class="nc">&nbsp;        if (currentSize == 4) return true;</b>
+&nbsp;        GameConfig config;
+&nbsp;        try {
+<b class="nc">&nbsp;            config = new GameConfig(currentSize + 1);</b>
+<b class="nc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        synchronized (this) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                sendMessage(new NetworkMessage(ViewEvent.CONFIG_REQUEST, config));</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param exceptionView the exception view to check.
+&nbsp;     * @param evt           the exception event that has occurred.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            if (evt == ExceptionEvent.NEW_EXCEPTION) {</b>
+<b class="nc">&nbsp;                this.clientExceptionsNotifierView = exceptionView;</b>
+<b class="nc">&nbsp;                UINotifier.setChanged();</b>
+<b class="nc">&nbsp;                UINotifier.notifyObservers(ViewUpdate.EXCEPTION_UPDATE, null);</b>
+<b class="nc">&nbsp;            } else this.disconnectedClientExceptionsNotifierView = exceptionView;</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param chatView the chat view to set.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void setChatView(PlayerChatModelView chatView) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            this.playerChatModelView = chatView;</b>
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.CHAT_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param drawModelView the model view to update.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void updateDrawView(DrawModelView drawModelView) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            GameState currentState = fullGameModelView.getCurrentState();</b>
+<b class="nc">&nbsp;            while (currentState != GameState.DRAW &amp;&amp; currentState != GameState.LAST_DRAW) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    sync.wait();</b>
+<b class="nc">&nbsp;                } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                currentState = fullGameModelView.getCurrentState();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            this.oldGameModelView = fullGameModelView;</b>
+<b class="nc">&nbsp;            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);</b>
+<b class="nc">&nbsp;            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);</b>
+&nbsp;
+<b class="nc">&nbsp;            updateCopy.applyChanges(drawModelView);</b>
+&nbsp;
+<b class="nc">&nbsp;            fullGameModelView = updateCopy;</b>
+<b class="nc">&nbsp;            diffCopy.diff(this.fullGameModelView);</b>
+<b class="nc">&nbsp;            this.gameDifferences = diffCopy;</b>
+&nbsp;
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param changes the model view to update.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void updateOrganizeView(OrganizeModelView changes) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            GameState currentState = fullGameModelView.getCurrentState();</b>
+<b class="nc">&nbsp;            while (currentState != GameState.ORGANIZE &amp;&amp; currentState != GameState.LAST_ORGANIZE) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    sync.wait();</b>
+<b class="nc">&nbsp;                } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                currentState = fullGameModelView.getCurrentState();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            this.oldGameModelView = fullGameModelView;</b>
+<b class="nc">&nbsp;            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);</b>
+<b class="nc">&nbsp;            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);</b>
+&nbsp;
+<b class="nc">&nbsp;            updateCopy.applyChanges(changes);</b>
+&nbsp;
+<b class="nc">&nbsp;            fullGameModelView = updateCopy;</b>
+<b class="nc">&nbsp;            diffCopy.diff(this.fullGameModelView);</b>
+<b class="nc">&nbsp;            this.gameDifferences = diffCopy;</b>
+&nbsp;
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param changes the model view to update.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void updateInsertView(InsertModelView changes) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            GameState currentState = fullGameModelView.getCurrentState();</b>
+<b class="nc">&nbsp;            while (currentState != GameState.INSERT &amp;&amp; currentState != GameState.LAST_INSERT) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    sync.wait();</b>
+<b class="nc">&nbsp;                } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                currentState = fullGameModelView.getCurrentState();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            this.oldGameModelView = fullGameModelView;</b>
+<b class="nc">&nbsp;            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);</b>
+<b class="nc">&nbsp;            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);</b>
+&nbsp;
+<b class="nc">&nbsp;            updateCopy.applyChanges(changes);</b>
+&nbsp;
+<b class="nc">&nbsp;            fullGameModelView = updateCopy;</b>
+<b class="nc">&nbsp;            diffCopy.diff(this.fullGameModelView);</b>
+<b class="nc">&nbsp;            this.gameDifferences = diffCopy;</b>
+&nbsp;
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param endTurnModelView the modelview to update.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void updateTurnView(EndTurnModelView endTurnModelView) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            GameState currentState = fullGameModelView.getCurrentState();</b>
+<b class="nc">&nbsp;            while (currentState != GameState.COUNTING_POINTS &amp;&amp; currentState != GameState.LAST_COUNTING_POINTS) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    sync.wait();</b>
+<b class="nc">&nbsp;                } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                currentState = fullGameModelView.getCurrentState();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            this.oldGameModelView = fullGameModelView;</b>
+<b class="nc">&nbsp;            FullGameModelView diffCopy = new FullGameModelView(fullGameModelView);</b>
+<b class="nc">&nbsp;            FullGameModelView updateCopy = new FullGameModelView(fullGameModelView);</b>
+&nbsp;
+<b class="nc">&nbsp;            updateCopy.applyChanges(endTurnModelView);</b>
+&nbsp;
+<b class="nc">&nbsp;            fullGameModelView = updateCopy;</b>
+<b class="nc">&nbsp;            diffCopy.diff(this.fullGameModelView);</b>
+<b class="nc">&nbsp;            this.gameDifferences = diffCopy;</b>
+&nbsp;
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the ModelViews.
+&nbsp;     */
+&nbsp;    private void resetBuffer() {
+<b class="nc">&nbsp;        this.oldGameModelView = fullGameModelView;</b>
+<b class="nc">&nbsp;        this.fullGameModelView = null;</b>
+<b class="nc">&nbsp;        this.gameDifferences = null;</b>
+<b class="nc">&nbsp;        this.lobbyModelView = null;</b>
+<b class="nc">&nbsp;        this.playerChatModelView = null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param viewType the view type.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void setView(ViewType viewType) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            switch (viewType) {</b>
+&nbsp;                case INIT -&gt; {
+<b class="nc">&nbsp;                    while (modelView == null) { //waits until modelView != null</b>
+&nbsp;                        try {
+<b class="nc">&nbsp;                            sync.wait();</b>
+<b class="nc">&nbsp;                        } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                        }</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    this.resetBuffer();</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;                case LOBBY -&gt; {
+<b class="nc">&nbsp;                    while (lobbyModelView == null) { //waits until lobbyModelView != null</b>
+&nbsp;                        try {
+<b class="nc">&nbsp;                            sync.wait();</b>
+<b class="nc">&nbsp;                        } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                        }</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                case GAME -&gt; {
+<b class="nc">&nbsp;                    while (fullGameModelView == null) { //waits until fullGameModelView != null</b>
+&nbsp;                        try {
+<b class="nc">&nbsp;                            sync.wait();</b>
+<b class="nc">&nbsp;                        } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                        }</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                case WIN -&gt; {
+<b class="nc">&nbsp;                    while (fullGameModelView == null || fullGameModelView.getCurrentState() != GameState.WIN) {</b>
+&nbsp;                        try {
+<b class="nc">&nbsp;                            sync.wait();</b>
+<b class="nc">&nbsp;                        } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                        }</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                case DISCONNECTION -&gt; {
+<b class="nc">&nbsp;                    while (disconnectedClientExceptionsNotifierView == null) {</b>
+&nbsp;                        try {
+<b class="nc">&nbsp;                            sync.wait();</b>
+<b class="nc">&nbsp;                        } catch (InterruptedException ignored) {</b>
+<b class="nc">&nbsp;                        }</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    this.resetBuffer();</b>
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            this.viewType = viewType;</b>
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.VIEW_TYPE_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds an observer to the UINotifier.
+&nbsp;     *
+&nbsp;     * @param o the observer to add.
+&nbsp;     */
+&nbsp;    public synchronized void addUI(Observer&lt;ViewUpdate, Object&gt; o) {
+<b class="nc">&nbsp;        UINotifier.addObserver(o);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes an observer to the UINotifier.
+&nbsp;     *
+&nbsp;     * @param o the observer to remove.
+&nbsp;     */
+&nbsp;    public synchronized void removeUI(Observer&lt;ViewUpdate, Object&gt; o) {
+<b class="nc">&nbsp;        UINotifier.deleteObserver(o);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the ModelView.
+&nbsp;     *
+&nbsp;     * @return the ModelView.
+&nbsp;     */
+&nbsp;    public synchronized ModelView getModelView() {
+<b class="nc">&nbsp;        return modelView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param modelView the model view to set.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void setModelView(ModelView modelView) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            this.modelView = modelView;</b>
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.MODEL_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the ClientExceptionsNotifierModelView.
+&nbsp;     *
+&nbsp;     * @return the ClientExceptionsNotifierModelView.
+&nbsp;     */
+&nbsp;    public synchronized ClientExceptionsNotifierModelView getClientExceptionsNotifierView() {
+<b class="nc">&nbsp;        return clientExceptionsNotifierView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the ClientExceptionsNotifierModelView that disconnected.
+&nbsp;     *
+&nbsp;     * @return the ClientExceptionsNotifierModelView that disconnected.
+&nbsp;     */
+&nbsp;    public synchronized ClientExceptionsNotifierModelView getDisconnectedClientExceptionsNotifierView() {
+<b class="nc">&nbsp;        return disconnectedClientExceptionsNotifierView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the PlayerChatModelView.
+&nbsp;     *
+&nbsp;     * @return the PlayerChatModelView.
+&nbsp;     */
+&nbsp;    public synchronized PlayerChatModelView getPlayerChatModelView() {
+<b class="nc">&nbsp;        return playerChatModelView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the LobbyModelView.
+&nbsp;     *
+&nbsp;     * @return the LobbyModelView.
+&nbsp;     */
+&nbsp;    public synchronized LobbyModelView getLobbyModelView() {
+<b class="nc">&nbsp;        return lobbyModelView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param lobbyModelView the lobby model view to set.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void setLobbyModelView(LobbyModelView lobbyModelView) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            this.lobbyModelView = lobbyModelView;</b>
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.LOBBY_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the FullGameModelView.
+&nbsp;     *
+&nbsp;     * @return the FullGameModelView.
+&nbsp;     */
+&nbsp;    public synchronized FullGameModelView getGameModelView() {
+<b class="nc">&nbsp;        return fullGameModelView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param theNewOne the game model view to set.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void setGameModelView(FullGameModelView theNewOne) {
+<b class="nc">&nbsp;        synchronized (sync) {</b>
+<b class="nc">&nbsp;            if (this.fullGameModelView != null) {</b>
+<b class="nc">&nbsp;                this.oldGameModelView = new FullGameModelView(fullGameModelView);</b>
+<b class="nc">&nbsp;                FullGameModelView copy = new FullGameModelView(fullGameModelView);</b>
+<b class="nc">&nbsp;                this.fullGameModelView = theNewOne;</b>
+<b class="nc">&nbsp;                copy.diff(this.fullGameModelView);</b>
+<b class="nc">&nbsp;                this.gameDifferences = copy;</b>
+<b class="nc">&nbsp;            } else {</b>
+<b class="nc">&nbsp;                this.fullGameModelView = theNewOne;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            UINotifier.setChanged();</b>
+<b class="nc">&nbsp;            UINotifier.notifyObservers(ViewUpdate.GAME_UPDATE, null);</b>
+<b class="nc">&nbsp;            sync.notifyAll();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the ViewType.
+&nbsp;     *
+&nbsp;     * @return the ViewType.
+&nbsp;     */
+&nbsp;    public synchronized ViewType getViewType() {
+<b class="nc">&nbsp;        return viewType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns if the current player/turn has changed in the last game update
+&nbsp;     * @return if the current player/turn has changed in the last game update
+&nbsp;     */
+&nbsp;    public synchronized boolean isCurrentPlayerDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getCurrentPlayerName() != null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the username of the player that is currently the new current player
+&nbsp;     * @return the username of the player that is currently the new current player
+&nbsp;     */
+&nbsp;    public synchronized String getCurrentPlayerDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getCurrentPlayerName();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the username of the player that was playing in the last game update
+&nbsp;     * @return the username of the player that was playing in the last game update
+&nbsp;     */
+&nbsp;    public synchronized String getPreviousPlayer() {
+<b class="nc">&nbsp;        if (oldGameModelView == null) return &quot;&quot;;</b>
+<b class="nc">&nbsp;        return oldGameModelView.getCurrentPlayerName();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns if the state have changed since the last game update
+&nbsp;     * @return if the state have changed since the last game update
+&nbsp;     */
+&nbsp;    public synchronized boolean isCurrentStateDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getCurrentState() != null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the new state if the state has changed, otherwise it returns null
+&nbsp;     * @return the new state if the state has changed, otherwise it returns null
+&nbsp;     */
+&nbsp;    public synchronized GameState getCurrentStateDiff() {
+<b class="nc">&nbsp;        if (gameDifferences == null) return GameState.DRAW; //first turn</b>
+<b class="nc">&nbsp;        return gameDifferences.getCurrentState();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the state previous to the one received in the last game update
+&nbsp;     * @return the state previous to the one received in the last game update
+&nbsp;     */
+&nbsp;    public synchronized GameState getLastState() {
+<b class="nc">&nbsp;        return oldGameModelView.getCurrentState();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns if remaining tiles have changed since the last game update
+&nbsp;     * @return if remaining tiles have changed since the last game update
+&nbsp;     */
+&nbsp;    public synchronized boolean isRemainingTilesDiff() {
+<b class="nc">&nbsp;        if (gameDifferences == null) return false;</b>
+<b class="nc">&nbsp;        return gameDifferences.getRemainingTiles() != -1;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public synchronized int getRemainingTilesDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getRemainingTiles();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gives an HashMap from Positions to ItemTiles. The Positions are the positions that have changed
+&nbsp;     * in the last game update and the ItemTiles are the new ItemTiles in that position.
+&nbsp;     * The Positions are not center relative but are relative to the top left
+&nbsp;     * corner of a usual matrix.
+&nbsp;     *
+&nbsp;     * @return a map from Positions to ItemTiles that have changed from the previous game update
+&nbsp;     */
+&nbsp;    public synchronized HashMap&lt;Position, ItemTile&gt; getLivingRoomDiff() {
+<b class="nc">&nbsp;        if (gameDifferences == null) return null;</b>
+<b class="nc">&nbsp;        HashMap&lt;Position, ItemTile&gt; result = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        ItemTile[][] diffLivingRoom = gameDifferences.getLivingRoom();</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; diffLivingRoom.length; i++) {</b>
+<b class="nc">&nbsp;            for (int j = 0; j &lt; diffLivingRoom[0].length; j++) {</b>
+<b class="nc">&nbsp;                if (diffLivingRoom[i][j] != null) {</b>
+<b class="nc">&nbsp;                    result.put(new Position(j, i), diffLivingRoom[i][j]);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The Common Goals returned are the CommonGoals who&#39;s Tokens lists have changed compared to the
+&nbsp;     * last game update.
+&nbsp;     * The Tokens in the CommonGoals returned are the tokens that have been removed.
+&nbsp;     *
+&nbsp;     * @return a list of the commonGoals that have changed from the previous game update
+&nbsp;     */
+&nbsp;    public synchronized List&lt;CommonGoalModelView&gt; getCommonGoalDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getCommonGoals().stream().filter(x -&gt; x.getTokens().size() != 0).toList();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The returned PlayerModelView&#39;s points are the new points of those players.
+&nbsp;     *
+&nbsp;     * @return the list of the players that have changed their points compared to the last game update.
+&nbsp;     */
+&nbsp;    public synchronized List&lt;PlayerModelView&gt; getPlayersPointsDiff() {
+<b class="nc">&nbsp;        if (gameDifferences != null)</b>
+<b class="nc">&nbsp;            return gameDifferences.getPlayers().stream().filter(x -&gt; x.getPoints() != -1).toList();</b>
+<b class="nc">&nbsp;        return new ArrayList&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the new points of the player if they have changed, otherwise returns -1.
+&nbsp;     *
+&nbsp;     * @return an int.
+&nbsp;     */
+&nbsp;    public synchronized int getLastPlayerPointsDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getPoints();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the tokens that the last player has earned in the last game update.
+&nbsp;     *
+&nbsp;     * @return a list of tokens.
+&nbsp;     */
+&nbsp;    public synchronized List&lt;Token&gt; getLastPlayerTokenDiff() {
+<b class="nc">&nbsp;        if (oldGameModelView != null &amp;&amp; gameDifferences != null)</b>
+<b class="nc">&nbsp;            return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTokens();</b>
+<b class="nc">&nbsp;        return new ArrayList&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the last player taken tiles that have been added in the last game update.
+&nbsp;     *
+&nbsp;     * @return a list of item tiles.
+&nbsp;     */
+&nbsp;    public synchronized List&lt;ItemTile&gt; getCurrentPlayerTakenTilesDiff() {
+<b class="nc">&nbsp;        return gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getTakenTiles();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the list of item tiles inserted by the current player.
+&nbsp;     *
+&nbsp;     * @return the list of item tiles inserted by the current player.
+&nbsp;     */
+&nbsp;    public synchronized List&lt;ItemTile&gt; getCurrentPlayerInsertedTiles() {
+<b class="nc">&nbsp;        if (oldGameModelView != null) return oldGameModelView.getCurrentPlayer().getTakenTiles();</b>
+<b class="nc">&nbsp;        return new ArrayList&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the current player has inserted the tile taken.
+&nbsp;     *
+&nbsp;     * @return true if the player inserted, false otherwise.
+&nbsp;     */
+&nbsp;    public synchronized boolean hasCurrentPlayerInsertedTiles() {
+<b class="nc">&nbsp;        if (fullGameModelView != null &amp;&amp; oldGameModelView != null)</b>
+<b class="nc">&nbsp;            return fullGameModelView.getCurrentPlayer().getTakenTiles().size() &lt; oldGameModelView.getCurrentPlayer().getTakenTiles().size();</b>
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if it&#39;s the turn of the player set in the ViewManager.username.
+&nbsp;     *
+&nbsp;     * @return true if it&#39;s the turn of the player set in the ViewManager.username. false otherwise.
+&nbsp;     */
+&nbsp;    public synchronized boolean isMyTurn() {
+<b class="nc">&nbsp;        if (fullGameModelView != null) return fullGameModelView.getCurrentPlayerName().equals(ViewManager.username);</b>
+<b class="nc">&nbsp;        else if (oldGameModelView != null) return oldGameModelView.getCurrentPlayerName().equals(ViewManager.username);</b>
+<b class="nc">&nbsp;        else return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the tiles taken are at least one and has at least one side free.
+&nbsp;     *
+&nbsp;     * @param chosenTiles the tiles taken.
+&nbsp;     * @return true if the chosen tiles are not valid, false otherwise.
+&nbsp;     */
+&nbsp;    public synchronized boolean areChosenTilesInvalid(List&lt;Position&gt; chosenTiles) {
+<b class="nc">&nbsp;        if (fullGameModelView == null) return false;</b>
+<b class="nc">&nbsp;        if (chosenTiles.size() == 0) return true;</b>
+<b class="nc">&nbsp;        for (Position p : chosenTiles) {</b>
+<b class="nc">&nbsp;            if (!fullGameModelView.atLeastOneSideFree(p)) return true;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if there&#39;s enough space in the bookshelf to insert tiles.
+&nbsp;     *
+&nbsp;     * @param tryChosenTiles the tiles to insert.
+&nbsp;     * @return true if there&#39;s enough space in the bookshelf, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean isThereEnoughBookshelfSpace(List&lt;Position&gt; tryChosenTiles) {
+<b class="nc">&nbsp;        if (fullGameModelView == null) return false;</b>
+<b class="nc">&nbsp;        ItemTile[][] bookshelf = fullGameModelView.getCurrentPlayer().getBookshelf();</b>
+<b class="nc">&nbsp;        int width = bookshelf[0].length;</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; width; i++) {</b>
+<b class="nc">&nbsp;            if (bookshelf[tryChosenTiles.size() - 1][i].getType() == ItemTileType.EMPTY) return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the position in the column where the current player has inserted the last tile taken.
+&nbsp;     *
+&nbsp;     * @return an int.
+&nbsp;     */
+&nbsp;    public synchronized int getCurrentPlayerInsertedColumnPosition() {
+<b class="nc">&nbsp;        if (!hasCurrentPlayerInsertedTiles()) return -1;</b>
+<b class="nc">&nbsp;        ItemTile[][] bookshelf = gameDifferences.getPlayer(oldGameModelView.getCurrentPlayerName()).getBookshelf();</b>
+<b class="nc">&nbsp;        for (ItemTile[] itemTiles : bookshelf) {</b>
+<b class="nc">&nbsp;            for (int j = 0; j &lt; bookshelf[0].length; j++) {</b>
+<b class="nc">&nbsp;                if (itemTiles[j] != null) return j;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return -1;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the list of players ordered by scores.
+&nbsp;     *
+&nbsp;     * @return a list of PlayerModelViews.
+&nbsp;     */
+&nbsp;    public synchronized List&lt;PlayerModelView&gt; getPlayersOrderedByScores() {
+<b class="nc">&nbsp;        if (fullGameModelView == null) return new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        return fullGameModelView.getPlayers().stream().sorted((x, y) -&gt; {</b>
+<b class="nc">&nbsp;            if (x.getPoints() == y.getPoints()) return 0;</b>
+<b class="nc">&nbsp;            else return x.getPoints() &gt;= y.getPoints() ? -1 : 1;</b>
+<b class="nc">&nbsp;        }).toList();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the winner.
+&nbsp;     *
+&nbsp;     * @return the player who won and has the highest score.
+&nbsp;     */
+&nbsp;    public synchronized PlayerModelView getWinner() {
+<b class="nc">&nbsp;        return getPlayersOrderedByScores().get(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void startAutoPlayer(int roomSize) {
+<b class="nc">&nbsp;        AutoPlayer a = new AutoPlayer();</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            a.preGameStart(roomSize);</b>
+<b class="nc">&nbsp;        } catch (InvalidParameterException ignored) {</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void startAutoPlayer() {
+<b class="nc">&nbsp;        AutoPlayer a = new AutoPlayer();</b>
+<b class="nc">&nbsp;        if (fullGameModelView != null) {</b>
+<b class="nc">&nbsp;            a.postGameStart();</b>
+&nbsp;        } else {
+&nbsp;            try {
+<b class="nc">&nbsp;                a.preGameStart(2);</b>
+<b class="nc">&nbsp;            } catch (InvalidParameterException ignored) {</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void stopUI() {
+<b class="nc">&nbsp;        for (Observer&lt;ViewUpdate, Object&gt; o : UINotifier.getObservers()) {</b>
+<b class="nc">&nbsp;            ((UI) o).stopUI();</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        UINotifier.deleteObservers();</b>
+<b class="nc">&nbsp;        this.resetBuffer();</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Disconnected from server...\nTry to reconnect\n&quot;);</b>
+<b class="nc">&nbsp;        ClientApp.initialUserChoice();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

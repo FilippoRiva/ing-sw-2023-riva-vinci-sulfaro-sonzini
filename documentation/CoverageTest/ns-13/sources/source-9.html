@@ -1,0 +1,157 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ScreenPage</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.textual.pages</a>
+</div>
+
+<h1>Coverage Summary for Class: ScreenPage (it.polimi.myshelfie.view.textual.pages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScreenPage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.textual.pages;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.textual.Terminal;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a screen page for the textualUI.
+&nbsp; */
+&nbsp;public abstract class ScreenPage {
+&nbsp;
+&nbsp;    final protected Terminal t;
+&nbsp;    final protected ViewManager viewManager;
+&nbsp;    final protected List&lt;String&gt; inputParameters;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes a Screen Page.
+&nbsp;     * @param t the terminal on which we want to render the page.
+&nbsp;     * @param inputParameters the shared input parameters between the TextualUI.
+&nbsp;     */
+<b class="nc">&nbsp;    public ScreenPage(Terminal t, List&lt;String&gt; inputParameters) {</b>
+<b class="nc">&nbsp;        this.t = t;</b>
+<b class="nc">&nbsp;        this.viewManager = ViewManager.getInstance();</b>
+<b class="nc">&nbsp;        this.inputParameters = inputParameters;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the page inside the Screen portion of the Terminal.
+&nbsp;     */
+&nbsp;    public abstract void render();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints the borders of the Terminal.
+&nbsp;     */
+&nbsp;    public void printBorder() {
+<b class="nc">&nbsp;        t.printDivider(0);</b>
+<b class="nc">&nbsp;        t.printDivider(40);</b>
+<b class="nc">&nbsp;        t.printDivider(t.INPUT_LINE);</b>
+<b class="nc">&nbsp;        t.printDivider(t.INPUT_LINE + t.INPUT_HEIGHT - 1);</b>
+<b class="nc">&nbsp;        t.printVerticalDivider(0, 0, 40);</b>
+<b class="nc">&nbsp;        t.printVerticalDivider(0, 63, 40);</b>
+<b class="nc">&nbsp;        if (!t.ANSI_ON) return;</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, 0, 0);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, 0, 63);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, 40, 0);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, 40, 63);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, t.INPUT_LINE, 0);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, t.INPUT_LINE + 2, 0);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, t.INPUT_LINE, t.WIDTH);</b>
+<b class="nc">&nbsp;        t.print(&quot;?&quot;, t.INPUT_LINE, t.WIDTH);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

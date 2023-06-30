@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonGoalFourOfFour</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.goals</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonGoalFourOfFour (it.polimi.myshelfie.model.goals)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonGoalFourOfFour</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (40/40)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.goals;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Common goal: Four groups each containing at least 4 tiles of the same type. The tile of one group can be different from those of another group.
+&nbsp; */
+<b class="fc">&nbsp;public class CommonGoalFourOfFour extends CommonGoal {</b>
+&nbsp;    /**
+&nbsp;     * Checks the common goal.
+&nbsp;     *
+&nbsp;     * @param bookshelf is a generic n x m matrix of ItemTile
+&nbsp;     * @return true if exists 4 groups of 4 tiles with the same ItemTile value, false otherwise
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isVerified(ItemTile[][] bookshelf) {
+<b class="fc">&nbsp;        int height = bookshelf.length;</b>
+<b class="fc">&nbsp;        int width = bookshelf[0].length;</b>
+<b class="fc">&nbsp;        boolean[][] take = new boolean[height][width];</b>
+<b class="fc">&nbsp;        int counter = 0;</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; height; i++) {</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; width; j++) {</b>
+<b class="fc">&nbsp;                if (!take[i][j] &amp;&amp; bookshelf[i][j].getType() != ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                    if (i &lt; 3) {</b>
+<b class="fc">&nbsp;                        if (j &lt; 2) {</b>
+<b class="fc">&nbsp;                            if (checkHorizontal(bookshelf, take, i, j)) {</b>
+<b class="fc">&nbsp;                                counter++;</b>
+<b class="fc">&nbsp;                                take[i][j] = true;</b>
+<b class="fc">&nbsp;                                take[i][j + 1] = true;</b>
+<b class="fc">&nbsp;                                take[i][j + 2] = true;</b>
+<b class="fc">&nbsp;                                take[i][j + 3] = true;</b>
+&nbsp;                            }
+&nbsp;                        }
+<b class="fc">&nbsp;                        if (!take[i][j] &amp;&amp; checkVertical(bookshelf, take, i, j)) {</b>
+<b class="fc">&nbsp;                            counter++;</b>
+<b class="fc">&nbsp;                            take[i][j] = true;</b>
+<b class="fc">&nbsp;                            take[i + 1][j] = true;</b>
+<b class="fc">&nbsp;                            take[i + 2][j] = true;</b>
+<b class="fc">&nbsp;                            take[i + 3][j] = true;</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                    } else if (j &lt; 2) {</b>
+<b class="fc">&nbsp;                        if (checkHorizontal(bookshelf, take, i, j)) {</b>
+&nbsp;                            //first two columns of the last three columns
+<b class="fc">&nbsp;                            counter++;</b>
+<b class="fc">&nbsp;                            take[i][j + 1] = true;</b>
+<b class="fc">&nbsp;                            take[i][j + 2] = true;</b>
+<b class="fc">&nbsp;                            take[i][j + 3] = true;</b>
+&nbsp;                        }
+&nbsp;                    }
+<b class="fc">&nbsp;                    if (counter == 4) return true;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean checkHorizontal(ItemTile[][] bookshelf, boolean[][] take, int i, int j) {
+<b class="fc">&nbsp;        for (int k = 0; k &lt; 3; k++) {</b>
+<b class="fc">&nbsp;            if (take[i][j] || bookshelf[i][j].getType() != bookshelf[i][j + 1].getType()) return false;</b>
+<b class="fc">&nbsp;            j++;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean checkVertical(ItemTile[][] bookshelf, boolean[][] take, int i, int j) {
+<b class="fc">&nbsp;        for (int k = 0; k &lt; 3; k++) {</b>
+<b class="fc">&nbsp;            if (take[i][j] || bookshelf[i][j].getType() != bookshelf[i + 1][j].getType()) return false;</b>
+<b class="fc">&nbsp;            i++;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the id
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return 2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the description
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getDescription() {
+<b class="fc">&nbsp;        return &quot;Four groups each containing at least 4 tiles of the same type.\n&quot; +</b>
+&nbsp;                &quot;The tile of one group can be different from those of another group&quot;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,431 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PreGameController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers.pregame</a>
+</div>
+
+<h1>Coverage Summary for Class: PreGameController (it.polimi.myshelfie.view.graphical.controllers.pregame)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PreGameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/125)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PreGameController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/126)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers.pregame;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.view.InternalViewState;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.Animations;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.GraphicalUI;
+&nbsp;import javafx.animation.Animation;
+&nbsp;import javafx.animation.TranslateTransition;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.fxml.Initializable;
+&nbsp;import javafx.scene.control.Button;
+&nbsp;import javafx.scene.control.Label;
+&nbsp;import javafx.scene.control.ProgressIndicator;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.stage.Stage;
+&nbsp;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.ResourceBundle;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the controller for the pre game for the view.
+&nbsp; */
+<b class="nc">&nbsp;public class PreGameController implements Initializable {</b>
+&nbsp;    @FXML
+&nbsp;    public HomeController homeController;
+&nbsp;    @FXML
+&nbsp;    public JoinController joinController;
+&nbsp;    @FXML
+&nbsp;    public CreateController createController;
+&nbsp;    @FXML
+&nbsp;    public LobbyController lobbyController;
+&nbsp;    @FXML
+&nbsp;    protected ProgressIndicator progress;
+&nbsp;    @FXML
+&nbsp;    protected Button chatButton;
+&nbsp;    @FXML
+&nbsp;    protected Label notificationDot;
+&nbsp;    @FXML
+&nbsp;    StackPane home;
+<b class="nc">&nbsp;    @FXML</b>
+&nbsp;    StackPane create = new StackPane();
+&nbsp;    @FXML
+&nbsp;    StackPane join;
+&nbsp;    @FXML
+&nbsp;    StackPane lobby;
+&nbsp;    @FXML
+&nbsp;    Button backButton;
+&nbsp;    @FXML
+&nbsp;    ImageView banner;
+&nbsp;    @FXML
+&nbsp;    ImageView logo;
+&nbsp;    @FXML
+&nbsp;    Button exitButton;
+&nbsp;    InternalViewState page;
+&nbsp;    StackPane lastSlideUp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and animations.
+&nbsp;     * It sets the state variables to their default values.
+&nbsp;     * @param url            the URL.
+&nbsp;     * @param resourceBundle the ResourceBundle.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle) {
+<b class="nc">&nbsp;        Stage stage = GraphicalUI.stage;</b>
+&nbsp;
+<b class="nc">&nbsp;        banner.fitWidthProperty().bind(stage.widthProperty());</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(logo, stage.widthProperty().divide(2), stage.heightProperty().divide(3));</b>
+&nbsp;
+<b class="nc">&nbsp;        homeController.initialize(banner);</b>
+<b class="nc">&nbsp;        joinController.initialize(banner, this);</b>
+<b class="nc">&nbsp;        createController.initialize(banner);</b>
+<b class="nc">&nbsp;        lobbyController.initialize(banner, this);</b>
+&nbsp;
+<b class="nc">&nbsp;        Animations.applyHoverScaling(backButton);</b>
+<b class="nc">&nbsp;        Animations.applyHoverScaling(chatButton);</b>
+<b class="nc">&nbsp;        Animations.applyHoverScaling(exitButton);</b>
+&nbsp;
+<b class="nc">&nbsp;        changePage(InternalViewState.INIT);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets to visible the progress indicator.
+&nbsp;     */
+&nbsp;    public void startLoading() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; progress.setVisible(true));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets to invisible the progress indicator.
+&nbsp;     */
+&nbsp;    public void stopLoading() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; progress.setVisible(false));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Changes the pages according to the internal view state.
+&nbsp;     * @param page the page.
+&nbsp;     */
+&nbsp;    public void changePage(InternalViewState page) {
+<b class="nc">&nbsp;        if (page == this.page) return; //avoiding forced animations</b>
+<b class="nc">&nbsp;        stopLoading();</b>
+<b class="nc">&nbsp;        switch (page) {</b>
+&nbsp;            case INIT -&gt; {
+<b class="nc">&nbsp;                if (this.page == InternalViewState.CREATE) {</b>
+<b class="nc">&nbsp;                    hidePane(create);</b>
+<b class="nc">&nbsp;                    hideButton(backButton);</b>
+<b class="nc">&nbsp;                } else if (this.page == InternalViewState.JOIN) {</b>
+<b class="nc">&nbsp;                    hidePane(join);</b>
+<b class="nc">&nbsp;                    hideButton(backButton);</b>
+<b class="nc">&nbsp;                } else if (this.page == InternalViewState.LOBBY) {</b>
+<b class="nc">&nbsp;                    dualHidePane(lobby, lastSlideUp);</b>
+<b class="nc">&nbsp;                    hideButton(backButton);</b>
+<b class="nc">&nbsp;                    hideButton(chatButton);</b>
+<b class="nc">&nbsp;                    hideLabel(notificationDot);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    create.setVisible(false);</b>
+<b class="nc">&nbsp;                    create.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                    join.setVisible(false);</b>
+<b class="nc">&nbsp;                    join.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                    lobby.setVisible(false);</b>
+<b class="nc">&nbsp;                    lobby.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                    lobbyController.chat.setVisible(false);</b>
+<b class="nc">&nbsp;                    lobbyController.chat.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                    backButton.setVisible(false);</b>
+<b class="nc">&nbsp;                    backButton.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                    chatButton.setVisible(false);</b>
+<b class="nc">&nbsp;                    chatButton.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                    notificationDot.setVisible(true);</b>
+<b class="nc">&nbsp;                    notificationDot.setOpacity(0);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                showButton(exitButton);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case JOIN -&gt; {
+<b class="nc">&nbsp;                joinController.updateListLobbies();</b>
+<b class="nc">&nbsp;                showPane(join);</b>
+<b class="nc">&nbsp;                lastSlideUp = join;</b>
+<b class="nc">&nbsp;                showButton(backButton);</b>
+<b class="nc">&nbsp;                hideButton(exitButton);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case CREATE -&gt; {
+<b class="nc">&nbsp;                showPane(create);</b>
+<b class="nc">&nbsp;                lastSlideUp = create;</b>
+<b class="nc">&nbsp;                showButton(backButton);</b>
+<b class="nc">&nbsp;                hideButton(exitButton);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case LOBBY -&gt; {
+<b class="nc">&nbsp;                lobbyController.refresh();</b>
+<b class="nc">&nbsp;                showPane(lobby);</b>
+<b class="nc">&nbsp;                showButton(chatButton);</b>
+<b class="nc">&nbsp;                moveLabel(notificationDot);</b>
+<b class="nc">&nbsp;                backButton.setVisible(true);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        this.page = page;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void dualHidePane(StackPane pane, StackPane secondPane) {
+<b class="nc">&nbsp;        TranslateTransition tt = Animations.getSlideToBottom(pane);</b>
+<b class="nc">&nbsp;        TranslateTransition tt2 = Animations.getSlideToBottom(secondPane);</b>
+<b class="nc">&nbsp;        tt.setOnFinished((finish) -&gt; {</b>
+<b class="nc">&nbsp;            pane.setVisible(false);</b>
+<b class="nc">&nbsp;            pane.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;            tt2.play();</b>
+&nbsp;        });
+<b class="nc">&nbsp;        tt2.setOnFinished((finish) -&gt; {</b>
+<b class="nc">&nbsp;            secondPane.setVisible(false);</b>
+<b class="nc">&nbsp;            secondPane.setMouseTransparent(true);</b>
+&nbsp;        });
+<b class="nc">&nbsp;        tt.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void hidePane(StackPane pane) {
+<b class="nc">&nbsp;        pane.setTranslateY(pane.getHeight());</b>
+<b class="nc">&nbsp;        TranslateTransition tt = Animations.getSlideToBottom(pane);</b>
+<b class="nc">&nbsp;        tt.setOnFinished((finish) -&gt; {</b>
+<b class="nc">&nbsp;            pane.setVisible(false);</b>
+<b class="nc">&nbsp;            pane.setMouseTransparent(true);</b>
+&nbsp;        });
+<b class="nc">&nbsp;        tt.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void showPane(StackPane pane) {
+<b class="nc">&nbsp;        pane.setTranslateY(pane.getHeight());</b>
+<b class="nc">&nbsp;        pane.setVisible(true);</b>
+<b class="nc">&nbsp;        pane.setMouseTransparent(false);</b>
+<b class="nc">&nbsp;        TranslateTransition tt = Animations.getSlideFromBottom(pane);</b>
+<b class="nc">&nbsp;        tt.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void showButton(Button button) {
+<b class="nc">&nbsp;        button.setMouseTransparent(false);</b>
+<b class="nc">&nbsp;        Animations.slideRegionFromTop(button, true).play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void hideButton(Button button) {
+<b class="nc">&nbsp;        button.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        Animations.slideRegionToTop(button).play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void moveLabel(Label label) {
+<b class="nc">&nbsp;        Animations.slideRegionFromTop(label, false).play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void hideLabel(Label label) {
+<b class="nc">&nbsp;        Animations.slideRegionToTop(label).play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Changes the view accordingly to the current internal view state. Associated to the back button.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void onBackArrowClicked() {
+<b class="nc">&nbsp;        if (page == InternalViewState.LOBBY) {</b>
+<b class="nc">&nbsp;            ViewManager.getInstance().exitRequest();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        GraphicalUI.mainViewController.changeView(InternalViewState.INIT);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Closes the application. Associated to the exit button.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void onExitButtonClicked() {
+<b class="nc">&nbsp;        System.exit(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Displays an error inside the Error Label of the active sub controller.
+&nbsp;     * @param errorMessage the message to display.
+&nbsp;     */
+&nbsp;    public void displayError(String errorMessage) {
+&nbsp;        Label errorLabel;
+<b class="nc">&nbsp;        switch (page) {</b>
+<b class="nc">&nbsp;            case JOIN -&gt; errorLabel = joinController.joinErrorLabel;</b>
+<b class="nc">&nbsp;            case CREATE -&gt; errorLabel = createController.createErrorLabel;</b>
+&nbsp;            default -&gt; {
+&nbsp;                return;
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        stopLoading();</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            errorLabel.setText(errorMessage);</b>
+<b class="nc">&nbsp;            errorLabel.setVisible(true);</b>
+&nbsp;        });
+<b class="nc">&nbsp;        Animations.timer(() -&gt; Platform.runLater(() -&gt; errorLabel.setVisible(false)), 3000);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the controller to its default state.
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        joinController.reset();</b>
+<b class="nc">&nbsp;        createController.reset();</b>
+<b class="nc">&nbsp;        lobbyController.reset();</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            notificationDot.setOpacity(0);</b>
+<b class="nc">&nbsp;            notificationDot.setText(&quot;0&quot;);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Toggles the visibility of the chat.
+&nbsp;     */
+&nbsp;    public void toggleChatVisible() {
+<b class="nc">&nbsp;        if (lobbyController.chatController.isChatVisible()) {</b>
+<b class="nc">&nbsp;            lobbyController.chat.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;            hidePane(lobbyController.chat);</b>
+<b class="nc">&nbsp;            lobbyController.chatController.setChatVisible(false);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        lobbyController.chat.setMouseTransparent(false);</b>
+<b class="nc">&nbsp;        showPane(lobbyController.chat);</b>
+<b class="nc">&nbsp;        lobbyController.chatController.setChatVisible(true);</b>
+&nbsp;        //reset notificationCounter
+<b class="nc">&nbsp;        if (notificationDot.getText().equals(&quot;0&quot;)) return;</b>
+<b class="nc">&nbsp;        Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));</b>
+<b class="nc">&nbsp;        a.setOnFinished((evt) -&gt; Platform.runLater(() -&gt; notificationDot.setText(&quot;0&quot;)));</b>
+<b class="nc">&nbsp;        a.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds the message to its chat controller and updates the notification Dot
+&nbsp;     */
+&nbsp;    public void notifyNewMessage() {
+<b class="nc">&nbsp;        lobbyController.chatController.addChatMessage();</b>
+<b class="nc">&nbsp;        if (lobbyController.chatController.isChatVisible()) return;</b>
+<b class="nc">&nbsp;        int prev = Integer.parseInt(notificationDot.getText());</b>
+<b class="nc">&nbsp;        if (prev == 0) {</b>
+<b class="nc">&nbsp;            Animations.popFadeIn(notificationDot).play();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        int newValue = prev + 1;</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; notificationDot.setText(String.valueOf(newValue)));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Model</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: Model (it.polimi.myshelfie.model.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Model</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.interfaces;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.events.ModelEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the model&#39;s interface.
+&nbsp; */
+&nbsp;public interface Model {
+&nbsp;    /**
+&nbsp;     * Adds a lobbyName to this list.
+&nbsp;     *
+&nbsp;     * @param lobbyName the lobby name
+&nbsp;     * @throws LobbyExistenceException if the name of the lobby you want to add already exists.
+&nbsp;     */
+&nbsp;    LobbyModel addLobby(String lobbyName) throws LobbyExistenceException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a lobby from the list and notifies the observers.
+&nbsp;     *
+&nbsp;     * @param lobbyName the name of the lobby.
+&nbsp;     * @throws LobbyExistenceException if the lobby that has to be removed does not exist.
+&nbsp;     */
+&nbsp;    void removeLobby(String lobbyName) throws LobbyExistenceException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add a model observer.
+&nbsp;     *
+&nbsp;     * @param obs is the observer to add.
+&nbsp;     */
+&nbsp;    void addModelObserver(Observer&lt;ModelEvent, ModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a Model Observer.
+&nbsp;     *
+&nbsp;     * @param obs the observer to remove.
+&nbsp;     */
+&nbsp;    void removeModelObserver(Observer&lt;ModelEvent, ModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the model view.
+&nbsp;     *
+&nbsp;     * @return the model view.
+&nbsp;     */
+&nbsp;    ModelView getModelView();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * To be used by the controller to get new Exception Notifiers.
+&nbsp;     * @return the client exception notifier.
+&nbsp;     */
+&nbsp;    ClientExceptionsNotifier getNewClientExceptionNotifier();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

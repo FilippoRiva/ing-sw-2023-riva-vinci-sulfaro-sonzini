@@ -1,0 +1,472 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LivingRoom</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model</a>
+</div>
+
+<h1>Coverage Summary for Class: LivingRoom (it.polimi.myshelfie.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LivingRoom</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,5%
+  </span>
+  <span class="absValue">
+    (132/134)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model;
+&nbsp;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.Stack;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the board of the game.
+&nbsp; * It has a bag of tiles, a grid with all the tiles that can be drawn, a size and the number of players playing, because the number of tiles on the board depends on it.
+&nbsp; */
+&nbsp;public class LivingRoom {
+&nbsp;    private final Stack&lt;ItemTile&gt; bag;
+&nbsp;    private final ItemTile[][] table;
+&nbsp;    private final boolean[][] validPositions;
+&nbsp;    private final int size;
+&nbsp;    private final int offset;
+&nbsp;    private final int numberOfPlayers;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new empty livingRoom of size x size dimension. The livingRoom will contain a bag of item tiles with
+&nbsp;     * a set number of tile per each tile type. The coordinate system has 0,0 at the center of the board.
+&nbsp;     * @param numTilesPerType the number of tiles of a single tile type
+&nbsp;     * @param size            the odd size of the new board
+&nbsp;     */
+<b class="fc">&nbsp;    public LivingRoom(int numTilesPerType, int size, int numberOfPlayers) throws InvalidParameterException {</b>
+<b class="fc">&nbsp;        if (size &lt; 9) throw new InvalidParameterException(&quot;Size of the livingRoom too small&quot;);</b>
+<b class="fc">&nbsp;        if (size % 2 == 0) throw new InvalidParameterException(&quot;Even size not implemented&quot;);</b>
+<b class="fc">&nbsp;        bag = new Stack&lt;&gt;();</b>
+<b class="fc">&nbsp;        ItemTileType[] itemTiles = ItemTileType.values();</b>
+<b class="fc">&nbsp;        for (ItemTileType itemTile : itemTiles) {</b>
+<b class="fc">&nbsp;            if (itemTile != ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                for (int j = 0; j &lt; numTilesPerType; j++) {</b>
+<b class="fc">&nbsp;                    bag.add(new ItemTile(itemTile, j % 3));</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        Collections.shuffle(bag);</b>
+<b class="fc">&nbsp;        this.numberOfPlayers = numberOfPlayers;</b>
+<b class="fc">&nbsp;        this.table = new ItemTile[size][size];</b>
+<b class="fc">&nbsp;        this.validPositions = new boolean[size][size];</b>
+<b class="fc">&nbsp;        this.size = size;</b>
+<b class="fc">&nbsp;        this.offset = (size - 1) / 2;</b>
+<b class="fc">&nbsp;        for (int x = 0; x &lt; size; x++) {</b>
+<b class="fc">&nbsp;            for (int y = 0; y &lt; size; y++) {</b>
+<b class="fc">&nbsp;                table[x][y] = null;</b>
+<b class="fc">&nbsp;                validPositions[x][y] = false;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        initializeValidPositions();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the valid positions of the living room.
+&nbsp;     */
+&nbsp;    private void initializeValidPositions() {
+<b class="fc">&nbsp;        int wingSize = offset - 1;</b>
+<b class="fc">&nbsp;        if (size &gt; 9) {</b>
+&nbsp;            //central square
+<b class="fc">&nbsp;            fillArea(-1, 1, 3, 3);</b>
+&nbsp;            //rectangles
+<b class="fc">&nbsp;            fillArea(2, 1, wingSize, 2);</b>
+<b class="fc">&nbsp;            fillArea(0, -2, 2, wingSize);</b>
+<b class="fc">&nbsp;            fillArea(-offset, 0, wingSize, 2);</b>
+<b class="fc">&nbsp;            fillArea(-1, offset, 2, wingSize);</b>
+&nbsp;            //stairs
+<b class="fc">&nbsp;            fillStair(-wingSize, wingSize - 1, wingSize - 1, 0);</b>
+<b class="fc">&nbsp;            fillStair(-wingSize + 1, -2, wingSize - 1, 1);</b>
+<b class="fc">&nbsp;            fillStair(2, -1, wingSize - 1, 2);</b>
+<b class="fc">&nbsp;            fillStair(1, wingSize, wingSize - 1, 3);</b>
+<b class="fc">&nbsp;        } else if (size == 9) {</b>
+<b class="fc">&nbsp;            switch (numberOfPlayers) {</b>
+&nbsp;                case 2 -&gt; {
+<b class="fc">&nbsp;                    fillArea(-1, 1, 3, 3);</b>
+&nbsp;
+<b class="fc">&nbsp;                    fillArea(-3, 0, 2, 2);</b>
+<b class="fc">&nbsp;                    fillArea(-1, 3, 2, 2);</b>
+<b class="fc">&nbsp;                    fillArea(2, 1, 2, 2);</b>
+<b class="fc">&nbsp;                    fillArea(0, -2, 2, 2);</b>
+&nbsp;
+<b class="fc">&nbsp;                    fillArea(-2, 1, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(1, 2, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(2, -1, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(-1, -2, 1, 1);</b>
+<b class="fc">&nbsp;                }</b>
+&nbsp;                case 3 -&gt; {
+<b class="fc">&nbsp;                    fillArea(-2, 2, 5, 5);</b>
+&nbsp;
+<b class="fc">&nbsp;                    fillArea(-3, 0, 1, 2);</b>
+<b class="fc">&nbsp;                    fillArea(3, 1, 1, 2);</b>
+<b class="fc">&nbsp;                    fillArea(-1, 3, 2, 1);</b>
+<b class="fc">&nbsp;                    fillArea(0, -3, 2, 1);</b>
+&nbsp;
+<b class="fc">&nbsp;                    fillArea(-4, -1, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(4, 1, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(-1, 4, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(1, -4, 1, 1);</b>
+<b class="fc">&nbsp;                }</b>
+&nbsp;                default -&gt; {
+<b class="fc">&nbsp;                    fillArea(-2, 2, 5, 5);</b>
+&nbsp;
+<b class="fc">&nbsp;                    fillArea(-4, 0, 2, 2);</b>
+<b class="fc">&nbsp;                    fillArea(3, 1, 2, 2);</b>
+<b class="fc">&nbsp;                    fillArea(-1, 4, 2, 2);</b>
+<b class="fc">&nbsp;                    fillArea(0, -3, 2, 2);</b>
+&nbsp;
+<b class="fc">&nbsp;                    fillArea(-3, 1, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(1, 3, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(3, -1, 1, 1);</b>
+<b class="fc">&nbsp;                    fillArea(-1, -3, 1, 1);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        refill();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Fills a certain area of the table until the bag of ItemTiles is empty
+&nbsp;     *
+&nbsp;     * @param x      the upper left corner&#39;s x coordinate
+&nbsp;     * @param y      the upper left corner&#39;s y coordinate
+&nbsp;     * @param width  the width of the area to fill
+&nbsp;     * @param height the height of the area to fill
+&nbsp;     */
+&nbsp;    private void fillArea(int x, int y, int width, int height) {
+<b class="fc">&nbsp;        for (int xPos = x; xPos &lt; x + width; xPos++) {</b>
+<b class="fc">&nbsp;            for (int yPos = y; yPos &gt; y - height; yPos--) {</b>
+<b class="fc">&nbsp;                setValid(xPos, yPos);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Fills a Stair given an x and y coordinates a size of the stair and it&#39;s orientation.
+&nbsp;     * @param x           upper left corner x coordinate
+&nbsp;     * @param y           upper left corner y coordinate
+&nbsp;     * @param size        size of the stair (they are always squares)
+&nbsp;     * @param orientation orientation of the stair. The orientation parameters can be:
+&nbsp;     *                    &lt;ul&gt;
+&nbsp;     *                    &lt;li&gt;
+&nbsp;     *                    0 - from lower left to upper right&lt;br&gt;
+&nbsp;     *                    &lt;/li&gt;
+&nbsp;     *                    &lt;li&gt;
+&nbsp;     *                    1 - from lower right to upper left&lt;br&gt;
+&nbsp;     *                    &lt;/li&gt;
+&nbsp;     *                    &lt;li&gt;
+&nbsp;     *                    2 - from upper right to lower left&lt;br&gt;
+&nbsp;     *                    &lt;/li&gt;
+&nbsp;     *                    &lt;li&gt;
+&nbsp;     *                    3 - from upper left to lower right
+&nbsp;     *                    &lt;/li&gt;
+&nbsp;     *                    &lt;/ul&gt;
+&nbsp;     */
+&nbsp;    private void fillStair(int x, int y, int size, int orientation) {
+<b class="fc">&nbsp;        if (bag.empty()) return;</b>
+<b class="fc">&nbsp;        boolean[][] stair = new boolean[size][size];</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; size; i++) {</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; size; j++) {</b>
+<b class="fc">&nbsp;                stair[i][j] = j &lt;= i;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        switch (orientation) {</b>
+<b class="fc">&nbsp;            case 1 -&gt; flipVertical(stair);</b>
+&nbsp;            case 2 -&gt; {
+<b class="fc">&nbsp;                flipHorizontal(stair);</b>
+<b class="fc">&nbsp;                flipVertical(stair);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;            case 3 -&gt; flipHorizontal(stair);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        for (int i = 0; i &lt; size; i++) {</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; size; j++) {</b>
+<b class="fc">&nbsp;                if (stair[i][j]) setValid(x + i, y - size + 1 + j);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Flips a matrix horizontally.
+&nbsp;     *
+&nbsp;     * @param matrix the matrix to flip.
+&nbsp;     */
+&nbsp;    private void flipHorizontal(boolean[][] matrix) {
+<b class="fc">&nbsp;        int size = matrix.length;</b>
+<b class="fc">&nbsp;        for (int x = 0; x &lt; size / 2; x++) {</b>
+<b class="fc">&nbsp;            for (int y = 0; y &lt; size; y++) {</b>
+<b class="fc">&nbsp;                boolean temp = matrix[x][y];</b>
+<b class="fc">&nbsp;                matrix[x][y] = matrix[size - x - 1][y];</b>
+<b class="fc">&nbsp;                matrix[size - x - 1][y] = temp;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Flips a matrix vertically.
+&nbsp;     *
+&nbsp;     * @param matrix the matrix to flip.
+&nbsp;     */
+&nbsp;    private void flipVertical(boolean[][] matrix) {
+&nbsp;        int size;
+<b class="fc">&nbsp;        size = matrix.length;</b>
+<b class="fc">&nbsp;        for (int x = 0; x &lt; size; x++) {</b>
+<b class="fc">&nbsp;            for (int y = 0; y &lt; size / 2; y++) {</b>
+<b class="fc">&nbsp;                boolean temp = matrix[x][y];</b>
+<b class="fc">&nbsp;                matrix[x][y] = matrix[x][size - y - 1];</b>
+<b class="fc">&nbsp;                matrix[x][size - y - 1] = temp;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets valid positions.
+&nbsp;     *
+&nbsp;     * @param x the x coordinate.
+&nbsp;     * @param y the y coordinate.
+&nbsp;     */
+&nbsp;    private void setValid(int x, int y) {
+<b class="fc">&nbsp;        validPositions[x + offset][offset - y] = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If the board is refillable it refills the board with the remaining tiles in the bag.
+&nbsp;     * If it isn&#39;t it does nothing.
+&nbsp;     */
+&nbsp;    public void refill() {
+<b class="fc">&nbsp;        if (!isRefillable()) return;</b>
+<b class="fc">&nbsp;        boolean emptyBag = bag.empty();</b>
+<b class="fc">&nbsp;        if (emptyBag) return;</b>
+<b class="fc">&nbsp;        for (int x = -offset; x &lt;= offset; x++) {</b>
+<b class="fc">&nbsp;            for (int y = -offset; y &lt;= offset; y++) {</b>
+<b class="fc">&nbsp;                if (isValid(x, y)) putTile(bag.pop(), x, y);</b>
+<b class="fc">&nbsp;                if (bag.isEmpty()) break;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            if (bag.isEmpty()) break;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Let you see what tile is at a certain table coordinate
+&nbsp;     *
+&nbsp;     * @param x x coordinate
+&nbsp;     * @param y y coordinate
+&nbsp;     * @return the ItemTile at [x,y] position
+&nbsp;     */
+&nbsp;    public ItemTile getTile(int x, int y) {
+<b class="fc">&nbsp;        return table[x + offset][offset - y];</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Puts a certain tile into a position of the table
+&nbsp;     *
+&nbsp;     * @param tile ItemTile to place into the table
+&nbsp;     * @param x    x coordinate
+&nbsp;     * @param y    y coordinate
+&nbsp;     */
+&nbsp;    private void putTile(ItemTile tile, int x, int y) {
+<b class="fc">&nbsp;        table[x + offset][offset - y] = tile;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a tile give a certain position on the table
+&nbsp;     *
+&nbsp;     * @param x x coordinate
+&nbsp;     * @param y y coordinate
+&nbsp;     * @return the ItemTile removed
+&nbsp;     */
+&nbsp;    public ItemTile removeTile(int x, int y) {
+<b class="fc">&nbsp;        ItemTile oldTile = table[x + offset][offset - y];</b>
+<b class="fc">&nbsp;        table[x + offset][offset - y] = new ItemTile(ItemTileType.EMPTY, 0);</b>
+<b class="fc">&nbsp;        return oldTile;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the table of this livingRoom.
+&nbsp;     *
+&nbsp;     * @return and ItemTile[][] containing the ItemTiles of the living room.
+&nbsp;     */
+&nbsp;    public ItemTile[][] getTable() {
+<b class="fc">&nbsp;        return table;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the livingRoom is refillable
+&nbsp;     *
+&nbsp;     * @return true if every remaining tile has no neighbour tile
+&nbsp;     */
+&nbsp;    public boolean isRefillable() {
+<b class="fc">&nbsp;        for (int y = offset; y &gt;= -offset; y--) {</b>
+<b class="fc">&nbsp;            for (int x = -offset; x &lt;= offset; x++) {</b>
+<b class="fc">&nbsp;                if (getTile(x, y) != null &amp;&amp; getTile(x, y).getType() != ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                    if (x != offset &amp;&amp; getTile(x + 1, y) != null &amp;&amp; getTile(x + 1, y).getType() != ItemTileType.EMPTY)</b>
+<b class="fc">&nbsp;                        return false;</b>
+<b class="fc">&nbsp;                    if (y != -offset &amp;&amp; getTile(x, y - 1) != null &amp;&amp; getTile(x, y - 1).getType() != ItemTileType.EMPTY)</b>
+<b class="fc">&nbsp;                        return false;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether a position is valid, given the position.
+&nbsp;     *
+&nbsp;     * @param p the position to check.
+&nbsp;     * @return true if the position is valid, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean isValid(Position p) {
+<b class="fc">&nbsp;        int x = p.getX();</b>
+<b class="fc">&nbsp;        int y = p.getY();</b>
+<b class="fc">&nbsp;        if (x &lt; -offset || x &gt; offset)</b>
+<b class="fc">&nbsp;            return false;</b>
+<b class="fc">&nbsp;        if (y &lt; -offset || y &gt; offset)</b>
+<b class="fc">&nbsp;            return false;</b>
+<b class="fc">&nbsp;        return isValid(x, y);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether a position is valid, given the coordinates
+&nbsp;     *
+&nbsp;     * @param x the x coordinate.
+&nbsp;     * @param y the y coordinate.
+&nbsp;     * @return true if the coordinates are valid, false otherwise.
+&nbsp;     */
+&nbsp;    private boolean isValid(int x, int y) {
+<b class="fc">&nbsp;        return validPositions[x + offset][offset - y];</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Check whether a position is empty.
+&nbsp;     *
+&nbsp;     * @param p the position to check.
+&nbsp;     * @return true if the position is empty, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean emptyPosition(Position p) {
+<b class="fc">&nbsp;        return getTile(p.getX(), p.getY()).getType().equals(ItemTileType.EMPTY);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if a tile can be drawn, so whether it has at least one side free.
+&nbsp;     *
+&nbsp;     * @param p the position to check.
+&nbsp;     * @return true if it&#39;s drawable, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean atLeastOneSideFree(Position p) {
+<b class="fc">&nbsp;        int x = p.getX();</b>
+<b class="fc">&nbsp;        int y = p.getY();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (p.getY() == offset || getTile(x, y + 1) == null || getTile(x, y + 1).getType() == ItemTileType.EMPTY)</b>
+<b class="fc">&nbsp;            return true;</b>
+<b class="fc">&nbsp;        if (p.getX() == offset || getTile(x + 1, y) == null || getTile(x + 1, y).getType() == ItemTileType.EMPTY)</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="fc">&nbsp;        if (p.getY() == -offset || getTile(x, y - 1) == null || getTile(x, y - 1).getType() == ItemTileType.EMPTY)</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="fc">&nbsp;        return p.getX() == -offset || getTile(x - 1, y) == null || getTile(x - 1, y).getType() == ItemTileType.EMPTY;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the bag of this livingRoom containing the remaining tiles.
+&nbsp;     *
+&nbsp;     * @return the bag of this livingRoom
+&nbsp;     */
+&nbsp;    public Stack&lt;ItemTile&gt; getBag() {
+<b class="fc">&nbsp;        return bag;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,203 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ControllerGroup</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.network</a>
+</div>
+
+<h1>Coverage Summary for Class: ControllerGroup (it.polimi.myshelfie.network)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ControllerGroup</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.network;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.ChatController;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.Controller;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.GameController;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.LobbyController;
+&nbsp;
+&nbsp;/**
+&nbsp; * Contains a Client, his Server Connection Handler and all of his controllers.
+&nbsp; * This class is instantiated each time a Network message from the Client to the Server has to be executed.
+&nbsp; */
+&nbsp;public class ControllerGroup {
+&nbsp;    private final Client client;
+&nbsp;    private final ServerConnectionHandlerImpl serverConnectionHandler;
+&nbsp;    private final String username;
+&nbsp;    private final Controller controller;
+&nbsp;    private final LobbyController lobbyController;
+&nbsp;    private final GameController gameController;
+&nbsp;    private final ChatController chatController;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param client                  the client.
+&nbsp;     * @param serverConnectionHandler the server connection handler.
+&nbsp;     * @param username                the name of the player.
+&nbsp;     * @param controller              the controller.
+&nbsp;     * @param lobbyController         the lobby controller.
+&nbsp;     * @param gameController          the game controller.
+&nbsp;     * @param chatController          the chat controller.
+&nbsp;     */
+&nbsp;    public ControllerGroup(Client client, ServerConnectionHandlerImpl serverConnectionHandler,
+&nbsp;                           String username, Controller controller,
+&nbsp;                           LobbyController lobbyController, GameController gameController,
+<b class="nc">&nbsp;                           ChatController chatController) {</b>
+<b class="nc">&nbsp;        this.client = client;</b>
+<b class="nc">&nbsp;        this.serverConnectionHandler = serverConnectionHandler;</b>
+<b class="nc">&nbsp;        this.username = username;</b>
+<b class="nc">&nbsp;        this.controller = controller;</b>
+<b class="nc">&nbsp;        this.lobbyController = lobbyController;</b>
+<b class="nc">&nbsp;        this.gameController = gameController;</b>
+<b class="nc">&nbsp;        this.chatController = chatController;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the client.
+&nbsp;     * @return the client.
+&nbsp;     */
+&nbsp;    public Client getClient() {
+<b class="nc">&nbsp;        return client;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the server connection handler.
+&nbsp;     * @return the server connection handler.
+&nbsp;     */
+&nbsp;    public ServerConnectionHandlerImpl getServerConnectionHandler() {
+<b class="nc">&nbsp;        return serverConnectionHandler;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the name of the player.
+&nbsp;     * @return the name of the player.
+&nbsp;     */
+&nbsp;    public String getUsername() {
+<b class="nc">&nbsp;        return username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the controller.
+&nbsp;     * @return the controller.
+&nbsp;     */
+&nbsp;    public Controller getController() {
+<b class="nc">&nbsp;        return controller;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the lobby controller.
+&nbsp;     * @return the lobby controller.
+&nbsp;     */
+&nbsp;    public LobbyController getLobbyController() {
+<b class="nc">&nbsp;        return lobbyController;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the game controller.
+&nbsp;     * @return the game controller.
+&nbsp;     */
+&nbsp;    public GameController getGameController() {
+<b class="nc">&nbsp;        return gameController;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the chat controller.
+&nbsp;     * @return the chat controller.
+&nbsp;     */
+&nbsp;    public ChatController getChatController() {
+<b class="nc">&nbsp;        return chatController;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

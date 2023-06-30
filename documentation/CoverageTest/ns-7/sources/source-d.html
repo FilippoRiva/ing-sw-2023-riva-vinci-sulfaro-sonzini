@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonGoalTwoSquares</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.goals</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonGoalTwoSquares (it.polimi.myshelfie.model.goals)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonGoalTwoSquares</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/27)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CommonGoalTwoSquares$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (28/28)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.goals;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Common goal: Two groups containing 4 tiles of the same type in a 2x2 square.
+&nbsp; */
+<b class="fc">&nbsp;public class CommonGoalTwoSquares extends CommonGoal {</b>
+&nbsp;    /**
+&nbsp;     * Checks the common goal.
+&nbsp;     *
+&nbsp;     * @param bookshelf is a generic n x m matrix of ItemTile
+&nbsp;     * @return true if exists 2 squares (2x2) with all ItemTiles equals, false otherwise
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isVerified(ItemTile[][] bookshelf) {
+<b class="fc">&nbsp;        int height = bookshelf.length;</b>
+<b class="fc">&nbsp;        int width = bookshelf[0].length;</b>
+<b class="fc">&nbsp;        boolean[][] take = new boolean[height][width];</b>
+<b class="fc">&nbsp;        int[] counter = new int[ItemTileType.values().length];</b>
+&nbsp;
+<b class="fc">&nbsp;        for (int i = 0; i &lt; height - 1; i++) {</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; width - 1; j++) {</b>
+<b class="fc">&nbsp;                if (!take[i][j] &amp;&amp; bookshelf[i][j].getType() != ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                    if (check(bookshelf, i, j)) {</b>
+<b class="fc">&nbsp;                        map(bookshelf[i][j], counter);</b>
+<b class="fc">&nbsp;                        take[i + 1][j] = true;</b>
+<b class="fc">&nbsp;                        take[i][j + 1] = true;</b>
+<b class="fc">&nbsp;                        take[i + 1][j + 1] = true;</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="fc">&nbsp;                if (Arrays.stream(counter).anyMatch(num -&gt; num &gt;= 2)) return true;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the id
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the description
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getDescription() {
+<b class="fc">&nbsp;        return &quot;Two groups containing 4 tiles of the same type in a 2x2 square&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean check(ItemTile[][] bookshelf, int i, int j) {
+<b class="fc">&nbsp;        if (bookshelf[i][j].getType() != bookshelf[i + 1][j + 1].getType()) return false;</b>
+<b class="fc">&nbsp;        if (bookshelf[i][j].getType() != bookshelf[i][j + 1].getType()) return false;</b>
+<b class="fc">&nbsp;        return bookshelf[i][j].getType() == bookshelf[i + 1][j].getType();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void map(ItemTile tile, int[] counter) {
+<b class="fc">&nbsp;        switch (tile.getType()) {</b>
+<b class="fc">&nbsp;            case CAT -&gt; counter[0]++;</b>
+<b class="fc">&nbsp;            case BOOK -&gt; counter[1]++;</b>
+<b class="fc">&nbsp;            case GAME -&gt; counter[2]++;</b>
+<b class="fc">&nbsp;            case FRAME -&gt; counter[3]++;</b>
+<b class="fc">&nbsp;            case TROPHY -&gt; counter[4]++;</b>
+<b class="fc">&nbsp;            case PLANT -&gt; counter[5]++;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>
