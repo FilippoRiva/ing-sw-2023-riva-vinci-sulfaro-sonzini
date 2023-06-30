@@ -47,6 +47,7 @@ public class ServerLogger {
      * @param message the message.
      */
     public static void log(Level level, String message) {
+        if(stream==null) return;
         logger.log(level, message);
         stream.flush();
     }
@@ -58,6 +59,7 @@ public class ServerLogger {
      * @param message           the message.
      */
     public static void logClientInfo(ServerConnectionHandlerImpl connectionHandler, String message) {
+        if(stream==null) return;
         String hostnameAndId = String.format("\" %-15s | ID : %-3s \"", connectionHandler.hostName, connectionHandler.clientID);
         ServerLogger.log(Level.INFO, hostnameAndId + " > " + message);
         stream.flush();

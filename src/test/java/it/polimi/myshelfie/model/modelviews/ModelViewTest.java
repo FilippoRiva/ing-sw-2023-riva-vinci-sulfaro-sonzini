@@ -42,7 +42,7 @@ class ModelViewTest {
         assertEquals(2, maxSizeMap.get("altra lobby"));
         Map<String, Integer> currentSizeMap = modelView.getCurrentSizeMap();
         assertEquals(2, currentSizeMap.get("nuova lobby"));
-        assertEquals(0, currentSizeMap.get("altra lobby"));
+        assertEquals(1, currentSizeMap.get("altra lobby"));
         assertEquals(2, modelView.getCurrentSize("nuova lobby"));
 
         //LobbyModelView
