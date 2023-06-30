@@ -1,0 +1,123 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Controller</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.controller.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: Controller (it.polimi.myshelfie.controller.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Controller</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.controller.interfaces;
+&nbsp;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.events.ExceptionEvent;
+&nbsp;import it.polimi.myshelfie.model.events.ModelEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ClientExceptionsNotifierModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ModelView;
+&nbsp;import it.polimi.myshelfie.network.Client;
+&nbsp;import it.polimi.myshelfie.network.ServerConnectionHandler;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a general controller that create a lobby and allows to join it, and add or disconnect a client.
+&nbsp; */
+&nbsp;public interface Controller {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a Lobby where the players can enter to play the game.
+&nbsp;     *
+&nbsp;     * @param client            the client representing the player who&#39;s connecting.
+&nbsp;     * @param connectionHandler the ServerConnectionHandler used for the player&#39;s connection.
+&nbsp;     * @param playerName        the name of this first player which is now the room owner and created this lobby.
+&nbsp;     * @param lobbyName         the name of the created lobby.
+&nbsp;     * @return the LobbyController associated to that specific lobby.
+&nbsp;     */
+&nbsp;    LobbyController createLobby(Client client, ServerConnectionHandler connectionHandler, String playerName, String lobbyName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Allows a player, that is not the first one to enter the game, to join an existing lobby.
+&nbsp;     *
+&nbsp;     * @param client            the client representing the player who&#39;s connecting.
+&nbsp;     * @param connectionHandler the ServerConnectionHandler used for the player&#39;s connection.
+&nbsp;     * @param playerName        the name of the player that wants to join this lobby.
+&nbsp;     * @param lobbyName         the name of the joined lobby.
+&nbsp;     * @return the LobbyController associated to that specific lobby.
+&nbsp;     */
+&nbsp;    LobbyController joinLobby(Client client, ServerConnectionHandler connectionHandler, String playerName, String lobbyName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a Client to the game.
+&nbsp;     *
+&nbsp;     * @param client                    the client representing the player who&#39;s connecting.
+&nbsp;     * @param networkModelObserver      the network model observer.
+&nbsp;     * @param networkExceptionsObserver thw network exceptions observer.
+&nbsp;     */
+&nbsp;
+&nbsp;    void addClient(Client client, Observer&lt;ModelEvent, ModelView&gt; networkModelObserver, Observer&lt;ExceptionEvent, ClientExceptionsNotifierModelView&gt; networkExceptionsObserver) throws InvalidParameterException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a client from the game.
+&nbsp;     *
+&nbsp;     * @param client the client quitting.
+&nbsp;     */
+&nbsp;    void quit(Client client);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

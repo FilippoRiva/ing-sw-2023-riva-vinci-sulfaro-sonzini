@@ -1,0 +1,302 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameOverlayController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers.game</a>
+</div>
+
+<h1>Coverage Summary for Class: GameOverlayController (it.polimi.myshelfie.view.graphical.controllers.game)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameOverlayController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/76)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers.game;
+&nbsp;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.Token;
+&nbsp;import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerModelView;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.Animations;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.GraphicalUI;
+&nbsp;import it.polimi.myshelfie.view.graphical.components.TokenImageView;
+&nbsp;import it.polimi.myshelfie.view.graphical.controllers.ChatController;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.scene.control.Label;
+&nbsp;import javafx.scene.control.Tooltip;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.layout.HBox;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.scene.layout.VBox;
+&nbsp;import javafx.stage.Stage;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static it.polimi.myshelfie.view.graphical.Images.getImage;
+&nbsp;
+&nbsp;/**
+&nbsp; * The game overlay controller containing common goals, the personal goal, the chat and other info components.
+&nbsp; */
+<b class="nc">&nbsp;public class GameOverlayController {</b>
+<b class="nc">&nbsp;    final ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;    @FXML
+&nbsp;    public ChatController chatController;
+&nbsp;    @FXML
+&nbsp;    protected Label messageLabel;
+&nbsp;    @FXML
+&nbsp;    protected Label playingLabel;
+&nbsp;    @FXML
+&nbsp;    protected VBox playersListVbox;
+&nbsp;    @FXML
+&nbsp;    protected StackPane fullStackPane;
+&nbsp;    @FXML
+&nbsp;    protected HBox commonGoalsHBox;
+&nbsp;    @FXML
+&nbsp;    protected StackPane chat;
+&nbsp;    @FXML
+&nbsp;    protected ImageView commonGoal1;
+&nbsp;    @FXML
+&nbsp;    protected ImageView commonGoal2;
+&nbsp;    @FXML
+&nbsp;    protected StackPane tokens1;
+&nbsp;    @FXML
+&nbsp;    protected StackPane tokens2;
+&nbsp;    @FXML
+&nbsp;    protected ImageView personalGoal;
+&nbsp;    private Stage stage;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and animations.
+&nbsp;     * It sets the state variables to their default values.
+&nbsp;     */
+&nbsp;    public void customInitialize() {
+<b class="nc">&nbsp;        stage = GraphicalUI.stage;</b>
+&nbsp;
+<b class="nc">&nbsp;        CustomBindings.bindSize(fullStackPane, stage.widthProperty(), stage.heightProperty());</b>
+<b class="nc">&nbsp;        fullStackPane.setPickOnBounds(false);</b>
+&nbsp;
+<b class="nc">&nbsp;        messageLabel.setMaxWidth(stage.getWidth() / 3);</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(playersListVbox, null, stage.heightProperty().divide(5));</b>
+&nbsp;
+<b class="nc">&nbsp;        CustomBindings.bindSize(personalGoal, null, stage.heightProperty().divide(5).multiply(3));</b>
+&nbsp;
+<b class="nc">&nbsp;        CustomBindings.bindSize(commonGoalsHBox, stage.widthProperty(), stage.heightProperty().divide(5));</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(commonGoal1, null, stage.heightProperty().divide(5));</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(commonGoal2, null, stage.heightProperty().divide(5));</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(tokens1, null, stage.heightProperty().divide(11));</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(tokens2, null, stage.heightProperty().divide(11));</b>
+&nbsp;
+<b class="nc">&nbsp;        CustomBindings.bindSize(chat, stage.widthProperty().divide(21).multiply(6), stage.heightProperty().divide(15).multiply(8));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the view when the game starts.
+&nbsp;     */
+&nbsp;    public void gameStart() {
+<b class="nc">&nbsp;        chatController.initGameOverlay(this);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;CommonGoalModelView&gt; commonGoals = viewManager.getGameModelView().getCommonGoals();</b>
+<b class="nc">&nbsp;        int idPersonalGoal = viewManager.getGameModelView().getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getId();</b>
+&nbsp;
+<b class="nc">&nbsp;        personalGoal.setImage(getImage(&quot;game/personalGoals/Personal_Goals&quot; + idPersonalGoal + &quot;.png&quot;));</b>
+<b class="nc">&nbsp;        commonGoal1.setImage(getImage(&quot;game/commonGoals/&quot; + (commonGoals.get(0).getId() + 1) + &quot;.jpg&quot;));</b>
+<b class="nc">&nbsp;        commonGoal2.setImage(getImage(&quot;game/commonGoals/&quot; + (commonGoals.get(1).getId() + 1) + &quot;.jpg&quot;));</b>
+<b class="nc">&nbsp;        Tooltip.install(commonGoal1, new Tooltip(commonGoals.get(0).getDescription()));</b>
+<b class="nc">&nbsp;        Tooltip.install(commonGoal2, new Tooltip(commonGoals.get(1).getDescription()));</b>
+&nbsp;
+<b class="nc">&nbsp;        tokens1.setTranslateY(-commonGoal1.getFitHeight() / 913 * 37);</b>
+<b class="nc">&nbsp;        tokens1.setTranslateX(commonGoal1.getFitHeight() / 913 * 321);</b>
+<b class="nc">&nbsp;        tokens2.setTranslateY(-commonGoal2.getFitHeight() / 913 * 37);</b>
+<b class="nc">&nbsp;        tokens2.setTranslateX(commonGoal2.getFitHeight() / 913 * 321);</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            playingLabel.setText(viewManager.getGameModelView().getCurrentPlayerName());</b>
+<b class="nc">&nbsp;            int i = 1;</b>
+<b class="nc">&nbsp;            for (PlayerModelView player : viewManager.getGameModelView().getPlayers()) {</b>
+<b class="nc">&nbsp;                Label label = new Label(i + &quot;) &quot; + player.getName());</b>
+<b class="nc">&nbsp;                playersListVbox.getChildren().add(label);</b>
+<b class="nc">&nbsp;                i++;</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+<b class="nc">&nbsp;            for (Token token : commonGoals.get(0).getTokens()) {</b>
+<b class="nc">&nbsp;                tokens1.getChildren().add(getTokenImageView(token));</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            for (Token token : commonGoals.get(1).getTokens()) {</b>
+<b class="nc">&nbsp;                tokens2.getChildren().add(getTokenImageView(token));</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        personalGoal.setTranslateY(stage.getHeight() / 5 * 3 - 70);</b>
+&nbsp;
+<b class="nc">&nbsp;        chat.setTranslateX(-20);</b>
+<b class="nc">&nbsp;        chat.setTranslateY(stage.getHeight() / 15 * 8 - 80);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private TokenImageView getTokenImageView(Token token) {
+<b class="nc">&nbsp;        TokenImageView tokenImageView = new TokenImageView(token);</b>
+<b class="nc">&nbsp;        tokenImageView.setPreserveRatio(true);</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(tokenImageView, null, commonGoal1.fitHeightProperty().divide(11).multiply(5));</b>
+<b class="nc">&nbsp;        return tokenImageView;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Shows the new infos at the beginning of a turn such as the new player who&#39;s playing and the new obtained tokens
+&nbsp;     */
+&nbsp;    public void startTurn() {
+<b class="nc">&nbsp;        List&lt;Token&gt; tokens = viewManager.getLastPlayerTokenDiff();</b>
+<b class="nc">&nbsp;        if (!tokens.isEmpty()) {</b>
+<b class="nc">&nbsp;            for (Token token : tokens) {</b>
+<b class="nc">&nbsp;                Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;                    if (token.getRomanNumeral() == 0) {</b>
+<b class="nc">&nbsp;                        messageLabel.setText(&quot;Last round&quot;);</b>
+<b class="nc">&nbsp;                    } else if (token.getRomanNumeral() == 1) {</b>
+<b class="nc">&nbsp;                        tokens1.getChildren().remove(tokens1.getChildren().size() - 1);</b>
+<b class="nc">&nbsp;                        messageLabel.setText(&quot;Earned a token from the first common goal&quot;);</b>
+<b class="nc">&nbsp;                    } else if (token.getRomanNumeral() == 2) {</b>
+<b class="nc">&nbsp;                        tokens2.getChildren().remove(tokens2.getChildren().size() - 1);</b>
+<b class="nc">&nbsp;                        messageLabel.setText(&quot;Earned a token from the second common goal&quot;);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    Animations.fadeIn(messageLabel).play();</b>
+<b class="nc">&nbsp;                    Animations.timer(() -&gt; Animations.fadeOut(messageLabel).play(), 3000);</b>
+&nbsp;                });
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; playingLabel.setText(viewManager.getCurrentPlayerDiff()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Translates the personal goal to a fully visible position.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    protected void showPersonalGoal() {
+<b class="nc">&nbsp;        personalGoal.setTranslateY(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Translates the personal goal to a partially visible position.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    protected void hidePersonalGoal() {
+<b class="nc">&nbsp;        personalGoal.setTranslateY(stage.getHeight() / 5 * 3 - 70);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Toggles the chat visibility and translation.
+&nbsp;     */
+&nbsp;    public void toggleChatVisible() {
+<b class="nc">&nbsp;        if (chatController.isChatVisible()) {</b>
+<b class="nc">&nbsp;            chat.setTranslateY(stage.getHeight() / 15 * 8 - 80);</b>
+<b class="nc">&nbsp;            chatController.setChatVisible(false);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        chat.setTranslateY(0);</b>
+<b class="nc">&nbsp;        chatController.setChatVisible(true);</b>
+&nbsp;        //reset notificationCounter
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Completely resets this controller to its original state.
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            messageLabel.setText(null);</b>
+<b class="nc">&nbsp;            tokens1.getChildren().clear();</b>
+<b class="nc">&nbsp;            tokens2.getChildren().clear();</b>
+<b class="nc">&nbsp;            playersListVbox.getChildren().clear();</b>
+&nbsp;        });
+<b class="nc">&nbsp;        chatController.reset();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

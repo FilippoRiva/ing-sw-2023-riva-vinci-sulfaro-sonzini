@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > NetworkInterfaceProvider</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: NetworkInterfaceProvider (it.polimi.myshelfie.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NetworkInterfaceProvider</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/31)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.utils;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.net.InetAddress;
+&nbsp;import java.net.NetworkInterface;
+&nbsp;import java.net.SocketException;
+&nbsp;import java.net.UnknownHostException;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.Enumeration;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * The network interface provider is used to get active system network interfaces.
+&nbsp; */
+<b class="nc">&nbsp;public class NetworkInterfaceProvider {</b>
+&nbsp;    /**
+&nbsp;     * Checks the network interfaces.
+&nbsp;     *
+&nbsp;     * @return the first active network interface he&#39;s able to find. Otherwise, it returns localhost.
+&nbsp;     */
+&nbsp;    public static String getInterfaceHostName() {
+<b class="nc">&nbsp;        System.out.println(&quot;--------------------------------------------------------&quot;);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;You have not provided your own IP.\n&quot; +</b>
+&nbsp;                &quot;Please provide your IP or press enter to use a random active network interface : &quot;);
+&nbsp;        String input;
+&nbsp;        try {
+<b class="nc">&nbsp;            input = new BufferedReader(new InputStreamReader(System.in)).readLine();</b>
+<b class="nc">&nbsp;            if (!input.equals(&quot;&quot;) &amp;&amp; !InetAddress.getByName(input).isReachable(1000)) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;   !! The specified IP is not reachable.&quot;);</b>
+<b class="nc">&nbsp;                input = &quot;&quot;;</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (UnknownHostException ex) {</b>
+<b class="nc">&nbsp;            System.err.println(&quot;Not a valid hostname&quot;);</b>
+<b class="nc">&nbsp;            input = &quot;&quot;;</b>
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            System.err.println(&quot;Unable to get user input&quot;);</b>
+<b class="nc">&nbsp;            input = &quot;&quot;;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        if (!input.equals(&quot;&quot;)) return input;</b>
+<b class="nc">&nbsp;        System.out.println(&quot;Loading Random Network Interface...&quot;);</b>
+<b class="nc">&nbsp;        String result = &quot;&quot;;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            Enumeration&lt;NetworkInterface&gt; netInterfaces = NetworkInterface.getNetworkInterfaces();</b>
+<b class="nc">&nbsp;            for (NetworkInterface net : Collections.list(netInterfaces)) {</b>
+<b class="nc">&nbsp;                if (net.isUp() &amp;&amp; !net.isLoopback()) {</b>
+<b class="nc">&nbsp;                    for (InetAddress addr : Collections.list(net.getInetAddresses())) {</b>
+<b class="nc">&nbsp;                        if (!addr.getHostAddress().contains(&quot;:&quot;)) { //only IPv4</b>
+<b class="nc">&nbsp;                            result = addr.getHostAddress();</b>
+<b class="nc">&nbsp;                            break;</b>
+&nbsp;                        }
+<b class="nc">&nbsp;                    }</b>
+&nbsp;                }
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            if (result.equals(&quot;&quot;)) result = &quot;localhost&quot;;</b>
+<b class="nc">&nbsp;        } catch (SocketException e) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Unable to get Network Interfaces&quot;);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ChatController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.controller.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatController (it.polimi.myshelfie.controller.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ChatController</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.controller.interfaces;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.chatting.Message;
+&nbsp;import it.polimi.myshelfie.model.events.ChatEvent;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface represents a controller for the chat system.
+&nbsp; */
+&nbsp;public interface ChatController {
+&nbsp;    /**
+&nbsp;     * Adds a message to the chat.
+&nbsp;     *
+&nbsp;     * @param message the message written by a player and sent to one or more players.
+&nbsp;     */
+&nbsp;    void addMessage(String playerName, Message message);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a chat observer.
+&nbsp;     *
+&nbsp;     * @param playerName          the name of the player.
+&nbsp;     * @param networkChatObserver the observer to add.
+&nbsp;     */
+&nbsp;    void addChatObserver(String playerName, Observer&lt;ChatEvent, PlayerChatModelView&gt; networkChatObserver);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

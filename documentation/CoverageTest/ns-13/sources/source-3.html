@@ -1,0 +1,236 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GamePage</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.textual.pages</a>
+</div>
+
+<h1>Coverage Summary for Class: GamePage (it.polimi.myshelfie.view.textual.pages)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GamePage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/58)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GamePage$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/59)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.textual.pages;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.GameState;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.modelviews.CommonGoalModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.FullGameModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerModelView;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.textual.ANSI;
+&nbsp;import it.polimi.myshelfie.view.textual.Terminal;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the game page for the textualUI.
+&nbsp; */
+&nbsp;public class GamePage extends ScreenPage {
+&nbsp;    private final String currentBookshelfOwner;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialises a GamePage.
+&nbsp;     * @param t the terminal in which we want to render the page.
+&nbsp;     * @param inputParameters the shared input parameters between the TextualUI
+&nbsp;     * @param bookshelfOwner the current bookshelf owner.
+&nbsp;     */
+&nbsp;    public GamePage(Terminal t, List&lt;String&gt; inputParameters, String bookshelfOwner) {
+<b class="nc">&nbsp;        super(t, inputParameters);</b>
+<b class="nc">&nbsp;        this.currentBookshelfOwner = bookshelfOwner;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the game page inside the Screen portion of the Terminal.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render() {
+<b class="nc">&nbsp;        FullGameModelView fullGameModelView = viewManager.getGameModelView();</b>
+<b class="nc">&nbsp;        if (fullGameModelView == null) return;</b>
+<b class="nc">&nbsp;        t.clearScreen();</b>
+<b class="nc">&nbsp;        t.printLivingRoom(fullGameModelView);</b>
+<b class="nc">&nbsp;        t.printPersonalGoal(fullGameModelView.getPlayer(ViewManager.getUsername()).getPersonalGoals().get(0).getGoal(), 25, 4);</b>
+<b class="nc">&nbsp;        printGameInfo(fullGameModelView);</b>
+<b class="nc">&nbsp;        t.printBookshelf(fullGameModelView.getPlayer(currentBookshelfOwner).getBookshelf(), currentBookshelfOwner, 25, 36);</b>
+<b class="nc">&nbsp;        if (!fullGameModelView.getCurrentPlayerName().equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;            t.printAction(&quot;help, chat, goals&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            switch (fullGameModelView.getCurrentState()) {</b>
+<b class="nc">&nbsp;                case DRAW, LAST_DRAW -&gt; t.printAction(&quot;help, chat, goals, d &lt;args&gt;&quot;);</b>
+<b class="nc">&nbsp;                case ORGANIZE, LAST_ORGANIZE -&gt; t.printAction(&quot;help, chat, goals, o &lt;args&gt;&quot;);</b>
+<b class="nc">&nbsp;                case INSERT, LAST_INSERT -&gt; t.printAction(&quot;help, chat, goals, i &lt;column&gt;&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        printBorder();</b>
+<b class="nc">&nbsp;        t.printDivider(24);</b>
+<b class="nc">&nbsp;        t.printVerticalDivider(0, 42, 25);</b>
+<b class="nc">&nbsp;        t.printVerticalDivider(24, 30, 11);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private void printGameInfo(FullGameModelView fullGameModelView) {
+<b class="nc">&nbsp;        int pos = 1;</b>
+<b class="nc">&nbsp;        t.printInInfoTable(&quot;Phase : &quot; + ANSI.BLUE_FG + fullGameModelView.getCurrentState() + ANSI.RESET, pos);</b>
+<b class="nc">&nbsp;        pos++;</b>
+<b class="nc">&nbsp;        String currentPlayer = fullGameModelView.getCurrentPlayer().getName();</b>
+<b class="nc">&nbsp;        String formattedCurrentPlayer = String.format(currentPlayer.length() &gt; 10 ? currentPlayer.substring(0, 9) : currentPlayer, &quot;%-10s&quot;);</b>
+<b class="nc">&nbsp;        t.printInInfoTable(&quot;Playing : &quot; + formattedCurrentPlayer, pos);</b>
+<b class="nc">&nbsp;        pos += 1;</b>
+<b class="nc">&nbsp;        t.printInInfoTable(&quot;Players :&quot;, pos);</b>
+<b class="nc">&nbsp;        pos++;</b>
+<b class="nc">&nbsp;        int idx = 1;</b>
+<b class="nc">&nbsp;        for (PlayerModelView p : fullGameModelView.getPlayers()) {</b>
+<b class="nc">&nbsp;            String username = p.getName();</b>
+<b class="nc">&nbsp;            String trimmedUsername = String.format(username.length() &gt; 10 ? username.substring(0, 9) : username, &quot;%-10s&quot;);</b>
+<b class="nc">&nbsp;            if (username.equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;                t.printInInfoTable(&quot;   &quot; + idx + &quot;. &quot; + ANSI.PINK_FG + ANSI.BOLD + trimmedUsername + ANSI.RESET + &quot; &quot; + p.getPoints(), pos);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                t.printInInfoTable(&quot;   &quot; + idx + &quot;. &quot; + trimmedUsername + &quot; &quot; + p.getPoints(), pos);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            idx++;</b>
+<b class="nc">&nbsp;            pos++;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        t.printInInfoTable(&quot;Common Goal Tokens:&quot;, 10);</b>
+<b class="nc">&nbsp;        idx = 1;</b>
+<b class="nc">&nbsp;        for (CommonGoalModelView c : fullGameModelView.getCommonGoals()) {</b>
+<b class="nc">&nbsp;            t.printInInfoTable(&quot;   &quot; + idx + &quot; :&quot;, 10 + idx);</b>
+<b class="nc">&nbsp;            t.printTopToken(c.getTokens(), 10 + idx, 48);</b>
+<b class="nc">&nbsp;            idx++;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        int numberOfCommonGoals = fullGameModelView.getCommonGoals().size();</b>
+<b class="nc">&nbsp;        if (fullGameModelView.getCurrentPlayerName().equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;            List&lt;ItemTile&gt; takenTiles = fullGameModelView.getPlayer(ViewManager.getUsername()).getTakenTiles();</b>
+<b class="nc">&nbsp;            if (takenTiles.size() != 0) {</b>
+<b class="nc">&nbsp;                t.printInInfoTable(&quot;Taken Tiles :&quot;, 10 + numberOfCommonGoals + 3);</b>
+<b class="nc">&nbsp;                t.printTakenTiles(takenTiles, 10 + numberOfCommonGoals + 4, 43, fullGameModelView.getCurrentState() == GameState.ORGANIZE);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else {</b>
+<b class="nc">&nbsp;            List&lt;ItemTile&gt; currenPlayerTakenTiles = fullGameModelView.getPlayer(fullGameModelView.getCurrentPlayerName()).getTakenTiles();</b>
+<b class="nc">&nbsp;            if (currenPlayerTakenTiles.size() != 0) {</b>
+<b class="nc">&nbsp;                t.printInInfoTable(fullGameModelView.getCurrentPlayerName() + &quot;&#39;s taken tiles :&quot;, 10 + numberOfCommonGoals + 3);</b>
+<b class="nc">&nbsp;                t.printTakenTiles(currenPlayerTakenTiles, 10 + numberOfCommonGoals + 4, 43, false);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        t.printInInfoTable(&quot;Remaining tiles :&quot;, 22);</b>
+<b class="nc">&nbsp;        t.printInInfoTable(&quot;   &quot; + fullGameModelView.getRemainingTiles(), 23);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

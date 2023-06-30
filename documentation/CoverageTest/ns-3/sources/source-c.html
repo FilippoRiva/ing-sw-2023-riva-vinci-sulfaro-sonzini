@@ -1,0 +1,220 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Position</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Position (it.polimi.myshelfie.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Position</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (9/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,8%
+  </span>
+  <span class="absValue">
+    (30/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Immutable class representing the position of a tile on the board. The centre of the board has coordinates (0,0).
+&nbsp; */
+&nbsp;public class Position implements Serializable {
+&nbsp;    private final int x;
+&nbsp;    private final int y;
+&nbsp;
+<b class="fc">&nbsp;    public Position(int x, int y) {</b>
+<b class="fc">&nbsp;        this.x = x;</b>
+<b class="fc">&nbsp;        this.y = y;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param p the position.
+&nbsp;     */
+<b class="fc">&nbsp;    public Position(Position p) {</b>
+<b class="fc">&nbsp;        this.x = p.getX();</b>
+<b class="fc">&nbsp;        this.y = p.getY();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether if the positions are not adjacent to each other or not aligned in a column or in a row.
+&nbsp;     * Returns true if they are.
+&nbsp;     *
+&nbsp;     * @param positions the positions to check
+&nbsp;     * @return true if the positions are misaligned
+&nbsp;     */
+&nbsp;    public static boolean arePositionsMisaligned(List&lt;Position&gt; positions) {
+<b class="fc">&nbsp;        if (positions.size() == 1) return false;</b>
+<b class="fc">&nbsp;        int maxIndex = positions.size() - 1;</b>
+&nbsp;
+&nbsp;        //Should not affect the initial order for GUI
+<b class="fc">&nbsp;        List&lt;Position&gt; sortedPositions = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Position p : positions) {</b>
+<b class="fc">&nbsp;            sortedPositions.add(new Position(p));</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        sortedPositions.sort(Comparator.comparingInt(Position::getX));</b>
+<b class="fc">&nbsp;        int maxX = sortedPositions.get(maxIndex).getX();</b>
+<b class="fc">&nbsp;        int minX = sortedPositions.get(0).getX();</b>
+&nbsp;
+<b class="fc">&nbsp;        sortedPositions.sort(Comparator.comparingInt(Position::getY));</b>
+<b class="fc">&nbsp;        int maxY = sortedPositions.get(maxIndex).getY();</b>
+<b class="fc">&nbsp;        int minY = sortedPositions.get(0).getY();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (maxX != minX &amp;&amp; maxY != minY) return true; //not in a line</b>
+<b class="fc">&nbsp;        if (maxX == minX &amp;&amp; maxY - minY + 1 != sortedPositions.size()) return true; //vertical line but not consecutive</b>
+<b class="fc">&nbsp;        return maxY == minY &amp;&amp; maxX - minX + 1 != sortedPositions.size(); //horizontal line but not consecutive</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the x coordinate of the tile&#39;s position.
+&nbsp;     *
+&nbsp;     * @return the x coordinate.
+&nbsp;     */
+&nbsp;    public int getX() {
+<b class="fc">&nbsp;        return x;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the y coordinate of the tile&#39;s position.
+&nbsp;     *
+&nbsp;     * @return the y coordinate.
+&nbsp;     */
+&nbsp;    public int getY() {
+<b class="fc">&nbsp;        return y;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int hashCode() {
+<b class="fc">&nbsp;        return (x * 100) + y;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean equals(Object obj) {
+<b class="fc">&nbsp;        if (obj == null || obj.getClass() != getClass()) return false;</b>
+&nbsp;        Position p;
+<b class="fc">&nbsp;        p = (Position) obj;</b>
+<b class="fc">&nbsp;        return p.getX() == x &amp;&amp; p.getY() == y;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Converts a position in a y x matrix position system to an in-the-middle centered matrix position
+&nbsp;     *
+&nbsp;     * @param livingRoomSize the size of the matrix
+&nbsp;     * @return a new Position centered to an in-the-middle centered matrix
+&nbsp;     */
+&nbsp;    public Position centered(int livingRoomSize) {
+<b class="fc">&nbsp;        int offset = (livingRoomSize - 1) / 2;</b>
+<b class="fc">&nbsp;        return new Position(x - offset, offset - y);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Converts a position in an x y matrix position system to an in-the-middle centered matrix position
+&nbsp;     *
+&nbsp;     * @param livingRoomSize the size of the matrix
+&nbsp;     * @return a new Position centered to an in-the-middle centered matrix
+&nbsp;     */
+&nbsp;    public Position centeredMatrix(int livingRoomSize) {
+<b class="nc">&nbsp;        int offset = (livingRoomSize - 1) / 2;</b>
+<b class="nc">&nbsp;        return new Position(y - offset, offset - x);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="fc">&nbsp;        return &quot;[&quot; + this.getX() + &quot;,&quot; + this.getY() + &quot;]&quot;;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

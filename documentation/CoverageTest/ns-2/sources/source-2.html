@@ -1,0 +1,438 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameControllerImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: GameControllerImpl (it.polimi.myshelfie.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameControllerImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,4%
+  </span>
+  <span class="absValue">
+    (119/141)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.controller;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.ChatController;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.GameController;
+&nbsp;import it.polimi.myshelfie.model.GameState;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.Position;
+&nbsp;import it.polimi.myshelfie.model.chatting.Message;
+&nbsp;import it.polimi.myshelfie.model.events.ChatEvent;
+&nbsp;import it.polimi.myshelfie.model.events.GameEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.DisconnectionException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.FullColumnException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.interfaces.ChatModel;
+&nbsp;import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
+&nbsp;import it.polimi.myshelfie.model.interfaces.GameModel;
+&nbsp;import it.polimi.myshelfie.model.modelviews.GameModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+&nbsp;import it.polimi.myshelfie.network.Client;
+&nbsp;import it.polimi.myshelfie.network.NetworkMessage;
+&nbsp;import it.polimi.myshelfie.network.ServerConnectionHandler;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;import it.polimi.myshelfie.utils.ServerLogger;
+&nbsp;import it.polimi.myshelfie.view.ViewType;
+&nbsp;
+&nbsp;import java.rmi.RemoteException;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.logging.Level;
+&nbsp;
+&nbsp;/**
+&nbsp; * It allows to do the basic moves of the game, disconnect from a game, add the observers and is responsible for signaling the end turn and end game.
+&nbsp; */
+&nbsp;public class GameControllerImpl implements GameController, ChatController {
+&nbsp;
+&nbsp;    private final GameModel gameModel;
+&nbsp;    private final ChatModel chatModel;
+&nbsp;    private final ControllerImpl controller;
+&nbsp;    private final Map&lt;String, Observer&lt;GameEvent, GameModelView&gt;&gt; gameObserverMap;
+&nbsp;    private final String gameName;
+&nbsp;    private Map&lt;String, Client&gt; clientsMap;
+&nbsp;    private Map&lt;String, ClientExceptionsNotifier&gt; exceptionsNotifiersMap;
+&nbsp;    private Map&lt;String, ServerConnectionHandler&gt; connectionHandlersMap;
+&nbsp;    private Map&lt;String, Observer&lt;ChatEvent, PlayerChatModelView&gt;&gt; chatObserverMap;
+&nbsp;    private boolean closed;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for the GameControllerImpl class.
+&nbsp;     *
+&nbsp;     * @param gameModel the model associated to the game.
+&nbsp;     * @param chatModel the model associated to the game chat.
+&nbsp;     * @param gameName  the name of the game.
+&nbsp;     */
+<b class="fc">&nbsp;    public GameControllerImpl(ControllerImpl controller, GameModel gameModel, ChatModel chatModel, String gameName) {</b>
+<b class="fc">&nbsp;        this.controller = controller;</b>
+<b class="fc">&nbsp;        this.gameModel = gameModel;</b>
+<b class="fc">&nbsp;        this.chatModel = chatModel;</b>
+<b class="fc">&nbsp;        this.gameName = gameName;</b>
+<b class="fc">&nbsp;        this.clientsMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.exceptionsNotifiersMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.connectionHandlersMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.gameObserverMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.chatObserverMap = new HashMap&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the attributes of the GameControllerImpl class.
+&nbsp;     *
+&nbsp;     * @param clientsMap            the list of clients and their players.
+&nbsp;     * @param connectionHandlersMap the list of connection handlers.
+&nbsp;     * @param notifiersMap          the list of the exceptions notifiers.
+&nbsp;     */
+&nbsp;    protected void init(Map&lt;String, Client&gt; clientsMap, Map&lt;String, ServerConnectionHandler&gt; connectionHandlersMap,
+&nbsp;                        Map&lt;String, ClientExceptionsNotifier&gt; notifiersMap) {
+<b class="fc">&nbsp;        this.clientsMap = clientsMap;</b>
+<b class="fc">&nbsp;        this.exceptionsNotifiersMap = notifiersMap;</b>
+<b class="fc">&nbsp;        this.connectionHandlersMap = connectionHandlersMap;</b>
+<b class="fc">&nbsp;        this.chatObserverMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (String player : connectionHandlersMap.keySet()) {</b>
+<b class="fc">&nbsp;            ServerConnectionHandler sch = connectionHandlersMap.get(player);</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                sch.setGameController(this);</b>
+<b class="fc">&nbsp;                sch.setChatController(this);</b>
+<b class="nc">&nbsp;            } catch (RemoteException e) { //disconnection during init</b>
+<b class="nc">&nbsp;                closed = false;</b>
+<b class="nc">&nbsp;                gameModel.setState(GameState.FIRST_DRAW);</b>
+<b class="nc">&nbsp;                disconnectFromGame(player);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        closed = false;</b>
+<b class="fc">&nbsp;        gameModel.setState(GameState.FIRST_DRAW);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param positions  the positions of the tiles the player wants to select from the board.
+&nbsp;     * @param playerName the player playing.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void drawTiles(List&lt;Position&gt; positions, String playerName) {
+<b class="fc">&nbsp;        if (closed) {</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player draw fail. Game Closed. Game name : &quot; + gameName + &quot; | Player drawing : &quot; + playerName);</b>
+<b class="nc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;Game Closed&quot;));</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        GameState currentGameState = gameModel.getState();</b>
+<b class="fc">&nbsp;        if (currentGameState != GameState.DRAW &amp;&amp; currentGameState != GameState.LAST_DRAW) return;</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            gameModel.drawTiles(positions, playerName);</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player draws. Game name : &quot; + gameName + &quot; | Player drawing : &quot; + playerName + &quot; | Drawn positions : &quot; + positions);</b>
+<b class="fc">&nbsp;            if (gameModel.getState() == GameState.DRAW) gameModel.setState(GameState.ORGANIZE);</b>
+<b class="fc">&nbsp;            else gameModel.setState(GameState.LAST_ORGANIZE);</b>
+<b class="fc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player draw fail. Game name : &quot; + gameName + &quot; | Player drawing : &quot; + playerName + &quot; | Drawn positions : &quot; + positions);</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(e);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param orderedTiles the tiles selected from the board.
+&nbsp;     * @param playerName   the player playing.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void orderChosenTiles(List&lt;ItemTile&gt; orderedTiles, String playerName) {
+<b class="fc">&nbsp;        if (closed) {</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player organize fail. Game Closed. Game name : &quot; + gameName + &quot; | Player drawing : &quot; + playerName);</b>
+<b class="nc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;Game Closed&quot;));</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        GameState currentGameState = gameModel.getState();</b>
+<b class="fc">&nbsp;        if (currentGameState != GameState.ORGANIZE &amp;&amp; currentGameState != GameState.LAST_ORGANIZE) return;</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            gameModel.orderChosenTiles(orderedTiles, playerName);</b>
+<b class="fc">&nbsp;            if (currentGameState == GameState.ORGANIZE) gameModel.setState(GameState.INSERT);</b>
+<b class="fc">&nbsp;            else gameModel.setState(GameState.LAST_INSERT);</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player organizes. Game name : &quot; + gameName + &quot; | Player organizing : &quot; + playerName + &quot; | Organized tiles : &quot; + orderedTiles);</b>
+<b class="fc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player organize fail. Game name : &quot; + gameName + &quot; | Player organizing : &quot; + playerName + &quot; | Organized tiles : &quot; + orderedTiles);</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(e);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the player playing.
+&nbsp;     * @param column     the column where to insert the chosen tiles.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void insertTiles(String playerName, int column) {
+<b class="fc">&nbsp;        if (closed) {</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player insert fail. Game Closed. Game name : &quot; + gameName + &quot; | Player drawing : &quot; + playerName);</b>
+<b class="nc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;Game Closed&quot;));</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        GameState currentGameState = gameModel.getState();</b>
+<b class="fc">&nbsp;        if (currentGameState != GameState.INSERT &amp;&amp; currentGameState != GameState.LAST_INSERT) return;</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            gameModel.insertTiles(playerName, column);</b>
+<b class="fc">&nbsp;            if (currentGameState == GameState.INSERT) gameModel.setState(GameState.COUNTING_POINTS);</b>
+<b class="fc">&nbsp;            else gameModel.setState(GameState.LAST_COUNTING_POINTS);</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player inserts. Game name : &quot; + gameName + &quot; | Player organizing : &quot; + playerName + &quot; | Chosen column : &quot; + column);</b>
+<b class="fc">&nbsp;        } catch (InvalidParameterException | FullColumnException e) {</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player insert fail. Game name : &quot; + gameName + &quot; | Player organizing : &quot; + playerName + &quot; | Chosen column : &quot; + column);</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(e);</b>
+&nbsp;            return;
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        endTurn(playerName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Processes the end turn: it checks if the player achieved a common goal; checks if the living room is refillable;
+&nbsp;     * sets the next turn.
+&nbsp;     *
+&nbsp;     * @param playerName the current player that has finished its turn.
+&nbsp;     */
+&nbsp;    private void endTurn(String playerName) {
+<b class="fc">&nbsp;        gameModel.checkCommonGoal(playerName);</b>
+<b class="fc">&nbsp;        gameModel.nextTurn();</b>
+<b class="fc">&nbsp;        gameModel.refillLivingRoom();</b>
+&nbsp;
+&nbsp;        //we are last round yet
+<b class="fc">&nbsp;        if (gameModel.getState() == GameState.LAST_COUNTING_POINTS) {</b>
+<b class="fc">&nbsp;            if (gameModel.isLastPlayer(playerName)) {</b>
+<b class="fc">&nbsp;                endGame();</b>
+&nbsp;                return;
+&nbsp;            }
+<b class="nc">&nbsp;            gameModel.setState(GameState.LAST_DRAW);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            if (gameModel.isBookshelfFull(playerName)) {</b>
+<b class="fc">&nbsp;                gameModel.addEndToken(playerName);</b>
+<b class="fc">&nbsp;                if (gameModel.isLastPlayer(playerName)) {</b>
+<b class="nc">&nbsp;                    endGame();</b>
+&nbsp;                    return;
+&nbsp;                }
+<b class="fc">&nbsp;                gameModel.setState(GameState.LAST_DRAW);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                gameModel.setState(GameState.DRAW);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the end game results such as end game tokens or personal goals points. Sets the game state to WIN.
+&nbsp;     */
+&nbsp;    private void endGame() {
+<b class="fc">&nbsp;        gameModel.calculateWinResults();</b>
+<b class="fc">&nbsp;        gameModel.setState(GameState.WIN);</b>
+<b class="fc">&nbsp;        for (Client c : clientsMap.values()) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                c.send(new NetworkMessage(ViewType.WIN));</b>
+<b class="nc">&nbsp;            } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                ServerLogger.log(Level.FINE, &quot;Sending a WIN Network Message to a Disconnected Client&quot;);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        closed = true;</b>
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINE, &quot;Game ended. Game name : &quot; + gameName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName          the name of the player.
+&nbsp;     * @param networkGameObserver the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addGameObserver(String playerName, Observer&lt;GameEvent, GameModelView&gt; networkGameObserver) {
+<b class="fc">&nbsp;        gameModel.addGameObserver(networkGameObserver);</b>
+<b class="fc">&nbsp;        gameObserverMap.put(playerName, networkGameObserver);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param disconnectedPlayerName the name of the player quitting.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void disconnectFromGame(String disconnectedPlayerName) {
+<b class="fc">&nbsp;        if (gameModel.getState() == GameState.WIN) {</b>
+<b class="fc">&nbsp;            leaveEndGame(disconnectedPlayerName, true);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        clientsMap.remove(disconnectedPlayerName);</b>
+<b class="fc">&nbsp;        connectionHandlersMap.remove(disconnectedPlayerName);</b>
+&nbsp;        //notifying non disconnected clients
+<b class="fc">&nbsp;        for (String player : clientsMap.keySet()) {</b>
+<b class="fc">&nbsp;            new Thread(() -&gt; {</b>
+&nbsp;                try {
+<b class="fc">&nbsp;                    exceptionsNotifiersMap.get(player).notifyException(new DisconnectionException(disconnectedPlayerName));</b>
+<b class="fc">&nbsp;                    connectionHandlersMap.get(player).setGameController(null);</b>
+<b class="fc">&nbsp;                    connectionHandlersMap.get(player).setChatController(null);</b>
+<b class="fc">&nbsp;                    clientsMap.get(player).send(new NetworkMessage(ViewType.DISCONNECTION));</b>
+<b class="nc">&nbsp;                } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                    ServerLogger.log(Level.FINE, &quot;Sending a DISCONNECTION Network Message to a Disconnected Client&quot;);</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;                controller.clientHasLeft(clientsMap.get(player));</b>
+<b class="fc">&nbsp;            }).start();</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;        //removing observers
+<b class="fc">&nbsp;        gameModel.removeGameObservers();</b>
+<b class="fc">&nbsp;        chatModel.removeChatObservers();</b>
+<b class="fc">&nbsp;        closed = true;</b>
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINE, &quot;Game shutdown after disconnection. Game name : &quot; + gameName + &quot; | Player disconnected : &quot; + disconnectedPlayerName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param username          the name of the player leaving.
+&nbsp;     * @param fromDisconnection indicates the disconnection.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void leaveEndGame(String username, boolean fromDisconnection) {
+<b class="fc">&nbsp;        if (gameModel.getState() != GameState.WIN) {</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Player leave end game fail. Not in end game. Game name : &quot; + gameName + &quot; | Player name : &quot; + username);</b>
+<b class="nc">&nbsp;            exceptionsNotifiersMap.get(username).notifyException(new Exception(&quot;Not in end game&quot;));</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        if (!fromDisconnection) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                connectionHandlersMap.get(username).setGameController(null);</b>
+<b class="fc">&nbsp;                connectionHandlersMap.get(username).setChatController(null);</b>
+<b class="nc">&nbsp;            } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                ServerLogger.log(Level.FINE, &quot;Setting Controllers to a Disconnected Client&quot;);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;            Client client = clientsMap.get(username);</b>
+<b class="fc">&nbsp;            new Thread(() -&gt; {</b>
+&nbsp;                try {
+<b class="fc">&nbsp;                    client.send(new NetworkMessage(ViewType.INIT));</b>
+<b class="nc">&nbsp;                } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                    ServerLogger.log(Level.FINE, &quot;Sending a INIT Network Message to a disconnected client while leaving game&quot;);</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            }).start();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        gameModel.removeGameObserver(gameObserverMap.get(username));</b>
+<b class="fc">&nbsp;        chatModel.removeChatObserver(username, chatObserverMap.get(username));</b>
+<b class="fc">&nbsp;        gameObserverMap.remove(gameObserverMap.get(username));</b>
+<b class="fc">&nbsp;        chatObserverMap.remove(chatObserverMap.get(username));</b>
+<b class="fc">&nbsp;        controller.clientHasLeft(clientsMap.get(username));</b>
+<b class="fc">&nbsp;        clientsMap.remove(username);</b>
+<b class="fc">&nbsp;        if (!fromDisconnection)</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINE, &quot;Player left end game. Game name : &quot; + gameName + &quot; | Player disconnected : &quot; + username);</b>
+&nbsp;        else
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINE, &quot;Player disconnected from end game. Game name : &quot; + gameName + &quot; | Player disconnected : &quot; + username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName
+&nbsp;     * @param message    the message written by a player and sent to one or more players.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addMessage(String playerName, Message message) {
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINEST, &quot;Player sent game chat message. Game name : &quot; + gameName + &quot; | Player chatting : &quot; + playerName +</b>
+<b class="fc">&nbsp;                &quot; | Message : &quot; + message.getSender() + &quot;-&gt;&quot; + message.getReceiver() + &quot; :: &quot; + message.getMessage());</b>
+<b class="fc">&nbsp;        chatModel.addMessage(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName          the name of the player.
+&nbsp;     * @param networkChatObserver the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addChatObserver(String playerName, Observer&lt;ChatEvent, PlayerChatModelView&gt; networkChatObserver) {
+<b class="fc">&nbsp;        chatModel.addChatObserver(playerName, networkChatObserver);</b>
+<b class="fc">&nbsp;        chatObserverMap.put(playerName, networkChatObserver);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

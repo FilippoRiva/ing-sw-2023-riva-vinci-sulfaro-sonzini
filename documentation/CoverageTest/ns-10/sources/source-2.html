@@ -1,0 +1,384 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > EndGameController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers.game</a>
+</div>
+
+<h1>Coverage Summary for Class: EndGameController (it.polimi.myshelfie.view.graphical.controllers.game)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EndGameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/86)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EndGameController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/87)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers.game;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.EarnedPoint;
+&nbsp;import it.polimi.myshelfie.model.PointType;
+&nbsp;import it.polimi.myshelfie.model.Token;
+&nbsp;import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerModelView;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.GraphicalUI;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.geometry.HPos;
+&nbsp;import javafx.geometry.Pos;
+&nbsp;import javafx.scene.control.Button;
+&nbsp;import javafx.scene.control.Label;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.input.KeyEvent;
+&nbsp;import javafx.scene.layout.ColumnConstraints;
+&nbsp;import javafx.scene.layout.GridPane;
+&nbsp;import javafx.scene.layout.HBox;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * The controller of the EndGame view.
+&nbsp; */
+<b class="nc">&nbsp;public class EndGameController {</b>
+<b class="nc">&nbsp;    private final ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;    @FXML
+&nbsp;    protected StackPane thirdPodiumStack;
+&nbsp;    @FXML
+&nbsp;    protected ImageView secondPodiumImage;
+&nbsp;    @FXML
+&nbsp;    protected ImageView firstPodiumImage;
+&nbsp;    @FXML
+&nbsp;    protected ImageView thirdPodiumImage;
+&nbsp;    @FXML
+&nbsp;    protected Label lobbyNameLabel;
+&nbsp;    @FXML
+&nbsp;    protected GridPane detailsGrid;
+&nbsp;    @FXML
+&nbsp;    protected GridPane scoreboardGrid;
+&nbsp;    @FXML
+&nbsp;    protected StackPane detailsStack;
+&nbsp;    @FXML
+&nbsp;    protected Label player1;
+&nbsp;    @FXML
+&nbsp;    protected Label player2;
+&nbsp;    @FXML
+&nbsp;    protected Label player3;
+&nbsp;    @FXML
+&nbsp;    protected Label points1;
+&nbsp;    @FXML
+&nbsp;    protected Label points2;
+&nbsp;    @FXML
+&nbsp;    protected Label points3;
+&nbsp;    @FXML
+&nbsp;    protected Button detailsButton;
+&nbsp;    @FXML
+&nbsp;    protected HBox mainHBox;
+&nbsp;    private Label[] pointsPodium;
+&nbsp;    private Label[] playersPodium;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and animations.
+&nbsp;     * It sets the state variables to their default values.
+&nbsp;     */
+&nbsp;    public void customInitialize() {
+<b class="nc">&nbsp;        CustomBindings.bindSize(mainHBox, GraphicalUI.stage.widthProperty(), GraphicalUI.stage.heightProperty());</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(firstPodiumImage, GraphicalUI.stage.widthProperty().divide(5), null);</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(secondPodiumImage, GraphicalUI.stage.widthProperty().divide(5), null);</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(thirdPodiumImage, GraphicalUI.stage.widthProperty().divide(5), null);</b>
+&nbsp;
+<b class="nc">&nbsp;        playersPodium = new Label[]{player1, player2, player3};</b>
+<b class="nc">&nbsp;        pointsPodium = new Label[]{points1, points2, points3};</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the end game view adding points and player names.
+&nbsp;     */
+&nbsp;    public void update() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt;</b>
+<b class="nc">&nbsp;                addColumn(detailsGrid, 0,</b>
+<b class="nc">&nbsp;                        new Label(), createLabel(&quot;End Token&quot;),</b>
+<b class="nc">&nbsp;                        createLabel(&quot;Common Goals&quot;), createLabel(&quot;PersonalGoal&quot;),</b>
+<b class="nc">&nbsp;                        createLabel(&quot;Adjacent Tiles&quot;), createLabel(&quot;Tot&quot;))</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        LobbyModelView lobbyModelView = viewManager.getLobbyModelView();</b>
+&nbsp;
+&nbsp;        //order players for taken points
+<b class="nc">&nbsp;        List&lt;PlayerModelView&gt; players = viewManager.getPlayersOrderedByScores();</b>
+&nbsp;
+<b class="nc">&nbsp;        int numPlayers = players.size();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (numPlayers == 2) {</b>
+<b class="nc">&nbsp;            thirdPodiumStack.setVisible(false); //only 2 players</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        for (int i = 0; i &lt; numPlayers; i++) {</b>
+<b class="nc">&nbsp;            if (i &lt; 3) {</b>
+<b class="nc">&nbsp;                PlayerModelView player = players.get(i);</b>
+<b class="nc">&nbsp;                int finalI = i;</b>
+<b class="nc">&nbsp;                Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;                    playersPodium[finalI].setText(player.getName());</b>
+<b class="nc">&nbsp;                    pointsPodium[finalI].setText(String.valueOf(player.getPoints()));</b>
+&nbsp;                });
+&nbsp;            }
+<b class="nc">&nbsp;            PlayerModelView player = players.get(i);</b>
+<b class="nc">&nbsp;            addRowScoreboard(player, i);</b>
+<b class="nc">&nbsp;            addColumnDetail(player, i, numPlayers);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; lobbyNameLabel.setText(lobbyModelView.getName()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private void addRowScoreboard(PlayerModelView player, int position) {
+<b class="nc">&nbsp;        Label nameLabel = new Label((position + 1) + &quot;. &quot; + player.getName());</b>
+<b class="nc">&nbsp;        nameLabel.setStyle(&quot;-fx-font-size: 25&quot;);</b>
+<b class="nc">&nbsp;        Label pointsLabel = new Label(String.valueOf(player.getPoints()));</b>
+<b class="nc">&nbsp;        pointsLabel.setStyle(&quot;-fx-font-size: 25&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; addRow(scoreboardGrid, position, nameLabel, pointsLabel));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private void addColumnDetail(PlayerModelView player, int position, int numPlayers) {
+<b class="nc">&nbsp;        List&lt;Token&gt; takenTokens = player.getTokens();</b>
+<b class="nc">&nbsp;        List&lt;EarnedPoint&gt; earnedPoints = player.getEarnedPoints();</b>
+<b class="nc">&nbsp;        List&lt;Integer&gt; tokenRomanNumeral = takenTokens.stream().map(Token::getRomanNumeral).toList();</b>
+&nbsp;
+<b class="nc">&nbsp;        Label nameLabel = new Label(player.getName());</b>
+<b class="nc">&nbsp;        nameLabel.setStyle(&quot;-fx-font-size: 18&quot;);</b>
+<b class="nc">&nbsp;        Label firstToken = createLabel(tokenRomanNumeral.contains(0) ? 1 : 0);</b>
+<b class="nc">&nbsp;        int common1 = tokenRomanNumeral.contains(1) ?</b>
+<b class="nc">&nbsp;                takenTokens.stream().filter(x -&gt; x.getRomanNumeral() == 1).toList().get(0).getValue() : 0;</b>
+<b class="nc">&nbsp;        int common2 = tokenRomanNumeral.contains(2) ?</b>
+<b class="nc">&nbsp;                takenTokens.stream().filter(x -&gt; x.getRomanNumeral() == 2).toList().get(0).getValue() : 0;</b>
+<b class="nc">&nbsp;        Label common = new Label(common1 + &quot; + &quot; + common2);</b>
+<b class="nc">&nbsp;        common.setStyle(&quot;-fx-font-size: 13&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        Label personal = createLabel(earnedPoints.stream().filter(x -&gt; x.getType() == PointType.PERSONAL).mapToInt(EarnedPoint::getValue).sum());</b>
+<b class="nc">&nbsp;        Label adjacent = createLabel(earnedPoints.stream().filter(x -&gt; x.getType() == PointType.ADJACENT).toList().get(0).getValue());</b>
+&nbsp;
+<b class="nc">&nbsp;        Label tot = createLabel(player.getPoints());</b>
+<b class="nc">&nbsp;        tot.setStyle(&quot;-fx-font-weight: bold; -fx-font-family: &#39;Baskerville Old Face&#39;; -fx-font-size: 22&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        ColumnConstraints columnConstraints = new ColumnConstraints();</b>
+&nbsp;        //columnConstraints.setPercentWidth((double) (724) /numPlayers);
+<b class="nc">&nbsp;        columnConstraints.setPrefWidth((double) (683 - 200) / numPlayers);</b>
+<b class="nc">&nbsp;        columnConstraints.setHalignment(HPos.CENTER);</b>
+<b class="nc">&nbsp;        detailsGrid.getColumnConstraints().add(columnConstraints);</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; addColumn(detailsGrid, position + 1, nameLabel, firstToken, common, personal, adjacent, tot));</b>
+&nbsp;        /*
+&nbsp;        End token:		1pt
+&nbsp;        Common goal 1:	8pt
+&nbsp;        Common goal 2:	4pt
+&nbsp;        Personal goal:	6pt
+&nbsp;        Adjacent tiles:	12pt
+&nbsp;
+&nbsp;        Tot:			31pt
+&nbsp;         */
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private void addColumn(GridPane grid, int column, Label... labels) {
+<b class="nc">&nbsp;        for (int i = 0; i &lt; labels.length; i++) {</b>
+<b class="nc">&nbsp;            grid.add(labels[i], column, i);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void addRow(GridPane grid, int row, Label... labels) {
+<b class="nc">&nbsp;        for (int i = 0; i &lt; labels.length; i++) {</b>
+<b class="nc">&nbsp;            grid.add(labels[i], i, row);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Label createLabel(int value) {
+<b class="nc">&nbsp;        Label label = new Label(String.valueOf(value));</b>
+<b class="nc">&nbsp;        return setLabelStyle(label, 15);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Label createLabel(String text) {
+<b class="nc">&nbsp;        Label label = new Label(text);</b>
+<b class="nc">&nbsp;        return setLabelStyle(label, 13);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Label setLabelStyle(Label label, int fontSize) {
+<b class="nc">&nbsp;        label.setAlignment(Pos.CENTER);</b>
+<b class="nc">&nbsp;        String style = &quot;-fx-font-size: &quot; + fontSize + &quot;; -fx-text-fill: black&quot;;</b>
+<b class="nc">&nbsp;        label.setStyle(style);</b>
+<b class="nc">&nbsp;        return label;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Changes the ViewDetail.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    protected void changeViewDetail() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            if (!detailsGrid.isVisible()) {</b>
+<b class="nc">&nbsp;                detailsGrid.setVisible(true);</b>
+<b class="nc">&nbsp;                scoreboardGrid.setVisible(false);</b>
+<b class="nc">&nbsp;                detailsButton.setText(&quot;&lt;&lt;Details&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                scoreboardGrid.setVisible(true);</b>
+<b class="nc">&nbsp;                detailsGrid.setVisible(false);</b>
+<b class="nc">&nbsp;                detailsButton.setText(&quot;Details&gt;&gt;&quot;);</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * When the back arrow is clicked, the view manager sends a network message associated to the EXIT_REQUEST.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    protected void onBackArrowClick() {
+<b class="nc">&nbsp;        viewManager.exitRequest();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the controller to its original state.
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            detailsGrid.getColumnConstraints().clear();</b>
+<b class="nc">&nbsp;            detailsGrid.getRowConstraints().clear();</b>
+<b class="nc">&nbsp;            scoreboardGrid.getColumnConstraints().clear();</b>
+<b class="nc">&nbsp;            scoreboardGrid.getRowConstraints().clear();</b>
+&nbsp;
+<b class="nc">&nbsp;            detailsGrid.getChildren().clear();</b>
+<b class="nc">&nbsp;            scoreboardGrid.getChildren().clear();</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Processes how a certain KeyEvent should be interpreted while this Controller is active
+&nbsp;     * @param keyEvent the keyEvent to process.
+&nbsp;     */
+&nbsp;    public void processKeyEvent(KeyEvent keyEvent) {
+<b class="nc">&nbsp;        switch (keyEvent.getCode()) {</b>
+<b class="nc">&nbsp;            case ESCAPE -&gt; onBackArrowClick();</b>
+<b class="nc">&nbsp;            case ENTER -&gt; changeViewDetail();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

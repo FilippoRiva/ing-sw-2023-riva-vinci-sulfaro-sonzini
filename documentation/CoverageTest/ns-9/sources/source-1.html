@@ -1,0 +1,201 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ClientImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.network</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientImpl (it.polimi.myshelfie.network)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.network;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.view.View;
+&nbsp;
+&nbsp;import java.rmi.RemoteException;
+&nbsp;import java.rmi.server.UnicastRemoteObject;
+&nbsp;import java.util.concurrent.Executors;
+&nbsp;import java.util.concurrent.ScheduledExecutorService;
+&nbsp;import java.util.concurrent.TimeUnit;
+&nbsp;
+&nbsp;/**
+&nbsp; * The Client implementation. It has a view associated and a lock object (lifeLineSync) used for the
+&nbsp; * connection lifeline.
+&nbsp; */
+&nbsp;public class ClientImpl extends UnicastRemoteObject implements Client {
+&nbsp;    private final View view;
+<b class="nc">&nbsp;    private final Object lifelineSync = new Object();</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param view the view.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+<b class="nc">&nbsp;    public ClientImpl(View view) throws RemoteException {</b>
+<b class="nc">&nbsp;        this.view = view;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     * @return the host name set in the java.rmi.server.hostname system property
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getHostName() throws RemoteException {
+<b class="nc">&nbsp;        return System.getProperty(&quot;java.rmi.server.hostname&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     * @param server the server connection handler.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void handshake(ServerConnectionHandler server) throws RemoteException {
+<b class="nc">&nbsp;        new Thread(() -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                server.lifeline();</b>
+<b class="nc">&nbsp;            } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                view.stopUI();</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }).start();</b>
+&nbsp;
+<b class="nc">&nbsp;        new Thread(() -&gt; view.addObserver((evt, message) -&gt; { //adding view observer</b>
+<b class="nc">&nbsp;            if (evt == null) return;</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                server.send(message);</b>
+<b class="nc">&nbsp;            } catch (RemoteException ignored) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;View Observer Failure. Unable to send Network Message to the server&quot;);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        })).start();</b>
+&nbsp;
+<b class="nc">&nbsp;        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);</b>
+<b class="nc">&nbsp;        service.scheduleAtFixedRate(()-&gt;{</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                server.send(new NetworkMessage()); //ping message</b>
+<b class="nc">&nbsp;            } catch (RemoteException ignored) {</b>
+<b class="nc">&nbsp;                service.shutdown();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }, 1, 5, TimeUnit.SECONDS);
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     * @param networkMessage the message to send.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void send(NetworkMessage networkMessage) throws RemoteException {
+<b class="nc">&nbsp;        networkMessage.clientExecute(view);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void lifeline() throws RemoteException {
+&nbsp;        //this method blocks forever the calling thread until the client disconnects
+<b class="nc">&nbsp;        synchronized (lifelineSync) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                lifelineSync.wait();</b>
+<b class="nc">&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

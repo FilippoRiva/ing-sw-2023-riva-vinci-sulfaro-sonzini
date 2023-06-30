@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TileImageView</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.components</a>
+</div>
+
+<h1>Coverage Summary for Class: TileImageView (it.polimi.myshelfie.view.graphical.components)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TileImageView</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.components;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;import it.polimi.myshelfie.view.graphical.Images;
+&nbsp;import javafx.scene.CacheHint;
+&nbsp;import javafx.scene.image.Image;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the TileImageView.
+&nbsp; */
+&nbsp;public class TileImageView extends ImageView {
+<b class="nc">&nbsp;    private static final HashMap&lt;String, Image&gt; tilesNameToImage = new HashMap&lt;&gt;();</b>
+&nbsp;    private ItemTile tile;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor of the TileImageView class
+&nbsp;     *
+&nbsp;     * @param tile the ItemTile whose TileImageView is to be constructed
+&nbsp;     */
+<b class="nc">&nbsp;    public TileImageView(ItemTile tile) {</b>
+<b class="nc">&nbsp;        Image image = getTileImage(tile);</b>
+<b class="nc">&nbsp;        this.tile = tile;</b>
+<b class="nc">&nbsp;        super.setImage(image);</b>
+<b class="nc">&nbsp;        super.setCache(true);</b>
+<b class="nc">&nbsp;        super.setCacheHint(CacheHint.SPEED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Default Constructor.
+&nbsp;     */
+&nbsp;    public TileImageView() {
+<b class="nc">&nbsp;        super();</b>
+<b class="nc">&nbsp;        this.tile = null;</b>
+<b class="nc">&nbsp;        super.setCache(true);</b>
+<b class="nc">&nbsp;        super.setCacheHint(CacheHint.SPEED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Preloads the Tiles images such that it is no longer required to get them from resources
+&nbsp;     */
+&nbsp;    public static void initImages() {
+<b class="nc">&nbsp;        for (ItemTileType itemTileType : ItemTileType.values()) {</b>
+<b class="nc">&nbsp;            if (itemTileType == ItemTileType.EMPTY) return;</b>
+<b class="nc">&nbsp;            for (int i = 1; i &lt; 4; i++) {</b>
+<b class="nc">&nbsp;                tilesNameToImage.put(itemTileType.getName() + i,</b>
+<b class="nc">&nbsp;                        Images.getImage(&quot;game/itemTiles/&quot; + itemTileType.getName() + i + &quot;.png&quot;));</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the preloaded tile image associated with the given ItemTile
+&nbsp;     *
+&nbsp;     * @param itemTile the itemTile whose image is to be returned
+&nbsp;     * @return the Image
+&nbsp;     */
+&nbsp;    private Image getTileImage(ItemTile itemTile) {
+<b class="nc">&nbsp;        if (itemTile == null || itemTile.getType() == ItemTileType.EMPTY) return null;</b>
+<b class="nc">&nbsp;        else return tilesNameToImage.get(itemTile.getType().getName() + (itemTile.getId() + 1));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a matrix of TilesImageView such that is mimics a ItemTile matrix
+&nbsp;     *
+&nbsp;     * @param matrix the ItemTile matrix to be cloned
+&nbsp;     * @return the cloned TileImageView matrix
+&nbsp;     */
+&nbsp;    public static TileImageView[][] convertMatrix(ItemTile[][] matrix) {
+<b class="nc">&nbsp;        TileImageView[][] result = new TileImageView[matrix.length][matrix[0].length];</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; matrix.length; i++) {</b>
+<b class="nc">&nbsp;            for (int j = 0; j &lt; matrix[0].length; j++) {</b>
+<b class="nc">&nbsp;                result[i][j] = new TileImageView(matrix[i][j]);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the tile.
+&nbsp;     * @param tile the tile to set.
+&nbsp;     * @param opacity the opacity to set.
+&nbsp;     */
+&nbsp;    public void setTile(ItemTile tile, int opacity) {
+<b class="nc">&nbsp;        super.setImage(getTileImage(tile));</b>
+<b class="nc">&nbsp;        this.tile = tile;</b>
+<b class="nc">&nbsp;        this.setOpacity(opacity);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the tile.
+&nbsp;     * @return the ItemTile.
+&nbsp;     */
+&nbsp;    public ItemTile getTile() {
+<b class="nc">&nbsp;        return tile;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

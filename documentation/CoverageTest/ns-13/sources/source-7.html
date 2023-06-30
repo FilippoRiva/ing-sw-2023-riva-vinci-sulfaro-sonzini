@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > JoinPage</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.textual.pages</a>
+</div>
+
+<h1>Coverage Summary for Class: JoinPage (it.polimi.myshelfie.view.textual.pages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JoinPage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.textual.pages;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ModelView;
+&nbsp;import it.polimi.myshelfie.view.textual.Terminal;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the join page for the textualUI.
+&nbsp; */
+&nbsp;public class JoinPage extends ScreenPage {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialises a JoinPage.
+&nbsp;     * @param t the terminal in which we want to render the page.
+&nbsp;     * @param inputParameters the shared input parameters between the TextualUI.
+&nbsp;     */
+&nbsp;    public JoinPage(Terminal t, List&lt;String&gt; inputParameters) {
+<b class="nc">&nbsp;        super(t, inputParameters);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the join page inside the Screen portion of the Terminal.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render() {
+<b class="nc">&nbsp;        t.clearScreen();</b>
+<b class="nc">&nbsp;        t.printTitle();</b>
+<b class="nc">&nbsp;        switch (inputParameters.size()) {</b>
+&nbsp;            case 0 -&gt; {
+<b class="nc">&nbsp;                t.centerPrint(&quot;Choose a lobby number&quot; + &quot; :&quot;, 20);</b>
+<b class="nc">&nbsp;                printAvailableLobbies();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case 1 -&gt; {
+<b class="nc">&nbsp;                t.centerPrint(&quot;Choose an username for &quot; + inputParameters.get(0) + &quot; :&quot;, 20);</b>
+<b class="nc">&nbsp;                t.printAction(&quot;back, &lt;username&gt;&quot;);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;            case 2 -&gt; {
+<b class="nc">&nbsp;                t.centerPrint(&quot;Joining &quot; + inputParameters.get(0), 20);</b>
+<b class="nc">&nbsp;                t.printAction(&quot;back&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        printBorder();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void printAvailableLobbies() {
+<b class="nc">&nbsp;        ModelView modelView = viewManager.getModelView();</b>
+<b class="nc">&nbsp;        if (modelView == null) {</b>
+<b class="nc">&nbsp;            t.centerPrint(&quot;none&quot;, 21);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;String&gt; lobbies = modelView.getLobbies();</b>
+<b class="nc">&nbsp;        if (lobbies == null || lobbies.size() == 0) {</b>
+<b class="nc">&nbsp;            t.centerPrint(&quot;none&quot;, 21);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        int idx = 1;</b>
+<b class="nc">&nbsp;        for (String lobby : lobbies) {</b>
+<b class="nc">&nbsp;            t.centerPrint(</b>
+<b class="nc">&nbsp;                    idx + &quot;. &quot; + lobby + &quot; &quot; + modelView.getCurrentSize(lobby) + &quot;/&quot; + modelView.getMaxSize(lobby),</b>
+&nbsp;                    21 + idx);
+<b class="nc">&nbsp;            idx++;</b>
+<b class="nc">&nbsp;            if (idx &gt; 13) break;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        t.printAction(&quot;back, [1, ..., &quot; + lobbies.size() + &quot;]&quot;);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

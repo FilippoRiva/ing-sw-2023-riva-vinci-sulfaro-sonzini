@@ -1,0 +1,284 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers.game</a>
+</div>
+
+<h1>Coverage Summary for Class: GameController (it.polimi.myshelfie.view.graphical.controllers.game)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/53)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/54)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers.game;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.GameState;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.Animations;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.GraphicalUI;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.scene.control.ProgressIndicator;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.input.KeyEvent;
+&nbsp;import javafx.scene.layout.AnchorPane;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.stage.Stage;
+&nbsp;
+&nbsp;/**
+&nbsp; * The game controller contains the panel, overlay and end game controllers.
+&nbsp; * It is used to propagate updates to the controllers.
+&nbsp; */
+<b class="nc">&nbsp;public class GameController {</b>
+&nbsp;
+<b class="nc">&nbsp;    private final ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;    @FXML
+&nbsp;    public GameOverlayController gameOverlayController;
+&nbsp;    @FXML
+&nbsp;    public GamePanelController gamePanelController;
+&nbsp;    @FXML
+&nbsp;    public EndGameController endGameController;
+&nbsp;    @FXML
+&nbsp;    protected ProgressIndicator progress;
+&nbsp;    @FXML
+&nbsp;    protected AnchorPane endGame;
+&nbsp;    @FXML
+&nbsp;    protected StackPane gameOverlay;
+&nbsp;    @FXML
+&nbsp;    protected AnchorPane gamePanel;
+&nbsp;    @FXML
+&nbsp;    protected ImageView backgroundImage;
+&nbsp;    @FXML
+&nbsp;    protected AnchorPane mainAnchorPane;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and animations.
+&nbsp;     * It sets the state variables to their default values.
+&nbsp;     */
+&nbsp;    public void initialize() {
+<b class="nc">&nbsp;        Stage stage = GraphicalUI.stage;</b>
+<b class="nc">&nbsp;        endGame.setVisible(false);</b>
+<b class="nc">&nbsp;        endGame.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        gameOverlay.setVisible(true);</b>
+&nbsp;        //gameOverlay.setMouseTransparent(true);
+<b class="nc">&nbsp;        gameOverlayController.customInitialize();</b>
+<b class="nc">&nbsp;        gamePanelController.customInitialize();</b>
+<b class="nc">&nbsp;        endGameController.customInitialize();</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(backgroundImage, stage.widthProperty(), stage.heightProperty());</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(mainAnchorPane, stage.widthProperty(), stage.heightProperty());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets to visible the components that needs to be visible at the beginning of the game.
+&nbsp;     */
+&nbsp;    public void gameStart() {
+&nbsp;        //default visible panels
+<b class="nc">&nbsp;        endGame.setVisible(false);</b>
+<b class="nc">&nbsp;        endGame.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        gamePanel.setVisible(true);</b>
+<b class="nc">&nbsp;        gamePanel.setMouseTransparent(false);</b>
+<b class="nc">&nbsp;        gameOverlay.setMouseTransparent(false);</b>
+<b class="nc">&nbsp;        gameOverlay.setVisible(true);</b>
+&nbsp;        //AutoPlayer Activation
+<b class="nc">&nbsp;        if (ViewManager.getInstance().getLobbyModelView().getName().equals(&quot;test&quot;) &amp;&amp;</b>
+<b class="nc">&nbsp;                ViewManager.getUsername().startsWith(&quot;bot&quot;)) ViewManager.getInstance().startAutoPlayer();</b>
+&nbsp;        //completely loading everything
+<b class="nc">&nbsp;        gamePanelController.setState(viewManager.getGameModelView().getCurrentState());</b>
+<b class="nc">&nbsp;        gamePanelController.leftBookshelfController.loadLeft();</b>
+<b class="nc">&nbsp;        gamePanelController.rightBookshelfController.loadRight();</b>
+<b class="nc">&nbsp;        gamePanelController.livingRoomController.loadGrid();</b>
+<b class="nc">&nbsp;        gameOverlayController.gameStart();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Used to trigger a game update over this controller and its sub controllers.
+&nbsp;     */
+&nbsp;    public void update() {
+<b class="nc">&nbsp;        GameState currentState = viewManager.getCurrentStateDiff();</b>
+&nbsp;
+<b class="nc">&nbsp;        gamePanelController.setState(currentState); //this reloads game panel elements</b>
+<b class="nc">&nbsp;        if (currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)</b>
+<b class="nc">&nbsp;            gameOverlayController.startTurn();</b>
+<b class="nc">&nbsp;        if (viewManager.getCurrentStateDiff() == GameState.WIN) {</b>
+<b class="nc">&nbsp;            gameOverlayController.startTurn();</b>
+<b class="nc">&nbsp;            gamePanelController.livingRoomController.checkEndToken();</b>
+<b class="nc">&nbsp;            Animations.timer(() -&gt; {</b>
+<b class="nc">&nbsp;                gameOverlay.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                gameOverlay.setVisible(false);</b>
+<b class="nc">&nbsp;                gamePanel.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;                gamePanel.setVisible(false);</b>
+<b class="nc">&nbsp;                endGameController.update();</b>
+<b class="nc">&nbsp;                endGame.setVisible(true);</b>
+<b class="nc">&nbsp;                endGame.setMouseTransparent(false);</b>
+&nbsp;            }, 2000);
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the chat by adding a chat message.
+&nbsp;     */
+&nbsp;    public void updateChat() {
+<b class="nc">&nbsp;        gameOverlayController.chatController.addChatMessage();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Displays an error.
+&nbsp;     * @param message the error message to display.
+&nbsp;     */
+&nbsp;    public void displayError(String message) {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the controller to its original state.
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        endGame.setVisible(false);</b>
+<b class="nc">&nbsp;        endGame.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        gamePanelController.reset();</b>
+<b class="nc">&nbsp;        gameOverlayController.reset();</b>
+<b class="nc">&nbsp;        endGameController.reset();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Processes how a certain KeyEvent should be interpreted while this Controller is active.
+&nbsp;     * @param keyEvent the keyEvent to process.
+&nbsp;     */
+&nbsp;    public void processKeyEvent(KeyEvent keyEvent) {
+<b class="nc">&nbsp;        switch (keyEvent.getCode()) {</b>
+&nbsp;            case ESCAPE -&gt; {
+<b class="nc">&nbsp;                if (gameOverlayController.chatController.isChatVisible()) gameOverlayController.toggleChatVisible();</b>
+&nbsp;            }
+&nbsp;            case ENTER -&gt; {
+<b class="nc">&nbsp;                if (gameOverlayController.chatController.isChatVisible())</b>
+<b class="nc">&nbsp;                    gameOverlayController.chatController.sendMessage();</b>
+<b class="nc">&nbsp;                else if (viewManager.getCurrentStateDiff() == GameState.DRAW) gamePanelController.draw();</b>
+<b class="nc">&nbsp;                else if (viewManager.getCurrentStateDiff() == GameState.ORGANIZE) gamePanelController.organize();</b>
+&nbsp;            }
+&nbsp;            case C -&gt; {
+<b class="nc">&nbsp;                if (!gameOverlayController.chatController.isChatVisible()) gameOverlayController.toggleChatVisible();</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

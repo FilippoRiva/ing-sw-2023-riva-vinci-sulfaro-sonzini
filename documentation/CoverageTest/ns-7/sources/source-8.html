@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonGoalSixOfTwo</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.goals</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonGoalSixOfTwo (it.polimi.myshelfie.model.goals)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonGoalSixOfTwo</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.goals;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Common goal: Six groups each containing at least 2 tiles of the same type. The tiles of one group can be different from those of another group.
+&nbsp; */
+<b class="fc">&nbsp;public class CommonGoalSixOfTwo extends CommonGoal {</b>
+&nbsp;    /**
+&nbsp;     * Checks common goal.
+&nbsp;     *
+&nbsp;     * @param bookshelf is a generic n x m matrix of ItemTile
+&nbsp;     * @return true if exists 6 groups of 2 tiles with the same ItemTile value, false otherwise
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isVerified(ItemTile[][] bookshelf) {
+<b class="fc">&nbsp;        int height = bookshelf.length;</b>
+<b class="fc">&nbsp;        int width = bookshelf[0].length;</b>
+<b class="fc">&nbsp;        boolean[][] take = new boolean[height][width];</b>
+<b class="fc">&nbsp;        int counter = 0;</b>
+&nbsp;
+<b class="fc">&nbsp;        for (int i = 0; i &lt; height; i++) {</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; width; j++) {</b>
+<b class="fc">&nbsp;                if (!take[i][j] &amp;&amp; bookshelf[i][j].getType() != ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                    if (i != height - 1) { //down</b>
+<b class="fc">&nbsp;                        if (bookshelf[i][j].getType() == bookshelf[i + 1][j].getType()) {</b>
+<b class="fc">&nbsp;                            counter++;</b>
+<b class="fc">&nbsp;                            take[i][j] = true;</b>
+<b class="fc">&nbsp;                            take[i + 1][j] = true;</b>
+&nbsp;                        }
+&nbsp;                    }
+<b class="fc">&nbsp;                    if (j != width - 1) { //right</b>
+<b class="fc">&nbsp;                        if (!take[i][j] &amp;&amp; bookshelf[i][j].getType() == bookshelf[i][j + 1].getType()) {</b>
+<b class="fc">&nbsp;                            counter++;</b>
+<b class="fc">&nbsp;                            take[i][j + 1] = true;</b>
+&nbsp;                        }
+&nbsp;                    }
+<b class="fc">&nbsp;                    if (counter == 6) return true;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the id
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return 3;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the description
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getDescription() {
+<b class="fc">&nbsp;        return &quot;Six groups each containing at least 2 tiles of the same type.\n&quot; +</b>
+&nbsp;                &quot;The tiles of one group can be different from those of another group&quot;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

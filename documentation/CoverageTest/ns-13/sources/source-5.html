@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > HelpPage</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.textual.pages</a>
+</div>
+
+<h1>Coverage Summary for Class: HelpPage (it.polimi.myshelfie.view.textual.pages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HelpPage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.textual.pages;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.view.ViewType;
+&nbsp;import it.polimi.myshelfie.view.textual.ANSI;
+&nbsp;import it.polimi.myshelfie.view.textual.Terminal;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the help page for the textualUI.
+&nbsp; */
+&nbsp;public class HelpPage extends ScreenPage {
+&nbsp;
+<b class="nc">&nbsp;    private final String color = ANSI.PINK_FG;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialises a HelpPage.
+&nbsp;     * @param t the terminal in which we want to render the page.
+&nbsp;     * @param inputParameters the shared input parameters between the TextualUI.
+&nbsp;     */
+&nbsp;    public HelpPage(Terminal t, List&lt;String&gt; inputParameters) {
+<b class="nc">&nbsp;        super(t, inputParameters);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the help page inside the Screen portion of the Terminal.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render() {
+<b class="nc">&nbsp;        t.clearScreen();</b>
+<b class="nc">&nbsp;        int line = 1;</b>
+<b class="nc">&nbsp;        t.print(color + &quot;Modes&quot; + ANSI.RESET, line++, 1);</b>
+<b class="nc">&nbsp;        t.print(&quot;help  : lists all commands&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;chat  : goes to chat mode&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;lobby : goes to lobby mode&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;game  : goes to game mode&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.printDivider(line++);</b>
+<b class="nc">&nbsp;        t.print(color + &quot;Mode : Lobby &quot; + ANSI.RESET, line++, 1);</b>
+<b class="nc">&nbsp;        t.print(&quot;+    : increases room size up to 4&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;-    : decreases room size down to 2&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;s    : starts the game if possible&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;exit: leave lobby&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.printDivider(line++);</b>
+<b class="nc">&nbsp;        t.print(color + &quot;Mode : Game &quot; + ANSI.RESET, line++, 1);</b>
+<b class="nc">&nbsp;        t.print(&quot;n        : shows the next player&#39;s library&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;p        : shows the previous player&#39;s library&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;d &lt;args&gt; : selects the tiles you want to draw&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;           given x and y coordinates.&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;           Example : \&quot;c -1 3 0 3 1 3\&quot; will draw positions &quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;                      (-1,3) (0,3) (1,3)&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;o &lt;args&gt; : order the drawn tiles&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;           Example : \&quot;o 0 2 1\&quot; will swap the second&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;                     and the third drawn tile  &quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;i &lt;args&gt; : inserts the ordered tiles into the given column&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;           Example : \&quot;i 1\&quot; will insert the tiles into the &quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;                     first column&quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.printDivider(line++);</b>
+<b class="nc">&nbsp;        t.print(color + &quot;Mode : Chat Commands&quot; + ANSI.RESET, line++, 1);</b>
+<b class="nc">&nbsp;        t.print(&quot;&lt;message&gt; : to send a message to everyone &quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.print(&quot;/&lt;username&gt; &lt;message&gt; : to send a message to a player &quot;, line++, 3);</b>
+<b class="nc">&nbsp;        t.printDivider(line++);</b>
+<b class="nc">&nbsp;        t.print(color + &quot;Utils&quot; + ANSI.RESET, line++, 1);</b>
+<b class="nc">&nbsp;        t.print(&quot;r : refreshes the UI&quot;, line, 3);</b>
+<b class="nc">&nbsp;        if (viewManager.getViewType() != ViewType.LOBBY) t.printAction(&quot;game, chat, goals&quot;);</b>
+<b class="nc">&nbsp;        else t.printAction(&quot;lobby,chat&quot;);</b>
+<b class="nc">&nbsp;        printBorder();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

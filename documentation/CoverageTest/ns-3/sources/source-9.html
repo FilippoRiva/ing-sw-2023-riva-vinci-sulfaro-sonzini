@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ModelImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model</a>
+</div>
+
+<h1>Coverage Summary for Class: ModelImpl (it.polimi.myshelfie.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ModelImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.events.ModelEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.LobbyExistenceException;
+&nbsp;import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
+&nbsp;import it.polimi.myshelfie.model.interfaces.LobbyModel;
+&nbsp;import it.polimi.myshelfie.model.interfaces.Model;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observable;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.concurrent.Executors;
+&nbsp;import java.util.concurrent.ScheduledExecutorService;
+&nbsp;import java.util.concurrent.TimeUnit;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the available lobbies that can be joined.
+&nbsp; * It contains a list with all the lobbies created that can be modified by the {@link #addLobby(String)} and {@link #removeLobby(String)} methods.
+&nbsp; */
+&nbsp;public class ModelImpl extends Observable&lt;ModelEvent, ModelView&gt; implements Model {
+<b class="fc">&nbsp;    private final HashMap&lt;String, Game&gt; lobbiesModel = new HashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notifies periodically every client about new lobbies (used to notify config and player changes).
+&nbsp;     */
+<b class="fc">&nbsp;    public ModelImpl() {</b>
+<b class="fc">&nbsp;        new Thread(() -&gt; {</b>
+<b class="fc">&nbsp;            ScheduledExecutorService ex = Executors.newScheduledThreadPool(1);</b>
+<b class="fc">&nbsp;            ex.scheduleAtFixedRate(() -&gt; {</b>
+<b class="fc">&nbsp;                setChanged();</b>
+<b class="fc">&nbsp;                notifyObservers(new ModelView(this));</b>
+&nbsp;            }, 0, 10, TimeUnit.SECONDS);
+<b class="fc">&nbsp;        }).start();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a lobby to the list of lobbies.
+&nbsp;     *
+&nbsp;     * @param lobbyName the name of the lobby you want to add.
+&nbsp;     * @return the lobby model associated to this specific lobby.
+&nbsp;     * @throws LobbyExistenceException if the name of the lobby you want to add already exists.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized LobbyModel addLobby(String lobbyName) throws LobbyExistenceException {
+<b class="fc">&nbsp;        if (lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(true, lobbyName);</b>
+&nbsp;
+<b class="fc">&nbsp;        Game lobbyModel = new Game(lobbyName);</b>
+<b class="fc">&nbsp;        lobbiesModel.put(lobbyName, lobbyModel);</b>
+<b class="fc">&nbsp;        setChanged();</b>
+<b class="fc">&nbsp;        notifyObservers(ModelEvent.LOBBY_ADD, new ModelView(this));</b>
+<b class="fc">&nbsp;        return lobbyModel;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a lobby from the list of lobbies.
+&nbsp;     *
+&nbsp;     * @param lobbyName the name of the lobby you want to remove.
+&nbsp;     * @throws LobbyExistenceException if the name of the lobby you want to remove does not exist.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void removeLobby(String lobbyName) throws LobbyExistenceException {
+<b class="fc">&nbsp;        if (!lobbiesModel.containsKey(lobbyName)) throw new LobbyExistenceException(false, lobbyName);</b>
+<b class="fc">&nbsp;        lobbiesModel.remove(lobbyName);</b>
+<b class="fc">&nbsp;        setChanged();</b>
+<b class="fc">&nbsp;        notifyObservers(ModelEvent.LOBBY_REMOVE, new ModelView(this));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param obs is the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addModelObserver(Observer&lt;ModelEvent, ModelView&gt; obs) {
+<b class="fc">&nbsp;        addObserver(obs);</b>
+<b class="fc">&nbsp;        setChanged();</b>
+<b class="fc">&nbsp;        notifyObservers(new ModelView(this));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param obs the observer to remove.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void removeModelObserver(Observer&lt;ModelEvent, ModelView&gt; obs) {
+<b class="fc">&nbsp;        deleteObserver(obs);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized ModelView getModelView() {
+<b class="fc">&nbsp;        return new ModelView(this);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @return the list of lobby names.
+&nbsp;     */
+&nbsp;    public List&lt;String&gt; getLobbies() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(lobbiesModel.keySet().stream().toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return a new ClientExceptionsNotifier
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized ClientExceptionsNotifier getNewClientExceptionNotifier() {
+<b class="fc">&nbsp;        return new ClientExceptionsNotifierImpl();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of players currently inside a specific lobby
+&nbsp;     *
+&nbsp;     * @param lobby the lobby
+&nbsp;     * @return the number of players of the requested lobby
+&nbsp;     */
+&nbsp;    public int getLobbyCurrentSize(String lobby) {
+<b class="fc">&nbsp;        return lobbiesModel.get(lobby).getCurrentSize();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the maximum number of players specified in the last Game Config of a specific lobby
+&nbsp;     *
+&nbsp;     * @param lobby the lobby
+&nbsp;     * @return the maximum number of players of the requested lobby
+&nbsp;     */
+&nbsp;    public int getLobbyMaxSize(String lobby) {
+<b class="fc">&nbsp;        return lobbiesModel.get(lobby).getMaxSize();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

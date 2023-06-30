@@ -1,0 +1,183 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LobbyModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.interfaces</a>
+</div>
+
+<h1>Coverage Summary for Class: LobbyModel (it.polimi.myshelfie.model.interfaces)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">LobbyModel</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.interfaces;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.GameConfig;
+&nbsp;import it.polimi.myshelfie.model.events.LobbyEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.LobbyFullException;
+&nbsp;import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the lobby&#39;s interface.
+&nbsp; */
+&nbsp;public interface LobbyModel {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the game with the GameConfig that have been previously set.
+&nbsp;     * If no custom GameConfig is set, the default one is used.
+&nbsp;     * Notifies every view on the lobby.
+&nbsp;     */
+&nbsp;    void initialize() throws LobbyFullException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the game config to be used by the game.
+&nbsp;     *
+&nbsp;     * @param config are the configurations for the game.
+&nbsp;     */
+&nbsp;    void setGameConfig(GameConfig config) throws InvalidParameterException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a player to the lobby.
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the new player that has to be added to the game.
+&nbsp;     * @throws LobbyFullException        if the lobby is full.
+&nbsp;     * @throws InvalidParameterException if the username is not valid.
+&nbsp;     */
+&nbsp;    void addPlayer(String playerName) throws LobbyFullException, InvalidParameterException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a player from the lobby.
+&nbsp;     *
+&nbsp;     * @param playerName is the name of the player that has to be removed from the game.
+&nbsp;     */
+&nbsp;    void removePlayer(String playerName) throws InvalidParameterException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether the lobby is empty.
+&nbsp;     *
+&nbsp;     * @return true if the lobby is full, false otherwise.
+&nbsp;     */
+&nbsp;    boolean isLobbyEmpty();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the Chat Model of this lobby.
+&nbsp;     *
+&nbsp;     * @return the chat model.
+&nbsp;     */
+&nbsp;    ChatModel getChatModel();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the GameModel of this Lobby
+&nbsp;     * @return the game model.
+&nbsp;     */
+&nbsp;    GameModel getGameModel();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the lobby name
+&nbsp;     * @return the lobby name
+&nbsp;     */
+&nbsp;    String getLobbyName();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a lobby observer.
+&nbsp;     *
+&nbsp;     * @param obs the observer to add.
+&nbsp;     */
+&nbsp;    void addLobbyObserver(Observer&lt;LobbyEvent, LobbyModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a lobby observer.
+&nbsp;     *
+&nbsp;     * @param obs the observer to remove.
+&nbsp;     */
+&nbsp;    void removeLobbyObserver(Observer&lt;LobbyEvent, LobbyModelView&gt; obs);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the lobby model view.
+&nbsp;     * @return the lobby model view.
+&nbsp;     */
+&nbsp;    LobbyModelView getLobbyModelView();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the lobby name.
+&nbsp;     * @return the lobby name.
+&nbsp;     */
+&nbsp;    String getName();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if the player is the room owner (the one who created it).
+&nbsp;     *
+&nbsp;     * @param username the name of the player to check.
+&nbsp;     * @return true if the player is the room owner, false otherwise.
+&nbsp;     */
+&nbsp;    boolean isRoomOwner(String username);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether the game has started.
+&nbsp;     *
+&nbsp;     * @return true if the game has started, false otherwise.
+&nbsp;     */
+&nbsp;    boolean hasStarted();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes lobbies&#39; observers.
+&nbsp;     */
+&nbsp;    void removeLobbyObservers();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

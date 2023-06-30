@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ServerConnectionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.network</a>
+</div>
+
+<h1>Coverage Summary for Class: ServerConnectionHandler (it.polimi.myshelfie.network)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ServerConnectionHandler</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.network;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.ChatController;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.GameController;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.LobbyController;
+&nbsp;
+&nbsp;import java.rmi.Remote;
+&nbsp;import java.rmi.RemoteException;
+&nbsp;
+&nbsp;/**
+&nbsp; * It&#39;s the interface used by a client to communicate with the server.
+&nbsp; */
+&nbsp;public interface ServerConnectionHandler extends Remote {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Used to send a network message.
+&nbsp;     *
+&nbsp;     * @param networkMessage the message to send.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void send(NetworkMessage networkMessage) throws RemoteException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates the game controller.
+&nbsp;     *
+&nbsp;     * @param gameController the controller to set.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void setGameController(GameController gameController) throws RemoteException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates the chat controller.
+&nbsp;     *
+&nbsp;     * @param chatController the controller to set.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void setChatController(ChatController chatController) throws RemoteException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates the lobby controller.
+&nbsp;     *
+&nbsp;     * @param lobbyController the controller to set.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void setLobbyController(LobbyController lobbyController) throws RemoteException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * It blocks forever the calling thread until the client disconnects.
+&nbsp;     *
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void lifeline() throws RemoteException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Closes the connection.
+&nbsp;     *
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void close() throws RemoteException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the ping&#39;s timer.
+&nbsp;     *
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    void ping() throws RemoteException;
+&nbsp;    GameController getGameController() throws RemoteException;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

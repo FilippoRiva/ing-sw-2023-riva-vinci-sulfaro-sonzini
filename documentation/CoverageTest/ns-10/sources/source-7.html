@@ -1,0 +1,338 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TileSorterController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers.game</a>
+</div>
+
+<h1>Coverage Summary for Class: TileSorterController (it.polimi.myshelfie.view.graphical.controllers.game)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TileSorterController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/97)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers.game;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.Animations;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.components.TileImageView;
+&nbsp;import javafx.animation.Animation;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.beans.binding.Bindings;
+&nbsp;import javafx.beans.binding.NumberBinding;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.geometry.Point2D;
+&nbsp;import javafx.scene.control.Label;
+&nbsp;import javafx.scene.effect.Glow;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.layout.HBox;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.scene.layout.VBox;
+&nbsp;import javafx.util.Duration;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * The controller of the tile sorter component of the game view.
+&nbsp; */
+<b class="nc">&nbsp;public class TileSorterController {</b>
+&nbsp;    @FXML
+&nbsp;    protected StackPane mainStackPane;
+&nbsp;    @FXML
+&nbsp;    protected ImageView backgroundImage;
+&nbsp;    @FXML
+&nbsp;    protected VBox tilesVBox;
+&nbsp;    @FXML
+&nbsp;    protected HBox tilesHBox;
+&nbsp;    @FXML
+&nbsp;    protected StackPane topStack;
+&nbsp;    @FXML
+&nbsp;    protected StackPane midStack;
+&nbsp;    @FXML
+&nbsp;    protected StackPane bottomStack;
+&nbsp;    @FXML
+&nbsp;    protected TileImageView top;
+&nbsp;    @FXML
+&nbsp;    protected TileImageView middle;
+&nbsp;    @FXML
+&nbsp;    protected TileImageView bottom;
+&nbsp;    @FXML
+&nbsp;    protected Label topChoiceDot;
+&nbsp;    @FXML
+&nbsp;    protected Label midChoiceDot;
+&nbsp;    @FXML
+&nbsp;    protected Label bottomChoiceDot;
+&nbsp;    private TileImageView[] tiles;
+&nbsp;    private Label[] choiceDots;
+&nbsp;    private boolean active;
+&nbsp;    private List&lt;TileImageView&gt; orderedTiles;
+&nbsp;    private List&lt;Label&gt; activeDots;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and animations.
+&nbsp;     * It sets the state variables to their default values.
+&nbsp;     * @param tileSize is the tileSize to be bound to the tiles of this tileSorter.
+&nbsp;     */
+&nbsp;    public void initialize(NumberBinding tileSize) {
+<b class="nc">&nbsp;        this.orderedTiles = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        this.tiles = new TileImageView[]{bottom, middle, top};</b>
+<b class="nc">&nbsp;        this.choiceDots = new Label[]{bottomChoiceDot, midChoiceDot, topChoiceDot};</b>
+<b class="nc">&nbsp;        this.activeDots = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        tileSize = tileSize.multiply(1.5);</b>
+<b class="nc">&nbsp;        tilesVBox.spacingProperty().bind(tileSize.divide(2));</b>
+<b class="nc">&nbsp;        for (TileImageView tile : tiles) {</b>
+<b class="nc">&nbsp;            tile.setTile(new ItemTile(ItemTileType.CAT, 0), 0);</b>
+<b class="nc">&nbsp;            CustomBindings.bindSize(tile, tileSize, tileSize);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        for (Label l : choiceDots) {</b>
+<b class="nc">&nbsp;            l.translateYProperty().bind(Bindings.negate(tileSize.divide(4)));</b>
+<b class="nc">&nbsp;            l.setScaleX(0);</b>
+<b class="nc">&nbsp;            l.setScaleY(0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        CustomBindings.bindSize(backgroundImage,</b>
+<b class="nc">&nbsp;                Bindings.add(tileSize, 40),</b>
+<b class="nc">&nbsp;                Bindings.multiply(tileSize, 3).add(tilesVBox.spacingProperty().multiply(2)).add(40));</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(tilesVBox,</b>
+<b class="nc">&nbsp;                backgroundImage.fitWidthProperty(),</b>
+<b class="nc">&nbsp;                backgroundImage.fitHeightProperty());</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(tilesHBox, tilesVBox);</b>
+<b class="nc">&nbsp;        active = false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the absolute position of a certain tile position.
+&nbsp;     * @param tileIndex the index starting from 1 to 3.
+&nbsp;     * @return a Point2D of the minX and minY absolute position.
+&nbsp;     */
+&nbsp;    public Point2D getPosition(int tileIndex) {
+<b class="nc">&nbsp;        return switch (tileIndex) {</b>
+<b class="nc">&nbsp;            case 1 -&gt; getPosition(bottom);</b>
+<b class="nc">&nbsp;            case 2 -&gt; getPosition(middle);</b>
+<b class="nc">&nbsp;            case 3 -&gt; getPosition(top);</b>
+<b class="nc">&nbsp;            default -&gt; throw new IllegalStateException(&quot;Unexpected value: &quot; + tileIndex);</b>
+&nbsp;        };
+&nbsp;    }
+&nbsp;
+&nbsp;    private Point2D getPosition(TileImageView tile) {
+<b class="nc">&nbsp;        return CustomBindings.getAbsolutePosition(tile);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Loads the taken tiles of the TileSorter component
+&nbsp;     */
+&nbsp;    public void loadTiles() {
+<b class="nc">&nbsp;        List&lt;ItemTile&gt; drawnTiles = ViewManager.getInstance().getGameModelView().getPlayer(ViewManager.getUsername()).getTakenTiles();</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; drawnTiles.size(); i++) {</b>
+<b class="nc">&nbsp;            TileImageView tile = tiles[i];</b>
+<b class="nc">&nbsp;            tile.setTile(drawnTiles.get(i), 1);</b>
+<b class="nc">&nbsp;            int finalI = i;</b>
+<b class="nc">&nbsp;            tile.setOnMousePressed((mouseEvent) -&gt; {</b>
+<b class="nc">&nbsp;                if (!active) return;</b>
+<b class="nc">&nbsp;                if (orderedTiles.contains(tile)) {</b>
+<b class="nc">&nbsp;                    orderedTiles.remove(tile);</b>
+<b class="nc">&nbsp;                    tile.setEffect(null);</b>
+<b class="nc">&nbsp;                    Animation hideAnimation = Animations.reverse(Animations.popFadeIn(choiceDots[finalI]));</b>
+<b class="nc">&nbsp;                    activeDots.remove(choiceDots[finalI]);</b>
+<b class="nc">&nbsp;                    hideAnimation.setOnFinished((evt) -&gt; Platform.runLater(() -&gt; choiceDots[finalI].setText(&quot;-1&quot;)));</b>
+<b class="nc">&nbsp;                    hideAnimation.play();</b>
+<b class="nc">&nbsp;                    fixChoiceDots(Integer.parseInt(choiceDots[finalI].getText()));</b>
+<b class="nc">&nbsp;                } else {</b>
+<b class="nc">&nbsp;                    orderedTiles.add(tile);</b>
+<b class="nc">&nbsp;                    tile.setEffect(new Glow());</b>
+<b class="nc">&nbsp;                    Platform.runLater(() -&gt; choiceDots[finalI].setText(String.valueOf(orderedTiles.size())));</b>
+<b class="nc">&nbsp;                    Animations.popFadeIn(choiceDots[finalI]).play();</b>
+<b class="nc">&nbsp;                    activeDots.add(choiceDots[finalI]);</b>
+&nbsp;                }
+&nbsp;            });
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private synchronized void fixChoiceDots(int removedPosition) {
+<b class="nc">&nbsp;        if (removedPosition == activeDots.size() + 1) return; //we removed the top element</b>
+<b class="nc">&nbsp;        for (Label choiceDot : activeDots) {</b>
+<b class="nc">&nbsp;            int currentIndex = Integer.parseInt(choiceDot.getText());</b>
+<b class="nc">&nbsp;            if (currentIndex &gt; removedPosition)</b>
+<b class="nc">&nbsp;                Platform.runLater(() -&gt; choiceDot.setText(String.valueOf(currentIndex - 1)));</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the chosen ordered tiles. If the player confirm without selecting any tile it returns an empty ItemTile List
+&nbsp;     *
+&nbsp;     * @return the list of the ItemTile chosen by the player
+&nbsp;     */
+&nbsp;    public synchronized List&lt;ItemTile&gt; getOrderedTiles() {
+<b class="nc">&nbsp;        Map&lt;Integer, ItemTile&gt; orderedTiles = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; tiles.length; i++) {</b>
+<b class="nc">&nbsp;            int index = Integer.parseInt(choiceDots[i].getText());</b>
+<b class="nc">&nbsp;            if (index != -1) {</b>
+<b class="nc">&nbsp;                orderedTiles.put(index, tiles[i].getTile());</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;ItemTile&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; activeDots.size(); i++) {</b>
+<b class="nc">&nbsp;            if (orderedTiles.containsKey(i + 1)) {</b>
+<b class="nc">&nbsp;                result.add(orderedTiles.get(i + 1));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Corrects the ordering of the tiles given the new order in the ViewManager
+&nbsp;     */
+&nbsp;    public void fixOrdering() {
+<b class="nc">&nbsp;        List&lt;Animation&gt; orderingAnimations = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        List&lt;ItemTile&gt; orderedTiles = ViewManager.getInstance().getGameModelView().getCurrentPlayer().getTakenTiles();</b>
+<b class="nc">&nbsp;        ArrayList&lt;TileImageView&gt; tilesCopy = new ArrayList&lt;&gt;(Arrays.stream(tiles).toList());</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; orderedTiles.size(); i++) {</b>
+<b class="nc">&nbsp;            ItemTile tile = orderedTiles.get(i);</b>
+<b class="nc">&nbsp;            for (TileImageView tileImage : tilesCopy) {</b>
+<b class="nc">&nbsp;                if (tileImage.getTile().getType() == tile.getType() &amp;&amp; tileImage.getTile().getId() == tile.getId()) {</b>
+<b class="nc">&nbsp;                    tileImage.setEffect(null);</b>
+<b class="nc">&nbsp;                    orderingAnimations.add(Animations.fixTranslateTo(tileImage, getPosition(i + 1)));</b>
+<b class="nc">&nbsp;                    tilesCopy.remove(tileImage);</b>
+<b class="nc">&nbsp;                    break;</b>
+&nbsp;                }
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        for (Animation a : orderingAnimations) a.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Hides active dots and resets their numbers afterward
+&nbsp;     */
+&nbsp;    public synchronized void resetDots() {
+<b class="nc">&nbsp;        for (Label l : activeDots) {</b>
+<b class="nc">&nbsp;            Animation hideAnimation = Animations.popFadeOut(l);</b>
+<b class="nc">&nbsp;            hideAnimation.setOnFinished((evt) -&gt; Platform.runLater(() -&gt; l.setText(&quot;-1&quot;)));</b>
+<b class="nc">&nbsp;            hideAnimation.play();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Completely reset the component emptying the orderedTiles list, resetting the active Dots,
+&nbsp;     * rotating out the TileImageView and erasing translations afterward
+&nbsp;     */
+&nbsp;    public synchronized void resetAll() {
+<b class="nc">&nbsp;        orderedTiles.clear();</b>
+<b class="nc">&nbsp;        activeDots.clear();</b>
+<b class="nc">&nbsp;        for (TileImageView t : tiles) {</b>
+<b class="nc">&nbsp;            Animation a = Animations.tileRotateOut(t, Duration.millis(200));</b>
+<b class="nc">&nbsp;            a.setOnFinished((evt) -&gt; {</b>
+<b class="nc">&nbsp;                Animation an = Animations.eraseTranslation(t);</b>
+<b class="nc">&nbsp;                an.setOnFinished((ev) -&gt; Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;                    t.setTile(new ItemTile(ItemTileType.EMPTY, 0), 0);</b>
+<b class="nc">&nbsp;                    Animations.tileRotateIn(t, Duration.millis(200)).play();</b>
+<b class="nc">&nbsp;                    t.setMouseTransparent(false);</b>
+&nbsp;                }));
+<b class="nc">&nbsp;                an.play();</b>
+&nbsp;            });
+<b class="nc">&nbsp;            a.play();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        setActive(false);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Enable the ability to choose tile ordering
+&nbsp;     *
+&nbsp;     * @param active the active boolean
+&nbsp;     */
+&nbsp;    public void setActive(boolean active) {
+<b class="nc">&nbsp;        this.active = active;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

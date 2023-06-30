@@ -1,0 +1,202 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > View</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view</a>
+</div>
+
+<h1>Coverage Summary for Class: View (it.polimi.myshelfie.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">View</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.events.ExceptionEvent;
+&nbsp;import it.polimi.myshelfie.model.modelviews.*;
+&nbsp;import it.polimi.myshelfie.network.NetworkMessage;
+&nbsp;import it.polimi.myshelfie.utils.Observable;
+&nbsp;import it.polimi.myshelfie.view.events.ViewEvent;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the generic View.
+&nbsp; */
+<b class="fc">&nbsp;public abstract class View extends Observable&lt;ViewEvent, NetworkMessage&gt; {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates a model view.
+&nbsp;     *
+&nbsp;     * @param modelView the model view to set.
+&nbsp;     */
+&nbsp;    public abstract void setModelView(ModelView modelView);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates an Exception view.
+&nbsp;     *
+&nbsp;     * @param exceptionView the exception view to set.
+&nbsp;     * @param evt           the exception event that has occurred.
+&nbsp;     */
+&nbsp;    public abstract void setExceptionView(ClientExceptionsNotifierModelView exceptionView, ExceptionEvent evt);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates a Chat view.
+&nbsp;     *
+&nbsp;     * @param chatView the chat view to set.
+&nbsp;     */
+&nbsp;    public abstract void setChatView(PlayerChatModelView chatView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates a Lobby model view.
+&nbsp;     *
+&nbsp;     * @param lobbyModelView the lobby model view to set.
+&nbsp;     */
+&nbsp;    public abstract void setLobbyModelView(LobbyModelView lobbyModelView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Associates a Game model view.
+&nbsp;     *
+&nbsp;     * @param fullGameModelView the game model view to set.
+&nbsp;     */
+&nbsp;    public abstract void setGameModelView(FullGameModelView fullGameModelView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the DrawModelView when a draw move occurs.
+&nbsp;     *
+&nbsp;     * @param drawModelView the model view to update.
+&nbsp;     */
+&nbsp;    public abstract void updateDrawView(DrawModelView drawModelView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the OrganizeModelVIew when an organize move occurs.
+&nbsp;     *
+&nbsp;     * @param organizeModelView the model view to update.
+&nbsp;     */
+&nbsp;    public abstract void updateOrganizeView(OrganizeModelView organizeModelView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the InsertModelView when an insert move occurs.
+&nbsp;     *
+&nbsp;     * @param insertModelView the model view to update.
+&nbsp;     */
+&nbsp;    public abstract void updateInsertView(InsertModelView insertModelView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the EndTurnModelView.
+&nbsp;     *
+&nbsp;     * @param endTurnModelView the model view to update.
+&nbsp;     */
+&nbsp;    public abstract void updateTurnView(EndTurnModelView endTurnModelView);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets a specific view based on the view type.
+&nbsp;     *
+&nbsp;     * @param viewType the view type.
+&nbsp;     */
+&nbsp;    public abstract void setView(ViewType viewType);
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Stops the UI.
+&nbsp;     */
+&nbsp;    public abstract void stopUI();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

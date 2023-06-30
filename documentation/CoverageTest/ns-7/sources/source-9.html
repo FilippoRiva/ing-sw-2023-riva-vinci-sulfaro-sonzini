@@ -1,0 +1,178 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonGoalStairs</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model.goals</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonGoalStairs (it.polimi.myshelfie.model.goals)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonGoalStairs</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model.goals;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.ItemTile;
+&nbsp;import it.polimi.myshelfie.model.ItemTileType;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Common goal: Five columns of increasing or decreasing height.
+&nbsp; */
+<b class="fc">&nbsp;public class CommonGoalStairs extends CommonGoal {</b>
+&nbsp;    int height;
+&nbsp;    int width;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks common goal.
+&nbsp;     *
+&nbsp;     * @param bookshelf is a generic n x m matrix of ItemTile
+&nbsp;     * @return true if I have 5 columns of height growing of decreasing, false otherwise
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean isVerified(ItemTile[][] bookshelf) {
+<b class="fc">&nbsp;        height = bookshelf.length;</b>
+<b class="fc">&nbsp;        width = bookshelf[0].length;</b>
+&nbsp;
+<b class="fc">&nbsp;        for (int i = height - 1; i &gt;= width - 2; i--) {</b>
+<b class="fc">&nbsp;            if (bookshelf[i][0].getType() == ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                if (checkRight(bookshelf, i)) return true;</b>
+&nbsp;                break;
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        for (int i = height - 1; i &gt;= width - 2; i--) {</b>
+<b class="fc">&nbsp;            if (bookshelf[i][width - 1].getType() == ItemTileType.EMPTY) {</b>
+<b class="fc">&nbsp;                if (checkLeft(bookshelf, i, width - 1)) return true;</b>
+&nbsp;                break;
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean checkRight(ItemTile[][] bookshelf, int i) {
+<b class="fc">&nbsp;        for (int k = 1; k &lt; width; k++) {</b>
+<b class="fc">&nbsp;            if (bookshelf[i - k + 1][k].getType() == ItemTileType.EMPTY) return false;</b>
+<b class="fc">&nbsp;            if ((i - k) &gt;= 0 &amp;&amp; bookshelf[i - k][k].getType() != ItemTileType.EMPTY) return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean checkLeft(ItemTile[][] bookshelf, int i, int j) {
+<b class="fc">&nbsp;        for (int k = 1; k &lt; width; k++) {</b>
+<b class="fc">&nbsp;            if (bookshelf[i - k + 1][j - k].getType() == ItemTileType.EMPTY) return false;</b>
+<b class="fc">&nbsp;            if ((i - k) &gt;= 0 &amp;&amp; bookshelf[i - k][j - k].getType() != ItemTileType.EMPTY) return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the id
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return 11;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @return the description
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getDescription() {
+<b class="fc">&nbsp;        return &quot;Five columns of increasing or decreasing height&quot;;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

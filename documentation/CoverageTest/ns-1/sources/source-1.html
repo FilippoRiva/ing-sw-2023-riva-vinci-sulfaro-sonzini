@@ -1,0 +1,322 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ClientApp</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientApp (it.polimi.myshelfie)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientApp</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/111)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.network.ClientImpl;
+&nbsp;import it.polimi.myshelfie.network.Server;
+&nbsp;import it.polimi.myshelfie.network.ServerConnectionHandlerStub;
+&nbsp;import it.polimi.myshelfie.utils.NetworkInterfaceProvider;
+&nbsp;import it.polimi.myshelfie.view.UI;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.GraphicalUI;
+&nbsp;import it.polimi.myshelfie.view.textual.ANSI;
+&nbsp;import it.polimi.myshelfie.view.textual.TextualUI;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InvalidClassException;
+&nbsp;import java.io.StreamCorruptedException;
+&nbsp;import java.net.InetAddress;
+&nbsp;import java.net.SocketException;
+&nbsp;import java.rmi.NotBoundException;
+&nbsp;import java.rmi.RemoteException;
+&nbsp;import java.rmi.registry.LocateRegistry;
+&nbsp;import java.rmi.registry.Registry;
+&nbsp;import java.util.Scanner;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Used to run the Client.
+&nbsp; */
+<b class="nc">&nbsp;public class ClientApp {</b>
+&nbsp;    static final int registryPort = 1099;
+<b class="nc">&nbsp;    static String serverIP = &quot;localhost&quot;;</b>
+<b class="nc">&nbsp;    static String clientIP = &quot;&quot;;</b>
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        for (int i = 0; i &lt; args.length; i++) {</b>
+<b class="nc">&nbsp;            if (args[i].equals(&quot;--client&quot;)) {</b>
+<b class="nc">&nbsp;                i++;</b>
+<b class="nc">&nbsp;                if (args.length == i) {</b>
+<b class="nc">&nbsp;                    System.out.println(&quot;please insert client IP&quot;);</b>
+&nbsp;                    return;
+&nbsp;                }
+<b class="nc">&nbsp;                if (!args[i].equals(&quot;&quot;)) {</b>
+&nbsp;                    try {
+<b class="nc">&nbsp;                        if (!InetAddress.getByName(args[i]).isReachable(1000)) {</b>
+<b class="nc">&nbsp;                            System.out.println(&quot;   !! The specified client IP is not reachable. Please enter your IP.&quot;);</b>
+&nbsp;                            return;
+&nbsp;                        } else {
+<b class="nc">&nbsp;                            System.out.println(&quot;Client IP set : &quot; + args[i]);</b>
+<b class="nc">&nbsp;                            clientIP = args[i];</b>
+&nbsp;                        }
+<b class="nc">&nbsp;                    } catch (IOException e) {</b>
+<b class="nc">&nbsp;                        System.out.println(&quot;   !! Unknown client host name. Please enter your IP.&quot;);</b>
+&nbsp;                        return;
+<b class="nc">&nbsp;                    }</b>
+&nbsp;                }
+<b class="nc">&nbsp;            } else if (args[i].equals(&quot;--server&quot;)) {</b>
+<b class="nc">&nbsp;                i++;</b>
+<b class="nc">&nbsp;                if (args.length == i) {</b>
+<b class="nc">&nbsp;                    System.out.println(&quot;please insert server IP&quot;);</b>
+&nbsp;                    return;
+&nbsp;                }
+<b class="nc">&nbsp;                if (!args[i].equals(&quot;&quot;)) {</b>
+&nbsp;                    try {
+<b class="nc">&nbsp;                        if (!InetAddress.getByName(args[i]).isReachable(1000)) {</b>
+<b class="nc">&nbsp;                            System.out.println(&quot;   !! The specified server IP is not reachable.&quot;);</b>
+&nbsp;                        } else {
+<b class="nc">&nbsp;                            System.out.println(&quot;Server IP set : &quot; + args[i]);</b>
+<b class="nc">&nbsp;                            serverIP = args[i];</b>
+&nbsp;                        }
+<b class="nc">&nbsp;                    } catch (IOException e) {</b>
+<b class="nc">&nbsp;                        System.out.println(&quot;   !! The specified server host name is unknown.&quot;);</b>
+<b class="nc">&nbsp;                    }</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        Runtime.getRuntime().addShutdownHook(new Thread(() -&gt; System.out.println(ANSI.CLEAR_ALL)));</b>
+<b class="nc">&nbsp;        initialUserChoice();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initial user choices: connection (socket or RMI), view (CLI or Graphical).
+&nbsp;     */
+&nbsp;    public static void initialUserChoice() {
+<b class="nc">&nbsp;        Scanner scanner = new Scanner(System.in);</b>
+<b class="nc">&nbsp;        int networkChoice = -1;</b>
+<b class="nc">&nbsp;        int viewChoice = -1;</b>
+&nbsp;
+<b class="nc">&nbsp;        while (networkChoice == -1) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;--------------------------------------------------------&quot;);</b>
+<b class="nc">&nbsp;            System.out.print(&quot;&gt; Choose between socket(1) and RMI(2) : &quot;);</b>
+<b class="nc">&nbsp;            networkChoice = getChoice(scanner);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        while (viewChoice == -1) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;--------------------------------------------------------&quot;);</b>
+<b class="nc">&nbsp;            System.out.print(&quot;&gt; Choose between CLI(1) and Graphical UI(2) : &quot;);</b>
+<b class="nc">&nbsp;            viewChoice = getChoice(scanner);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;
+<b class="nc">&nbsp;        boolean connected = false;</b>
+<b class="nc">&nbsp;        if (!serverIP.equals(&quot;localhost&quot;)) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                if (networkChoice == 1) startSocketConnection(viewManager);</b>
+<b class="nc">&nbsp;                else startRMIConnection(viewManager);</b>
+<b class="nc">&nbsp;                connected = true;</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;   !! Unable to connect using cli parameters &quot; + serverIP);</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        while (!connected) {</b>
+&nbsp;            String ip;
+<b class="nc">&nbsp;            System.out.println(&quot;--------------------------------------------------------&quot;);</b>
+<b class="nc">&nbsp;            System.out.print(&quot;&gt; Input server IP or press enter to connect to localhost : &quot;);</b>
+<b class="nc">&nbsp;            ip = scanner.nextLine();</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                if (!InetAddress.getByName(ip).isReachable(1000)) {</b>
+<b class="nc">&nbsp;                    System.out.println(&quot;   !! Not a reachable ip hostname&quot;);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    if (!ip.equals(&quot;&quot;)) serverIP = ip;</b>
+<b class="nc">&nbsp;                    if (networkChoice == 1) startSocketConnection(viewManager);</b>
+<b class="nc">&nbsp;                    else startRMIConnection(viewManager);</b>
+<b class="nc">&nbsp;                    connected = true;</b>
+&nbsp;                }
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;   !! Unable to connect to &quot; + serverIP);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        UI view;
+<b class="nc">&nbsp;        if (viewChoice == 1) view = new TextualUI();</b>
+<b class="nc">&nbsp;        else view = new GraphicalUI();</b>
+<b class="nc">&nbsp;        viewManager.addUI(view);</b>
+<b class="nc">&nbsp;        view.startUI();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the user choice.
+&nbsp;     * @param scanner the scanner.
+&nbsp;     * @return the int associated to the choice.
+&nbsp;     */
+&nbsp;    private static int getChoice(Scanner scanner) {
+&nbsp;        int networkChoice;
+&nbsp;        try {
+<b class="nc">&nbsp;            networkChoice = Integer.parseInt(scanner.nextLine());</b>
+<b class="nc">&nbsp;            if (!(networkChoice == 1 || networkChoice == 2)) {</b>
+<b class="nc">&nbsp;                throw new NumberFormatException();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (NumberFormatException ignored) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;   !! Not a valid choice&quot;);</b>
+<b class="nc">&nbsp;            return -1;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return networkChoice;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts RMI connection.
+&nbsp;     * @param viewManager the view manager.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    private static void startRMIConnection(ViewManager viewManager) throws RemoteException {
+<b class="nc">&nbsp;        if (clientIP.equals(&quot;&quot;)) { //automatic client ip retrieval</b>
+<b class="nc">&nbsp;            clientIP = NetworkInterfaceProvider.getInterfaceHostName();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        System.out.println(&quot;RMI started over : &quot; + clientIP);</b>
+<b class="nc">&nbsp;        System.setProperty(&quot;java.rmi.server.hostname&quot;, clientIP); //the property is still called server</b>
+&nbsp;        Registry registry;
+<b class="nc">&nbsp;        registry = LocateRegistry.getRegistry(serverIP, registryPort);</b>
+&nbsp;        Server server;
+&nbsp;        try {
+<b class="nc">&nbsp;            server = (Server) registry.lookup(&quot;server&quot;);</b>
+<b class="nc">&nbsp;        } catch (NotBoundException e) {</b>
+<b class="nc">&nbsp;            throw new RemoteException(&quot;&quot;, e);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        server.connect(new ClientImpl(viewManager));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts socket connection.
+&nbsp;     * @param viewManager the view manager.
+&nbsp;     * @throws RemoteException if a communication-related exceptions has occurred.
+&nbsp;     */
+&nbsp;    private static void startSocketConnection(ViewManager viewManager) throws RemoteException {
+<b class="nc">&nbsp;        ServerConnectionHandlerStub serverStub = new ServerConnectionHandlerStub(serverIP, 54321);</b>
+<b class="nc">&nbsp;        ClientImpl client = new ClientImpl(viewManager);</b>
+<b class="nc">&nbsp;        client.handshake(serverStub);</b>
+<b class="nc">&nbsp;        new Thread(() -&gt; {</b>
+<b class="nc">&nbsp;            boolean running = true;</b>
+<b class="nc">&nbsp;            while (running) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    serverStub.receive(client);</b>
+<b class="nc">&nbsp;                } catch (RemoteException e) {</b>
+&nbsp;                    try {
+<b class="nc">&nbsp;                        serverStub.close();</b>
+<b class="nc">&nbsp;                    } catch (RemoteException ignored) {</b>
+<b class="nc">&nbsp;                        System.err.println(&quot;Unable to close the Socket&quot;);</b>
+<b class="nc">&nbsp;                    }</b>
+<b class="nc">&nbsp;                    break;</b>
+<b class="nc">&nbsp;                } catch (StreamCorruptedException e) {</b>
+<b class="nc">&nbsp;                    System.err.println(&quot;The stream has been reset by the server&quot;);</b>
+<b class="nc">&nbsp;                } catch (InvalidClassException e) {</b>
+<b class="nc">&nbsp;                    System.out.println(&quot;Receiving Unrecognized Classes&quot;);</b>
+<b class="nc">&nbsp;                } catch (SocketException e) {</b>
+<b class="nc">&nbsp;                    System.err.println(&quot;Lost server connection. Disconnecting....&quot;);</b>
+<b class="nc">&nbsp;                    running = false;</b>
+<b class="nc">&nbsp;                } catch (IOException e) {</b>
+<b class="nc">&nbsp;                    throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+<b class="nc">&nbsp;            viewManager.stopUI();</b>
+<b class="nc">&nbsp;        }).start();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

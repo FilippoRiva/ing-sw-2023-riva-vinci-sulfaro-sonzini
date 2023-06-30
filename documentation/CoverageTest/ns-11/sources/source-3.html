@@ -1,0 +1,316 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > JoinController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers.pregame</a>
+</div>
+
+<h1>Coverage Summary for Class: JoinController (it.polimi.myshelfie.view.graphical.controllers.pregame)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JoinController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/39)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">JoinController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">JoinController$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers.pregame;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.modelviews.ModelView;
+&nbsp;import it.polimi.myshelfie.view.InternalViewState;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.Animations;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.Effects;
+&nbsp;import it.polimi.myshelfie.view.graphical.GraphicalUI;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.concurrent.Task;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.geometry.Pos;
+&nbsp;import javafx.scene.Node;
+&nbsp;import javafx.scene.control.Button;
+&nbsp;import javafx.scene.control.Label;
+&nbsp;import javafx.scene.control.ScrollPane;
+&nbsp;import javafx.scene.control.TextField;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.input.KeyEvent;
+&nbsp;import javafx.scene.layout.AnchorPane;
+&nbsp;import javafx.scene.layout.Background;
+&nbsp;import javafx.scene.layout.VBox;
+&nbsp;import javafx.scene.paint.Color;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.concurrent.ExecutionException;
+&nbsp;
+&nbsp;/**
+&nbsp; * The controller of the Join view.
+&nbsp; */
+<b class="nc">&nbsp;public class JoinController {</b>
+<b class="nc">&nbsp;    final ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;    @FXML
+&nbsp;    protected TextField playerNameField;
+&nbsp;    @FXML
+&nbsp;    protected VBox lobbiesVBox;
+&nbsp;    @FXML
+&nbsp;    protected Button joinButton;
+&nbsp;    @FXML
+&nbsp;    protected ImageView listBackgroundImage;
+&nbsp;    @FXML
+&nbsp;    protected ImageView clearBackground;
+&nbsp;    @FXML
+&nbsp;    protected ScrollPane lobbiesScrollPane;
+&nbsp;    @FXML
+&nbsp;    protected Label joinErrorLabel;
+<b class="nc">&nbsp;    private String selected = null;</b>
+&nbsp;    private PreGameController preGameController;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and animations.
+&nbsp;     * It sets the state variables to their default values.
+&nbsp;     * @param banner the top banner of the pregame view.
+&nbsp;     * @param preGameController the preGameController.
+&nbsp;     */
+&nbsp;    public void initialize(ImageView banner, PreGameController preGameController) {
+<b class="nc">&nbsp;        CustomBindings.bindSize(listBackgroundImage, GraphicalUI.stage.widthProperty().divide(1.5),</b>
+<b class="nc">&nbsp;                GraphicalUI.stage.heightProperty().divide(6).multiply(2.5));</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(lobbiesVBox, listBackgroundImage.fitWidthProperty(), listBackgroundImage.fitHeightProperty());</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(lobbiesScrollPane, listBackgroundImage.fitWidthProperty(), listBackgroundImage.fitHeightProperty());</b>
+&nbsp;
+<b class="nc">&nbsp;        Animations.applyHoverScaling(joinButton);</b>
+<b class="nc">&nbsp;        Effects.applyShadow(joinButton);</b>
+&nbsp;
+<b class="nc">&nbsp;        CustomBindings.bindLowerPreGamePane(clearBackground, banner);</b>
+<b class="nc">&nbsp;        this.preGameController = preGameController;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Makes a join request if the player has selected a lobby and has inserted a username.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    protected void onJoinMouseClicked() {
+<b class="nc">&nbsp;        String playerName = playerNameField.getText();</b>
+<b class="nc">&nbsp;        if (selected == null) return;</b>
+<b class="nc">&nbsp;        if (playerName.isEmpty()) {</b>
+<b class="nc">&nbsp;            Animations.emptyFieldError(playerNameField).play();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            viewManager.joinRequest(selected, playerName);</b>
+<b class="nc">&nbsp;            ViewManager.setUsername(playerName);</b>
+<b class="nc">&nbsp;            preGameController.startLoading();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the list of lobbies in the lobbiesVBox.
+&nbsp;     */
+&nbsp;    public void updateListLobbies() {
+&nbsp;        //generating nodes
+<b class="nc">&nbsp;        Task&lt;List&lt;Node&gt;&gt; task = new Task&lt;&gt;() {</b>
+&nbsp;            @Override
+&nbsp;            protected List&lt;Node&gt; call() {
+<b class="nc">&nbsp;                List&lt;Node&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;                ModelView modelView = viewManager.getModelView();</b>
+<b class="nc">&nbsp;                List&lt;String&gt; lobbies = modelView.getLobbies();</b>
+<b class="nc">&nbsp;                for (String lobby : lobbies) {</b>
+<b class="nc">&nbsp;                    AnchorPane anchorPane = new AnchorPane();</b>
+<b class="nc">&nbsp;                    if (lobby.equals(selected)) anchorPane.setBackground(Background.fill(Color.rgb(218, 106, 45)));</b>
+&nbsp;
+<b class="nc">&nbsp;                    anchorPane.setOnMousePressed(event -&gt; {</b>
+<b class="nc">&nbsp;                        selected = lobby;</b>
+<b class="nc">&nbsp;                        Platform.runLater(() -&gt; joinButton.setDisable(false));</b>
+<b class="nc">&nbsp;                        updateListLobbies();</b>
+&nbsp;                    });
+&nbsp;
+<b class="nc">&nbsp;                    Label label = generateStandardLabel(lobby);</b>
+<b class="nc">&nbsp;                    label.setAlignment(Pos.TOP_LEFT);</b>
+<b class="nc">&nbsp;                    anchorPane.getChildren().add(label);</b>
+<b class="nc">&nbsp;                    AnchorPane.setLeftAnchor(label, 20D);</b>
+&nbsp;
+<b class="nc">&nbsp;                    label = generateStandardLabel(modelView.getCurrentSize(lobby) + &quot;/&quot; + modelView.getMaxSize(lobby));</b>
+<b class="nc">&nbsp;                    label.setAlignment(Pos.TOP_RIGHT);</b>
+<b class="nc">&nbsp;                    anchorPane.getChildren().add(label);</b>
+<b class="nc">&nbsp;                    AnchorPane.setRightAnchor(label, 20D);</b>
+<b class="nc">&nbsp;                    result.add(anchorPane);</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;                return result;</b>
+&nbsp;            }
+&nbsp;        };
+&nbsp;
+&nbsp;        //updating view
+<b class="nc">&nbsp;        task.setOnSucceeded((event) -&gt; {</b>
+&nbsp;            List&lt;Node&gt; anchorPanes;
+&nbsp;            try {
+<b class="nc">&nbsp;                anchorPanes = task.get();</b>
+<b class="nc">&nbsp;            } catch (InterruptedException | ExecutionException e) {</b>
+<b class="nc">&nbsp;                throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;                lobbiesVBox.getChildren().clear();</b>
+<b class="nc">&nbsp;                lobbiesVBox.getChildren().addAll(anchorPanes);</b>
+&nbsp;            });
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        new Thread(task).start();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Label generateStandardLabel(String text) {
+<b class="nc">&nbsp;        Label label = new Label(text);</b>
+<b class="nc">&nbsp;        label.setMaxWidth(837);</b>
+<b class="nc">&nbsp;        label.setTextFill(Color.WHITE);</b>
+<b class="nc">&nbsp;        return label;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the controller to its original state.
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        this.selected = null;</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            joinButton.setDisable(true);</b>
+<b class="nc">&nbsp;            playerNameField.clear();</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Processes how a certain KeyEvent should be interpreted while this Controller is active
+&nbsp;     * @param keyEvent the keyEvent to process.
+&nbsp;     */
+&nbsp;    public void processKeyEvent(KeyEvent keyEvent) {
+<b class="nc">&nbsp;        switch (keyEvent.getCode()) {</b>
+<b class="nc">&nbsp;            case ESCAPE -&gt; GraphicalUI.mainViewController.changeView(InternalViewState.INIT);</b>
+<b class="nc">&nbsp;            case ENTER -&gt; preGameController.joinController.onJoinMouseClicked();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

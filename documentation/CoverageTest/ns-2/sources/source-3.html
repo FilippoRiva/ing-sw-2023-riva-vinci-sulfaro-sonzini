@@ -1,0 +1,370 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LobbyControllerImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: LobbyControllerImpl (it.polimi.myshelfie.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LobbyControllerImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,1%
+  </span>
+  <span class="absValue">
+    (88/101)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.controller;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.GameConfig;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.ChatController;
+&nbsp;import it.polimi.myshelfie.controller.interfaces.LobbyController;
+&nbsp;import it.polimi.myshelfie.model.chatting.Message;
+&nbsp;import it.polimi.myshelfie.model.events.ChatEvent;
+&nbsp;import it.polimi.myshelfie.model.events.LobbyEvent;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;import it.polimi.myshelfie.model.exceptions.LobbyFullException;
+&nbsp;import it.polimi.myshelfie.model.interfaces.ChatModel;
+&nbsp;import it.polimi.myshelfie.model.interfaces.ClientExceptionsNotifier;
+&nbsp;import it.polimi.myshelfie.model.interfaces.GameModel;
+&nbsp;import it.polimi.myshelfie.model.interfaces.LobbyModel;
+&nbsp;import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+&nbsp;import it.polimi.myshelfie.network.Client;
+&nbsp;import it.polimi.myshelfie.network.NetworkMessage;
+&nbsp;import it.polimi.myshelfie.network.ServerConnectionHandler;
+&nbsp;import it.polimi.myshelfie.utils.Observer;
+&nbsp;import it.polimi.myshelfie.utils.ServerLogger;
+&nbsp;import it.polimi.myshelfie.view.ViewType;
+&nbsp;
+&nbsp;import java.rmi.RemoteException;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.logging.Level;
+&nbsp;
+&nbsp;/**
+&nbsp; * It allows to exit a lobby, add players to it, start the game if the player is the room owner and add observers.
+&nbsp; */
+&nbsp;public class LobbyControllerImpl implements LobbyController, ChatController {
+&nbsp;
+&nbsp;    private final String lobbyName;
+&nbsp;    private final LobbyModel lobbyModel;
+&nbsp;    private final ChatModel chatModel;
+&nbsp;    private final ControllerImpl controllerImpl;
+&nbsp;    private final Map&lt;String, Client&gt; clientsMap;
+&nbsp;    private final Map&lt;String, ServerConnectionHandler&gt; connectionHandlersMap;
+&nbsp;    private final Map&lt;String, ClientExceptionsNotifier&gt; exceptionsNotifiersMap;
+&nbsp;    private final Map&lt;String, Observer&lt;LobbyEvent, LobbyModelView&gt;&gt; lobbyObserverMap;
+&nbsp;    private final Map&lt;String, Observer&lt;ChatEvent, PlayerChatModelView&gt;&gt; chatObserverMap;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for the LobbyControllerImpl class
+&nbsp;     *
+&nbsp;     * @param lobbyName      the name of the lobby.
+&nbsp;     * @param lobbyModel     the model associated to the lobby.
+&nbsp;     * @param chatModel      the model associated to the game chat.
+&nbsp;     * @param controllerImpl the controller of the game.
+&nbsp;     */
+<b class="fc">&nbsp;    public LobbyControllerImpl(String lobbyName, LobbyModel lobbyModel, ChatModel chatModel, ControllerImpl controllerImpl) {</b>
+<b class="fc">&nbsp;        this.lobbyName = lobbyName;</b>
+<b class="fc">&nbsp;        this.lobbyModel = lobbyModel;</b>
+<b class="fc">&nbsp;        this.chatModel = chatModel;</b>
+<b class="fc">&nbsp;        this.controllerImpl = controllerImpl;</b>
+<b class="fc">&nbsp;        this.clientsMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.connectionHandlersMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.exceptionsNotifiersMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.lobbyObserverMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.chatObserverMap = new HashMap&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the name of the player that leaves the lobby.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void exitLobby(String playerName) {
+<b class="fc">&nbsp;        if (lobbyModel.hasStarted()) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;lobby closed&quot;));</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Exit lobby fail. Lobby has already started. Lobby name : &quot; + lobbyName + &quot; | Player name : &quot; + playerName);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;        //removes from model
+&nbsp;        try {
+<b class="fc">&nbsp;            lobbyModel.removePlayer(playerName);</b>
+<b class="nc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Exit lobby fail. Requested user is not in this lobby. Lobby name : &quot; + lobbyName + &quot; | Requested player name : &quot; + playerName);</b>
+<b class="nc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(e);</b>
+&nbsp;            return;
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        //removes from controller
+<b class="fc">&nbsp;        lobbyModel.removeLobbyObserver(lobbyObserverMap.get(playerName));</b>
+<b class="fc">&nbsp;        chatModel.removeChatObserver(playerName, chatObserverMap.get(playerName));</b>
+<b class="fc">&nbsp;        controllerImpl.clientHasLeft(clientsMap.get(playerName));</b>
+&nbsp;
+&nbsp;        //going to INIT view
+<b class="fc">&nbsp;        Client client = clientsMap.get(playerName);</b>
+<b class="fc">&nbsp;        new Thread(() -&gt; {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                client.send(new NetworkMessage(ViewType.INIT));</b>
+<b class="nc">&nbsp;            } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                ServerLogger.log(Level.FINE, &quot;Sending a INIT Network Message to a disconnected client while exiting lobby&quot;);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }).start();</b>
+<b class="fc">&nbsp;        clientsMap.remove(playerName);</b>
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINE, &quot;Player left lobby. Lobby name : &quot; + lobbyName + &quot; | Player leaving : &quot; + playerName);</b>
+&nbsp;
+&nbsp;        //deleting if empty
+<b class="fc">&nbsp;        if (lobbyModel.isLobbyEmpty()) {</b>
+<b class="fc">&nbsp;            controllerImpl.deleteLobby(lobbyModel.getLobbyName());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the player&#39;s name
+&nbsp;     * @param config     the game&#39;s settings.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void setConfig(String playerName, GameConfig config) {
+<b class="fc">&nbsp;        if (!lobbyModel.isRoomOwner(playerName)) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;You&#39;re not the room owner&quot;));</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Set Config fail. Not Room Owner. Lobby name : &quot; + lobbyName + &quot; | Player setting config : &quot; + playerName);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        if (lobbyModel.hasStarted()) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;Lobby closed&quot;));</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Set Config fail. Lobby Closed. Lobby name : &quot; + lobbyName + &quot; | Player setting config : &quot; + playerName);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;        try {
+<b class="fc">&nbsp;            lobbyModel.setGameConfig(config);</b>
+<b class="fc">&nbsp;        } catch (InvalidParameterException e) {</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Set Config fail. Config are not valid. Lobby name : &quot; + lobbyName + &quot; | Player setting config : &quot; + playerName);</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(e);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINEST, &quot;Player set config. Lobby name : &quot; + lobbyName + &quot; | Config : \n&quot; +</b>
+<b class="fc">&nbsp;                &quot;    Player Num : &quot; + config.getNumPlayers() + &quot;\n&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the name of the player that can start the game.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void startGame(String playerName) {
+<b class="fc">&nbsp;        if (!lobbyModel.isRoomOwner(playerName)) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;You&#39;re not the room owner&quot;));</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Start game fail. Not Room Owner. Lobby name : &quot; + lobbyName + &quot; | Player starting game : &quot; + playerName);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        if (lobbyModel.hasStarted()) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;lobby closed&quot;));</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Start game fail. Lobby Closed. Lobby name : &quot; + lobbyName + &quot; | Player starting game : &quot; + playerName);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;        //initializes the model
+&nbsp;        try {
+<b class="fc">&nbsp;            lobbyModel.initialize();</b>
+<b class="fc">&nbsp;        } catch (LobbyFullException e) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(e);</b>
+<b class="fc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Start game fail. Lobby is not full. Lobby name : &quot; + lobbyName + &quot; | Player starting game : &quot; + playerName);</b>
+&nbsp;            return;
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        //removes lobby controllers
+<b class="fc">&nbsp;        for (ServerConnectionHandler sch : connectionHandlersMap.values()) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                sch.setLobbyController(null);</b>
+<b class="fc">&nbsp;                sch.setChatController(null);</b>
+<b class="nc">&nbsp;            } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                ServerLogger.log(Level.FINE, &quot;Setting Controllers to a Disconnected Client during game start&quot;);</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        //removing observers
+<b class="fc">&nbsp;        lobbyModel.removeLobbyObservers();</b>
+<b class="fc">&nbsp;        chatModel.removeChatObservers();</b>
+<b class="fc">&nbsp;        controllerImpl.deleteLobby(lobbyName);</b>
+&nbsp;
+&nbsp;        //creating game controller and starting the game
+<b class="fc">&nbsp;        GameModel gameModel = lobbyModel.getGameModel();</b>
+<b class="fc">&nbsp;        GameControllerImpl gameController = new GameControllerImpl(controllerImpl, gameModel, gameModel.getChatModel(), lobbyName);</b>
+<b class="fc">&nbsp;        gameController.init(new HashMap&lt;&gt;(clientsMap), new HashMap&lt;&gt;(connectionHandlersMap), new HashMap&lt;&gt;(exceptionsNotifiersMap));</b>
+&nbsp;
+&nbsp;        //setting each client&#39;s views to GAME
+<b class="fc">&nbsp;        for (Client client : clientsMap.values()) {</b>
+<b class="fc">&nbsp;            new Thread(() -&gt; {</b>
+&nbsp;                try {
+<b class="fc">&nbsp;                    client.send(new NetworkMessage(ViewType.GAME));</b>
+<b class="nc">&nbsp;                } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;                    ServerLogger.log(Level.INFO, &quot;Sending a GAME Network message to a Disconnected Client&quot;);</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            }).start();</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINE, &quot;Game start. Lobby name : &quot; + lobbyName + &quot; | Players : &quot; + clientsMap.keySet());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName           the name of the player.
+&nbsp;     * @param networkLobbyObserver the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addLobbyObserver(String playerName, Observer&lt;LobbyEvent, LobbyModelView&gt; networkLobbyObserver) {
+<b class="fc">&nbsp;        if (lobbyModel.hasStarted()) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;lobby closed&quot;));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        lobbyModel.addLobbyObserver(networkLobbyObserver);</b>
+<b class="fc">&nbsp;        lobbyObserverMap.put(playerName, networkLobbyObserver);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName the name of the player who&#39;s sending the message
+&nbsp;     * @param message    the message written by a player and sent to one or more players.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addMessage(String playerName, Message message) {
+<b class="fc">&nbsp;        if (lobbyModel.hasStarted()) {</b>
+<b class="nc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;lobby closed&quot;));</b>
+<b class="nc">&nbsp;            ServerLogger.log(Level.FINEST, &quot;Add message fail. Lobby Closed. Lobby name : &quot; + lobbyName + &quot; | Player chatting : &quot; + playerName);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        if (message.getMessage().isEmpty()) return;</b>
+<b class="fc">&nbsp;        chatModel.addMessage(message);</b>
+<b class="fc">&nbsp;        ServerLogger.log(Level.FINEST, &quot;Player sent chat message. Lobby name : &quot; + lobbyName + &quot; | Player chatting : &quot; + playerName +</b>
+<b class="fc">&nbsp;                &quot; | Message : &quot; + message.getSender() + &quot;-&gt;&quot; + message.getReceiver() + &quot; :: &quot; + message.getMessage());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     *
+&nbsp;     * @param playerName          the name of the player.
+&nbsp;     * @param networkChatObserver the observer to add.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public synchronized void addChatObserver(String playerName, Observer&lt;ChatEvent, PlayerChatModelView&gt; networkChatObserver) {
+<b class="fc">&nbsp;        if (lobbyModel.hasStarted()) {</b>
+<b class="fc">&nbsp;            exceptionsNotifiersMap.get(playerName).notifyException(new Exception(&quot;lobby closed&quot;));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        chatModel.addChatObserver(playerName, networkChatObserver);</b>
+<b class="fc">&nbsp;        chatObserverMap.put(playerName, networkChatObserver);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a player to the game.
+&nbsp;     *
+&nbsp;     * @param client             represents the player.
+&nbsp;     * @param connectionHandler  the ServerConnectionHandler used for the player&#39;s connection.
+&nbsp;     * @param exceptionsNotifier the client exception notifier of this client.
+&nbsp;     * @param playerName         the name of the player that must be added to the lobby.
+&nbsp;     * @throws InvalidParameterException if the playerName is not available.
+&nbsp;     * @throws LobbyFullException        if the lobby is full.
+&nbsp;     */
+&nbsp;    protected void addPlayer(Client client, ServerConnectionHandler connectionHandler, ClientExceptionsNotifier exceptionsNotifier, String playerName) throws InvalidParameterException, LobbyFullException {
+<b class="fc">&nbsp;        lobbyModel.addPlayer(playerName);</b>
+<b class="fc">&nbsp;        clientsMap.put(playerName, client);</b>
+<b class="fc">&nbsp;        connectionHandlersMap.put(playerName, connectionHandler);</b>
+<b class="fc">&nbsp;        exceptionsNotifiersMap.put(playerName, exceptionsNotifier);</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            connectionHandler.setChatController(this);</b>
+<b class="nc">&nbsp;        } catch (RemoteException e) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(e);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

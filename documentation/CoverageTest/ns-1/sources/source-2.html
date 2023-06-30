@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie</a>
+</div>
+
+<h1>Coverage Summary for Class: GameConfig (it.polimi.myshelfie)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (27/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.exceptions.InvalidParameterException;
+&nbsp;
+&nbsp;import java.awt.*;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents all the general settings of the game:
+&nbsp; *                                                  &lt;ul&gt;
+&nbsp; *                                                  &lt;li&gt;number of players&lt;/li&gt;
+&nbsp; *                                                  &lt;li&gt;bookshelf dimension&lt;/li&gt;
+&nbsp; *                                                  &lt;li&gt;number of common goals&lt;/li&gt;
+&nbsp; *                                                  &lt;li&gt;number of tiles per type&lt;/li&gt;
+&nbsp; *                                                  &lt;li&gt;living room size&lt;/li&gt;
+&nbsp; *                                                  &lt;li&gt;number of personal goals&lt;/li&gt;
+&nbsp; *                                                  &lt;li&gt;personal goal ratio&lt;/li&gt;
+&nbsp; *                                                  &lt;/ul&gt;
+&nbsp; */
+&nbsp;public class GameConfig implements Serializable {
+&nbsp;    private final int numPlayers;
+&nbsp;    private final Dimension bookshelfDimension;
+&nbsp;    private final int numCommonGoal;
+&nbsp;    private final int numTilesPerType;
+&nbsp;    private final int livingRoomSize;
+&nbsp;    private final int numPersonalGoals;
+&nbsp;    private final double personalGoalRatio;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Default constructor.
+&nbsp;     *
+&nbsp;     * @param numPlayers the number of players in the game.
+&nbsp;     * @throws InvalidParameterException if the number of players is not valid (smaller than 2).
+&nbsp;     */
+<b class="fc">&nbsp;    public GameConfig(int numPlayers) throws InvalidParameterException {</b>
+<b class="fc">&nbsp;        if (numPlayers &lt; 2) throw new InvalidParameterException(&quot;too few players&quot;);</b>
+<b class="fc">&nbsp;        this.numPlayers = numPlayers;</b>
+<b class="fc">&nbsp;        this.bookshelfDimension = new Dimension(5, 6);</b>
+<b class="fc">&nbsp;        this.numCommonGoal = 2;</b>
+<b class="fc">&nbsp;        this.numTilesPerType = 22;</b>
+<b class="fc">&nbsp;        this.livingRoomSize = 9;</b>
+<b class="fc">&nbsp;        this.numPersonalGoals = 1;</b>
+<b class="fc">&nbsp;        this.personalGoalRatio = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Costum constructor.
+&nbsp;     *
+&nbsp;     * @param numPlayers         the number of players in the game.
+&nbsp;     * @param bookshelfDimension the dimension of the bookshelf.
+&nbsp;     * @param numCommonGoal      the number of common goals per player.
+&nbsp;     * @param numTilesPerType    the number of tiles per type.
+&nbsp;     * @param livingRoomSize     the dimension of the living room
+&nbsp;     * @param numPersonalGoals   the number of personal goals per player.
+&nbsp;     * @param personalGoalRatio  the filling percentage of the personal goal.
+&nbsp;     * @throws InvalidParameterException if the number of players or personal gaols is not valid, or the size of the bookshelf and the living room is not valid.
+&nbsp;     */
+&nbsp;    public GameConfig(int numPlayers, Dimension bookshelfDimension, int numCommonGoal, int numTilesPerType, int livingRoomSize, int numPersonalGoals, double personalGoalRatio)
+<b class="fc">&nbsp;            throws InvalidParameterException {</b>
+&nbsp;        //exceptions for all attributes
+<b class="fc">&nbsp;        this.numPlayers = numPlayers;</b>
+<b class="fc">&nbsp;        this.bookshelfDimension = bookshelfDimension;</b>
+<b class="fc">&nbsp;        this.numCommonGoal = numCommonGoal;</b>
+<b class="fc">&nbsp;        this.numTilesPerType = numTilesPerType;</b>
+<b class="fc">&nbsp;        this.livingRoomSize = livingRoomSize;</b>
+<b class="fc">&nbsp;        this.numPersonalGoals = numPersonalGoals;</b>
+<b class="fc">&nbsp;        this.personalGoalRatio = personalGoalRatio;</b>
+<b class="fc">&nbsp;        if (numPersonalGoals * numPlayers &gt; 12)</b>
+<b class="nc">&nbsp;            throw new InvalidParameterException(&quot;Invalid number of players or number of personal goals&quot;);</b>
+<b class="fc">&nbsp;        if (bookshelfDimension.width &gt; bookshelfDimension.height)</b>
+<b class="nc">&nbsp;            throw new InvalidParameterException(&quot;Invalid bookshelf size&quot;);</b>
+<b class="fc">&nbsp;        if (livingRoomSize % 2 == 0 || livingRoomSize &lt; 9)</b>
+<b class="nc">&nbsp;            throw new InvalidParameterException(&quot;Invalid livingRoom Size&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of players in the game.
+&nbsp;     * @return the number of players in the game.
+&nbsp;     */
+&nbsp;    public int getNumPlayers() {
+<b class="fc">&nbsp;        return numPlayers;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the bookshelf dimension.
+&nbsp;     * @return the bookshelf dimension.
+&nbsp;     */
+&nbsp;    public Dimension getBookshelfDimension() {
+<b class="fc">&nbsp;        return bookshelfDimension;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of common goals.
+&nbsp;     * @return the number of common goals.
+&nbsp;     */
+&nbsp;    public int getNumCommonGoal() {
+<b class="fc">&nbsp;        return numCommonGoal;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of personal goals
+&nbsp;     * @return the number of personal goals.
+&nbsp;     */
+&nbsp;    public int getNumPersonalGoals() {
+<b class="fc">&nbsp;        return numPersonalGoals;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of tiles per type
+&nbsp;     * @return the number of tiles per type.
+&nbsp;     */
+&nbsp;    public int getNumTilesPerType() {
+<b class="fc">&nbsp;        return numTilesPerType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the living room size.
+&nbsp;     * @return the living room size.
+&nbsp;     */
+&nbsp;    public int getLivingRoomSize() {
+<b class="fc">&nbsp;        return livingRoomSize;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the filling percentage of the personal goals.
+&nbsp;     * @return the filling percentage of the personal goals.
+&nbsp;     */
+&nbsp;    public double getPersonalGoalRatio() {
+<b class="fc">&nbsp;        return personalGoalRatio;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,627 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Animations</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical</a>
+</div>
+
+<h1>Coverage Summary for Class: Animations (it.polimi.myshelfie.view.graphical)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Animations</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/176)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Animations$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/178)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical;
+&nbsp;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.view.graphical.components.TileImageView;
+&nbsp;import javafx.animation.*;
+&nbsp;import javafx.geometry.Point2D;
+&nbsp;import javafx.scene.Node;
+&nbsp;import javafx.scene.control.TextField;
+&nbsp;import javafx.scene.layout.Region;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.scene.transform.Rotate;
+&nbsp;import javafx.util.Duration;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Timer;
+&nbsp;import java.util.TimerTask;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the animations.
+&nbsp; */
+<b class="nc">&nbsp;public class Animations {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Applies two animations. When the node is being hovered the node&#39;s scale property goes to 1.05.
+&nbsp;     * When the node was hovered and is no longer being hovered the node&#39;s scale property returns to 1.
+&nbsp;     *
+&nbsp;     * @param node the node to be scaled
+&nbsp;     */
+&nbsp;    public static void applyHoverScaling(Node node) {
+<b class="nc">&nbsp;        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(100));</b>
+<b class="nc">&nbsp;        scaleTransition.setFromX(1);</b>
+<b class="nc">&nbsp;        scaleTransition.setFromY(1);</b>
+<b class="nc">&nbsp;        scaleTransition.setToX(1.05);</b>
+<b class="nc">&nbsp;        scaleTransition.setToY(1.05);</b>
+<b class="nc">&nbsp;        scaleTransition.setNode(node);</b>
+<b class="nc">&nbsp;        ScaleTransition reverseScaleTransition = new ScaleTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        reverseScaleTransition.setFromX(1.05);</b>
+<b class="nc">&nbsp;        reverseScaleTransition.setFromY(1.05);</b>
+<b class="nc">&nbsp;        reverseScaleTransition.setToX(1);</b>
+<b class="nc">&nbsp;        reverseScaleTransition.setToY(1);</b>
+<b class="nc">&nbsp;        reverseScaleTransition.setNode(node);</b>
+<b class="nc">&nbsp;        node.setOnMouseEntered((mouseEvent -&gt; scaleTransition.play()));</b>
+<b class="nc">&nbsp;        node.setOnMouseExited((mouseEvent -&gt; reverseScaleTransition.play()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Utility function that runs a certain task after a certain time of milliseconds
+&nbsp;     *
+&nbsp;     * @param runnable the task
+&nbsp;     * @param time     the time in milliseconds
+&nbsp;     */
+&nbsp;    public static void timer(Runnable runnable, long time) {
+<b class="nc">&nbsp;        Timer timer = new Timer();</b>
+<b class="nc">&nbsp;        timer.schedule(new TimerTask() {</b>
+&nbsp;            @Override
+&nbsp;            public void run() {
+<b class="nc">&nbsp;                runnable.run();</b>
+&nbsp;            }
+&nbsp;        }, time);
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that animates a StackPane from the bottom of the view to the intended position of the stackPane
+&nbsp;     * in 200 milliseconds.
+&nbsp;     *
+&nbsp;     * @param pane the StackPane;
+&nbsp;     * @return the animation;
+&nbsp;     */
+&nbsp;    public static TranslateTransition getSlideFromBottom(StackPane pane) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        tt.setNode(pane);</b>
+<b class="nc">&nbsp;        tt.setFromY(pane.getHeight());</b>
+<b class="nc">&nbsp;        tt.setToY(0);</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that animates a StackPane from the intended position of the stackPane to the bottom of the view
+&nbsp;     * in 200 milliseconds.
+&nbsp;     *
+&nbsp;     * @param pane the StackPane;
+&nbsp;     * @return the animation;
+&nbsp;     */
+&nbsp;    public static TranslateTransition getSlideToBottom(StackPane pane) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        tt.setNode(pane);</b>
+<b class="nc">&nbsp;        tt.setFromY(0);</b>
+<b class="nc">&nbsp;        tt.setToY(pane.getHeight());</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that animates a Region from the top of the view to the intended position of the Region
+&nbsp;     * in 200 milliseconds. It forces the visibility of the node if the forceVisible parameter is true.
+&nbsp;     *
+&nbsp;     * @param region       the region to be slid
+&nbsp;     * @param forceVisible the force visibility flag
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static TranslateTransition slideRegionFromTop(Region region, boolean forceVisible) {
+<b class="nc">&nbsp;        region.setTranslateY(-region.getLayoutY() - region.getHeight());</b>
+<b class="nc">&nbsp;        if (forceVisible) {</b>
+<b class="nc">&nbsp;            region.setVisible(true);</b>
+<b class="nc">&nbsp;            region.setMouseTransparent(false);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return Animations.getSlideFromTop(region);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that animates a Region from the top of the view to the intended position of the Region
+&nbsp;     * in 200 milliseconds.
+&nbsp;     *
+&nbsp;     * @param region the region;
+&nbsp;     * @return the animation;
+&nbsp;     */
+&nbsp;    private static TranslateTransition getSlideFromTop(Region region) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        tt.setFromY(-region.getLayoutY() - region.getHeight());</b>
+<b class="nc">&nbsp;        tt.setToY(0);</b>
+<b class="nc">&nbsp;        tt.setNode(region);</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that animates a Region from it&#39;s intended position to the top of the view
+&nbsp;     * in 200 milliseconds. It Automatically hides the node when the animation finishes
+&nbsp;     *
+&nbsp;     * @param region the region to be slid.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static TranslateTransition slideRegionToTop(Region region) {
+<b class="nc">&nbsp;        TranslateTransition tt = Animations.getSlideToTop(region);</b>
+<b class="nc">&nbsp;        tt.play();</b>
+<b class="nc">&nbsp;        tt.setOnFinished((finish) -&gt; {</b>
+<b class="nc">&nbsp;            region.setVisible(false);</b>
+<b class="nc">&nbsp;            region.setMouseTransparent(true);</b>
+&nbsp;        });
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that animates a Region from it&#39;s intended position to the top of the view
+&nbsp;     * in 200 milliseconds.
+&nbsp;     *
+&nbsp;     * @param region the region;
+&nbsp;     * @return the animation;
+&nbsp;     */
+&nbsp;    private static TranslateTransition getSlideToTop(Region region) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        tt.setFromY(0);</b>
+<b class="nc">&nbsp;        tt.setToY(-region.getLayoutY() - region.getHeight());</b>
+<b class="nc">&nbsp;        tt.setNode(region);</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that shakes a node and scales it. To be used for visual error notification.
+&nbsp;     *
+&nbsp;     * @param node the node
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static Animation nodeError(Node node, double rotation) {
+<b class="nc">&nbsp;        RotateTransition rt = new RotateTransition(Duration.millis(40));</b>
+<b class="nc">&nbsp;        RotateTransition rt2 = new RotateTransition(Duration.millis(60));</b>
+<b class="nc">&nbsp;        RotateTransition rt3 = new RotateTransition(Duration.millis(40));</b>
+<b class="nc">&nbsp;        SequentialTransition st = new SequentialTransition(rt, rt2, rt3);</b>
+<b class="nc">&nbsp;        ScaleTransition scaleT = new ScaleTransition(Duration.millis(70));</b>
+<b class="nc">&nbsp;        ParallelTransition pt = new ParallelTransition(st, scaleT);</b>
+&nbsp;
+<b class="nc">&nbsp;        scaleT.setFromX(1);</b>
+<b class="nc">&nbsp;        scaleT.setToX(1.1);</b>
+<b class="nc">&nbsp;        scaleT.setFromY(1);</b>
+<b class="nc">&nbsp;        scaleT.setToY(1.1);</b>
+<b class="nc">&nbsp;        scaleT.setCycleCount(2);</b>
+<b class="nc">&nbsp;        scaleT.setAutoReverse(true);</b>
+<b class="nc">&nbsp;        scaleT.setNode(node);</b>
+&nbsp;
+<b class="nc">&nbsp;        rt.setByAngle(rotation);</b>
+<b class="nc">&nbsp;        rt.setNode(node);</b>
+&nbsp;
+<b class="nc">&nbsp;        rt2.setByAngle(-2 * rotation);</b>
+<b class="nc">&nbsp;        rt2.setNode(node);</b>
+&nbsp;
+<b class="nc">&nbsp;        rt3.setByAngle(rotation);</b>
+<b class="nc">&nbsp;        rt3.setToAngle(0);</b>
+<b class="nc">&nbsp;        rt3.setNode(node);</b>
+&nbsp;
+<b class="nc">&nbsp;        return pt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that scales a text field to 0.9 and auto-reverses itself. To be used for visual error notification.
+&nbsp;     *
+&nbsp;     * @param field the textField to the scaled
+&nbsp;     * @return the field
+&nbsp;     */
+&nbsp;    public static Animation emptyFieldError(TextField field) {
+<b class="nc">&nbsp;        ScaleTransition st = new ScaleTransition(Duration.millis(150));</b>
+<b class="nc">&nbsp;        st.setNode(field);</b>
+<b class="nc">&nbsp;        st.setFromX(1);</b>
+<b class="nc">&nbsp;        st.setToX(0.9);</b>
+<b class="nc">&nbsp;        st.setFromY(1);</b>
+<b class="nc">&nbsp;        st.setToY(0.9);</b>
+<b class="nc">&nbsp;        st.setCycleCount(2);</b>
+<b class="nc">&nbsp;        st.setAutoReverse(true);</b>
+<b class="nc">&nbsp;        return st;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that fades in a node if the node opacity is set to lower than 1.
+&nbsp;     *
+&nbsp;     * @param node the region to be faded in
+&nbsp;     * @return the fading animation
+&nbsp;     */
+&nbsp;    public static Animation fadeIn(Node node) {
+<b class="nc">&nbsp;        FadeTransition ft = new FadeTransition(Duration.millis(100), node);</b>
+<b class="nc">&nbsp;        ft.setByValue(1);</b>
+<b class="nc">&nbsp;        return ft;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that fades out a node if the node opacity is set to lower than 1.
+&nbsp;     *
+&nbsp;     * @param node the region to be faded in
+&nbsp;     * @return the fading animation
+&nbsp;     */
+&nbsp;    public static Animation fadeOut(Node node) {
+<b class="nc">&nbsp;        FadeTransition ft = new FadeTransition(Duration.millis(100), node);</b>
+<b class="nc">&nbsp;        ft.setByValue(-1);</b>
+<b class="nc">&nbsp;        return ft;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that scales in 100 millis a node from 0% scaling to 100% scaling.
+&nbsp;     *
+&nbsp;     * @param node the node to be popped
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static Animation pop(Node node) {
+<b class="nc">&nbsp;        ScaleTransition pop = new ScaleTransition(Duration.millis(100), node);</b>
+<b class="nc">&nbsp;        pop.setFromX(0);</b>
+<b class="nc">&nbsp;        pop.setFromY(0);</b>
+<b class="nc">&nbsp;        pop.setByX(1);</b>
+<b class="nc">&nbsp;        pop.setByY(1);</b>
+<b class="nc">&nbsp;        return pop;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that scales in 100 millis a node from 100% scaling to 100% scaling.
+&nbsp;     * @param node the node to be popped.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation reversePop(Node node) {
+<b class="nc">&nbsp;        ScaleTransition pop = new ScaleTransition(Duration.millis(100), node);</b>
+<b class="nc">&nbsp;        pop.setFromX(1);</b>
+<b class="nc">&nbsp;        pop.setFromY(1);</b>
+<b class="nc">&nbsp;        pop.setToX(0);</b>
+<b class="nc">&nbsp;        pop.setToY(0);</b>
+<b class="nc">&nbsp;        return pop;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the parallel combination of the pop and fadeIn animations
+&nbsp;     *
+&nbsp;     * @param node the node to be animated
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static Animation popFadeIn(Node node) {
+<b class="nc">&nbsp;        Animation fade = fadeIn(node);</b>
+<b class="nc">&nbsp;        Animation pop = pop(node);</b>
+<b class="nc">&nbsp;        return new ParallelTransition(fade, pop);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the parallel combination of the reversePop and fadeOut animations
+&nbsp;     *
+&nbsp;     * @param node the node to be animated.
+&nbsp;     * @return the animations.
+&nbsp;     */
+&nbsp;    public static Animation popFadeOut(Node node) {
+<b class="nc">&nbsp;        Animation fade = Animations.fadeOut(node);</b>
+<b class="nc">&nbsp;        Animation revPop = reversePop(node);</b>
+<b class="nc">&nbsp;        return new ParallelTransition(fade, revPop);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Reverses any kind of animation.
+&nbsp;     * It modifies the existing animation.
+&nbsp;     *
+&nbsp;     * @param animation the animation to be reversed.
+&nbsp;     * @return the reverse animation
+&nbsp;     */
+&nbsp;    public static Animation reverse(Animation animation) {
+<b class="nc">&nbsp;        animation.setRate(-1);</b>
+<b class="nc">&nbsp;        return animation;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Translates a region to the left of the view
+&nbsp;     *
+&nbsp;     * @param pane the pane to be slid
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static Animation translateToLeft(Region pane) {
+<b class="nc">&nbsp;        TranslateTransition animation = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        animation.setNode(pane);</b>
+<b class="nc">&nbsp;        animation.setByX(-(pane.getWidth() + pane.getLayoutX()));</b>
+<b class="nc">&nbsp;        return animation;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Translates a region back to its original position from the left of the view
+&nbsp;     *
+&nbsp;     * @param pane the pane to be slid
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static Animation translateFromLeft(Region pane) {
+<b class="nc">&nbsp;        TranslateTransition animation = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        animation.setNode(pane);</b>
+<b class="nc">&nbsp;        animation.setFromX(-(pane.getWidth() + pane.getLayoutX()));</b>
+<b class="nc">&nbsp;        animation.setToX(0);</b>
+<b class="nc">&nbsp;        return animation;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Rotates the nodes of a certain amount of degrees in parallel
+&nbsp;     *
+&nbsp;     * @param degrees the degrees
+&nbsp;     * @param nodes   the varargs nodes
+&nbsp;     * @return the animation
+&nbsp;     */
+&nbsp;    public static Animation rotateY(double degrees, Duration duration, Node... nodes) {
+<b class="nc">&nbsp;        List&lt;RotateTransition&gt; rotations = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (Node node : nodes) {</b>
+<b class="nc">&nbsp;            RotateTransition rt = new RotateTransition(duration);</b>
+<b class="nc">&nbsp;            rt.setAxis(Rotate.Y_AXIS);</b>
+<b class="nc">&nbsp;            rt.setNode(node);</b>
+<b class="nc">&nbsp;            rt.setByAngle(degrees);</b>
+<b class="nc">&nbsp;            rotations.add(rt);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new ParallelTransition(rotations.toArray(new RotateTransition[0]));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Rotates a node of a certain amount of degrees.
+&nbsp;     *
+&nbsp;     * @param node the node to rotate.
+&nbsp;     * @param angle the angle of rotation.
+&nbsp;     * @param duration the duration in millis of the animation.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation rotateZ(Node node, double angle, Duration duration) {
+<b class="nc">&nbsp;        RotateTransition rt = new RotateTransition(duration);</b>
+<b class="nc">&nbsp;        rt.setNode(node);</b>
+<b class="nc">&nbsp;        rt.setByAngle(angle);</b>
+<b class="nc">&nbsp;        return rt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Utility method to get an X-Y paired scaling animation.
+&nbsp;     *
+&nbsp;     * @param node   the node to be scaled
+&nbsp;     * @param fromXY the fromX and fromY parameters
+&nbsp;     * @param toXY   the toX and toY parameters
+&nbsp;     * @param byXY   the byX and byY parameters
+&nbsp;     * @return the scaling animation
+&nbsp;     */
+&nbsp;    public static Animation scale(Node node, double fromXY, double toXY, double byXY) {
+<b class="nc">&nbsp;        ScaleTransition st = new ScaleTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        if (fromXY &gt;= 0) {</b>
+<b class="nc">&nbsp;            st.setFromX(fromXY);</b>
+<b class="nc">&nbsp;            st.setFromY(fromXY);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (toXY &gt;= 0) {</b>
+<b class="nc">&nbsp;            st.setToX(toXY);</b>
+<b class="nc">&nbsp;            st.setToY(toXY);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (byXY &gt;= 0) {</b>
+<b class="nc">&nbsp;            st.setByX(byXY);</b>
+<b class="nc">&nbsp;            st.setByY(byXY);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        st.setNode(node);</b>
+<b class="nc">&nbsp;        return st;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Translates a node by a certain position.
+&nbsp;     *
+&nbsp;     * @param node the node to translate.
+&nbsp;     * @param byX the X coordinate.
+&nbsp;     * @param byY the Y coordinate.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation translateBy(Node node, double byX, double byY) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        tt.setNode(node);</b>
+<b class="nc">&nbsp;        tt.setByX(byX);</b>
+<b class="nc">&nbsp;        tt.setByY(byY);</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Translates a node to a certain position.
+&nbsp;     *
+&nbsp;     * @param node the node to translate.
+&nbsp;     * @param coordinate the coordinates.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation translateTo(Node node, Point2D coordinate) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(400));</b>
+<b class="nc">&nbsp;        node.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        tt.setOnFinished((evt) -&gt; node.setMouseTransparent(false));</b>
+<b class="nc">&nbsp;        tt.setNode(node);</b>
+<b class="nc">&nbsp;        tt.setToX(coordinate.getX() - CustomBindings.getAbsolutePosition(node).getX());</b>
+<b class="nc">&nbsp;        tt.setToY(coordinate.getY() - CustomBindings.getAbsolutePosition(node).getY());</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Fixes reorder tiles translations.
+&nbsp;     *
+&nbsp;     * @param node the node to translate.
+&nbsp;     * @param coordinate the fixing coordinates.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation fixTranslateTo(Node node, Point2D coordinate) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(400));</b>
+<b class="nc">&nbsp;        tt.setNode(node);</b>
+<b class="nc">&nbsp;        node.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        tt.setOnFinished((evt) -&gt; node.setMouseTransparent(false));</b>
+<b class="nc">&nbsp;        double yPos = CustomBindings.getAbsolutePosition(node).getY();</b>
+<b class="nc">&nbsp;        if (coordinate.getY() - yPos == 0) {</b>
+<b class="nc">&nbsp;            node.setMouseTransparent(false);</b>
+<b class="nc">&nbsp;            return new TranslateTransition(Duration.millis(0));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        tt.setByY(coordinate.getY() - yPos);</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an animation that erases the translations previously set to the node.
+&nbsp;     *
+&nbsp;     * @param node the node from which to erase the translation.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation eraseTranslation(Node node) {
+<b class="nc">&nbsp;        TranslateTransition tt = new TranslateTransition(Duration.millis(200));</b>
+<b class="nc">&nbsp;        node.setMouseTransparent(true);</b>
+<b class="nc">&nbsp;        tt.setOnFinished((evt) -&gt; node.setMouseTransparent(false));</b>
+<b class="nc">&nbsp;        tt.setNode(node);</b>
+<b class="nc">&nbsp;        tt.setByX(-node.getTranslateX());</b>
+<b class="nc">&nbsp;        tt.setByY(-node.getTranslateY());</b>
+<b class="nc">&nbsp;        return tt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an Animation that rotates a tile from -90 degrees to 0 in a tile over the Y axis.
+&nbsp;     *
+&nbsp;     * @param tile the tile to rotate in.
+&nbsp;     * @param duration the duration of the animation.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation tileRotateIn(TileImageView tile, Duration duration) {
+<b class="nc">&nbsp;        tile.setRotationAxis(Rotate.Y_AXIS);</b>
+<b class="nc">&nbsp;        tile.setRotate(-90);</b>
+<b class="nc">&nbsp;        tile.setVisible(true);</b>
+<b class="nc">&nbsp;        return rotateY(90, duration, tile);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an Animation that rotates a tile from 0 degrees to -90 in a tile over the Y axis.
+&nbsp;     *
+&nbsp;     * @param tile the tile to rotate out.
+&nbsp;     * @param duration the duration of the animation.
+&nbsp;     * @return the animation.
+&nbsp;     */
+&nbsp;    public static Animation tileRotateOut(TileImageView tile, Duration duration) {
+<b class="nc">&nbsp;        tile.setRotationAxis(Rotate.Y_AXIS);</b>
+<b class="nc">&nbsp;        tile.setRotate(0);</b>
+<b class="nc">&nbsp;        tile.setVisible(true);</b>
+<b class="nc">&nbsp;        Animation rotation = rotateY(-90, duration, tile);</b>
+<b class="nc">&nbsp;        rotation.setOnFinished((evt) -&gt; tile.setVisible(false));</b>
+<b class="nc">&nbsp;        return rotation;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

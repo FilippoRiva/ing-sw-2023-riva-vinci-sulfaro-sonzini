@@ -1,0 +1,184 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ChatPage</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.textual.pages</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatPage (it.polimi.myshelfie.view.textual.pages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatPage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.textual.pages;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.chatting.Message;
+&nbsp;import it.polimi.myshelfie.model.chatting.Messages;
+&nbsp;import it.polimi.myshelfie.model.modelviews.LobbyModelView;
+&nbsp;import it.polimi.myshelfie.model.modelviews.PlayerChatModelView;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.ViewType;
+&nbsp;import it.polimi.myshelfie.view.textual.ANSI;
+&nbsp;import it.polimi.myshelfie.view.textual.Terminal;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the chat page for the textualUI.
+&nbsp; */
+&nbsp;public class ChatPage extends ScreenPage {
+<b class="nc">&nbsp;    private final String[] colors = {</b>
+&nbsp;            ANSI.PINK_FG, ANSI.BLUE_FG, ANSI.GREEN_FG, ANSI.LIGHTBLUE_FG, ANSI.YELLOW_FG, ANSI.RED_FG
+&nbsp;    };
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialises a ChatPage.
+&nbsp;     * @param t the terminal in which we want to render the page.
+&nbsp;     * @param inputParameters the shared input parameters between the TextualUI.
+&nbsp;     */
+&nbsp;    public ChatPage(Terminal t, List&lt;String&gt; inputParameters) {
+<b class="nc">&nbsp;        super(t, inputParameters);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Renders the chat page inside the Screen portion of the Terminal.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void render() {
+<b class="nc">&nbsp;        LobbyModelView lobby = viewManager.getLobbyModelView();</b>
+<b class="nc">&nbsp;        PlayerChatModelView chat = viewManager.getPlayerChatModelView();</b>
+<b class="nc">&nbsp;        if (lobby == null) return;</b>
+<b class="nc">&nbsp;        t.clearScreen();</b>
+<b class="nc">&nbsp;        t.centerPrint(&quot;CHAT&quot;, 2);</b>
+<b class="nc">&nbsp;        int line = 4;</b>
+<b class="nc">&nbsp;        if (chat == null || chat.getMessages().size() == 0) {</b>
+<b class="nc">&nbsp;            t.centerPrint(&quot;no messages &quot;, 4);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            List&lt;Message&gt; messages = chat.getMessages();</b>
+<b class="nc">&nbsp;            if (messages.size() &gt; 29) messages = messages.subList(messages.size() - 29, messages.size());</b>
+<b class="nc">&nbsp;            int idx = 0;</b>
+<b class="nc">&nbsp;            for (Message msg : messages) {</b>
+<b class="nc">&nbsp;                int playerIndex = lobby.getPlayers().indexOf(msg.getSender());</b>
+&nbsp;                String color;
+<b class="nc">&nbsp;                if (playerIndex != -1) color = colors[lobby.getPlayers().indexOf(msg.getSender())];</b>
+<b class="nc">&nbsp;                else color = ANSI.GRAY_FG; //if player has left</b>
+<b class="nc">&nbsp;                if (msg.getReceiver().equals(Messages.toEveryOne)) {</b>
+<b class="nc">&nbsp;                    t.printMessage(</b>
+<b class="nc">&nbsp;                            color + msg.getSender() + ANSI.RESET + &quot; : &quot; + msg.getMessage(),</b>
+&nbsp;                            line + idx,
+<b class="nc">&nbsp;                            (msg.getSender() + msg.getMessage()).length() + 3);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    if (msg.getSender().equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;                        playerIndex = lobby.getPlayers().indexOf(msg.getReceiver());</b>
+<b class="nc">&nbsp;                        if (playerIndex != -1) color = colors[lobby.getPlayers().indexOf(msg.getReceiver())];</b>
+<b class="nc">&nbsp;                        else color = ANSI.GRAY_FG; //if player has left</b>
+<b class="nc">&nbsp;                        t.printMessage(</b>
+<b class="nc">&nbsp;                                &quot;w(to :&quot; + color + msg.getReceiver() + ANSI.RESET + &quot;) : &quot; + msg.getMessage(),</b>
+&nbsp;                                line + idx,
+<b class="nc">&nbsp;                                (msg.getSender() + msg.getMessage()).length() + 10);</b>
+<b class="nc">&nbsp;                    } else t.printMessage(</b>
+<b class="nc">&nbsp;                            &quot;w(from :&quot; + color + msg.getSender() + ANSI.RESET + &quot;) : &quot; + msg.getMessage(),</b>
+&nbsp;                            line + idx,
+<b class="nc">&nbsp;                            (msg.getSender() + msg.getMessage()).length() + 12);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                idx++;</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (viewManager.getViewType() == ViewType.GAME) t.printAction(&quot;help, game, goals&quot;);</b>
+<b class="nc">&nbsp;        if (viewManager.getViewType() == ViewType.LOBBY) t.printAction(&quot;help, lobby&quot;);</b>
+<b class="nc">&nbsp;        printBorder();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

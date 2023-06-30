@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ItemTile</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.model</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemTile (it.polimi.myshelfie.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemTile</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.model;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;
+&nbsp;/**
+&nbsp; * Immutable Class representing a specific tile.
+&nbsp; * It has a type and also an id, used to associate each tile with his image.
+&nbsp; */
+&nbsp;public class ItemTile implements Serializable {
+&nbsp;    private final ItemTileType type;
+&nbsp;    private final int id;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Default Constructor
+&nbsp;     *
+&nbsp;     * @param type the ItemTileType of the ItemTile
+&nbsp;     * @param id   the id of the tile
+&nbsp;     */
+<b class="fc">&nbsp;    public ItemTile(ItemTileType type, int id) {</b>
+<b class="fc">&nbsp;        this.type = type;</b>
+<b class="fc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Used to get the id of the tile.
+&nbsp;     *
+&nbsp;     * @return the number of the tile.
+&nbsp;     */
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the ItemTileType set inside the Constructor.
+&nbsp;     *
+&nbsp;     * @return the type of the ItemTile.
+&nbsp;     */
+&nbsp;    public ItemTileType getType() {
+<b class="fc">&nbsp;        return type;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if an Object is equal to this ItemTile
+&nbsp;     *
+&nbsp;     * @param obj the object we want to compare
+&nbsp;     * @return true if the object is an ItemTile his ItemTileType is the same of this tile
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean equals(Object obj) {
+<b class="fc">&nbsp;        if (obj == null || obj.getClass() != getClass()) return false;</b>
+&nbsp;        ItemTile tile;
+<b class="fc">&nbsp;        tile = (ItemTile) obj;</b>
+<b class="fc">&nbsp;        return this.type.equals(tile.getType());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Converts this ItemTile into a String format
+&nbsp;     *
+&nbsp;     * @return a String representing the ItemTile. ex: &quot;CAT : 1&quot; or &quot;GAME, 3&quot;.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="fc">&nbsp;        return type.toString() + &quot; : &quot; + id;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>

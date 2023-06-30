@@ -1,0 +1,336 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ChatController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.myshelfie.view.graphical.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatController (it.polimi.myshelfie.view.graphical.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/87)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.polimi.myshelfie.view.graphical.controllers;
+&nbsp;
+&nbsp;import it.polimi.myshelfie.model.chatting.Message;
+&nbsp;import it.polimi.myshelfie.model.chatting.Messages;
+&nbsp;import it.polimi.myshelfie.view.ViewManager;
+&nbsp;import it.polimi.myshelfie.view.graphical.Animations;
+&nbsp;import it.polimi.myshelfie.view.graphical.CustomBindings;
+&nbsp;import it.polimi.myshelfie.view.graphical.controllers.game.GameOverlayController;
+&nbsp;import javafx.animation.Animation;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.collections.FXCollections;
+&nbsp;import javafx.collections.ObservableList;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.fxml.Initializable;
+&nbsp;import javafx.scene.CacheHint;
+&nbsp;import javafx.scene.Node;
+&nbsp;import javafx.scene.control.ChoiceBox;
+&nbsp;import javafx.scene.control.Label;
+&nbsp;import javafx.scene.control.ScrollPane;
+&nbsp;import javafx.scene.control.TextField;
+&nbsp;import javafx.scene.image.ImageView;
+&nbsp;import javafx.scene.layout.*;
+&nbsp;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.ResourceBundle;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents the chat controller.
+&nbsp; */
+<b class="nc">&nbsp;public class ChatController implements Initializable {</b>
+<b class="nc">&nbsp;    private final ViewManager viewManager = ViewManager.getInstance();</b>
+&nbsp;    @FXML
+&nbsp;    protected TextField messageText;
+&nbsp;    @FXML
+&nbsp;    protected ChoiceBox&lt;String&gt; receiverChoice;
+&nbsp;    @FXML
+&nbsp;    protected ScrollPane chatScroll;
+&nbsp;    @FXML
+&nbsp;    protected VBox messagesVBox;
+&nbsp;    @FXML
+&nbsp;    protected ImageView backgroundImage;
+&nbsp;    @FXML
+&nbsp;    protected ImageView messagesBackgroundImage;
+&nbsp;    @FXML
+&nbsp;    protected StackPane chat;
+&nbsp;    @FXML
+&nbsp;    protected Label notificationDot;
+<b class="nc">&nbsp;    private boolean chatIsOpen = false;</b>
+&nbsp;    private GameOverlayController gameOverlayController;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the controller&#39;s component&#39;s resize properties and sets the state variables to their default values.
+&nbsp;     *
+&nbsp;     * @param url            the URL.
+&nbsp;     * @param resourceBundle the ResourceBundle.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle) {
+<b class="nc">&nbsp;        CustomBindings.bindSize(chatScroll, backgroundImage.fitWidthProperty().subtract(20), null);</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(messagesVBox, chatScroll.minWidthProperty().subtract(20), null);</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(backgroundImage, chat.minWidthProperty(), chat.minHeightProperty());</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(messagesBackgroundImage, chatScroll.minWidthProperty(), chat.minHeightProperty().subtract(180));</b>
+<b class="nc">&nbsp;        messagesVBox.heightProperty().addListener(observable -&gt; chatScroll.setVvalue(1D));</b>
+<b class="nc">&nbsp;        receiverChoice.setValue(&quot;Everyone&quot;);</b>
+<b class="nc">&nbsp;        notificationDot.setVisible(true);</b>
+<b class="nc">&nbsp;        notificationDot.setOpacity(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Reads the text inside the chat TextField and, if valid, it sends it to the viewManager.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void sendMessage() {
+<b class="nc">&nbsp;        if (messageText.getText().replace(&quot; &quot;, &quot;&quot;).equals(&quot;&quot;)) return;</b>
+&nbsp;        String receiver;
+<b class="nc">&nbsp;        if (receiverChoice.getValue().equals(&quot;Everyone&quot;)) receiver = Messages.toEveryOne;</b>
+<b class="nc">&nbsp;        else receiver = receiverChoice.getValue();</b>
+&nbsp;
+<b class="nc">&nbsp;        Message message = new Message(ViewManager.getUsername(), receiver, messageText.getText());</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; messageText.clear());</b>
+<b class="nc">&nbsp;        viewManager.sendChatMessage(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the usernames in the chat ChoiceBox
+&nbsp;     */
+&nbsp;    public void updateChoiceBox() {
+<b class="nc">&nbsp;        List&lt;String&gt; players = new ArrayList&lt;&gt;(viewManager.getLobbyModelView().getPlayers());</b>
+<b class="nc">&nbsp;        players.remove(ViewManager.getUsername());</b>
+<b class="nc">&nbsp;        players.add(&quot;Everyone&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        ObservableList&lt;String&gt; obList = FXCollections.observableList(players);</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            receiverChoice.setItems(obList);</b>
+<b class="nc">&nbsp;            receiverChoice.setValue(&quot;Everyone&quot;);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds the last message present in the ViewManager to the messagesVBox.
+&nbsp;     */
+&nbsp;    public void addChatMessage() {
+<b class="nc">&nbsp;        Message message = viewManager.getPlayerChatModelView().getLastMessage();</b>
+&nbsp;
+&nbsp;        //create default messagePane
+<b class="nc">&nbsp;        HBox messageBox = new HBox();</b>
+<b class="nc">&nbsp;        messageBox.setCache(true);</b>
+<b class="nc">&nbsp;        messageBox.setCacheHint(CacheHint.SPEED);</b>
+<b class="nc">&nbsp;        Region emptySpace = new Region();</b>
+<b class="nc">&nbsp;        HBox.setHgrow(emptySpace, Priority.ALWAYS);</b>
+<b class="nc">&nbsp;        VBox singleMessageVBox = new VBox();</b>
+<b class="nc">&nbsp;        CustomBindings.bindSize(messageBox, chatScroll.minWidthProperty().subtract(20), null);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (message.getSender().equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;            messageBox.getChildren().addAll(emptySpace, singleMessageVBox);</b>
+<b class="nc">&nbsp;        } else messageBox.getChildren().addAll(singleMessageVBox, emptySpace);</b>
+&nbsp;
+&nbsp;        //create default textLabel
+<b class="nc">&nbsp;        Label userLabel = new Label(message.getSender());</b>
+<b class="nc">&nbsp;        if (message.getReceiver().equals(Messages.toEveryOne))</b>
+<b class="nc">&nbsp;            userLabel.setStyle(&quot;-fx-font-size: 13; -fx-label-padding: 0 0 0 10&quot;);</b>
+<b class="nc">&nbsp;        else userLabel.setStyle(&quot;-fx-font-size: 13; -fx-text-fill:MidnightBlue; -fx-label-padding: 0 0 0 10&quot;);</b>
+<b class="nc">&nbsp;        Label textLabel = new Label(message.getMessage());</b>
+<b class="nc">&nbsp;        textLabel.setStyle(&quot;-fx-font-size: 20; -fx-label-padding: 0 0 0 10; -fx-wrap-text: true&quot;);</b>
+<b class="nc">&nbsp;        Label timeLabel = new Label(message.getTimeHHmm());</b>
+<b class="nc">&nbsp;        timeLabel.setStyle(&quot;-fx-font-size: 10; -fx-label-padding: 0 0 0 10&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        textLabel.maxWidthProperty().bind(chatScroll.maxWidthProperty().divide(3).multiply(2));</b>
+<b class="nc">&nbsp;        textLabel.minWidthProperty().bind(chatScroll.maxWidthProperty().divide(3));</b>
+&nbsp;
+<b class="nc">&nbsp;        CustomBindings.bindSize(singleMessageVBox, textLabel);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (message.getSender().equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;            if (message.getReceiver().equals(Messages.toEveryOne))</b>
+<b class="nc">&nbsp;                singleMessageVBox.setStyle(&quot;-fx-background-color: NavajoWhite ; -fx-background-radius: 20 0 20 20&quot;);</b>
+<b class="nc">&nbsp;            else singleMessageVBox.setStyle(&quot;-fx-background-color: NavajoWhite  ; -fx-background-radius: 20 0 20 20&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            if (message.getReceiver().equals(Messages.toEveryOne))</b>
+<b class="nc">&nbsp;                singleMessageVBox.setStyle(&quot;-fx-background-color: AntiqueWhite; -fx-background-radius: 20 0 20 20&quot;);</b>
+<b class="nc">&nbsp;            else singleMessageVBox.setStyle(&quot;-fx-background-color: AntiqueWhite; -fx-background-radius: 0 20 20 20&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (!message.getReceiver().equals(Messages.toEveryOne)) {</b>
+<b class="nc">&nbsp;            if (message.getSender().equals(ViewManager.getUsername())) {</b>
+<b class="nc">&nbsp;                userLabel.setText(&quot;Private to : &quot; + message.getReceiver());</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                userLabel.setText(&quot;Private from : &quot; + message.getSender());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        singleMessageVBox.getChildren().addAll(userLabel, textLabel, timeLabel);</b>
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;            ObservableList&lt;Node&gt; messages = messagesVBox.getChildren();</b>
+<b class="nc">&nbsp;            if (messages.size() &gt; 100) messages.remove(0);</b>
+<b class="nc">&nbsp;            messages.add(messageBox);</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        updateNotificationDot();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void updateNotificationDot() {
+<b class="nc">&nbsp;        if (!isChatVisible()) {</b>
+<b class="nc">&nbsp;            int prev = Integer.parseInt(notificationDot.getText());</b>
+<b class="nc">&nbsp;            if (prev == 0) {</b>
+<b class="nc">&nbsp;                Animations.popFadeIn(notificationDot).play();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            int newValue = prev + 1;</b>
+<b class="nc">&nbsp;            Platform.runLater(() -&gt; notificationDot.setText(String.valueOf(newValue)));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void resetNotificationDot() {
+<b class="nc">&nbsp;        if (notificationDot.getText().equals(&quot;0&quot;)) return;</b>
+<b class="nc">&nbsp;        Animation a = Animations.reverse(Animations.popFadeIn(notificationDot));</b>
+<b class="nc">&nbsp;        a.setOnFinished((evt) -&gt; Platform.runLater(() -&gt; notificationDot.setText(&quot;0&quot;)));</b>
+<b class="nc">&nbsp;        a.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns true if the chat is visible
+&nbsp;     * @return true if the chat is visible
+&nbsp;     */
+&nbsp;    public boolean isChatVisible() {
+<b class="nc">&nbsp;        return chatIsOpen;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If set to true it sets the chat to visible by resetting the notificationDot and focusing the chat input.
+&nbsp;     * @param visible the visibility of the chat.
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void setChatVisible(boolean visible) {
+<b class="nc">&nbsp;        if (visible) {</b>
+<b class="nc">&nbsp;            resetNotificationDot();</b>
+<b class="nc">&nbsp;            chatIsOpen = true;</b>
+<b class="nc">&nbsp;            messageText.requestFocus();</b>
+<b class="nc">&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc">&nbsp;                messageText.clear();</b>
+<b class="nc">&nbsp;                chatScroll.setVvalue(1.0);</b>
+&nbsp;            });
+&nbsp;        } else {
+<b class="nc">&nbsp;            chatIsOpen = false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resets the controller by removing messages from the messagesVBox and resetting the notificationDot
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        Platform.runLater(() -&gt; messagesVBox.getChildren().removeAll(messagesVBox.getChildren()));</b>
+<b class="nc">&nbsp;        resetNotificationDot();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Used to toggle the chat while in GAME internal view state.
+&nbsp;     */
+&nbsp;    public void toggleChat() {
+<b class="nc">&nbsp;        if (gameOverlayController != null) gameOverlayController.toggleChatVisible();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Used to initialize the chat while in GAME internal view state.
+&nbsp;     * @param gameOverlayController the overlay controller.
+&nbsp;     */
+&nbsp;    public void initGameOverlay(GameOverlayController gameOverlayController) {
+<b class="nc">&nbsp;        this.gameOverlayController = gameOverlayController;</b>
+<b class="nc">&nbsp;        updateChoiceBox();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-06-30 10:53</div>
+</div>
+</body>
+</html>
