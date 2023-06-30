@@ -124,14 +124,6 @@ powershell.exe .\client.ps1  [ -n ] [ client_ip server_ip ]
 .\client.ps1  [ -n ] [ client_ip server_ip ] 
 ```
 
-If launching these commands you get an error like "+ FullyQualifiedErrorId : UnauthorizedAccess" follow these steps:
-1. Open a PowerShell window as administrator
-2. Type `Set-ExecutionPolicy Unrestricted` and press Enter
-3. Confirm your choice typing S and press Enter
-
-Now you are able to launch the application from PowerShell.
-
-
 Where :
 
 - -n : disables ANSI escape sequences (just in case your terminal doesn't support them).
@@ -150,9 +142,17 @@ properly to the java RMI server.
 If your terminal doesn't support ANSI escape sequences, or you're experiencing weird textual UI behaviour, please use
 the -n option.
 
+!! If you get an error like "+ FullyQualifiedErrorId : UnauthorizedAccess" while launching these commands follow these steps:
+1. Open a PowerShell window as administrator
+2. Type `Set-ExecutionPolicy Unrestricted` and press Enter
+3. Confirm your choice typing S and press Enter
+
+Now you are able to launch the application from PowerShell.
+
+
 ### Additional options
-When launching the server it's possible to set the serverLog level of detail.
-The Logger is used to get an ongoing list of updates of what's happening in the server, at various level of detail:
+When launching the server it's possible to set the server logger level of detail.
+The logger is used to get an ongoing list of updates of what's happening in the server, at various level of detail:
 - SEVERE: shows bugs and critical errors (lowest level of detail);
 - WARNING: shows non-critical errors;
 - INFO: shows generic network and controller info;
@@ -165,7 +165,7 @@ By setting a certain level of detail, messages from lower levels of detail are a
 
 This feature is used for monitoring client interactions with the server.
 
-To do this is necessary to set the LOG_LEVEL environmental variable.
+To do this is necessary to set the LOG_LEVEL environmental variable before launching the server.
 
 #### Linux/MacOS
 ``` bash
@@ -175,6 +175,3 @@ export LOG_LEVEL=<LEVEL_OF_DETAIL>
 ``` bash
 $Env:LOG_LEVEL = "<LEVEL_OF_DETAIL>"
 ```
-
-
-
