@@ -74,7 +74,7 @@ public class PreGameController implements Initializable {
 
         homeController.initialize(banner);
         joinController.initialize(banner, this);
-        createController.initialize(banner, this);
+        createController.initialize(banner);
         lobbyController.initialize(banner, this);
 
         Animations.applyHoverScaling(backButton);

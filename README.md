@@ -154,7 +154,7 @@ the -n option.
 When launching the server it's possible to set the serverLog level of detail.
 The Logger is used to get an ongoing list of updates of what's happening in the server, at various level of detail:
 - SEVERE: shows bugs and critical errors (lowest level of detail);
-- WARNING: shows non critical errors;
+- WARNING: shows non-critical errors;
 - INFO: shows generic network and controller info;
 - CONFIG: shows config;
 - FINE: shows network additional info;
@@ -171,7 +171,7 @@ To do this is necessary to set the LOG_LEVEL environmental variable.
 ``` bash
 export LOG_LEVEL=<LEVEL_OF_DETAIL>
 ```
-####Windows
+#### Windows
 ``` bash
 $Env:LOG_LEVEL = "<LEVEL_OF_DETAIL>"
 ```
