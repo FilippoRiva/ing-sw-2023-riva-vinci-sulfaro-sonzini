@@ -83,7 +83,7 @@ public class GameController {
      * Used to trigger a game update over this controller and its sub controllers.
      */
     public void update() {
-        GameState currentState = viewManager.getCurrentStateDiff();
+        GameState currentState = viewManager.getGameModelView().getCurrentState();
 
         gamePanelController.setState(currentState); //this reloads game panel elements
         if (currentState == GameState.DRAW || currentState == GameState.LAST_DRAW)
